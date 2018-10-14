@@ -295,8 +295,8 @@ layer=1</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>190</x>
-      <y>190</y>
+      <x>220</x>
+      <y>130</y>
       <w>120</w>
       <h>40</h>
     </coordinates>
@@ -383,14 +383,14 @@ layer=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>300</x>
-      <y>170</y>
-      <w>100</w>
-      <h>60</h>
+      <x>330</x>
+      <y>70</y>
+      <w>200</w>
+      <h>100</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;includes&gt;&gt;</panel_attributes>
-    <additional_attributes>80.0;10.0;10.0;40.0</additional_attributes>
+    <additional_attributes>180.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
