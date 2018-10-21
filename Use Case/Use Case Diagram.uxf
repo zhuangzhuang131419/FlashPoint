@@ -310,8 +310,8 @@ layer=1</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>384</x>
-      <y>272</y>
+      <x>560</x>
+      <y>312</y>
       <w>96</w>
       <h>32</h>
     </coordinates>
@@ -323,8 +323,8 @@ layer=1</panel_attributes>
   <element>
     <id>UMLUseCase</id>
     <coordinates>
-      <x>576</x>
-      <y>264</y>
+      <x>640</x>
+      <y>256</y>
       <w>96</w>
       <h>32</h>
     </coordinates>
@@ -467,31 +467,6 @@ layer=1</panel_attributes>
     <additional_attributes>10.0;10.0;480.0;255.0</additional_attributes>
   </element>
   <element>
-    <id>UMLUseCase</id>
-    <coordinates>
-      <x>616</x>
-      <y>328</y>
-      <w>96</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>Explosion
-fg=black
-layer=1</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>464</x>
-      <y>288</y>
-      <w>176</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=.&gt;
-&lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>200.0;60.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
       <x>280</x>
@@ -533,23 +508,67 @@ layer=1</panel_attributes>
     <coordinates>
       <x>352</x>
       <y>176</y>
-      <w>256</w>
-      <h>104</h>
+      <w>320</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>300.0;110.0;10.0;10.0</additional_attributes>
+    <additional_attributes>380.0;100.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>344</x>
       <y>176</y>
-      <w>112</w>
-      <h>112</h>
+      <w>272</w>
+      <h>152</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;extends&gt;&gt;</panel_attributes>
-    <additional_attributes>100.0;120.0;10.0;10.0</additional_attributes>
+    <additional_attributes>320.0;170.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>880</x>
+      <y>240</y>
+      <w>80</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>POI Manager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>880</x>
+      <y>336</y>
+      <w>80</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Fire Manager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>728</x>
+      <y>264</y>
+      <w>200</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;230.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>320</y>
+      <w>280</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;330.0;60.0</additional_attributes>
   </element>
 </diagram>
