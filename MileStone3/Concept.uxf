@@ -166,7 +166,7 @@ isHotSpot: boolean</panel_attributes>
       <x>450</x>
       <y>150</y>
       <w>60</w>
-      <h>60</h>
+      <h>55</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
@@ -174,7 +174,7 @@ m1pos=0,-10
 m2=0,1
 m2pos=-25,10
 controls v</panel_attributes>
-    <additional_attributes>30.0;10.0;30.0;100.0</additional_attributes>
+    <additional_attributes>30.0;10.0;30.0;90.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -325,16 +325,17 @@ FireEngineParking</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>410</x>
-      <y>200</y>
+      <y>195</y>
       <w>90</w>
-      <h>50</h>
+      <h>55</h>
     </coordinates>
     <panel_attributes>*FireFighter*
 --
 basicMove: BasicMove
 specialMove: SpecialMove
 carrying: Carryable
-role: FireFighterRole</panel_attributes>
+role: FireFighterRole
+AP: int</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
