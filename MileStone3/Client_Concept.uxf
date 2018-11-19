@@ -135,9 +135,9 @@ rescueStatus: POIStatus</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>568</x>
-      <y>424</y>
+      <y>416</y>
       <w>128</w>
-      <h>80</h>
+      <h>88</h>
     </coordinates>
     <panel_attributes>*Grid*
 --
@@ -460,13 +460,13 @@ occupied by v</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>664</x>
-      <y>392</y>
+      <y>376</y>
       <w>144</w>
-      <h>80</h>
+      <h>104</h>
     </coordinates>
     <panel_attributes>neighbours
-m1=1...6</panel_attributes>
-    <additional_attributes>40.0;70.0;90.0;70.0;90.0;10.0;10.0;10.0;10.0;40.0</additional_attributes>
+m1=1...4</panel_attributes>
+    <additional_attributes>40.0;100.0;90.0;100.0;90.0;10.0;10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -474,7 +474,7 @@ m1=1...6</panel_attributes>
       <x>616</x>
       <y>224</y>
       <w>144</w>
-      <h>216</h>
+      <h>208</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
@@ -482,7 +482,7 @@ m1pos=0,-10
 m2=80...*
 m2pos=0,10
 game board made of v</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;250.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;240.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -513,207 +513,51 @@ locates on &gt;</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0;150.0;90.0</additional_attributes>
   </element>
   <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>888</x>
-      <y>384</y>
-      <w>80</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>*FireManager*
---
-
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
     <id>Relation</id>
     <coordinates>
       <x>688</x>
-      <y>416</y>
-      <w>352</w>
-      <h>72</h>
+      <y>328</y>
+      <w>360</w>
+      <h>168</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m1pos=0,-18
 m2=80...*
 m2pos=-15,0
-advances fire on v</panel_attributes>
-    <additional_attributes>300.0;10.0;300.0;60.0;10.0;60.0</additional_attributes>
+update fire 
+status on v</panel_attributes>
+    <additional_attributes>360.0;10.0;360.0;180.0;10.0;180.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>744</x>
       <y>192</y>
-      <w>240</w>
-      <h>120</h>
+      <w>360</w>
+      <h>128</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=2
-utlizes &gt;</panel_attributes>
-    <additional_attributes>10.0;20.0;270.0;20.0;270.0;130.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>928</x>
-      <y>296</y>
-      <w>80</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>*GameManager*
---
-
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>976</x>
-      <y>384</y>
-      <w>104</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>*POIManager*
---
-POIList: List&lt;POI&gt;
-
-
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>960</x>
-      <y>328</y>
-      <w>72</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0;70.0;40.0;70.0;70.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>920</x>
-      <y>352</y>
-      <w>64</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes>10.0;40.0;10.0;10.0;60.0;10.0</additional_attributes>
+update game with &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;420.0;20.0;420.0;140.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>616</x>
-      <y>416</y>
+      <y>328</y>
       <w>520</w>
-      <h>496</h>
+      <h>584</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m1pos=0,-18
 m2=0...*
 m2pos=-15,0
-manages v</panel_attributes>
-    <additional_attributes>560.0;10.0;560.0;590.0;10.0;590.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>112</x>
-      <y>200</y>
-      <w>96</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>*Communication*
---
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>40</x>
-      <y>280</y>
-      <w>120</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>*TextCommunication*
---
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>168</x>
-      <y>280</y>
-      <w>120</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes>*VoiceCommunication*
---
-</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>96</x>
-      <y>256</y>
-      <w>80</w>
-      <h>40</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes>10.0;30.0;10.0;10.0;80.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>152</x>
-      <y>232</y>
-      <w>72</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;40.0;70.0;40.0;70.0;60.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>248</x>
-      <y>200</y>
-      <w>160</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=1...6
-m1pos=0,-18
-m2=1
-m2pos=-15,0
-communicate with &gt;</panel_attributes>
-    <additional_attributes>150.0;60.0;150.0;90.0;10.0;90.0;10.0;10.0;140.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>200</x>
-      <y>208</y>
-      <w>72</w>
-      <h>32</h>
-    </coordinates>
-    <panel_attributes>lt=.
-</panel_attributes>
-    <additional_attributes>70.0;20.0;10.0;20.0</additional_attributes>
+updates v</panel_attributes>
+    <additional_attributes>560.0;10.0;560.0;700.0;10.0;700.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -875,7 +719,7 @@ movementAP: int</panel_attributes>
       <h>912</h>
     </coordinates>
     <panel_attributes>&lt;&lt;system&gt;&gt;
-FlashPoint
+Client
 --</panel_attributes>
     <additional_attributes/>
   </element>
@@ -1136,7 +980,7 @@ passengers: List&lt;FireFighter&gt;
     <id>UMLSpecialState</id>
     <coordinates>
       <x>536</x>
-      <y>352</y>
+      <y>360</y>
       <w>32</w>
       <h>32</h>
     </coordinates>
@@ -1149,18 +993,18 @@ passengers: List&lt;FireFighter&gt;
       <x>504</x>
       <y>224</y>
       <w>64</w>
-      <h>144</h>
+      <h>152</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 </panel_attributes>
-    <additional_attributes>10.0;20.0;60.0;20.0;60.0;160.0</additional_attributes>
+    <additional_attributes>10.0;20.0;60.0;20.0;60.0;170.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>488</x>
-      <y>352</y>
+      <y>360</y>
       <w>64</w>
       <h>40</h>
     </coordinates>
@@ -1175,14 +1019,14 @@ m2pos=0,-20
     <id>Relation</id>
     <coordinates>
       <x>560</x>
-      <y>352</y>
+      <y>360</y>
       <w>296</w>
-      <h>160</h>
+      <h>152</h>
     </coordinates>
     <panel_attributes>lt=-
 m2=1
-interact with v</panel_attributes>
-    <additional_attributes>10.0;20.0;340.0;20.0;340.0;180.0</additional_attributes>
+interact with &gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;340.0;20.0;340.0;170.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
@@ -1242,12 +1086,12 @@ Dead
     <id>Relation</id>
     <coordinates>
       <x>688</x>
-      <y>472</y>
+      <y>480</y>
       <w>136</w>
-      <h>64</h>
+      <h>56</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>150.0;60.0;120.0;60.0;120.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>150.0;50.0;120.0;50.0;120.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1274,16 +1118,17 @@ Dead
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>784</x>
+      <x>768</x>
       <y>232</y>
-      <w>136</w>
-      <h>64</h>
+      <w>160</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>*GameStatus*
 --
 totalDamageToHouse: int
 gameBoard: List&lt;Grid&gt;
-POIRecord: List&lt;POI&gt;</panel_attributes>
+POIRecord: List&lt;POI&gt;
+fireFighters: List&lt;FireFighter&gt;</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1291,7 +1136,7 @@ POIRecord: List&lt;POI&gt;</panel_attributes>
     <coordinates>
       <x>632</x>
       <y>224</y>
-      <w>168</w>
+      <w>152</w>
       <h>72</h>
     </coordinates>
     <panel_attributes>lt=-
@@ -1299,7 +1144,7 @@ m1=1
 m1pos=0,-18
 m2=1
 keep track of game with &gt;</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;60.0;190.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;60.0;170.0;60.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1307,20 +1152,99 @@ keep track of game with &gt;</panel_attributes>
       <x>648</x>
       <y>264</y>
       <w>24</w>
-      <h>176</h>
+      <h>168</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;200.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;190.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>648</x>
       <y>312</y>
-      <w>296</w>
+      <w>328</w>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;350.0;10.0</additional_attributes>
+    <additional_attributes>10.0;10.0;390.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>960</x>
+      <y>304</y>
+      <w>144</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>*Client_Manager*
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>920</x>
+      <y>248</y>
+      <w>168</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=1
+m2=1
+uses date from ^
+
+</panel_attributes>
+    <additional_attributes>80.0;70.0;80.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLActor</id>
+    <coordinates>
+      <x>792</x>
+      <y>0</y>
+      <w>48</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>Server</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>808</x>
+      <y>48</y>
+      <w>120</w>
+      <h>200</h>
+    </coordinates>
+    <panel_attributes>sends and receives</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;230.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>488</x>
+      <y>304</y>
+      <w>440</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=3
+m2=1
+&lt; keep tracks of</panel_attributes>
+    <additional_attributes>10.0;60.0;520.0;60.0;520.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>688</x>
+      <y>304</y>
+      <w>224</w>
+      <h>160</h>
+    </coordinates>
+    <panel_attributes>lt=-
+m1=3
+m2=1
+&lt; keep tracks of</panel_attributes>
+    <additional_attributes>10.0;170.0;250.0;170.0;250.0;10.0</additional_attributes>
   </element>
 </diagram>
