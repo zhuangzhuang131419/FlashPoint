@@ -75,3 +75,13 @@ DerivedDataCache/*
 
 # Starter content files
 Content/StarterContent/*
+
+# Ploygon City
+Content/PloygonCity/*
+
+# TopDown templete
+Content/TopDownBP/*
+
+# others
+Content/Mannequin/*
+Content/Geometry/*
