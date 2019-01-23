@@ -16,6 +16,10 @@ public:
 	ATile();
 
 protected:
+	// Cursor over method implementation
+	UFUNCTION()
+	void OnCursorOver(UPrimitiveComponent* Component);
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

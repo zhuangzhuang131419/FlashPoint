@@ -14,7 +14,12 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 {
 	GENERATED_BODY()
 	
-	
+public:
+	AFPPlayerController();
+
+protected:
+	// Called when the game starts or when spawned
+	virtual void BeginPlay() override;
 	
 	
 };

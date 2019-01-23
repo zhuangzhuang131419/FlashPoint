@@ -11,11 +11,21 @@ ATile::ATile()
 
 }
 
+void ATile::OnCursorOver(UPrimitiveComponent * Component)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
+}
+
 // Called when the game starts or when spawned
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Create binding to on cursor over
+	FScriptDelegate onMouseOverDel;
+	onMouseOverDel.BindUFunction(this, "OnCursorOver");
+	OnBeginCursorOver.Add(onMouseOverDel);
+
 }
 
 // Called every frame
