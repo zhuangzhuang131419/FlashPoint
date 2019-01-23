@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="14.3.0">
-  <zoom_level>5</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>125</x>
-      <y>185</y>
-      <w>50</w>
-      <h>15</h>
+      <x>104</x>
+      <y>128</y>
+      <w>80</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>_:Client_</panel_attributes>
     <additional_attributes/>
@@ -15,10 +15,10 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>215</x>
-      <y>185</y>
-      <w>50</w>
-      <h>15</h>
+      <x>248</x>
+      <y>128</y>
+      <w>80</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>_:Server_</panel_attributes>
     <additional_attributes/>
@@ -26,21 +26,21 @@
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>260</x>
-      <y>345</y>
-      <w>215</w>
-      <h>65</h>
+      <x>320</x>
+      <y>384</y>
+      <w>344</w>
+      <h>104</h>
     </coordinates>
-    <panel_attributes>opt: w.status == "intact"</panel_attributes>
+    <panel_attributes>opt: [w.status == "intact"]</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>145</x>
-      <y>195</y>
-      <w>15</w>
-      <h>50</h>
+      <x>136</x>
+      <y>144</y>
+      <w>24</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -48,10 +48,10 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>145</x>
-      <y>235</y>
-      <w>10</w>
-      <h>50</h>
+      <x>136</x>
+      <y>208</y>
+      <w>16</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>
 bg=white</panel_attributes>
@@ -60,10 +60,10 @@ bg=white</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>150</x>
-      <y>230</y>
-      <w>95</w>
-      <h>20</h>
+      <x>144</x>
+      <y>200</y>
+      <w>152</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 Chopwall(w:Wall)</panel_attributes>
@@ -72,10 +72,10 @@ Chopwall(w:Wall)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>235</x>
-      <y>195</y>
-      <w>15</w>
-      <h>40</h>
+      <x>280</x>
+      <y>144</y>
+      <w>24</w>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
@@ -83,10 +83,10 @@ Chopwall(w:Wall)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>235</x>
-      <y>225</y>
-      <w>10</w>
-      <h>285</h>
+      <x>280</x>
+      <y>192</y>
+      <w>16</w>
+      <h>456</h>
     </coordinates>
     <panel_attributes>
 bg=white</panel_attributes>
@@ -95,10 +95,10 @@ bg=white</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>345</x>
-      <y>185</y>
-      <w>50</w>
-      <h>15</h>
+      <x>456</x>
+      <y>128</y>
+      <w>80</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>_w:Wall_</panel_attributes>
     <additional_attributes/>
@@ -106,10 +106,10 @@ bg=white</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>365</x>
-      <y>235</y>
-      <w>10</w>
-      <h>250</h>
+      <x>488</x>
+      <y>208</y>
+      <w>16</w>
+      <h>400</h>
     </coordinates>
     <panel_attributes>
 bg=white</panel_attributes>
@@ -118,10 +118,10 @@ bg=white</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>365</x>
-      <y>195</y>
-      <w>15</w>
-      <h>50</h>
+      <x>488</x>
+      <y>144</y>
+      <w>24</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -129,10 +129,10 @@ bg=white</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>485</x>
-      <y>180</y>
-      <w>50</w>
-      <h>15</h>
+      <x>680</x>
+      <y>120</y>
+      <w>80</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>_:Fireman_</panel_attributes>
     <additional_attributes/>
@@ -140,10 +140,10 @@ bg=white</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>370</x>
-      <y>355</y>
-      <w>100</w>
-      <h>45</h>
+      <x>496</x>
+      <y>400</y>
+      <w>160</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 setStatus("damage")</panel_attributes>
@@ -152,21 +152,21 @@ setStatus("damage")</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>260</x>
-      <y>415</y>
-      <w>215</w>
-      <h>60</h>
+      <x>320</x>
+      <y>496</y>
+      <w>344</w>
+      <h>96</h>
     </coordinates>
-    <panel_attributes>opt: w.status == "damage"</panel_attributes>
+    <panel_attributes>opt: [w.status == "damage"]</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>370</x>
-      <y>415</y>
-      <w>100</w>
-      <h>45</h>
+      <x>496</x>
+      <y>496</y>
+      <w>160</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 setStatus("destroy")</panel_attributes>
@@ -175,10 +175,10 @@ setStatus("destroy")</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>505</x>
-      <y>190</y>
-      <w>15</w>
-      <h>70</h>
+      <x>712</x>
+      <y>136</y>
+      <w>24</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
@@ -186,10 +186,10 @@ setStatus("destroy")</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>505</x>
-      <y>250</y>
-      <w>10</w>
-      <h>155</h>
+      <x>712</x>
+      <y>232</y>
+      <w>16</w>
+      <h>248</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -197,10 +197,10 @@ setStatus("destroy")</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>510</x>
-      <y>360</y>
-      <w>100</w>
-      <h>45</h>
+      <x>720</x>
+      <y>408</y>
+      <w>160</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 removeAP(chopAP)</panel_attributes>
@@ -209,10 +209,10 @@ removeAP(chopAP)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>700</x>
-      <y>180</y>
-      <w>50</w>
-      <h>15</h>
+      <x>1024</x>
+      <y>120</y>
+      <w>80</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>_:Building_</panel_attributes>
     <additional_attributes/>
@@ -220,10 +220,10 @@ removeAP(chopAP)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>720</x>
-      <y>190</y>
-      <w>15</w>
-      <h>115</h>
+      <x>1056</x>
+      <y>136</y>
+      <w>24</w>
+      <h>184</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;210.0</additional_attributes>
@@ -231,22 +231,22 @@ removeAP(chopAP)</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>605</x>
-      <y>455</y>
-      <w>130</w>
-      <h>50</h>
+      <x>864</x>
+      <y>584</y>
+      <w>216</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>opt: 
-total structural damage &lt; 24</panel_attributes>
+[total_structural_damage &lt; 24]</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>720</x>
-      <y>295</y>
-      <w>10</w>
-      <h>215</h>
+      <x>1056</x>
+      <y>304</y>
+      <w>16</w>
+      <h>344</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -254,10 +254,10 @@ total structural damage &lt; 24</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>485</y>
-      <w>490</w>
-      <h>20</h>
+      <x>288</x>
+      <y>608</y>
+      <w>784</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 endGame()</panel_attributes>
@@ -266,10 +266,10 @@ endGame()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>250</y>
-      <w>135</w>
-      <h>20</h>
+      <x>288</x>
+      <y>232</y>
+      <w>216</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 DamageWall(w:Wall)</panel_attributes>
@@ -278,10 +278,10 @@ DamageWall(w:Wall)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>265</y>
-      <w>275</w>
-      <h>20</h>
+      <x>288</x>
+      <y>256</y>
+      <w>440</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 AdjustAP(chopAP)</panel_attributes>
@@ -290,14 +290,26 @@ AdjustAP(chopAP)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>240</x>
-      <y>300</y>
-      <w>490</w>
-      <h>25</h>
+      <x>288</x>
+      <y>312</y>
+      <w>784</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 CheckBuilding()
 </panel_attributes>
     <additional_attributes>10.0;20.0;960.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>144</x>
+      <y>248</y>
+      <w>152</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+updateClient()</panel_attributes>
+    <additional_attributes>10.0;20.0;170.0;20.0</additional_attributes>
   </element>
 </diagram>
