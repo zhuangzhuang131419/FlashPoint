@@ -20,6 +20,13 @@ protected:
 	UFUNCTION()
 	void OnCursorOver(UPrimitiveComponent* Component);
 
+	UFUNCTION()
+	void OnCursorClicked(UPrimitiveComponent* Component);
+
+	UFUNCTION()
+	void OnCursorLeft(UPrimitiveComponent* Component);
+	
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
