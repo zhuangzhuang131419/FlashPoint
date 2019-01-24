@@ -90,7 +90,7 @@ EndTurn(): void</panel_attributes>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-ServerEndTurn()</panel_attributes>
+ServerEndTurn(p)</panel_attributes>
     <additional_attributes>160.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
