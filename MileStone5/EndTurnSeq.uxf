@@ -133,7 +133,7 @@ f := FindFiremanByClient(p)</panel_attributes>
       <x>264</x>
       <y>160</y>
       <w>320</w>
-      <h>48</h>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 IncreaseAP(4)
@@ -355,7 +355,7 @@ Space</panel_attributes>
       <x>120</x>
       <y>40</y>
       <w>16</w>
-      <h>3888</h>
+      <h>3984</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -377,7 +377,7 @@ Space</panel_attributes>
       <x>256</x>
       <y>64</y>
       <w>16</w>
-      <h>3856</h>
+      <h>3952</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -786,7 +786,7 @@ boolean</panel_attributes>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-ExplodingToWards(direction:int)</panel_attributes>
+ExplodingTowards(direction:int)</panel_attributes>
     <additional_attributes>330.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -1676,7 +1676,7 @@ Space[] parks := GetClosestParksTo(s)</panel_attributes>
       <w>528</w>
       <h>144</h>
     </coordinates>
-    <panel_attributes>opt [x.length&gt;1]</panel_attributes>
+    <panel_attributes>opt [parks.length&gt;1]</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1696,45 +1696,12 @@ SetState(KnockedDownPlacement)</panel_attributes>
     <coordinates>
       <x>464</x>
       <y>2984</y>
-      <w>120</w>
-      <h>32</h>
+      <w>152</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-FiremanRelocation()</panel_attributes>
-    <additional_attributes>130.0;20.0;10.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>568</x>
-      <y>2752</y>
-      <w>24</w>
-      <h>256</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;300.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLGeneric</id>
-    <coordinates>
-      <x>568</x>
-      <y>2992</y>
-      <w>16</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>464</x>
-      <y>3024</y>
-      <w>120</w>
-      <h>24</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;130.0;10.0</additional_attributes>
+ChooseFiremanRelocation(f)</panel_attributes>
+    <additional_attributes>10.0;70.0;40.0;70.0;40.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLFrame</id>
@@ -1744,7 +1711,7 @@ FiremanRelocation()</panel_attributes>
       <w>936</w>
       <h>128</h>
     </coordinates>
-    <panel_attributes>opt [x.length==1]</panel_attributes>
+    <panel_attributes>opt [parks.length==1]</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -1996,7 +1963,7 @@ ManageGameStatus()</panel_attributes>
       <x>456</x>
       <y>3760</y>
       <w>16</w>
-      <h>136</h>
+      <h>232</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -2050,8 +2017,20 @@ SetState(Complete)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
+      <x>128</x>
+      <y>3992</y>
+      <w>144</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+</panel_attributes>
+    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
       <x>264</x>
-      <y>3872</y>
+      <y>3968</y>
       <w>208</w>
       <h>32</h>
     </coordinates>
@@ -2060,15 +2039,26 @@ SetState(Complete)</panel_attributes>
     <additional_attributes>10.0;20.0;240.0;20.0</additional_attributes>
   </element>
   <element>
+    <id>UMLFrame</id>
+    <coordinates>
+      <x>352</x>
+      <y>3880</y>
+      <w>224</w>
+      <h>88</h>
+    </coordinates>
+    <panel_attributes>opt [durability==0]</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
     <id>Relation</id>
     <coordinates>
-      <x>128</x>
-      <y>3896</y>
-      <w>144</w>
-      <h>32</h>
+      <x>464</x>
+      <y>3888</y>
+      <w>120</w>
+      <h>72</h>
     </coordinates>
-    <panel_attributes>lt=&lt;.
-</panel_attributes>
-    <additional_attributes>10.0;20.0;160.0;20.0</additional_attributes>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+SetState(Complete)</panel_attributes>
+    <additional_attributes>10.0;70.0;40.0;70.0;40.0;10.0;10.0;10.0</additional_attributes>
   </element>
 </diagram>
