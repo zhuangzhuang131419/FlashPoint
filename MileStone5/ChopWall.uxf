@@ -107,9 +107,9 @@ bg=white</panel_attributes>
     <id>UMLGeneric</id>
     <coordinates>
       <x>504</x>
-      <y>128</y>
+      <y>288</y>
       <w>16</w>
-      <h>400</h>
+      <h>240</h>
     </coordinates>
     <panel_attributes>
 bg=white</panel_attributes>
@@ -121,10 +121,10 @@ bg=white</panel_attributes>
       <x>504</x>
       <y>64</y>
       <w>24</w>
-      <h>80</h>
+      <h>240</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
@@ -165,7 +165,7 @@ setStatus("damage")</panel_attributes>
     <coordinates>
       <x>512</x>
       <y>416</y>
-      <w>160</w>
+      <w>152</w>
       <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
@@ -178,18 +178,18 @@ setStatus("destroy")</panel_attributes>
       <x>728</x>
       <y>56</y>
       <w>24</w>
-      <h>112</h>
+      <h>128</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
       <x>728</x>
-      <y>152</y>
+      <y>168</y>
       <w>16</w>
-      <h>416</h>
+      <h>56</h>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
@@ -197,20 +197,8 @@ setStatus("destroy")</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>736</x>
-      <y>328</y>
-      <w>160</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-removeAP(chopAP)</panel_attributes>
-    <additional_attributes>10.0;70.0;50.0;70.0;50.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
       <x>304</x>
-      <y>152</y>
+      <y>280</y>
       <w>216</w>
       <h>32</h>
     </coordinates>
@@ -222,12 +210,12 @@ Damage()</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>304</x>
-      <y>200</y>
+      <y>160</y>
       <w>440</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-AdjustAP(int chopAP)</panel_attributes>
+AdjustAP(ap: int)</panel_attributes>
     <additional_attributes>10.0;20.0;530.0;20.0</additional_attributes>
   </element>
   <element>
@@ -246,12 +234,46 @@ AdjustAP(int chopAP)</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>304</x>
-      <y>536</y>
+      <y>200</y>
       <w>440</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 </panel_attributes>
     <additional_attributes>10.0;20.0;530.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>304</x>
+      <y>504</y>
+      <w>216</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+</panel_attributes>
+    <additional_attributes>10.0;20.0;250.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>504</x>
+      <y>520</y>
+      <w>24</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>728</x>
+      <y>216</y>
+      <w>24</w>
+      <h>432</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;520.0</additional_attributes>
   </element>
 </diagram>

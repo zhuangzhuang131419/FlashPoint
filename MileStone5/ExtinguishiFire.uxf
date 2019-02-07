@@ -144,7 +144,7 @@ status := GetState()</panel_attributes>
       <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-setStatus(status:Smoke)</panel_attributes>
+SetFIreStatus(SpaceStatus::Smoke)</panel_attributes>
     <additional_attributes>220.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -167,7 +167,7 @@ setStatus(status:Smoke)</panel_attributes>
       <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-setStatus(status:Safe)</panel_attributes>
+SetFireStatus(SpaceStatus::Safe)</panel_attributes>
     <additional_attributes>220.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -250,7 +250,7 @@ SpaceStatus</panel_attributes>
       <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-decrementAP(2)</panel_attributes>
+AdjustAP(ap: int)</panel_attributes>
     <additional_attributes>520.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>

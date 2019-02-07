@@ -133,7 +133,7 @@ f := FindFiremanByClient(p)</panel_attributes>
       <x>264</x>
       <y>160</y>
       <w>320</w>
-      <h>40</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 IncreaseAP(4)
@@ -1171,7 +1171,7 @@ SpaceStatus</panel_attributes>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-b : IsRevealed()</panel_attributes>
+b := IsRevealed()</panel_attributes>
     <additional_attributes>350.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -2060,5 +2060,71 @@ SetState(Complete)</panel_attributes>
     <panel_attributes>lt=&lt;&lt;&lt;-
 SetState(Complete)</panel_attributes>
     <additional_attributes>10.0;70.0;40.0;70.0;40.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>744</x>
+      <y>2072</y>
+      <w>24</w>
+      <h>1976</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;2450.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>568</x>
+      <y>2752</y>
+      <w>24</w>
+      <h>1288</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;1590.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>920</x>
+      <y>2232</y>
+      <w>24</w>
+      <h>1808</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;2240.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1256</x>
+      <y>3608</y>
+      <w>24</w>
+      <h>456</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;550.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1408</x>
+      <y>1592</y>
+      <w>24</w>
+      <h>2472</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;3070.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1528</x>
+      <y>1408</y>
+      <w>24</w>
+      <h>2656</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;3300.0</additional_attributes>
   </element>
 </diagram>
