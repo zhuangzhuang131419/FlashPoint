@@ -4,7 +4,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>189</x>
+      <x>126</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -15,31 +15,31 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>224</x>
+      <x>161</x>
       <y>49</y>
       <w>217</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-move(d:Space)</panel_attributes>
+Move(d:Space)</panel_attributes>
     <additional_attributes>10.0;20.0;290.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>63</x>
+      <x>0</x>
       <y>35</y>
       <w>168</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-move(d:Space)</panel_attributes>
+Move(d:Space)</panel_attributes>
     <additional_attributes>10.0;20.0;220.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>217</x>
+      <x>154</x>
       <y>42</y>
       <w>14</w>
       <h>1561</h>
@@ -50,7 +50,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>217</x>
+      <x>154</x>
       <y>14</y>
       <w>21</w>
       <h>42</h>
@@ -61,7 +61,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>399</x>
+      <x>336</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -72,7 +72,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>427</x>
+      <x>364</x>
       <y>56</y>
       <w>14</w>
       <h>1533</h>
@@ -83,7 +83,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
+      <x>364</x>
       <y>14</y>
       <w>21</w>
       <h>56</h>
@@ -94,7 +94,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>574</x>
+      <x>511</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -105,7 +105,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>602</x>
+      <x>539</x>
       <y>14</y>
       <w>21</w>
       <h>84</h>
@@ -116,7 +116,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>602</x>
+      <x>539</x>
       <y>84</y>
       <w>14</w>
       <h>56</h>
@@ -127,7 +127,7 @@ move(d:Space)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>77</y>
       <w>182</w>
       <h>28</h>
@@ -139,7 +139,7 @@ f := FindFiremanByClient(c)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>119</y>
       <w>182</w>
       <h>28</h>
@@ -151,7 +151,7 @@ Fireman</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>707</x>
+      <x>644</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -162,7 +162,7 @@ Fireman</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>875</x>
+      <x>812</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -173,7 +173,7 @@ Fireman</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1288</x>
+      <x>1225</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -184,7 +184,7 @@ Fireman</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1029</x>
+      <x>966</x>
       <y>0</y>
       <w>70</w>
       <h>21</h>
@@ -195,7 +195,7 @@ Fireman</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1148</x>
+      <x>1085</x>
       <y>0</y>
       <w>84</w>
       <h>21</h>
@@ -206,7 +206,7 @@ Fireman</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>175</y>
       <w>14</w>
       <h>273</h>
@@ -217,8 +217,8 @@ Fireman</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
-      <y>168</y>
+      <x>371</x>
+      <y>231</y>
       <w>315</w>
       <h>28</h>
     </coordinates>
@@ -229,7 +229,7 @@ AdjustAP(ap: int)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>14</y>
       <w>21</w>
       <h>175</h>
@@ -240,8 +240,8 @@ AdjustAP(ap: int)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
-      <y>420</y>
+      <x>371</x>
+      <y>273</y>
       <w>315</w>
       <h>28</h>
     </coordinates>
@@ -252,34 +252,22 @@ AdjustAP(ap: int)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>742</x>
-      <y>196</y>
-      <w>112</w>
-      <h>56</h>
+      <x>371</x>
+      <y>168</y>
+      <w>315</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
 v:=GetCarried()</panel_attributes>
-    <additional_attributes>10.0;60.0;40.0;60.0;40.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>742</x>
-      <y>266</y>
-      <w>140</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-v:=removeAP(number)</panel_attributes>
-    <additional_attributes>10.0;60.0;40.0;60.0;40.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>430.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>658</x>
-      <y>252</y>
-      <w>231</w>
-      <h>161</h>
+      <x>308</x>
+      <y>231</y>
+      <w>420</w>
+      <h>154</h>
     </coordinates>
     <panel_attributes>alt
 --
@@ -294,41 +282,18 @@ v:=removeAP(number)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>742</x>
-      <y>350</y>
-      <w>147</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-v:=removeAP(number*2)</panel_attributes>
-    <additional_attributes>10.0;60.0;40.0;60.0;40.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>602</x>
-      <y>133</y>
-      <w>21</w>
-      <h>462</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;640.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>903</x>
+      <x>840</x>
       <y>14</y>
       <w>21</w>
-      <h>833</h>
+      <h>581</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;1170.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;810.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>903</x>
+      <x>840</x>
       <y>833</y>
       <w>14</w>
       <h>63</h>
@@ -339,7 +304,7 @@ v:=removeAP(number*2)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1057</x>
+      <x>994</x>
       <y>14</y>
       <w>21</w>
       <h>952</h>
@@ -350,7 +315,7 @@ v:=removeAP(number*2)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1057</x>
+      <x>994</x>
       <y>952</y>
       <w>14</w>
       <h>49</h>
@@ -361,7 +326,7 @@ v:=removeAP(number*2)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>826</y>
       <w>483</w>
       <h>28</h>
@@ -373,7 +338,7 @@ p:GetPOI()</panel_attributes>
   <element>
     <id>Text</id>
     <coordinates>
-      <x>658</x>
+      <x>315</x>
       <y>273</y>
       <w>70</w>
       <h>49</h>
@@ -385,8 +350,8 @@ style=wordwrap</panel_attributes>
   <element>
     <id>Text</id>
     <coordinates>
-      <x>658</x>
-      <y>336</y>
+      <x>315</x>
+      <y>322</y>
       <w>70</w>
       <h>49</h>
     </coordinates>
@@ -397,7 +362,7 @@ style=wordwrap</panel_attributes>
   <element>
     <id>Text</id>
     <coordinates>
-      <x>371</x>
+      <x>308</x>
       <y>924</y>
       <w>63</w>
       <h>28</h>
@@ -409,7 +374,7 @@ style=wordwrap</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>945</y>
       <w>637</w>
       <h>28</h>
@@ -421,7 +386,7 @@ Reveal()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>980</y>
       <w>637</w>
       <h>28</h>
@@ -433,7 +398,7 @@ Reveal()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>875</y>
       <w>483</w>
       <h>28</h>
@@ -445,7 +410,7 @@ POI</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>287</x>
+      <x>224</x>
       <y>1043</y>
       <w>952</w>
       <h>112</h>
@@ -456,18 +421,18 @@ POI</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1183</x>
+      <x>1120</x>
       <y>14</y>
       <w>21</w>
-      <h>1078</h>
+      <h>1603</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;1520.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;2270.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1183</x>
+      <x>840</x>
       <y>1078</y>
       <w>14</w>
       <h>49</h>
@@ -478,65 +443,54 @@ POI</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
+      <x>364</x>
       <y>1071</y>
-      <w>770</w>
+      <w>490</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
 RemoveFromSpace(p: GameUnit)</panel_attributes>
-    <additional_attributes>10.0;20.0;1080.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;680.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>427</x>
+      <x>364</x>
       <y>1113</y>
-      <w>770</w>
+      <w>490</w>
       <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;1080.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLGeneric</id>
-    <coordinates>
-      <x>602</x>
-      <y>581</y>
-      <w>14</w>
-      <h>49</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes/>
+    <additional_attributes>10.0;10.0;680.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>574</y>
-      <w>182</w>
+      <w>483</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;
-outside := IsOutside(d: Space)</panel_attributes>
-    <additional_attributes>10.0;20.0;240.0;20.0</additional_attributes>
+outside := IsOutside()</panel_attributes>
+    <additional_attributes>10.0;20.0;670.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>609</y>
-      <w>182</w>
+      <w>483</w>
       <h>28</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 Boolean</panel_attributes>
-    <additional_attributes>10.0;20.0;240.0;20.0</additional_attributes>
+    <additional_attributes>10.0;20.0;670.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1316</x>
+      <x>1253</x>
       <y>14</y>
       <w>21</w>
       <h>1421</h>
@@ -547,7 +501,7 @@ Boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>511</y>
       <w>21</w>
       <h>714</h>
@@ -558,18 +512,18 @@ Boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>602</x>
-      <y>623</y>
+      <x>539</x>
+      <y>133</y>
       <w>21</w>
-      <h>994</h>
+      <h>1484</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;1400.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;2100.0</additional_attributes>
   </element>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>1211</y>
       <w>14</w>
       <h>56</h>
@@ -580,7 +534,7 @@ Boolean</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>343</x>
+      <x>280</x>
       <y>1400</y>
       <w>1022</w>
       <h>119</h>
@@ -591,18 +545,18 @@ Boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>903</x>
+      <x>840</x>
       <y>889</y>
       <w>21</w>
-      <h>728</h>
+      <h>203</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;1020.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;270.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>1351</y>
       <w>21</w>
       <h>266</h>
@@ -613,7 +567,7 @@ Boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>1204</y>
       <w>315</w>
       <h>28</h>
@@ -625,7 +579,7 @@ g:GetCarried()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>1246</y>
       <w>315</w>
       <h>28</h>
@@ -637,7 +591,7 @@ GameObject</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>1295</y>
       <w>315</w>
       <h>28</h>
@@ -649,7 +603,7 @@ RemoveCarried()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>1414</y>
       <w>896</w>
       <h>28</h>
@@ -661,7 +615,7 @@ SetVictimStatus(VictimState::Rescued)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>1316</x>
+      <x>1253</x>
       <y>1421</y>
       <w>14</w>
       <h>70</h>
@@ -672,7 +626,7 @@ SetVictimStatus(VictimState::Rescued)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>1470</y>
       <w>896</w>
       <h>28</h>
@@ -684,7 +638,7 @@ SetVictimStatus(VictimState::Rescued)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>224</x>
+      <x>161</x>
       <y>1568</y>
       <w>217</w>
       <h>28</h>
@@ -696,7 +650,7 @@ SetVictimStatus(VictimState::Rescued)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>441</y>
       <w>21</w>
       <h>49</h>
@@ -707,7 +661,7 @@ SetVictimStatus(VictimState::Rescued)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>476</y>
       <w>14</w>
       <h>42</h>
@@ -718,7 +672,7 @@ SetVictimStatus(VictimState::Rescued)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>469</y>
       <w>315</w>
       <h>28</h>
@@ -730,7 +684,7 @@ d := GetLocatedSpace()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>497</y>
       <w>315</w>
       <h>35</h>
@@ -743,7 +697,7 @@ Space
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1057</x>
+      <x>994</x>
       <y>994</y>
       <w>21</w>
       <h>623</h>
@@ -754,7 +708,7 @@ Space
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>273</x>
+      <x>210</x>
       <y>819</y>
       <w>1008</w>
       <h>364</h>
@@ -765,7 +719,7 @@ Space
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>273</x>
+      <x>210</x>
       <y>1197</y>
       <w>1120</w>
       <h>343</h>
@@ -776,7 +730,7 @@ Space
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>1302</y>
       <w>14</w>
       <h>56</h>
@@ -787,7 +741,7 @@ Space
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
+      <x>672</x>
       <y>1260</y>
       <w>21</w>
       <h>56</h>
@@ -798,7 +752,7 @@ Space
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>434</x>
+      <x>371</x>
       <y>1337</y>
       <w>315</w>
       <h>28</h>
@@ -810,12 +764,69 @@ Space
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1316</x>
+      <x>1253</x>
       <y>1484</y>
       <w>21</w>
       <h>147</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>371</x>
+      <y>350</y>
+      <w>315</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+</panel_attributes>
+    <additional_attributes>10.0;20.0;430.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>371</x>
+      <y>301</y>
+      <w>315</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;
+AdjustAP(ap*2: int)</panel_attributes>
+    <additional_attributes>10.0;20.0;430.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLGeneric</id>
+    <coordinates>
+      <x>840</x>
+      <y>581</y>
+      <w>14</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes/>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>623</y>
+      <w>21</w>
+      <h>224</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;300.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>840</x>
+      <y>1120</y>
+      <w>21</w>
+      <h>497</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;690.0</additional_attributes>
   </element>
 </diagram>

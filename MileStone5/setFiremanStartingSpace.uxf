@@ -87,7 +87,7 @@
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-setFiremanStartingSpace(f:Fireman, startingSpace: Space)</panel_attributes>
+SetFiremanStartingSpace(f:Fireman, startingSpace: Space)</panel_attributes>
     <additional_attributes>440.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -99,7 +99,7 @@ setFiremanStartingSpace(f:Fireman, startingSpace: Space)</panel_attributes>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-setController(p: Client)</panel_attributes>
+SetController(p: Client)</panel_attributes>
     <additional_attributes>520.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -134,17 +134,6 @@ setController(p: Client)</panel_attributes>
     </coordinates>
     <panel_attributes>_startingSpace:Space_</panel_attributes>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>0</x>
-      <y>0</y>
-      <w>24</w>
-      <h>56</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;50.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -261,7 +250,7 @@ positionInvalid: Boolean</panel_attributes>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-setLocatedAt(startingSpace: Space)</panel_attributes>
+SetLocatedAt(startingSpace: Space)</panel_attributes>
     <additional_attributes>520.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>

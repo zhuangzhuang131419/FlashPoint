@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="14.3.0">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>476</x>
+      <y>266</y>
+      <w>238</w>
+      <h>287</h>
+    </coordinates>
+    <panel_attributes>Game
+--
+-numPlayer: int
+-durability: int
+-placedPOIs: List&lt;POI&gt;
+-placablePOIs: List&lt;POI&gt;
+-placedFiremen: List&lt;Fireman&gt;
+-state: GameState
+-red: int
+-black: int
+--
++AddParticipant(Client player, ReadyStatus r): void
++GetState(): GameState
++SetState(GameState state): void
++FindFiremanByClient(Client c): Fireman
++GetRedDice(): int
++GetBlackDice(): int
++FindSpace(int red, int black): Space
++ManagePOI(): void
++RemovePOIFromPlaced(POI poi): void
++RemovePOIFromPlacable(POI poi): void
++RandomPOIFromPlacable(): POI
++ChooseFiremanRelocation(Fireman f): void
++SetNumOfPlayers(int num): void
++SetRules(Rule rules)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>112</x>
+      <y>273</y>
+      <w>294</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;system-wide&gt;&gt; 1
+Server
+--
+-playersOnline: int
+-players: List&lt;Client&gt;
+--
++CreateNewFamilyGame(): void
++ServerEndTurn(): void
++SetFiremanStartingSpace(Fireman f, Space startingSpace): void
++ExtinguishFire(Space dest): void
++Move(Space d): void
++Chopwall(Wall w): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>518</x>
+      <y>651</y>
+      <w>161</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>Client
+--
+-id: String
+--
++InsufficientPlayer(): void
++EndTurn(): void
++ExtinguishFire(Space dest): void
++Move(Space d): void
++Chopwall(Wall w): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>399</x>
+      <y>280</y>
+      <w>91</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>294</x>
+      <y>210</y>
+      <w>56</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1
+{frozen}</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>231</x>
+      <y>168</y>
+      <w>147</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>GameCreator
+--
+
+--
++Create(int numOfPlayers): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>770</x>
+      <y>630</y>
+      <w>147</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Fireman
+--
+-AP: int
+-carried: GameUnit
+-controller: Client
+--
++SetController(): void
++GetCarried() :GameUnit
++RemoveCarried(): void
++CheckAP(int ap): boolean
++AdjustAP(int ap): void 
++IncreaseAP(int ap): void
++SetAP(int ap): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>826</x>
+      <y>98</y>
+      <w>210</w>
+      <h>224</h>
+    </coordinates>
+    <panel_attributes>Space
+--
+-coordinate: Pair&lt;int, int&gt;
+-kind: SpaceKind
+-state: SpaceStatus
+-objectsOnSpace:List&lt;GameUnit&gt;
+-adjacentEdges: List&lt;EdgeObstacle&gt;
+--
++SetKind(SpaceKind: kind): void
++SetCoordinate(Pair&lt;int, int&gt; coordinate): void
++AssociatedGame(Game game): void
++GetState(): SpaceStatus
++SetFireStatus(state: SpaceStatus): void
++IsOutside() : boolean
++GetPOI(): POI
++ExplodingTowards(int direction): void
++FlashOver(): void
++RemoveFromSpace(GameUnit unit): void
++AdvanceFire(): void
++ConnectNeighbours(): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>924</x>
+      <y>630</y>
+      <w>147</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+POI
+--
+state: POIStatus
+--
++Reveal(): void
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>833</x>
+      <y>392</y>
+      <w>175</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+GameUnit
+--
+-locatedSpace: Space
+--
++IsOnfire(): boolean
++GetLocatedSpace(): Space 
++SetLocatedAt(Space space): void
++AssociatedGame(Game game): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1078</x>
+      <y>777</y>
+      <w>77</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>FalseAlarm
+--
+
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>882</x>
+      <y>777</y>
+      <w>182</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Victim
+--
+-state: VictimState
+--
++GetVictimState(): VictimState
++SetVictimState(VictimState state): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1036</x>
+      <y>686</y>
+      <w>91</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0;110.0;90.0;110.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>959</x>
+      <y>742</y>
+      <w>98</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>833</x>
+      <y>483</y>
+      <w>119</w>
+      <h>161</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;10.0;150.0;170.0;10.0;170.0;10.0;210.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1078</x>
+      <y>392</y>
+      <w>105</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+EdgeObstacle
+--
+
+--
++Damage(): void
++IsBlocked(): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1022</x>
+      <y>511</y>
+      <w>105</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Wall
+--
+-state: WallStatus
+--
++Damage(): void
++IsBlocked(): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1134</x>
+      <y>511</y>
+      <w>105</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>Door
+--
+-state: DoorStatus
+--
++Damage(): void
++IsBlocked(): boolean
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>931</x>
+      <y>595</y>
+      <w>119</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>150.0;50.0;150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1043</x>
+      <y>483</y>
+      <w>98</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;40.0;10.0;10.0;120.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1120</x>
+      <y>462</y>
+      <w>91</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0;110.0;40.0;110.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>623</x>
+      <y>546</y>
+      <w>63</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+{frozen}
+references
+m1=1
+m2=3...6</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>385</x>
+      <y>399</y>
+      <w>147</w>
+      <h>287</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;390.0;190.0;390.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>371</x>
+      <y>189</y>
+      <w>238</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+creates</panel_attributes>
+    <additional_attributes>280.0;110.0;280.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>623</x>
+      <y>189</y>
+      <w>217</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+{frozen}
+stores</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0;290.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>707</x>
+      <y>406</y>
+      <w>140</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+{frozen}
+Keeps track of</panel_attributes>
+    <additional_attributes>10.0;20.0;180.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>966</x>
+      <y>315</y>
+      <w>35</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=0...*
+Has</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>700</y>
+      <w>112</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+{frozen}
+controls
+m2=1</panel_attributes>
+    <additional_attributes>10.0;20.0;140.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>154</x>
+      <y>651</y>
+      <w>63</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+DoorStatus
+--
+Open
+Closed
+Destroyed
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>224</x>
+      <y>651</y>
+      <w>63</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+WallStatus
+--
+Intact
+Damaged
+Destroyed</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>154</x>
+      <y>588</y>
+      <w>63</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+POIStatus
+--
+Hidden
+Revealed
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>154</x>
+      <y>490</y>
+      <w>119</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+GameState
+--
+ReadyToJoin
+Placing
+MainGame
+KnockedDownPlacement
+Completed</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>224</x>
+      <y>588</y>
+      <w>63</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+SpaceKind
+--
+Indoor
+Outdoor
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>154</x>
+      <y>413</y>
+      <w>63</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+SpaceStatus
+--
+Safe
+Smoke
+Fire
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>154</x>
+      <y>728</y>
+      <w>63</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+VictimState
+--
+Unconscious
+Treated
+Rescued
+Lost
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1092</x>
+      <y>196</y>
+      <w>91</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>ParkingSpot
+--
+-kind: VehicleKind
+--
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1029</x>
+      <y>203</y>
+      <w>77</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>896</x>
+      <y>315</y>
+      <w>63</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1
+m2=1
+locates on</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>224</x>
+      <y>413</y>
+      <w>63</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;enum&gt;&gt;
+VehicleKind
+--
+Ambulance
+Engine
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1015</x>
+      <y>315</y>
+      <w>77</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=1
+m2=2...4
+neighbours
+{frozen}</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;130.0;90.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>294</x>
+      <y>399</y>
+      <w>238</w>
+      <h>336</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m1=1
+m2=1
+Pass messages to</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;450.0;320.0;450.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>546</x>
+      <y>546</y>
+      <w>77</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+interacts with
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;150.0</additional_attributes>
+  </element>
+</diagram>

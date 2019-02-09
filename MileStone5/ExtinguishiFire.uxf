@@ -4,7 +4,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>63</x>
+      <x>0</x>
       <y>0</y>
       <w>90</w>
       <h>27</h>
@@ -15,7 +15,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>288</x>
+      <x>225</x>
       <y>0</y>
       <w>90</w>
       <h>27</h>
@@ -26,7 +26,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>765</x>
+      <x>702</x>
       <y>0</y>
       <w>90</w>
       <h>27</h>
@@ -37,7 +37,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>486</x>
+      <x>423</x>
       <y>0</y>
       <w>108</w>
       <h>27</h>
@@ -48,7 +48,7 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>99</x>
+      <x>36</x>
       <y>18</y>
       <w>27</w>
       <h>36</h>
@@ -59,7 +59,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>99</x>
+      <x>36</x>
       <y>36</y>
       <w>18</w>
       <h>702</h>
@@ -70,7 +70,7 @@
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>324</x>
+      <x>261</x>
       <y>45</y>
       <w>18</w>
       <h>693</h>
@@ -81,7 +81,7 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>324</x>
+      <x>261</x>
       <y>18</y>
       <w>27</w>
       <h>45</h>
@@ -92,19 +92,19 @@
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>108</x>
+      <x>45</x>
       <y>36</y>
       <w>234</w>
       <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-extinguishFire(destination:space)</panel_attributes>
+ExtinguishFire(destination:space)</panel_attributes>
     <additional_attributes>240.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>306</y>
       <w>216</w>
       <h>36</h>
@@ -116,7 +116,7 @@ status := GetState()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>18</y>
       <w>27</w>
       <h>315</h>
@@ -127,7 +127,7 @@ status := GetState()</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>180</x>
+      <x>117</x>
       <y>513</y>
       <w>333</w>
       <h>108</h>
@@ -138,19 +138,19 @@ status := GetState()</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>405</y>
       <w>216</w>
       <h>36</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-SetFIreStatus(SpaceStatus::Smoke)</panel_attributes>
+SetFireStatus(SpaceStatus::Smoke)</panel_attributes>
     <additional_attributes>220.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>180</x>
+      <x>117</x>
       <y>396</y>
       <w>333</w>
       <h>108</h>
@@ -161,7 +161,7 @@ SetFIreStatus(SpaceStatus::Smoke)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>522</y>
       <w>216</w>
       <h>36</h>
@@ -173,7 +173,7 @@ SetFireStatus(SpaceStatus::Safe)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>801</x>
+      <x>738</x>
       <y>18</y>
       <w>27</w>
       <h>36</h>
@@ -184,7 +184,7 @@ SetFireStatus(SpaceStatus::Safe)</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>801</x>
+      <x>738</x>
       <y>36</y>
       <w>18</w>
       <h>225</h>
@@ -195,20 +195,20 @@ SetFireStatus(SpaceStatus::Safe)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>45</y>
       <w>486</w>
       <h>45</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-checkAP(Fireman)
+CheckAP(ap: int)
 </panel_attributes>
     <additional_attributes>520.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>342</y>
       <w>216</w>
       <h>36</h>
@@ -220,7 +220,7 @@ SpaceStatus</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>738</x>
+      <x>675</x>
       <y>216</y>
       <w>225</w>
       <h>63</h>
@@ -231,12 +231,12 @@ SpaceStatus</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>738</x>
+      <x>675</x>
       <y>126</y>
       <w>225</w>
       <h>63</h>
     </coordinates>
-    <panel_attributes> AP &lt; 2
+    <panel_attributes> AP &lt; ap
 --
 </panel_attributes>
     <additional_attributes/>
@@ -244,7 +244,7 @@ SpaceStatus</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>648</y>
       <w>486</w>
       <h>36</h>
@@ -256,7 +256,7 @@ AdjustAP(ap: int)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>108</x>
+      <x>45</x>
       <y>720</y>
       <w>234</w>
       <h>27</h>
@@ -267,7 +267,7 @@ AdjustAP(ap: int)</panel_attributes>
   <element>
     <id>UMLFrame</id>
     <coordinates>
-      <x>630</x>
+      <x>567</x>
       <y>81</y>
       <w>405</w>
       <h>216</h>
@@ -287,7 +287,7 @@ AdjustAP(ap: int)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>144</y>
       <w>486</w>
       <h>36</h>
@@ -299,7 +299,7 @@ false:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>234</y>
       <w>486</w>
       <h>36</h>
@@ -311,7 +311,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>801</x>
+      <x>738</x>
       <y>252</y>
       <w>27</w>
       <h>423</h>
@@ -322,7 +322,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>99</x>
+      <x>36</x>
       <y>729</y>
       <w>27</w>
       <h>153</h>
@@ -333,7 +333,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>324</x>
+      <x>261</x>
       <y>729</y>
       <w>27</w>
       <h>144</h>
@@ -344,7 +344,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>576</y>
       <w>27</w>
       <h>288</h>
@@ -355,7 +355,7 @@ true:boolean</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>315</y>
       <w>18</w>
       <h>54</h>
@@ -366,7 +366,7 @@ true:boolean</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>414</y>
       <w>18</w>
       <h>54</h>
@@ -377,7 +377,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>450</y>
       <w>216</w>
       <h>27</h>
@@ -388,7 +388,7 @@ true:boolean</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>531</y>
       <w>18</w>
       <h>54</h>
@@ -399,7 +399,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>567</y>
       <w>216</w>
       <h>27</h>
@@ -410,7 +410,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>360</y>
       <w>27</w>
       <h>72</h>
@@ -421,7 +421,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>531</x>
+      <x>468</x>
       <y>459</y>
       <w>27</w>
       <h>90</h>
@@ -432,7 +432,7 @@ true:boolean</panel_attributes>
   <element>
     <id>UMLGeneric</id>
     <coordinates>
-      <x>801</x>
+      <x>738</x>
       <y>657</y>
       <w>18</w>
       <h>54</h>
@@ -443,7 +443,7 @@ true:boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>333</x>
+      <x>270</x>
       <y>693</y>
       <w>486</w>
       <h>27</h>

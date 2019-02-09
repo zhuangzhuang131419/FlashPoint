@@ -123,7 +123,7 @@ createNewFamilyGame(num: Integer)</panel_attributes>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
-insufficientPlayerNumber()</panel_attributes>
+InsufficientPlayer()</panel_attributes>
     <additional_attributes>10.0;20.0;350.0;20.0</additional_attributes>
   </element>
   <element>
@@ -247,7 +247,7 @@ Create(numOfPlayers: Integer)</panel_attributes>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-SetStatus(ReadyToJoin: Status)</panel_attributes>
+SetState(ReadyToJoin: Status)</panel_attributes>
     <additional_attributes>420.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -316,7 +316,7 @@ SetRules(rules: Rule)</panel_attributes>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-AddParticipant(player:Player, notReady:ReadyStatus)</panel_attributes>
+AddParticipant(player:Client, notReady:ReadyStatus)</panel_attributes>
     <additional_attributes>420.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -340,18 +340,6 @@ AddParticipant(player:Player, notReady:ReadyStatus)</panel_attributes>
     </coordinates>
     <panel_attributes/>
     <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>402</x>
-      <y>438</y>
-      <w>264</w>
-      <h>24</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-GetGameInstance()</panel_attributes>
-    <additional_attributes>420.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -386,7 +374,7 @@ GetGameInstance()</panel_attributes>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-SetKinds(kinds:Set&lt;Kind&gt;)</panel_attributes>
+SetKind(kind: Kind)</panel_attributes>
     <additional_attributes>590.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -398,19 +386,7 @@ SetKinds(kinds:Set&lt;Kind&gt;)</panel_attributes>
       <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;-
-SetCoordinates(coordinates:Set&lt;Coordinate&gt;)</panel_attributes>
-    <additional_attributes>590.0;20.0;10.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>402</x>
-      <y>606</y>
-      <w>366</w>
-      <h>24</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-AssociateGame(currentGame:Game)</panel_attributes>
+SetCoordinates(coordinate: Pair&lt;int, int&gt;)</panel_attributes>
     <additional_attributes>590.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
@@ -698,28 +674,6 @@ SetDoorState(Closed)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>756</x>
-      <y>1050</y>
-      <w>18</w>
-      <h>390</h>
-    </coordinates>
-    <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;630.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLGeneric</id>
-    <coordinates>
-      <x>756</x>
-      <y>1428</y>
-      <w>18</w>
-      <h>30</h>
-    </coordinates>
-    <panel_attributes/>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
       <x>402</x>
       <y>1380</y>
       <w>912</w>
@@ -754,18 +708,6 @@ SetDoorState(Closed)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>768</x>
-      <y>1428</y>
-      <w>612</w>
-      <h>24</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;&lt;-
-associateSpaces()</panel_attributes>
-    <additional_attributes>1000.0;20.0;10.0;20.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
       <x>1368</x>
       <y>1548</y>
       <w>18</w>
@@ -778,12 +720,12 @@ associateSpaces()</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>756</x>
-      <y>1452</y>
+      <y>1050</y>
       <w>18</w>
-      <h>876</h>
+      <h>1278</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;1440.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;2110.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
@@ -1211,5 +1153,17 @@ AssociateGame(currentGame:Game)</panel_attributes>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;600.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>402</x>
+      <y>606</y>
+      <w>366</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;-
+AssociateGame(currentGame:Game)</panel_attributes>
+    <additional_attributes>590.0;20.0;10.0;20.0</additional_attributes>
   </element>
 </diagram>
