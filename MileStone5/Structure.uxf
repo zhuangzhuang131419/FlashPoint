@@ -300,7 +300,7 @@ EdgeObstacle
       <x>882</x>
       <y>444</y>
       <w>96</w>
-      <h>54</h>
+      <h>60</h>
     </coordinates>
     <panel_attributes>Wall
 --
@@ -308,6 +308,7 @@ EdgeObstacle
 --
 +Damage(): void
 +IsBlocked(): boolean
++AssociateSpace(): void
 </panel_attributes>
     <additional_attributes/>
   </element>
@@ -317,7 +318,7 @@ EdgeObstacle
       <x>984</x>
       <y>444</y>
       <w>96</w>
-      <h>54</h>
+      <h>60</h>
     </coordinates>
     <panel_attributes>Door
 --
@@ -325,6 +326,7 @@ EdgeObstacle
 --
 +Damage(): void
 +IsBlocked(): boolean
++AssociateSpace(): void
 </panel_attributes>
     <additional_attributes/>
   </element>
