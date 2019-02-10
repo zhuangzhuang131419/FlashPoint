@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "EdgeUnit.h"
+#include "Engine/World.h"
 #include "Tile.generated.h"
 
 UCLASS()
@@ -18,7 +19,11 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 
+	// Here is a function that binds all cursor functions
+	void BindCursorFunc();
+
 protected:
+	// FIELDS
 	// A Static mesh component to store the floor mesh
 	UPROPERTY(VisibleAnyWhere)
 	UStaticMeshComponent* TileMesh = nullptr;
@@ -40,6 +45,10 @@ protected:
 	AEdgeUnit* frontWall = nullptr;
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* backWall = nullptr;
+	UPROPERTY(EditAnyWhere, Category = "Setup")
+	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;
+
+	// FUNCTIONS
 	// Cursor over method implementation
 	UFUNCTION()
 	void OnCursorOver(UPrimitiveComponent* Component);

@@ -16,6 +16,25 @@ ATile::ATile()
 
 }
 
+// Here is the function to bind all input bindings
+void ATile::BindCursorFunc()
+{
+	// Create binding to on cursor over
+	FScriptDelegate onMouseOverDel;
+	onMouseOverDel.BindUFunction(this, "OnCursorOver");
+	OnBeginCursorOver.Add(onMouseOverDel);
+
+	// Create binding to on cursor click
+	FScriptDelegate onMouseClickedDel;
+	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
+	OnClicked.Add(onMouseClickedDel);
+
+	// Create binding to on cursor leave
+	FScriptDelegate onMouseLeftDel;
+	onMouseLeftDel.BindUFunction(this, "OnCursorLeft");
+	OnEndCursorOver.Add(onMouseLeftDel);
+}
+
 void ATile::OnCursorOver(UPrimitiveComponent * Component)
 {
 	PlaneColorSwitch(ableMat);
@@ -45,20 +64,13 @@ void ATile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// Create binding to on cursor over
-	FScriptDelegate onMouseOverDel;
-	onMouseOverDel.BindUFunction(this, "OnCursorOver");
-	OnBeginCursorOver.Add(onMouseOverDel);
+	BindCursorFunc();
 
-	// Create binding to on cursor click
-	FScriptDelegate onMouseClickedDel;
-	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
-	OnClicked.Add(onMouseClickedDel);
-
-	// Create binding to on cursor leave
-	FScriptDelegate onMouseLeftDel;
-	onMouseLeftDel.BindUFunction(this, "OnCursorLeft");
-	OnEndCursorOver.Add(onMouseLeftDel);
+	GetWorld()->SpawnActor<AEdgeUnit>(
+		EdgeClass,
+		TileMesh->GetSocketLocation(FName("WallLeft")),
+		TileMesh->GetSocketRotation(FName("WallLeft"))
+	);
 }
 
 // Called every frame
