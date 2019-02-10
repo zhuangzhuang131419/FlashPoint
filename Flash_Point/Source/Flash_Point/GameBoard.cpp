@@ -16,6 +16,19 @@ void AGameBoard::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	// Initialize the TArray
+	if (ensure(TileClass)) {
+		for (int32 i = 0; i < boardWidth; i++) {
+			for (int32 j = 0; j < boardLength; j++) {
+				FVector tempLoc = FVector(TILE_SIZE * j, TILE_SIZE * i, 0) + GetActorLocation();
+				boardTiles.Add(GetWorld()->SpawnActor<ATile>(
+					TileClass,
+					tempLoc,
+					GetActorRotation()
+					));
+			}
+		}
+	}
 }
 
 // Called every frame
