@@ -7,7 +7,12 @@
 ATile::ATile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
+
+	// Intialize the floor and plane objects
+	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Tile Mesh"));
+	ColorPlane = CreateDefaultSubobject<UStaticMeshComponent>(FName("Color Plane"));
+	ColorPlane->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("Plane"));
 
 }
 
