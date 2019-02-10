@@ -18,6 +18,7 @@ ATile::ATile()
 
 void ATile::OnCursorOver(UPrimitiveComponent * Component)
 {
+	PlaneColorSwitch(ableMat);
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
 }
 
@@ -28,7 +29,15 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 
 void ATile::OnCursorLeft(UPrimitiveComponent * Component)
 {
+	PlaneColorSwitch(baseMat);
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
+}
+
+void ATile::PlaneColorSwitch(UMaterialInterface * mat)
+{
+	if (ensure(ColorPlane)) {
+		ColorPlane->SetMaterial(0, mat);
+	}
 }
 
 // Called when the game starts or when spawned
