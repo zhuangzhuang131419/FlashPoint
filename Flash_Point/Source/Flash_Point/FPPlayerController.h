@@ -6,6 +6,16 @@
 #include "GameFramework/PlayerController.h"
 #include "FPPlayerController.generated.h"
 
+UENUM(BlueprintType)
+enum class EGameOperations : uint8
+{
+	PlaceFireFighter,
+	Move,
+	ChopWall,
+	ExtinguishFire,
+	Carry
+};
+
 /**
  * 
  */
