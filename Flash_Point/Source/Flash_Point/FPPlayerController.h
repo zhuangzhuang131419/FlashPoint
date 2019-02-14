@@ -13,7 +13,8 @@ enum class EGameOperations : uint8
 	Move,
 	ChopWall,
 	ExtinguishFire,
-	Carry
+	Carry,
+    OpenDoor
 };
 
 /**
