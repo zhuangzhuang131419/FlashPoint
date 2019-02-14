@@ -14,7 +14,8 @@ enum class EGameOperations : uint8
 	ChopWall,
 	ExtinguishFire,
 	Carry,
-    OpenDoor
+    OpenDoor,
+	None
 };
 
 /**
@@ -27,6 +28,7 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 	
 public:
 	AFPPlayerController();
+	EGameOperations CurrentOperation = EGameOperations::None;
 
 protected:
 	// Called when the game starts or when spawned
