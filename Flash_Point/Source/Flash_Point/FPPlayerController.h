@@ -27,12 +27,17 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetOpenDoor();
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	EGameOperations GetCurrentOperation();
 	AFPPlayerController();
-	EGameOperations CurrentOperation = EGameOperations::None;
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	EGameOperations CurrentOperation = EGameOperations::None;
 	
 	
 };

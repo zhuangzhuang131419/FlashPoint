@@ -15,5 +15,15 @@ void AFPPlayerController::BeginPlay()
 
 }
 
+void AFPPlayerController::SetOpenDoor()
+{
+	CurrentOperation = EGameOperations::OpenDoor;
+}
+
+EGameOperations AFPPlayerController::GetCurrentOperation()
+{
+	return CurrentOperation;
+}
+
 
 
