@@ -20,6 +20,36 @@ void AFPPlayerController::SetOpenDoor()
 	CurrentOperation = EGameOperations::OpenDoor;
 }
 
+void AFPPlayerController::SetNone()
+{
+	CurrentOperation = EGameOperations::None;
+}
+
+void AFPPlayerController::SetPlaceFireFighter()
+{
+	CurrentOperation = EGameOperations::PlaceFireFighter;
+}
+
+void AFPPlayerController::SetMove()
+{
+	CurrentOperation = EGameOperations::Move;
+}
+
+void AFPPlayerController::SetExtinguishFire()
+{
+	CurrentOperation = EGameOperations::ExtinguishFire;
+}
+
+void AFPPlayerController::SetChopWall()
+{
+	CurrentOperation = EGameOperations::ChopWall;
+}
+
+void AFPPlayerController::SetCarry()
+{
+	CurrentOperation = EGameOperations::Carry;
+}
+
 EGameOperations AFPPlayerController::GetCurrentOperation()
 {
 	return CurrentOperation;

@@ -28,9 +28,29 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 	
 public:
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
-	void SetOpenDoor();
-	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	EGameOperations GetCurrentOperation();
+
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetOpenDoor();
+	
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetNone();
+
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetPlaceFireFighter();
+
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetMove();
+
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetChopWall();
+
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetExtinguishFire();
+
+	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	void SetCarry();
+
 	AFPPlayerController();
 
 
