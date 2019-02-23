@@ -46,7 +46,9 @@ protected:
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* backWall = nullptr;
 	UPROPERTY(EditAnyWhere, Category = "Setup")
-	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;
+	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;	// for regular edge class
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AEdgeUnit> DoorClass = nullptr;	// for door edge class
 
 	// FUNCTIONS
 	// Cursor over method implementation
