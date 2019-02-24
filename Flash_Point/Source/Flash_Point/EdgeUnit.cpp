@@ -13,6 +13,26 @@ AEdgeUnit::AEdgeUnit()
 	WallMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("WallMesh"));
 }
 
+void AEdgeUnit::BindFirstNeighbour(ATile * firstTile)
+{
+	if (ensure(firstNeighbour)) {
+		UE_LOG(LogTemp, Warning, TEXT("failed on binding existing first neighbour on wall: %s"), *GetName());
+	}
+	else {
+		firstNeighbour = firstTile;
+	}
+}
+
+void AEdgeUnit::BindSecondNeighbour(ATile * secondTile)
+{
+	if (ensure(secondNeighbour)) {
+		UE_LOG(LogTemp, Warning, TEXT("failed on binding existing second neighbour on wall: %s"), *GetName());
+	}
+	else {
+		secondNeighbour = secondTile;
+	}
+}
+
 // Called when the game starts or when spawned
 void AEdgeUnit::BeginPlay()
 {

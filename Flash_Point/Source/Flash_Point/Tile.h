@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "EdgeUnit.h"
+#include "GeneralTypes.h"
 #include "Engine/World.h"
 #include "Tile.generated.h"
 
@@ -19,8 +20,13 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 
-	// Here is a function that binds all cursor functions
-	void BindCursorFunc();
+	// This method will change the tile's type together with its supposed base color
+	void SetTileType(ETileType tileType);
+	// Below are binding functions for edge units
+	void BindFrontWall(AEdgeUnit* edge);
+	void BindBackWall(AEdgeUnit* edge);
+	void BindLeftWall(AEdgeUnit* edge);
+	void BindRightWall(AEdgeUnit* edge);
 
 protected:
 	// FIELDS
@@ -34,9 +40,15 @@ protected:
 	UStaticMeshComponent* ColorPlane = nullptr;
 
 	// Color mat components
-	// Default color of the plane goes here
+	// Plane color for hidden quadrant view
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
-	UMaterialInterface* baseMat = nullptr;
+	UMaterialInterface* hiddenMat = nullptr;
+	// Plane color for odd quadrant
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UMaterialInterface* oddMat = nullptr;
+	// Plane color for even quadrant
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UMaterialInterface* evenMat = nullptr;
 	// Here is the walkable color
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ableMat = nullptr;
@@ -68,7 +80,13 @@ protected:
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* backWall = nullptr;
 
+	// Other references and variables
+	UMaterialInterface* baseMat = nullptr;
+	ETileType type = ETileType::Default;
+
 	// FUNCTIONS
+	// Here is a function that binds all cursor functions
+	void BindCursorFunc();
 	// Cursor over method implementation
 	UFUNCTION()
 	void OnCursorOver(UPrimitiveComponent* Component);

@@ -8,6 +8,7 @@
 /**
  * 
  */
+// An enum for different operations
 UENUM(BlueprintType)
 enum class EGameOperations : uint8
 {
@@ -18,6 +19,15 @@ enum class EGameOperations : uint8
 	Carry,
 	OpenDoor,
 	None
+};
+
+// An enum for different tile types
+UENUM(BlueprintType)
+enum class ETileType : uint8
+{
+	Default,
+	FireEnginePark,
+	AmbulancePark
 };
 
 // A struct used to indicate map generation

@@ -16,6 +16,42 @@ ATile::ATile()
 
 }
 
+void ATile::SetTileType(ETileType tileType)
+{
+	if (tileType == ETileType::AmbulancePark) {
+		type = tileType;
+		baseMat = ambulanceParkMat;
+		PlaneColorSwitch(baseMat);
+	}
+	else if (tileType == ETileType::FireEnginePark) {
+		type = tileType;
+		baseMat = engineParkMat;
+		PlaneColorSwitch(baseMat);
+	}
+}
+
+void ATile::BindFrontWall(AEdgeUnit * edge)
+{
+	frontWall = edge;
+	frontWall->BindSecondNeighbour(this);
+}
+
+void ATile::BindBackWall(AEdgeUnit * edge)
+{
+	backWall = edge;
+	backWall->BindFirstNeighbour(this);
+}
+
+void ATile::BindLeftWall(AEdgeUnit * edge)
+{
+	leftWall = edge;
+}
+
+void ATile::BindRightWall(AEdgeUnit * edge)
+{
+	rightWall = edge;
+}
+
 // Here is the function to bind all input bindings
 void ATile::BindCursorFunc()
 {
@@ -66,6 +102,10 @@ void ATile::BeginPlay()
 	
 	BindCursorFunc();
 
+	// Assign temporary basic mat
+	baseMat = hiddenMat;
+
+	// Initialize edge units
 	GetWorld()->SpawnActor<AEdgeUnit>(
 		EdgeClass,
 		TileMesh->GetSocketLocation(FName("WallLeft")),
