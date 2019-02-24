@@ -22,11 +22,16 @@ public:
 
 	// This method will change the tile's type together with its supposed base color
 	void SetTileType(ETileType tileType);
+	// This method will set the quarant and therefore default color of the tile
+	void SetQuadrant(int32 quad);
+	// Methods for creating and returning edge units with respect to current tile, 0 for default, 1 for wall, 2 for door
+	AEdgeUnit* BuildEdgeRight(int32 type);
+	AEdgeUnit* BuildEdgeFront(int32 type);
 	// Below are binding functions for edge units
-	void BindFrontWall(AEdgeUnit* edge);
-	void BindBackWall(AEdgeUnit* edge);
-	void BindLeftWall(AEdgeUnit* edge);
-	void BindRightWall(AEdgeUnit* edge);
+	void BindFrontEdge(AEdgeUnit* edge);
+	void BindBackEdge(AEdgeUnit* edge);
+	void BindLeftEdge(AEdgeUnit* edge);
+	void BindRightEdge(AEdgeUnit* edge);
 
 protected:
 	// FIELDS
@@ -81,8 +86,9 @@ protected:
 	AEdgeUnit* backWall = nullptr;
 
 	// Other references and variables
-	UMaterialInterface* baseMat = nullptr;
-	ETileType type = ETileType::Default;
+	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
+	ETileType type = ETileType::Default;	// the default type of the tile
+	int32 quadrant = 0;	// default quarant of the tile
 
 	// FUNCTIONS
 	// Here is a function that binds all cursor functions

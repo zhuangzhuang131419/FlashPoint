@@ -30,26 +30,140 @@ void ATile::SetTileType(ETileType tileType)
 	}
 }
 
-void ATile::BindFrontWall(AEdgeUnit * edge)
+void ATile::SetQuadrant(int32 quad)
 {
+	// set quadrant and color of the tile
+	quadrant = quad;
+	if (quadrant % 2) {
+		baseMat = oddMat;
+		PlaneColorSwitch(baseMat);
+	}
+	else {
+		baseMat = evenMat;
+		PlaneColorSwitch(baseMat);
+	}
+}
+
+AEdgeUnit * ATile::BuildEdgeRight(int32 type)
+{
+	// return null if proper classes are not available
+	if (!ensure(EdgeClass) || !ensure(WallClass) || !ensure(DoorClass)) {
+		return nullptr;
+	}
+
+	// Initialize specified edge units on the right side of the tile
+	if (type == 0) {
+		// build an empty edge
+		return GetWorld()->SpawnActor<AEdgeUnit>(
+			EdgeClass,
+			TileMesh->GetSocketLocation(FName("WallRight")),
+			TileMesh->GetSocketRotation(FName("WallRight"))
+			);
+	}
+	else if (type == 1) {
+		// build a wall edge
+		return GetWorld()->SpawnActor<AEdgeUnit>(
+			WallClass,
+			TileMesh->GetSocketLocation(FName("WallRight")),
+			TileMesh->GetSocketRotation(FName("WallRight"))
+			);
+	}
+	else if (type == 2) {
+		// build a door edge
+		return GetWorld()->SpawnActor<AEdgeUnit>(
+			DoorClass,
+			TileMesh->GetSocketLocation(FName("WallRight")),
+			TileMesh->GetSocketRotation(FName("WallRight"))
+			);
+	}
+	else {
+		return nullptr;
+	}
+}
+
+AEdgeUnit * ATile::BuildEdgeFront(int32 type)
+{
+	// return null if proper classes are not available
+	if (!ensure(EdgeClass) || !ensure(WallClass) || !ensure(DoorClass)) {
+		return nullptr;
+	}
+
+	// Initialize specified edge units on the front side of the tile
+	if (type == 0) {
+		// build an empty edge
+		return GetWorld()->SpawnActor<AEdgeUnit>(
+			EdgeClass,
+			TileMesh->GetSocketLocation(FName("WallFront")),
+			TileMesh->GetSocketRotation(FName("WallFront"))
+			);
+	}
+	else if (type == 1) {
+		// build a wall edge
+		return GetWorld()->SpawnActor<AEdgeUnit>(
+			WallClass,
+			TileMesh->GetSocketLocation(FName("WallFront")),
+			TileMesh->GetSocketRotation(FName("WallFront"))
+			);
+	}
+	else if (type == 2) {
+		// build a door edge
+		return GetWorld()->SpawnActor<AEdgeUnit>(
+			DoorClass,
+			TileMesh->GetSocketLocation(FName("WallFront")),
+			TileMesh->GetSocketRotation(FName("WallFront"))
+			);
+	}
+	else {
+		return nullptr;
+	}
+}
+
+void ATile::BindFrontEdge(AEdgeUnit * edge)
+{
+	// if a front wall already exist, delete it
+	if (ensure(frontWall)) {
+		frontWall->Destroy();
+	}
 	frontWall = edge;
-	frontWall->BindSecondNeighbour(this);
+	if (ensure(frontWall)) {
+		frontWall->BindSecondNeighbour(this);
+	}
 }
 
-void ATile::BindBackWall(AEdgeUnit * edge)
+void ATile::BindBackEdge(AEdgeUnit * edge)
 {
+	// if a back wall already exist, delete it
+	if (ensure(backWall)) {
+		backWall->Destroy();
+	}
 	backWall = edge;
-	backWall->BindFirstNeighbour(this);
+	if (ensure(backWall)) {
+		backWall->BindFirstNeighbour(this);
+	}
 }
 
-void ATile::BindLeftWall(AEdgeUnit * edge)
+void ATile::BindLeftEdge(AEdgeUnit * edge)
 {
+	// if a left wall already exist, delete it
+	if (ensure(leftWall)) {
+		leftWall->Destroy();
+	}
 	leftWall = edge;
+	if (ensure(leftWall)) {
+		leftWall->BindSecondNeighbour(this);
+	}
 }
 
-void ATile::BindRightWall(AEdgeUnit * edge)
+void ATile::BindRightEdge(AEdgeUnit * edge)
 {
+	// if a right wall already exist, delete it
+	if (ensure(rightWall)) {
+		rightWall->Destroy();
+	}
 	rightWall = edge;
+	if (ensure(rightWall)) {
+		rightWall->BindFirstNeighbour(this);
+	}
 }
 
 // Here is the function to bind all input bindings
@@ -104,13 +218,6 @@ void ATile::BeginPlay()
 
 	// Assign temporary basic mat
 	baseMat = hiddenMat;
-
-	// Initialize edge units
-	GetWorld()->SpawnActor<AEdgeUnit>(
-		EdgeClass,
-		TileMesh->GetSocketLocation(FName("WallLeft")),
-		TileMesh->GetSocketRotation(FName("WallLeft"))
-	);
 }
 
 // Called every frame

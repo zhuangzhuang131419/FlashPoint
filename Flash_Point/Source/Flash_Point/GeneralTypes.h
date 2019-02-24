@@ -45,15 +45,15 @@ struct FSpawnIndicator
 	// An integer array to specify the locations of fire engine parks in orde of front, back, left, right
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map info")
 	TArray<int32> ambulanceParkLoc;
-	// An int array to indicate to which tile's left has a wall on
+	// An int array to indicate to which tile's right has a wall on
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map info")
-	TArray<int32> wallLeft;
+	TArray<int32> wallRight;
 	// An int array to indicate to which tile's front has a wall on
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map info")
 	TArray<int32> wallFront;
-	// An int array to indicate to which door's left has a wall on
+	// An int array to indicate to which door's right has a wall on
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map info")
-	TArray<int32> doorLeft;
+	TArray<int32> doorRight;
 	// An int array to indicate to which door's front has a wall on
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map info")
 	TArray<int32> doorFront;
