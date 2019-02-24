@@ -22,6 +22,9 @@ protected:
 	// The tile class for spawning
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ATile> TileClass = nullptr;
+	// The road tile class for spawning
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<ATile> RoadClass = nullptr;
 	// The edge class for spawning
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;

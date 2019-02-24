@@ -22,7 +22,8 @@ protected:
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	ATile* tile_a = nullptr;
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
-	ATile* tile_b = nullptr; UPROPERTY(VisibleAnyWhere)
+	ATile* tile_b = nullptr; 
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* WallMesh = nullptr;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

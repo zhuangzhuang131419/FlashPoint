@@ -24,19 +24,41 @@ public:
 
 protected:
 	// FIELDS
+
+	// Static mesh components
 	// A Static mesh component to store the floor mesh
 	UPROPERTY(VisibleAnyWhere)
 	UStaticMeshComponent* TileMesh = nullptr;
 	// A static mesh to store the color plane
 	UPROPERTY(VisibleAnyWhere)
 	UStaticMeshComponent* ColorPlane = nullptr;
+
+	// Color mat components
 	// Default color of the plane goes here
-	UPROPERTY(EditAnyWhere, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;
 	// Here is the walkable color
-	UPROPERTY(BlueprintReadWrite, EditAnyWhere, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ableMat = nullptr;
-	// Here are the edges of the tile
+	// Here is the un-walkable color
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UMaterialInterface* unableMat = nullptr;
+	// Here is the fire engine parking lot color
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UMaterialInterface* engineParkMat = nullptr;
+	// Here is the ambulance parking lot color
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UMaterialInterface* ambulanceParkMat = nullptr;
+
+	// Edge class components
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;	// for regular edge class
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AEdgeUnit> WallClass = nullptr;	// for wall edge class
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AEdgeUnit> DoorClass = nullptr;	// for door edge class
+
+	// Neighbour edge refences
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* leftWall = nullptr;
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
@@ -45,10 +67,6 @@ protected:
 	AEdgeUnit* frontWall = nullptr;
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* backWall = nullptr;
-	UPROPERTY(EditAnyWhere, Category = "Setup")
-	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;	// for regular edge class
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AEdgeUnit> DoorClass = nullptr;	// for door edge class
 
 	// FUNCTIONS
 	// Cursor over method implementation
