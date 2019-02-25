@@ -30,6 +30,15 @@ enum class ETileType : uint8
 	AmbulancePark
 };
 
+// An enum for edge types
+UENUM(BlueprintType)
+enum class EEdgeType : uint8
+{
+	Empty,
+	Wall,
+	Door
+};
+
 // A struct used to indicate map generation
 USTRUCT(BlueprintType)
 struct FSpawnIndicator

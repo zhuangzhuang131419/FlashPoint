@@ -11,11 +11,8 @@ AGameBoard::AGameBoard()
 
 }
 
-// Called when the game starts or when spawned
-void AGameBoard::BeginPlay()
+void AGameBoard::InitializeDefaultBoard()
 {
-	Super::BeginPlay();
-	
 	// Initialize the TArray
 	if (ensure(TileClass && RoadClass)) {
 		ATile* tempTile = nullptr;
@@ -115,6 +112,226 @@ void AGameBoard::BeginPlay()
 			}
 		}
 	}
+}
+
+void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
+{
+	ATile* tempTile = nullptr;
+	ATile* tempNeighbour = nullptr;
+	AEdgeUnit* tempEdge = nullptr;
+	// first generate all specified doors on boundaries
+	for (int32 i = 0; i < indicator.doorLoc.Num(); i++) {
+		// in case for multiple doors on a single side use mod to separate each case
+		if (i % 4 == 0 && indicator.doorLoc[i] > -1) {
+			// here is a door on the frontest boundary
+			tempTile = boardTiles[indicator.doorLoc[i]];
+			if (ensure(tempTile)) {
+				// generate the door
+				tempEdge = tempTile->BuildEdgeFront(2);
+				if (ensure(tempEdge)) {
+					// open the door since it is on boundaries
+					tempEdge->OnOpenDoor();
+					// bind the door
+					tempTile->BindFrontEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.doorLoc[i] + 1];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindBackEdge(tempEdge);
+					}
+				}
+			}
+		}
+		if (i % 4 == 1 && indicator.doorLoc[i] > -1) {
+			// here is a door on the backest boundary
+			tempTile = boardTiles[indicator.doorLoc[i]];
+			if (ensure(tempTile)) {
+				// generate the door and open it
+				tempEdge = tempTile->BuildEdgeFront(2);
+				if (ensure(tempEdge)) {
+					// open the door since it is on boundaries
+					tempEdge->OnOpenDoor();
+					// bind the door
+					tempTile->BindFrontEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.doorLoc[i] + 1];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindBackEdge(tempEdge);
+					}
+				}
+			}
+		}
+		if (i % 4 == 2 && indicator.doorLoc[i] > -1) {
+			// here is a door on the leftest boundary
+			tempTile = boardTiles[indicator.doorLoc[i]];
+			if (ensure(tempTile)) {
+				// generate the door
+				tempEdge = tempTile->BuildEdgeRight(2);
+				if (ensure(tempEdge)) {
+					// open the door since it is on boundaries
+					tempEdge->OnOpenDoor();
+					// bind the door
+					tempTile->BindRightEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.doorLoc[i] + boardLength];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindLeftEdge(tempEdge);
+					}
+				}
+			}
+		}
+		if (i % 4 == 3 && indicator.doorLoc[i] > -1) {
+			// here is a door on the rightest boundary
+			tempTile = boardTiles[indicator.doorLoc[i]];
+			if (ensure(tempTile)) {
+				// generate the door
+				tempEdge = tempTile->BuildEdgeRight(2);
+				if (ensure(tempEdge)) {
+					// open the door since it is on boundaries
+					tempEdge->OnOpenDoor();
+					// bind the door
+					tempTile->BindRightEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.doorLoc[i] + boardLength];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindLeftEdge(tempEdge);
+					}
+				}
+			}
+		}
+	}
+
+	// Now set up specific tiles for fire engine park or ambulance park
+	tempTile = nullptr;
+	for (int32 i = 0; i < indicator.engineParkLoc.Num(); i++) {
+		if (indicator.engineParkLoc[i] > -1) {
+			// set up for the first tile on the specified location
+			tempTile = boardTiles[indicator.engineParkLoc[i]];
+			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::FireEnginePark);
+			}
+			// set up for the second tile on the specified location
+			if (i % 4 == 0 || i % 4 == 1) {
+				tempTile = boardTiles[indicator.engineParkLoc[i] + boardLength];
+			}
+			else {
+				tempTile = boardTiles[indicator.engineParkLoc[i] + 1];
+			}
+			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::FireEnginePark);
+			}
+		}
+	}
+	tempTile = nullptr;
+	for (int32 i = 0; i < indicator.ambulanceParkLoc.Num(); i++) {
+		if (indicator.ambulanceParkLoc[i] > -1) {
+			tempTile = boardTiles[indicator.ambulanceParkLoc[i]];
+			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::AmbulancePark);
+			}
+			// set up for the second tile on the specified location
+			if (i % 4 == 0 || i % 4 == 1) {
+				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + boardLength];
+			}
+			else {
+				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
+			}
+			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::AmbulancePark);
+			}
+		}
+	}
+
+	// Now setup walls on indicated location's right side
+	tempTile = nullptr;
+	tempNeighbour = nullptr;
+	tempEdge = nullptr;
+	for (int32 i = 0; i < indicator.wallRight.Num(); i++) {
+		if (indicator.wallRight[i] > -1) {
+			tempTile = boardTiles[indicator.wallRight[i]];
+			if (ensure(tempTile)) {
+				// build the wall
+				tempEdge = tempTile->BuildEdgeRight(1);
+				if (ensure(tempEdge)) {
+					// bind the wall
+					tempTile->BindRightEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.wallRight[i] + boardLength];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindLeftEdge(tempEdge);
+					}
+				}
+			}
+		}
+	}
+
+	// Now setup walls on indicated location's front side
+	tempTile = nullptr;
+	tempNeighbour = nullptr;
+	tempEdge = nullptr;
+	for (int32 i = 0; i < indicator.wallFront.Num(); i++) {
+		if (indicator.wallFront[i] > -1) {
+			tempTile = boardTiles[indicator.wallFront[i]];
+			if (ensure(tempTile)) {
+				// build the wall
+				tempEdge = tempTile->BuildEdgeFront(1);
+				if (ensure(tempEdge)) {
+					// bind the wall
+					tempTile->BindFrontEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.wallFront[i] + 1];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindBackEdge(tempEdge);
+					}
+				}
+			}
+		}
+	}
+
+	// Now setup doors on indicated location's right side
+	tempTile = nullptr;
+	tempNeighbour = nullptr;
+	tempEdge = nullptr;
+	for (int32 i = 0; i < indicator.doorRight.Num(); i++) {
+		if (indicator.doorRight[i] > -1) {
+			tempTile = boardTiles[indicator.doorRight[i]];
+			if (ensure(tempTile)) {
+				// build the wall
+				tempEdge = tempTile->BuildEdgeRight(2);
+				if (ensure(tempEdge)) {
+					// bind the wall
+					tempTile->BindRightEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.doorRight[i] + boardLength];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindLeftEdge(tempEdge);
+					}
+				}
+			}
+		}
+	}
+
+	// Now setup doors on indicated location's front side
+	tempTile = nullptr;
+	tempNeighbour = nullptr;
+	tempEdge = nullptr;
+	for (int32 i = 0; i < indicator.doorFront.Num(); i++) {
+		if (indicator.doorFront[i] > -1) {
+			tempTile = boardTiles[indicator.doorFront[i]];
+			if (ensure(tempTile)) {
+				// build the wall
+				tempEdge = tempTile->BuildEdgeFront(2);
+				if (ensure(tempEdge)) {
+					// bind the wall
+					tempTile->BindFrontEdge(tempEdge);
+					tempNeighbour = boardTiles[indicator.doorFront[i] + 1];
+					if (ensure(tempNeighbour)) {
+						tempNeighbour->BindBackEdge(tempEdge);
+					}
+				}
+			}
+		}
+	}
+}
+
+// Called when the game starts or when spawned
+void AGameBoard::BeginPlay()
+{
+	InitializeDefaultBoard();
+
+	Super::BeginPlay();
 }
 
 // Called every frame

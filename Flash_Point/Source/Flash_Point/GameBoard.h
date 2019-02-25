@@ -20,17 +20,20 @@ public:
 protected:
 	// FIELDS
 	// The tile class for spawning
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ATile> TileClass = nullptr;
 	// The road tile class for spawning
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ATile> RoadClass = nullptr;
-	// The edge class for spawning
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AEdgeUnit> EdgeClass = nullptr;
+	// the entire board are stored here
 	TArray<ATile*> boardTiles;
 
 	// FUNCTIONS
+	// This method will initilize the default board
+	void InitializeDefaultBoard();
+	// For blueprint to call on in order to generate a map as specified with indicator
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void GenerateSpecified(FSpawnIndicator indicator);
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
