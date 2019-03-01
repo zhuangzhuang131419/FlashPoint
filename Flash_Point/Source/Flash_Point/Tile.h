@@ -7,9 +7,13 @@
 #include "Components/StaticMeshComponent.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "EdgeUnit.h"
+#include "FireFighterPawn.h"
+#include "Particles/ParticleSystemComponent.h"
 #include "GeneralTypes.h"
 #include "Engine/World.h"
 #include "Tile.generated.h"
+
+class AGameBoard;
 
 UCLASS()
 class FLASH_POINT_API ATile : public AActor
@@ -85,9 +89,22 @@ protected:
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* backWall = nullptr;
 
+	// particle systems for fire status
+	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
+	UParticleSystemComponent* FireEffect;
+	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
+	UParticleSystemComponent* SmokeEffect;
+	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
+	UParticleSystemComponent* BlastEffect;
+
+	// located items and firefighters
+	UPROPERTY(EditAnyWhere, Category = "Tile Units")
+	TArray<AFireFighterPawn*> placedFireFighters;
+
 	// Other references and variables
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
+	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	int32 quadrant = 0;	// default quarant of the tile
 
 	// FUNCTIONS

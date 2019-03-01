@@ -8,6 +8,7 @@
 #include "EdgeUnit.generated.h"
 
 class ATile;
+class AGameBoard;
 
 UCLASS()
 class FLASH_POINT_API AEdgeUnit : public AActor
@@ -21,6 +22,8 @@ public:
 	// Methods to bind neighbour walls
 	void BindFirstNeighbour(ATile* firstTile);
 	void BindSecondNeighbour(ATile* secondTile);
+	// Method to bind the edge to current board for damage counting
+	void BindBoard(AGameBoard* board);
 	// A blueprint event to open the door
 	UFUNCTION(BlueprintImplementableEvent, Category = "Edge Utilities")
 	void OnOpenDoor();
@@ -40,6 +43,8 @@ protected:
 	ATile* tile_a = nullptr;
 	UPROPERTY(EditAnyWhere, Category = "Map Associations")
 	ATile* tile_b = nullptr; 
+	UPROPERTY(BlueprintReadOnly, Category = "Map Associations")
+	AGameBoard* gameBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* WallMesh = nullptr;
 

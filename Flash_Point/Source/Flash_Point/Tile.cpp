@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Tile.h"
+#include "GameBoard.h"
 
 
 // Sets default values
@@ -13,6 +14,17 @@ ATile::ATile()
 	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Tile Mesh"));
 	ColorPlane = CreateDefaultSubobject<UStaticMeshComponent>(FName("Color Plane"));
 	ColorPlane->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("Plane"));
+
+	// Initialize all fire status effects
+	FireEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Fire Effect"));
+	FireEffect->bAutoActivate = false;
+	FireEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
+	SmokeEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Smoke Effect"));
+	SmokeEffect->bAutoActivate = false;
+	SmokeEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
+	BlastEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Blast Effect"));
+	BlastEffect->bAutoActivate = false;
+	BlastEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
 
 }
 

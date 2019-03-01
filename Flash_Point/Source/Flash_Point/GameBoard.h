@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "Tile.h"
+#include "FPPlayerController.h"
+#include "FireFighterPawn.h"
 #include "GameBoard.generated.h"
 
 UCLASS()
@@ -16,6 +18,16 @@ class FLASH_POINT_API AGameBoard : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AGameBoard();
+	// getter and setter for current player controller in order to take turn
+	UFUNCTION(BlueprintCallable, Category = "Take turn")
+	AFPPlayerController* GetCurrentPlayer();
+	UFUNCTION(BlueprintCallable, Category = "Take turn")
+	void SetCurrentPlayer(AFPPlayerController* current);
+	// getter and settter for current game board health
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	int32 GetCurrentGameHealth();
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	void SetCurrentGameHealth(int32 currentHealth);
 
 protected:
 	// FIELDS
@@ -25,8 +37,15 @@ protected:
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ATile> RoadClass = nullptr;
+	// The road tile class for spawning
+	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	AFPPlayerController* currentPlayer = nullptr;
 	// the entire board are stored here
 	TArray<ATile*> boardTiles;
+	// The firefighters placed on the board
+	TArray<AFireFighterPawn*> fireFighters;
+	// The current gameboard health
+	int32 health = MAX_HEALTH;
 
 	// FUNCTIONS
 	// This method will initilize the default board
@@ -44,6 +63,8 @@ private:
 	const int32 TILE_SIZE = 400;
 
 public:	
+	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
+	const int32 MAX_HEALTH = 24;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

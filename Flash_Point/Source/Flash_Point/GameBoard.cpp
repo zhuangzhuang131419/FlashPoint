@@ -8,7 +8,26 @@ AGameBoard::AGameBoard()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+}
 
+AFPPlayerController * AGameBoard::GetCurrentPlayer()
+{
+	return currentPlayer;
+}
+
+void AGameBoard::SetCurrentPlayer(AFPPlayerController * current)
+{
+	currentPlayer = current;
+}
+
+int32 AGameBoard::GetCurrentGameHealth()
+{
+	return health;
+}
+
+void AGameBoard::SetCurrentGameHealth(int32 currentHealth)
+{
+	health = currentHealth;
 }
 
 void AGameBoard::InitializeDefaultBoard()
@@ -74,6 +93,7 @@ void AGameBoard::InitializeDefaultBoard()
 					}
 					// connecting the edge with both of the neighbours
 					if (ensure(tempEdge)) {
+						tempEdge->BindBoard(this);
 						tempTile->BindFrontEdge(tempEdge);
 						tempNeighbour = boardTiles[i * boardLength + j + 1];
 						if (ensure(tempNeighbour)) {
@@ -102,6 +122,7 @@ void AGameBoard::InitializeDefaultBoard()
 					}
 					// connecting the edge with both of the neighbours
 					if (ensure(tempEdge)) {
+						tempEdge->BindBoard(this);
 						tempTile->BindRightEdge(tempEdge);
 						tempNeighbour = boardTiles[(i + 1) * boardLength + j];
 						if (ensure(tempNeighbour)) {
@@ -129,6 +150,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// generate the door
 				tempEdge = tempTile->BuildEdgeFront(2);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// open the door since it is on boundaries
 					tempEdge->OnOpenDoor();
 					// bind the door
@@ -147,6 +169,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// generate the door and open it
 				tempEdge = tempTile->BuildEdgeFront(2);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// open the door since it is on boundaries
 					tempEdge->OnOpenDoor();
 					// bind the door
@@ -165,6 +188,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// generate the door
 				tempEdge = tempTile->BuildEdgeRight(2);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// open the door since it is on boundaries
 					tempEdge->OnOpenDoor();
 					// bind the door
@@ -183,6 +207,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// generate the door
 				tempEdge = tempTile->BuildEdgeRight(2);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// open the door since it is on boundaries
 					tempEdge->OnOpenDoor();
 					// bind the door
@@ -248,6 +273,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// build the wall
 				tempEdge = tempTile->BuildEdgeRight(1);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// bind the wall
 					tempTile->BindRightEdge(tempEdge);
 					tempNeighbour = boardTiles[indicator.wallRight[i] + boardLength];
@@ -270,6 +296,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// build the wall
 				tempEdge = tempTile->BuildEdgeFront(1);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// bind the wall
 					tempTile->BindFrontEdge(tempEdge);
 					tempNeighbour = boardTiles[indicator.wallFront[i] + 1];
@@ -292,6 +319,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// build the wall
 				tempEdge = tempTile->BuildEdgeRight(2);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// bind the wall
 					tempTile->BindRightEdge(tempEdge);
 					tempNeighbour = boardTiles[indicator.doorRight[i] + boardLength];
@@ -314,6 +342,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				// build the wall
 				tempEdge = tempTile->BuildEdgeFront(2);
 				if (ensure(tempEdge)) {
+					tempEdge->BindBoard(this);
 					// bind the wall
 					tempTile->BindFrontEdge(tempEdge);
 					tempNeighbour = boardTiles[indicator.doorFront[i] + 1];
@@ -330,6 +359,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 void AGameBoard::BeginPlay()
 {
 	InitializeDefaultBoard();
+
+	health = MAX_HEALTH;
 
 	Super::BeginPlay();
 }

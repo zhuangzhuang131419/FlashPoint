@@ -13,6 +13,7 @@ UENUM(BlueprintType)
 enum class EGameOperations : uint8
 {
 	PlaceFireFighter,
+	RespawnFireFighter,
 	Move,
 	ChopWall,
 	ExtinguishFire,
@@ -37,6 +38,15 @@ enum class EEdgeType : uint8
 	Empty,
 	Wall,
 	Door
+};
+
+// An enum for tile status
+UENUM(BlueprintType)
+enum class EFireStatus : uint8
+{
+	Clear,
+	Smoke,
+	Fire
 };
 
 // A struct used to indicate map generation

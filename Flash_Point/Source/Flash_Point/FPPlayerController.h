@@ -25,6 +25,8 @@ public:
 	void SetNone();
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetPlaceFireFighter();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetRespawnFireFighter();
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetMove();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
