@@ -8,6 +8,7 @@
 #include "Materials/MaterialInstanceDynamic.h"
 #include "EdgeUnit.h"
 #include "FireFighterPawn.h"
+#include "FPPlayerController.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GeneralTypes.h"
 #include "Engine/World.h"
@@ -28,6 +29,8 @@ public:
 	void SetTileType(ETileType tileType);
 	// This method will set the quarant and therefore default color of the tile
 	void SetQuadrant(int32 quad);
+	// A method to set the location of the tile
+	void SetLocation(int32 x, int32 y);
 	// Methods for creating and returning edge units with respect to current tile, 0 for default, 1 for wall, 2 for door
 	AEdgeUnit* BuildEdgeRight(int32 type);
 	AEdgeUnit* BuildEdgeFront(int32 type);
@@ -36,6 +39,15 @@ public:
 	void BindBackEdge(AEdgeUnit* edge);
 	void BindLeftEdge(AEdgeUnit* edge);
 	void BindRightEdge(AEdgeUnit* edge);
+	// check if the tile is a outside tile
+	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
+	bool IsOutside();
+	// Getter and setter for fire status
+	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
+	EFireStatus GetFireStatus();
+	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
+	void SetFireStatus(EFireStatus status);
+
 
 protected:
 	// FIELDS
@@ -49,7 +61,7 @@ protected:
 	UStaticMeshComponent* ColorPlane = nullptr;
 
 	// Color mat components
-	// Plane color for hidden quadrant view
+	// Plane color for hidden quadrant view and attribute indicating is outside
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* hiddenMat = nullptr;
 	// Plane color for odd quadrant
@@ -70,6 +82,8 @@ protected:
 	// Here is the ambulance parking lot color
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ambulanceParkMat = nullptr;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	bool outside = false;	// for door edge class
 
 	// Edge class components
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
@@ -98,7 +112,7 @@ protected:
 	UParticleSystemComponent* BlastEffect;
 
 	// located items and firefighters
-	UPROPERTY(EditAnyWhere, Category = "Tile Units")
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Units")
 	TArray<AFireFighterPawn*> placedFireFighters;
 
 	// Other references and variables
@@ -106,6 +120,8 @@ protected:
 	ETileType type = ETileType::Default;	// the default type of the tile
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	int32 quadrant = 0;	// default quarant of the tile
+	int32 xLoc, yLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
+	AFPPlayerController* localPlayer = nullptr;
 
 	// FUNCTIONS
 	// Here is a function that binds all cursor functions

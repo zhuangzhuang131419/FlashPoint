@@ -56,6 +56,12 @@ void ATile::SetQuadrant(int32 quad)
 	}
 }
 
+void ATile::SetLocation(int32 x, int32 y)
+{
+	xLoc = x;
+	yLoc = y;
+}
+
 AEdgeUnit * ATile::BuildEdgeRight(int32 type)
 {
 	// return null if proper classes are not available
@@ -178,6 +184,21 @@ void ATile::BindRightEdge(AEdgeUnit * edge)
 	}
 }
 
+bool ATile::IsOutside()
+{
+	return outside;
+}
+
+EFireStatus ATile::GetFireStatus()
+{
+	return fireStatus;
+}
+
+void ATile::SetFireStatus(EFireStatus status)
+{
+	fireStatus = status;
+}
+
 // Here is the function to bind all input bindings
 void ATile::BindCursorFunc()
 {
@@ -199,13 +220,69 @@ void ATile::BindCursorFunc()
 
 void ATile::OnCursorOver(UPrimitiveComponent * Component)
 {
-	PlaneColorSwitch(ableMat);
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
+	if (ensure(localPlayer)) {
+		EGameOperations ops = localPlayer->GetCurrentOperation();
+		switch (ops)
+		{
+		case EGameOperations::PlaceFireFighter:
+			if (outside) {
+				PlaneColorSwitch(ableMat);
+			}
+			else {
+				PlaneColorSwitch(unableMat);
+			}
+			break;
+		case EGameOperations::RespawnFireFighter:
+			break;
+		case EGameOperations::Move:
+			break;
+		case EGameOperations::ChopWall:
+			break;
+		case EGameOperations::ExtinguishFire:
+			break;
+		case EGameOperations::Carry:
+			break;
+		case EGameOperations::OpenDoor:
+			break;
+		case EGameOperations::None:
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Clicked"));
+	if (ensure(localPlayer)) {
+		EGameOperations ops = localPlayer->GetCurrentOperation();
+		switch (ops)
+		{
+		case EGameOperations::PlaceFireFighter:
+			if (outside) {
+				// Place firefighter to current tile
+				localPlayer->GetPawn()->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+				localPlayer->SetNone();
+			}
+			break;
+		case EGameOperations::RespawnFireFighter:
+			break;
+		case EGameOperations::Move:
+			break;
+		case EGameOperations::ChopWall:
+			break;
+		case EGameOperations::ExtinguishFire:
+			break;
+		case EGameOperations::Carry:
+			break;
+		case EGameOperations::OpenDoor:
+			break;
+		case EGameOperations::None:
+			break;
+		default:
+			break;
+		}
+	}
 }
 
 void ATile::OnCursorLeft(UPrimitiveComponent * Component)
@@ -230,6 +307,9 @@ void ATile::BeginPlay()
 
 	// Assign temporary basic mat
 	baseMat = hiddenMat;
+
+	// Find the local player
+	localPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 }
 
 // Called every frame

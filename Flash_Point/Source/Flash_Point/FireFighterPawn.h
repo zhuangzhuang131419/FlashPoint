@@ -15,6 +15,10 @@ public:
 	// Sets default values for this pawn's properties
 	AFireFighterPawn();
 
+	// A blueprint event to relocate the camera
+	UFUNCTION(BlueprintImplementableEvent, Category = "Camera Management")
+	void RelocateCamera(FVector location);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

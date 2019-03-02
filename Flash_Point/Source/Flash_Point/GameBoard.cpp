@@ -55,6 +55,8 @@ void AGameBoard::InitializeDefaultBoard()
 						);
 				}
 				if (ensure(tempTile)) {
+					// initialize the tile's location
+					tempTile->SetLocation(i, j);
 					// Separate the board into 4 quadrants
 					if (i < boardWidth / 2 && j < boardLength / 2) {
 						tempTile->SetQuadrant(0);
@@ -358,10 +360,26 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 // Called when the game starts or when spawned
 void AGameBoard::BeginPlay()
 {
+	// Initialize starting game map
 	InitializeDefaultBoard();
 
+	// Initialize game board health
 	health = MAX_HEALTH;
 
+	// Initialize all players in the game
+	AFPPlayerController* tempPlayer = nullptr;
+	for (FConstPlayerControllerIterator iterator = GetWorld()->GetPlayerControllerIterator(); iterator; ++iterator) {
+		// Get each player controller
+		tempPlayer = Cast<AFPPlayerController>(iterator->Get());
+		if (ensure(tempPlayer)) {
+			players.Add(tempPlayer);
+			// Set the player's action mode to place initial fire fighter
+			tempPlayer->SetPlaceFireFighter();
+
+			// Detach and relocate the player controller's camera
+			Cast<AFireFighterPawn>(tempPlayer->GetPawn())->RelocateCamera(GetActorLocation() + FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
+		}
+	}
 	Super::BeginPlay();
 }
 

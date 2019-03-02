@@ -29,6 +29,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SetCurrentGameHealth(int32 currentHealth);
 
+	// Max health of the board to be specified at begining
+	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
+	int32 MAX_HEALTH = 24;
+
 protected:
 	// FIELDS
 	// The tile class for spawning
@@ -40,10 +44,15 @@ protected:
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* currentPlayer = nullptr;
+	// A resonable height for camera to be above the board
+	UPROPERTY(EditAnyWhere, Category = "Setup")
+	int32 camHeight = 800;
 	// the entire board are stored here
 	TArray<ATile*> boardTiles;
 	// The firefighters placed on the board
 	TArray<AFireFighterPawn*> fireFighters;
+	// All players in current map
+	TArray<AFPPlayerController*> players;
 	// The current gameboard health
 	int32 health = MAX_HEALTH;
 
@@ -63,8 +72,6 @@ private:
 	const int32 TILE_SIZE = 400;
 
 public:	
-	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
-	const int32 MAX_HEALTH = 24;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
