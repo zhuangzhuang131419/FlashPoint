@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "FireFighterPawn.generated.h"
 
+class ATile;
+
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
 {
@@ -18,8 +20,24 @@ public:
 	// A blueprint event to relocate the camera
 	UFUNCTION(BlueprintImplementableEvent, Category = "Camera Management")
 	void RelocateCamera(FVector location);
+	// Getter and setter for the firefighter's current location
+	ATile* GetPlacedOn();
+	void SetPlacedOn(ATile* tile);
+	// Getter and setter for current firefighter ap
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetCurrentAP();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetCurrentAP(int32 current);
 
 protected:
+	// current firefighter position
+	ATile* placedOn = nullptr;
+	// The firefighter's current ap value and max ap value
+	UPROPERTY(BlueprintReadWrite, Category = "Firefighter Attributes")
+	int32 currentAP = 4;	// initial AP for all firefighters are 4
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
+	int32 maxAP = 8;	// Firefighter max ap
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

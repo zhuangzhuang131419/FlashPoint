@@ -62,6 +62,18 @@ void ATile::SetLocation(int32 x, int32 y)
 	yLoc = y;
 }
 
+bool ATile::GetLocation(int32 & x, int32 & y)
+{
+	x = xLoc;
+	y = yLoc;
+	if (x >= 0 && y >= 0) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 AEdgeUnit * ATile::BuildEdgeRight(int32 type)
 {
 	// return null if proper classes are not available
@@ -220,6 +232,7 @@ void ATile::BindCursorFunc()
 
 void ATile::OnCursorOver(UPrimitiveComponent * Component)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
 	if (ensure(localPlayer)) {
 		EGameOperations ops = localPlayer->GetCurrentOperation();
 		switch (ops)
@@ -235,6 +248,7 @@ void ATile::OnCursorOver(UPrimitiveComponent * Component)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
+			FindPathToCurrent();
 			break;
 		case EGameOperations::ChopWall:
 			break;
@@ -263,6 +277,12 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 				// Place firefighter to current tile
 				localPlayer->GetPawn()->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 				localPlayer->SetNone();
+				// Add the firefighter to the current position actors
+				if (ensure(localPawn)) {
+					// Associate the firefighter with this tile
+					placedFireFighters.Add(localPawn);
+					localPawn->SetPlacedOn(this);
+				}
 			}
 			break;
 		case EGameOperations::RespawnFireFighter:
@@ -289,6 +309,10 @@ void ATile::OnCursorLeft(UPrimitiveComponent * Component)
 {
 	PlaneColorSwitch(baseMat);
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
+	// Reset move related attributes
+	isReady = false;
+	canMoveTo = false;
+	prev = nullptr;
 }
 
 void ATile::PlaneColorSwitch(UMaterialInterface * mat)
@@ -296,6 +320,14 @@ void ATile::PlaneColorSwitch(UMaterialInterface * mat)
 	if (ensure(ColorPlane)) {
 		ColorPlane->SetMaterial(0, mat);
 	}
+}
+
+void ATile::FindPathToCurrent()
+{
+	// Do an a* search to find the shortest path to this target location
+	TArray<ATile*> traceTiles;
+	ATile* start = localPawn->GetPlacedOn();
+	ATile* goal = this;
 }
 
 // Called when the game starts or when spawned
@@ -308,8 +340,9 @@ void ATile::BeginPlay()
 	// Assign temporary basic mat
 	baseMat = hiddenMat;
 
-	// Find the local player
+	// Find the local player and local pawn
 	localPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
 }
 
 // Called every frame

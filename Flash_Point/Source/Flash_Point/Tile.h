@@ -29,8 +29,9 @@ public:
 	void SetTileType(ETileType tileType);
 	// This method will set the quarant and therefore default color of the tile
 	void SetQuadrant(int32 quad);
-	// A method to set the location of the tile
+	// Getter and setter of the location of the tile
 	void SetLocation(int32 x, int32 y);
+	bool GetLocation(int32& x, int32& y);
 	// Methods for creating and returning edge units with respect to current tile, 0 for default, 1 for wall, 2 for door
 	AEdgeUnit* BuildEdgeRight(int32 type);
 	AEdgeUnit* BuildEdgeFront(int32 type);
@@ -120,8 +121,14 @@ protected:
 	ETileType type = ETileType::Default;	// the default type of the tile
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	int32 quadrant = 0;	// default quarant of the tile
-	int32 xLoc, yLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
 	AFPPlayerController* localPlayer = nullptr;
+	AFireFighterPawn* localPawn = nullptr;
+	
+	// attributes to use for path finding
+	ATile* prev = nullptr;	// a pointer to follow for path finding
+	int32 xLoc, yLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
+	bool canMoveTo = false;
+	bool isReady = false;
 
 	// FUNCTIONS
 	// Here is a function that binds all cursor functions
@@ -137,6 +144,8 @@ protected:
 	void OnCursorLeft(UPrimitiveComponent* Component);
 	// A method to set material of the plane
 	void PlaneColorSwitch(UMaterialInterface* mat);
+	// A method to find path to current tile from player pawn's tile
+	void FindPathToCurrent();
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

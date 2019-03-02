@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GeneralTypes.generated.h"
 
+class ATile;
+
 /**
  * 
  */
@@ -76,6 +78,20 @@ struct FSpawnIndicator
 	// An int array to indicate to which door's front has a wall on
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Map info")
 	TArray<int32> doorFront;
+};
+
+// A struct to store nodes for a star searching on shortest path tile
+USTRUCT(BlueprintType)
+struct FSearchNode
+{
+	GENERATED_USTRUCT_BODY()
+		
+	// integer for cost
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search Node")
+	int32 nodeCost;
+	// tile for node tile
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search Node")
+	ATile* nodeTile;
 };
 
 class FLASH_POINT_API GeneralTypes

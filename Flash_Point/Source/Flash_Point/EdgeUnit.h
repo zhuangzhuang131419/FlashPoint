@@ -27,6 +27,10 @@ public:
 	// A blueprint event to open the door
 	UFUNCTION(BlueprintImplementableEvent, Category = "Edge Utilities")
 	void OnOpenDoor();
+	// Get other neighbour of the edge, used in move searching
+	ATile* GetOtherNeighbour(ATile* current);
+	// Check if the edge is blocked
+	bool IsBlocked();
 
 protected:
 	// FIELDS

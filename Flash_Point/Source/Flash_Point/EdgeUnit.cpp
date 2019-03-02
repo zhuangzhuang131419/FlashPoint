@@ -39,6 +39,24 @@ void AEdgeUnit::BindBoard(AGameBoard * board)
 	gameBoard = board;
 }
 
+ATile * AEdgeUnit::GetOtherNeighbour(ATile * current)
+{
+	if (current == firstNeighbour) {
+		return secondNeighbour;
+	}
+	else if(current == secondNeighbour) {
+		return firstNeighbour;
+	}
+	else {
+		return nullptr;
+	}
+}
+
+bool AEdgeUnit::IsBlocked()
+{
+	return isBlocked;
+}
+
 // Called when the game starts or when spawned
 void AEdgeUnit::BeginPlay()
 {
