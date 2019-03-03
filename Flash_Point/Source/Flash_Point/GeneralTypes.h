@@ -94,11 +94,29 @@ struct FSearchNode
 	int32 cost;
 	// tile for node tile
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search Node")
-	ATile* nodeTile;
+	ATile* nodeTile = nullptr;
 
 	// override the < operator to be used in heap naking
 	friend bool operator<(const FSearchNode& lhs, const FSearchNode& rhs) {
-		return (lhs.heuristic < rhs.heuristic);
+		if (lhs.heuristic < rhs.heuristic) {
+			return true;
+		}
+		else if (lhs.heuristic == rhs.heuristic && lhs.cost > rhs.cost) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+
+	// override the == operator to be used in heap naking
+	friend bool operator==(const FSearchNode& lhs, const FSearchNode& rhs) {
+		if (lhs.heuristic == rhs.heuristic && lhs.cost == rhs.cost && lhs.nodeTile == rhs.nodeTile) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 
 	FSearchNode() : heuristic(0), cost(0), nodeTile(nullptr) {}

@@ -241,6 +241,13 @@ void ATile::SetExpanded(bool exp)
 	expanded = exp;
 }
 
+void ATile::ResetTile()
+{
+	PlaneColorSwitch(baseMat);
+	prev = nullptr;
+	expanded = false;
+}
+
 bool ATile::IsOutside()
 {
 	return outside;
@@ -333,6 +340,15 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
+			if (isReady && canMoveTo) {
+				localPlayer->GetPawn()->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+				localPlayer->SetNone();
+				if (ensure(localPawn)) {
+					// Associate the firefighter with this tile
+					placedFireFighters.Add(localPawn);
+					localPawn->SetPlacedOn(this);
+				}
+			}
 			break;
 		case EGameOperations::ChopWall:
 			break;
@@ -353,12 +369,10 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 void ATile::OnCursorLeft(UPrimitiveComponent * Component)
 {
 	board->ClearAllTile();
-	PlaneColorSwitch(baseMat);
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
 	// Reset move related attributes
 	isReady = false;
 	canMoveTo = false;
-	prev = nullptr;
 }
 
 void ATile::PlaneColorSwitch(UMaterialInterface * mat)
@@ -378,7 +392,7 @@ void ATile::FindPathToCurrent()
 	int32 cost = GeneralTypes::AStarShotest(start, goal, traceTiles);
 	if (cost != 0) {
 		// here the goal is successfully found
-		if (cost < localPawn->GetCurrentAP()) {
+		if (cost <= localPawn->GetCurrentAP()) {
 			canMoveTo = true;
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(ableMat);

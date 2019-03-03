@@ -16,6 +16,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	// use a tarray as heap for finding the min node each time
 	bool success = false;
 	TArray<FSearchNode> searchNodes;
+	FSearchNode startNode(0, 0, start);
 	searchNodes.Add(FSearchNode(0, 0, start));
 	ATile* current = nullptr;
 	// check on each of the 4 neighbouring nodes
@@ -35,10 +36,8 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		towardsDirection.Add(current->GetLeft());
 		towardsDirection.Add(current->GetRight());
 		// check on all 4 nodes to see if they can be inserted to the search Nodes
-
 		for (AEdgeUnit* edge : towardsDirection) {
-			// do front node first
-			if (edge) {
+			if (edge && !edge->IsBlocked()) {
 				temp = edge->GetOtherNeighbour(current);
 				if (temp && !temp->IsExpanded()) {
 					// mark prev tile node
@@ -48,17 +47,11 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 					if (temp->GetFireStatus() == EFireStatus::Fire) {
 						cost++;
 					}
-					// if the wall is blocked, use very high cost to represent unlikely way
-					if (edge->IsBlocked()) {
-						cost += 200;
-					}
 					// insert a new node to the heap
 					searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 				}
 			}
 		}
-		
-		
 		UE_LOG(LogTemp, Warning, TEXT("After expansion"));
 		UE_LOG(LogTemp, Warning, TEXT("Heap size: %d"), searchNodes.Num());
 		// check if min of the heap is a goal state

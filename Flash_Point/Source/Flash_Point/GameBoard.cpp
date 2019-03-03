@@ -34,7 +34,7 @@ void AGameBoard::ClearAllTile()
 {
 	for (ATile* t : boardTiles) {
 		if (ensure(t)) {
-			t->SetExpanded(false);
+			t->ResetTile();
 		}
 	}
 }

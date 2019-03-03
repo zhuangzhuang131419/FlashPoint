@@ -53,6 +53,8 @@ public:
 	// Getter and setter for expanded
 	bool IsExpanded();
 	void SetExpanded(bool exp);
+	// reset the entire board for next operation
+	void ResetTile();
 	// check if the tile is a outside tile
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	bool IsOutside();
@@ -132,6 +134,7 @@ protected:
 	// Other references and variables
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	int32 quadrant = 0;	// default quarant of the tile
 	AFPPlayerController* localPlayer = nullptr;

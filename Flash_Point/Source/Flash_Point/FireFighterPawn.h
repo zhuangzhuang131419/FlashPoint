@@ -33,7 +33,7 @@ protected:
 	// current firefighter position
 	ATile* placedOn = nullptr;
 	// The firefighter's current ap value and max ap value
-	UPROPERTY(BlueprintReadWrite, Category = "Firefighter Attributes")
+	UPROPERTY(BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 currentAP = 4;	// initial AP for all firefighters are 4
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;	// Firefighter max ap
