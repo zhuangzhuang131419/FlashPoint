@@ -20,7 +20,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	searchNodes.Add(FSearchNode(0, 0, start));
 	ATile* current = nullptr;
 	// check on each of the 4 neighbouring nodes
-	AEdgeUnit *front, *back, *left, *right = nullptr;
+	TArray<AEdgeUnit*> towardsDirection;
 	ATile* temp = nullptr;
 	FSearchNode tempNode;
 	int32 cost = 0;
@@ -31,10 +31,10 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		current = tempNode.nodeTile;
 		current->SetExpanded(true);
 		// front neighbour
-		front = current->GetFront();
-		back = current->GetBack();
-		left = current->GetLeft();
-		right = current->GetRight();
+		towardsDirection.Add(current->GetFront());
+		towardsDirection.Add(current->GetBack());
+		towardsDirection.Add(current->GetLeft());
+		towardsDirection.Add(current->GetRight());
 		// check on all 4 nodes to see if they can be inserted to the search Nodes
 		// do front node first
 		if (front && !front->IsBlocked()) {
@@ -47,12 +47,6 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 				if (temp->GetFireStatus() == EFireStatus::Fire) {
 					cost++;
 				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (front->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 			}
 		}
 		// do back node
