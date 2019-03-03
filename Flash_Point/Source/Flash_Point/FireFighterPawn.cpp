@@ -42,13 +42,34 @@ void AFireFighterPawn::BeginPlay()
 void AFireFighterPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
 void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
 
+bool AFireFighterPawn::CarrayVictim(ACitizen * Citizen)
+{
+	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("Added"));
+	if (Victim == nullptr)
+	{
+		Victim = Citizen;
+		return true;
+	}
+
+	return false;
+}
+
+ACitizen * AFireFighterPawn::GetVictim()
+{
+	return Victim;
+}
+
+bool AFireFighterPawn::RemoveVictim()
+{
+	Victim = nullptr;
+	return true;
 }
 

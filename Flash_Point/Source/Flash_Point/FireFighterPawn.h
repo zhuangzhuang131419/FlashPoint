@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
+#include "Engine.h"
 #include "FireFighterPawn.generated.h"
 
 class ATile;
+class ACitizen;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -38,6 +40,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;	// Firefighter max ap
 
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -48,6 +51,16 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	
-	
+
+public:
+	bool CarrayVictim(ACitizen* Citizen);
+
+	UFUNCTION(BlueprintCallable, Category = "Citizen Carraying")
+	ACitizen* GetVictim();
+
+	UFUNCTION(BlueprintCallable, Category = "Citizen Carraying")
+	bool RemoveVictim();
+
+protected:
+	ACitizen* Victim = nullptr;
 };
