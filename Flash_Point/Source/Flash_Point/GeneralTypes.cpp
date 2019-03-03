@@ -37,7 +37,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		right = current->GetRight();
 		// check on all 4 nodes to see if they can be inserted to the search Nodes
 		// do front node first
-		if (front) {
+		if (front && !front->IsBlocked()) {
 			temp = front->GetOtherNeighbour(current);
 			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
@@ -56,7 +56,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 			}
 		}
 		// do back node
-		if (back) {
+		if (back && !back->IsBlocked()) {
 			temp = back->GetOtherNeighbour(current);
 			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
@@ -75,7 +75,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 			}
 		}
 		// do left node
-		if (left) {
+		if (left && !left->IsBlocked()) {
 			temp = left->GetOtherNeighbour(current);
 			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
@@ -94,7 +94,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 			}
 		}
 		// do right node
-		if (right) {
+		if (right && !right->IsBlocked()) {
 			temp = right->GetOtherNeighbour(current);
 			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
