@@ -19,7 +19,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	searchNodes.Add(FSearchNode(0, 0, start));
 	ATile* current = nullptr;
 	// check on each of the 4 neighbouring nodes
-	AEdgeUnit *front, *back, *left, *right = nullptr;
+	TArray<AEdgeUnit*> towardsDirection;
 	ATile* temp = nullptr;
 	FSearchNode tempNode;
 	int32 cost = 0;
@@ -30,87 +30,35 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		current = tempNode.nodeTile;
 		current->SetExpanded(true);
 		// front neighbour
-		front = current->GetFront();
-		back = current->GetBack();
-		left = current->GetLeft();
-		right = current->GetRight();
+		towardsDirection.Add(current->GetFront());
+		towardsDirection.Add(current->GetBack());
+		towardsDirection.Add(current->GetLeft());
+		towardsDirection.Add(current->GetRight());
 		// check on all 4 nodes to see if they can be inserted to the search Nodes
-		// do front node first
-		if (front) {
-			temp = front->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
+
+		for (AEdgeUnit* edge : towardsDirection) {
+			// do front node first
+			if (edge) {
+				temp = edge->GetOtherNeighbour(current);
+				if (temp && !temp->IsExpanded()) {
+					// mark prev tile node
+					temp->SetPrev(current);
+					cost = tempNode.cost + 1;
+					// if the tile is on fire, it cost extra ap
+					if (temp->GetFireStatus() == EFireStatus::Fire) {
+						cost++;
+					}
+					// if the wall is blocked, use very high cost to represent unlikely way
+					if (edge->IsBlocked()) {
+						cost += 200;
+					}
+					// insert a new node to the heap
+					searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (front->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 			}
 		}
-		// do back node
-		if (back) {
-			temp = back->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
-				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (back->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
-			}
-		}
-		// do left node
-		if (left) {
-			temp = left->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
-				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (left->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
-			}
-		}
-		// do right node
-		if (right) {
-			temp = right->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
-				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (right->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
-			}
-		}
+		
+		
 		UE_LOG(LogTemp, Warning, TEXT("After expansion"));
 		UE_LOG(LogTemp, Warning, TEXT("Heap size: %d"), searchNodes.Num());
 		// check if min of the heap is a goal state
