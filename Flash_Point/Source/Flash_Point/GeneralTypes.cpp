@@ -16,6 +16,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	// use a tarray as heap for finding the min node each time
 	bool success = false;
 	TArray<FSearchNode> searchNodes;
+	FSearchNode startNode(0, 0, start);
 	searchNodes.Add(FSearchNode(0, 0, start));
 	ATile* current = nullptr;
 	// check on each of the 4 neighbouring nodes
