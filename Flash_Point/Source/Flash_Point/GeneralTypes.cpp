@@ -36,74 +36,20 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		towardsDirection.Add(current->GetLeft());
 		towardsDirection.Add(current->GetRight());
 		// check on all 4 nodes to see if they can be inserted to the search Nodes
-		// do front node first
-		if (front && !front->IsBlocked()) {
-			temp = front->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
+		for (AEdgeUnit* edge : towardsDirection) {
+			if (edge && !edge->IsBlocked()) {
+				temp = edge->GetOtherNeighbour(current);
+				if (temp && !temp->IsExpanded()) {
+					// mark prev tile node
+					temp->SetPrev(current);
+					cost = tempNode.cost + 1;
+					// if the tile is on fire, it cost extra ap
+					if (temp->GetFireStatus() == EFireStatus::Fire) {
+						cost++;
+					}
+					// insert a new node to the heap
+					searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 				}
-			}
-		}
-		// do back node
-		if (back && !back->IsBlocked()) {
-			temp = back->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
-				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (back->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
-			}
-		}
-		// do left node
-		if (left && !left->IsBlocked()) {
-			temp = left->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
-				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (left->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
-			}
-		}
-		// do right node
-		if (right && !right->IsBlocked()) {
-			temp = right->GetOtherNeighbour(current);
-			if (temp && !temp->IsExpanded()) {
-				// mark prev tile node
-				temp->SetPrev(current);
-				cost = tempNode.cost + 1;
-				// if the tile is on fire, it cost extra ap
-				if (temp->GetFireStatus() == EFireStatus::Fire) {
-					cost++;
-				}
-				// if the wall is blocked, use very high cost to represent unlikely way
-				if (right->IsBlocked()) {
-					cost += 200;
-				}
-				// insert a new node to the heap
-				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 			}
 		}
 		UE_LOG(LogTemp, Warning, TEXT("After expansion"));
