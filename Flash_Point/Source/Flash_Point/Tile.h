@@ -40,6 +40,14 @@ public:
 	void BindBackEdge(AEdgeUnit* edge);
 	void BindLeftEdge(AEdgeUnit* edge);
 	void BindRightEdge(AEdgeUnit* edge);
+	// getters for the 4 neighbouring edges
+	AEdgeUnit* GetFront();
+	AEdgeUnit* GetBack();
+	AEdgeUnit* GetLeft();
+	AEdgeUnit* GetRight();
+	// Getter and setters for the prev tile
+	ATile* GetPrev();
+	void SetPrev(ATile* prevTile);
 	// check if the tile is a outside tile
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	bool IsOutside();

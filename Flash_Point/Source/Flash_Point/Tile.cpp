@@ -196,6 +196,36 @@ void ATile::BindRightEdge(AEdgeUnit * edge)
 	}
 }
 
+AEdgeUnit * ATile::GetFront()
+{
+	return frontWall;
+}
+
+AEdgeUnit * ATile::GetBack()
+{
+	return backWall;
+}
+
+AEdgeUnit * ATile::GetLeft()
+{
+	return leftWall;
+}
+
+AEdgeUnit * ATile::GetRight()
+{
+	return rightWall;
+}
+
+ATile * ATile::GetPrev()
+{
+	return prev;
+}
+
+void ATile::SetPrev(ATile * prevTile)
+{
+	prev = prevTile;
+}
+
 bool ATile::IsOutside()
 {
 	return outside;
@@ -328,6 +358,28 @@ void ATile::FindPathToCurrent()
 	TArray<ATile*> traceTiles;
 	ATile* start = localPawn->GetPlacedOn();
 	ATile* goal = this;
+	int32 cost = GeneralTypes::AStarShotest(start, goal, traceTiles);
+	if (cost != 0) {
+		// here the goal is successfully found
+		if (cost < localPawn->GetCurrentAP()) {
+			canMoveTo = true;
+			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+				traceTiles[i]->PlaneColorSwitch(ableMat);
+			}
+		}
+		else {
+			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+				traceTiles[i]->PlaneColorSwitch(unableMat);
+			}
+		}
+		isReady = true;
+	}
+	else {
+		if (traceTiles.Num() > 0) {
+			canMoveTo = true;
+			PlaneColorSwitch(ableMat);
+		}
+	}
 }
 
 // Called when the game starts or when spawned

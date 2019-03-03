@@ -86,17 +86,34 @@ struct FSearchNode
 {
 	GENERATED_USTRUCT_BODY()
 		
-	// integer for cost
+	// integer for expected
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search Node")
-	int32 nodeCost;
+	int32 heuristic;
+	// integer for actual path cost
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search Node")
+	int32 cost;
 	// tile for node tile
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Search Node")
 	ATile* nodeTile;
+
+	// override the < operator to be used in heap naking
+	friend bool operator<(const FSearchNode& lhs, const FSearchNode& rhs) {
+		return (lhs.heuristic < rhs.heuristic);
+	}
+
+	FSearchNode() : heuristic(0), cost(0), nodeTile(nullptr) {}
+	FSearchNode(int32 heur, int32 nodeCost, ATile* tile) : heuristic(heur), cost(nodeCost), nodeTile(tile) {}
 };
 
 class FLASH_POINT_API GeneralTypes
 {
 public:
 	GeneralTypes();
+
+	// A method to use a star search to find the shortest path from one tile to another
+	static int32 AStarShotest(ATile* start, ATile* goal, TArray<ATile*> & trace);
+	// A method to find the heuristic of a node to goal
+	static int32 GetHeuristic(ATile* cur, ATile* goal);
+
 	~GeneralTypes();
 };
