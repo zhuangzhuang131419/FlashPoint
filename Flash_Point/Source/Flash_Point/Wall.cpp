@@ -12,11 +12,6 @@ AWall::AWall() {
 	edgeType = EEdgeType::Wall;
 	isChoped = false;
 
-	// Create binding to on cursor click
-	FScriptDelegate onMouseClickedDel;
-	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
-	OnClicked.Add(onMouseClickedDel);
-
 	SetReplicates(true);
 	SetReplicateMovement(true);
 }
@@ -45,6 +40,15 @@ void AWall::OnCursorClicked(UPrimitiveComponent* Component) {
 		}
 	}
 
+}
+
+void AWall::BeginPlay()
+{
+	Super::BeginPlay();
+	// Create binding to on cursor click
+	FScriptDelegate onMouseClickedDel;
+	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
+	OnClicked.Add(onMouseClickedDel);
 }
 
 

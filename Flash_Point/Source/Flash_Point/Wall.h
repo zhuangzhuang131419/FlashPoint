@@ -26,6 +26,7 @@ protected:
 	UFUNCTION()
 	void OnCursorClicked(UPrimitiveComponent* Component);
 	
+	virtual void BeginPlay() override;
 	
 	
 };
