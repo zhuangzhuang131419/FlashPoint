@@ -340,6 +340,15 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
+			if (isReady && canMoveTo) {
+				localPlayer->GetPawn()->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+				localPlayer->SetNone();
+				if (ensure(localPawn)) {
+					// Associate the firefighter with this tile
+					placedFireFighters.Add(localPawn);
+					localPawn->SetPlacedOn(this);
+				}
+			}
 			break;
 		case EGameOperations::ChopWall:
 			break;
