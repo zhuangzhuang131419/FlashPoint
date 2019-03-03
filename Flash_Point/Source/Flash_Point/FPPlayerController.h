@@ -4,19 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "GeneralTypes.h"
 #include "FPPlayerController.generated.h"
-
-UENUM(BlueprintType)
-enum class EGameOperations : uint8
-{
-	PlaceFireFighter,
-	Move,
-	ChopWall,
-	ExtinguishFire,
-	Carry,
-    OpenDoor,
-	None
-};
 
 /**
  * 
@@ -27,30 +16,25 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	// Below functions are for changing operations
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	EGameOperations GetCurrentOperation();
-
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetOpenDoor();
-	
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetNone();
-
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetPlaceFireFighter();
-
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetRespawnFireFighter();
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetMove();
-
-	UFUNCTION(BlueprintCallable, Category="GameOperations")
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetChopWall();
-
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetExtinguishFire();
-
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetCarry();
-
 	AFPPlayerController();
 
 

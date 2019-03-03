@@ -30,6 +30,11 @@ void AFPPlayerController::SetPlaceFireFighter()
 	CurrentOperation = EGameOperations::PlaceFireFighter;
 }
 
+void AFPPlayerController::SetRespawnFireFighter()
+{
+	CurrentOperation = EGameOperations::RespawnFireFighter;
+}
+
 void AFPPlayerController::SetMove()
 {
 	CurrentOperation = EGameOperations::Move;

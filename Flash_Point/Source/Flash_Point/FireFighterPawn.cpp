@@ -11,6 +11,26 @@ AFireFighterPawn::AFireFighterPawn()
 
 }
 
+ATile * AFireFighterPawn::GetPlacedOn()
+{
+	return placedOn;
+}
+
+void AFireFighterPawn::SetPlacedOn(ATile * tile)
+{
+	placedOn = tile;
+}
+
+int32 AFireFighterPawn::GetCurrentAP()
+{
+	return currentAP;
+}
+
+void AFireFighterPawn::SetCurrentAP(int32 current)
+{
+	currentAP = current;
+}
+
 // Called when the game starts or when spawned
 void AFireFighterPawn::BeginPlay()
 {
