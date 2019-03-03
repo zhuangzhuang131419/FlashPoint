@@ -27,6 +27,8 @@ public:
 
 	// This method will change the tile's type together with its supposed base color
 	void SetTileType(ETileType tileType);
+	// This method will set the related gameboard of the tile
+	void LinkGameBoard(AGameBoard* gameBoard);
 	// This method will set the quarant and therefore default color of the tile
 	void SetQuadrant(int32 quad);
 	// Getter and setter of the location of the tile
@@ -48,6 +50,9 @@ public:
 	// Getter and setters for the prev tile
 	ATile* GetPrev();
 	void SetPrev(ATile* prevTile);
+	// Getter and setter for expanded
+	bool IsExpanded();
+	void SetExpanded(bool exp);
 	// check if the tile is a outside tile
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	bool IsOutside();
@@ -133,10 +138,12 @@ protected:
 	AFireFighterPawn* localPawn = nullptr;
 	
 	// attributes to use for path finding
+	AGameBoard* board = nullptr;	// a pointer to game board for clearing all tile status
 	ATile* prev = nullptr;	// a pointer to follow for path finding
 	int32 xLoc, yLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
 	bool canMoveTo = false;
 	bool isReady = false;
+	bool expanded = false;
 
 	// FUNCTIONS
 	// Here is a function that binds all cursor functions

@@ -42,6 +42,11 @@ void ATile::SetTileType(ETileType tileType)
 	}
 }
 
+void ATile::LinkGameBoard(AGameBoard * gameBoard)
+{
+	board = gameBoard;
+}
+
 void ATile::SetQuadrant(int32 quad)
 {
 	// set quadrant and color of the tile
@@ -226,6 +231,16 @@ void ATile::SetPrev(ATile * prevTile)
 	prev = prevTile;
 }
 
+bool ATile::IsExpanded()
+{
+	return expanded;
+}
+
+void ATile::SetExpanded(bool exp)
+{
+	expanded = exp;
+}
+
 bool ATile::IsOutside()
 {
 	return outside;
@@ -337,6 +352,7 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 
 void ATile::OnCursorLeft(UPrimitiveComponent * Component)
 {
+	board->ClearAllTile();
 	PlaneColorSwitch(baseMat);
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
 	// Reset move related attributes
@@ -358,6 +374,7 @@ void ATile::FindPathToCurrent()
 	TArray<ATile*> traceTiles;
 	ATile* start = localPawn->GetPlacedOn();
 	ATile* goal = this;
+	UE_LOG(LogTemp, Warning, TEXT("Before search"));
 	int32 cost = GeneralTypes::AStarShotest(start, goal, traceTiles);
 	if (cost != 0) {
 		// here the goal is successfully found
@@ -380,6 +397,7 @@ void ATile::FindPathToCurrent()
 			PlaneColorSwitch(ableMat);
 		}
 	}
+	UE_LOG(LogTemp, Warning, TEXT("After search"));
 }
 
 // Called when the game starts or when spawned

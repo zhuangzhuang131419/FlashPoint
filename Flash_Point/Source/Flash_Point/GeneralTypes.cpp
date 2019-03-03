@@ -24,9 +24,11 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	FSearchNode tempNode;
 	int32 cost = 0;
 	while (searchNodes.Num() > 0) {
+		UE_LOG(LogTemp, Warning, TEXT("Before expansion"));
 		// get the min node
 		searchNodes.HeapPop(tempNode);
 		current = tempNode.nodeTile;
+		current->SetExpanded(true);
 		// front neighbour
 		front = current->GetFront();
 		back = current->GetBack();
@@ -36,7 +38,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		// do front node first
 		if (front) {
 			temp = front->GetOtherNeighbour(current);
-			if (temp) {
+			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
 				temp->SetPrev(current);
 				cost = tempNode.cost + 1;
@@ -55,7 +57,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		// do back node
 		if (back) {
 			temp = back->GetOtherNeighbour(current);
-			if (temp) {
+			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
 				temp->SetPrev(current);
 				cost = tempNode.cost + 1;
@@ -74,7 +76,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		// do left node
 		if (left) {
 			temp = left->GetOtherNeighbour(current);
-			if (temp) {
+			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
 				temp->SetPrev(current);
 				cost = tempNode.cost + 1;
@@ -93,7 +95,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		// do right node
 		if (right) {
 			temp = right->GetOtherNeighbour(current);
-			if (temp) {
+			if (temp && !temp->IsExpanded()) {
 				// mark prev tile node
 				temp->SetPrev(current);
 				cost = tempNode.cost + 1;
@@ -109,21 +111,24 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 				searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
 			}
 		}
+		UE_LOG(LogTemp, Warning, TEXT("After expansion"));
+		UE_LOG(LogTemp, Warning, TEXT("Heap size: %d"), searchNodes.Num());
 		// check if min of the heap is a goal state
 		if (searchNodes.Num() > 0 && searchNodes.HeapTop().nodeTile == goal) {
 			success = true;
 			break;
 		}
 	}
-	trace.Add(start);
 	if (searchNodes.Num() > 0 && success) {
 		// use the first node of the searchNodes to fillup trace
 		temp = goal;
 		while (temp && temp != start) {
 			// insert at begining each time
+			UE_LOG(LogTemp, Warning, TEXT("trace adding"));
 			trace.Add(temp);
 			temp = temp->GetPrev();
 		}
+		trace.Add(start);
 		// return the cost to the goal node
 		return searchNodes.HeapTop().cost;
 	}

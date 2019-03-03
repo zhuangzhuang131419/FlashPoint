@@ -28,6 +28,8 @@ public:
 	int32 GetCurrentGameHealth();
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SetCurrentGameHealth(int32 currentHealth);
+	// to clear all tile status, used in path finding
+	void ClearAllTile();
 
 	// Max health of the board to be specified at begining
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")

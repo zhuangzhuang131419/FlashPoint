@@ -30,6 +30,15 @@ void AGameBoard::SetCurrentGameHealth(int32 currentHealth)
 	health = currentHealth;
 }
 
+void AGameBoard::ClearAllTile()
+{
+	for (ATile* t : boardTiles) {
+		if (ensure(t)) {
+			t->SetExpanded(false);
+		}
+	}
+}
+
 void AGameBoard::InitializeDefaultBoard()
 {
 	// Initialize the TArray
@@ -71,6 +80,7 @@ void AGameBoard::InitializeDefaultBoard()
 						tempTile->SetQuadrant(3);
 					}
 					// add the tile to board tiles in order to store it
+					tempTile->LinkGameBoard(this);
 					boardTiles.Add(tempTile);
 				}
 			}
