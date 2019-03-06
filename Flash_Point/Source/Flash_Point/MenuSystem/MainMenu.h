@@ -19,14 +19,39 @@ protected:
 	virtual bool Initialize() override;
 
 	// Widget class
-	UPROPERTY(BluePrintReadWrite, Category = "Setup")
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<UUserWidget> CreateNewGameMenu = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<UUserWidget> JoinGameMenu = nullptr;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<UUserWidget> LoadGameMenu = nullptr;
+
+	UPROPERTY(BluePrintReadWrite, Category = "Setup")
+	TSubclassOf<UUserWidget> OptionMenu = nullptr;
 
 	UPROPERTY(meta = (BindWidget))
 	UButton* New_Game = nullptr;
 
+	UPROPERTY(meta = (BindWidget))
+	UButton* Join_Game = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Load_Game = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Option_Button = nullptr;
+
+	UPROPERTY(meta = (BindWidget))
+	UButton* Exit_Game = nullptr;
+
 	// Button functions
 	// New Game button
 	void OnNewGameClicked();
+	void OnJoinGameClicked();
+	void OnLoadGameClicked();
+	void OnOptionClicked();
+	void OnExitClicked();
 	
 };
