@@ -63,7 +63,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	if (searchNodes.Num() > 0 && success) {
 		// use the first node of the searchNodes to fillup trace
 		temp = goal;
-		while (temp && temp != start) {
+		while (temp && temp != start && trace.Num() < 80) {
 			// insert at begining each time
 			UE_LOG(LogTemp, Warning, TEXT("trace adding"));
 			trace.Add(temp);
