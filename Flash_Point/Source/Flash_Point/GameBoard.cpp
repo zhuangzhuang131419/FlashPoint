@@ -41,6 +41,8 @@ void AGameBoard::ClearAllTile()
 
 void AGameBoard::InitializeDefaultBoard()
 {
+	// This is only done on the server
+	if (!HasAuthority()) return;
 	// Initialize the TArray
 	if (ensure(TileClass && RoadClass)) {
 		ATile* tempTile = nullptr;
@@ -149,6 +151,7 @@ void AGameBoard::InitializeDefaultBoard()
 
 void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 {
+	if (!HasAuthority()) return;
 	ATile* tempTile = nullptr;
 	ATile* tempNeighbour = nullptr;
 	AEdgeUnit* tempEdge = nullptr;
@@ -370,12 +373,16 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 // Called when the game starts or when spawned
 void AGameBoard::BeginPlay()
 {
-	// Initialize starting game map
-	InitializeDefaultBoard();
+	// Set replicate for server and client synchronization
+	if (HasAuthority()) {
+		SetReplicates(true);
 
-	// Initialize game board health
-	health = MAX_HEALTH;
+		// Initialize starting game map
+		InitializeDefaultBoard();
 
+		// Initialize game board health
+		health = MAX_HEALTH;
+	}
 	// Initialize all players in the game
 	AFPPlayerController* tempPlayer = nullptr;
 	for (FConstPlayerControllerIterator iterator = GetWorld()->GetPlayerControllerIterator(); iterator; ++iterator) {
@@ -385,7 +392,7 @@ void AGameBoard::BeginPlay()
 			players.Add(tempPlayer);
 			// Set the player's action mode to place initial fire fighter
 			tempPlayer->SetPlaceFireFighter();
-
+			UE_LOG(LogTemp, Warning, TEXT("relocating camera on player %s"), *tempPlayer->GetName());
 			// Detach and relocate the player controller's camera
 			Cast<AFireFighterPawn>(tempPlayer->GetPawn())->RelocateCamera(GetActorLocation() + FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
 		}

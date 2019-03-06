@@ -60,6 +60,11 @@ bool AEdgeUnit::IsBlocked()
 // Called when the game starts or when spawned
 void AEdgeUnit::BeginPlay()
 {
+	// replicate this object
+	if (HasAuthority()) {
+		SetReplicates(true);
+	}
+
 	Super::BeginPlay();
 	
 }

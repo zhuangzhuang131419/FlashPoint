@@ -431,7 +431,11 @@ void ATile::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	BindCursorFunc();
+	if (HasAuthority()) {
+		SetReplicates(true);		
+	}
+
+	BindCursorFunc();	
 
 	// Assign temporary basic mat
 	baseMat = hiddenMat;

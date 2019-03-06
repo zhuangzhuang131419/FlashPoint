@@ -15,6 +15,10 @@ class FLASH_POINT_API UMainMenu : public UUserWidget
 {
 	GENERATED_BODY()
 	
+
+public:
+	UMainMenu(const FObjectInitializer& ObjectInitializer);
+
 protected:
 	virtual bool Initialize() override;
 

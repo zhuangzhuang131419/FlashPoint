@@ -1,6 +1,13 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MainMenu.h"
+#include "UObject/ConstructorHelpers.h"
+
+UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+	ConstructorHelpers::FClassFinder<UUserWidget> NewGameMenuFinder(TEXT("/Game/BPs/Widgets/WBP_CreateNewGameUI"));
+	if (!ensure(NewGameMenuFinder.Class))	return;
+	CreateNewGameMenu = NewGameMenuFinder.Class;
+}
 
 bool UMainMenu::Initialize() {
 	if (Super::Initialize()) {
