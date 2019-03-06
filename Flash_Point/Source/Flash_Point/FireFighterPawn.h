@@ -23,6 +23,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Camera Management")
 	void RelocateCamera(FVector location);
 	// Getter and setter for the firefighter's current location
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	ATile* GetPlacedOn();
 	void SetPlacedOn(ATile* tile);
 	// Getter and setter for current firefighter ap

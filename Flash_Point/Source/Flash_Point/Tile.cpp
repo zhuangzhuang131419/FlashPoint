@@ -241,11 +241,22 @@ void ATile::SetExpanded(bool exp)
 	expanded = exp;
 }
 
+int32 ATile::GetPathCost()
+{
+	return pathCost;
+}
+
+void ATile::SetpathCost(int32 cost)
+{
+	pathCost = cost;
+}
+
 void ATile::ResetTile()
 {
 	PlaneColorSwitch(baseMat);
 	prev = nullptr;
 	expanded = false;
+	pathCost = -1;
 }
 
 bool ATile::IsOutside()
@@ -384,12 +395,13 @@ void ATile::PlaneColorSwitch(UMaterialInterface * mat)
 
 void ATile::FindPathToCurrent()
 {
+	if (!ensure(localPawn))	return;
 	// Do an a* search to find the shortest path to this target location
 	TArray<ATile*> traceTiles;
 	ATile* start = localPawn->GetPlacedOn();
 	ATile* goal = this;
 	UE_LOG(LogTemp, Warning, TEXT("Before search"));
-	int32 cost = GeneralTypes::AStarShotest(start, goal, traceTiles);
+	int32 cost = GeneralTypes::AStarShotest(localPawn->GetCurrentAP(), start, goal, traceTiles);
 	if (cost != 0) {
 		// here the goal is successfully found
 		if (cost <= localPawn->GetCurrentAP()) {

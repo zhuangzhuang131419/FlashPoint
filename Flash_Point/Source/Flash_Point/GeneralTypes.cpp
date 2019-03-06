@@ -7,7 +7,7 @@ GeneralTypes::GeneralTypes()
 {
 }
 
-int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& trace)
+int32 GeneralTypes::AStarShotest(int32 maxDepth, ATile * start, ATile * goal, TArray<ATile*>& trace)
 {
 	if (start == goal) {
 		trace.Add(start);
@@ -24,6 +24,7 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 	ATile* temp = nullptr;
 	FSearchNode tempNode;
 	int32 cost = 0;
+	int32 tempCost = 0;
 	while (searchNodes.Num() > 0) {
 		UE_LOG(LogTemp, Warning, TEXT("Before expansion"));
 		// get the min node
@@ -39,16 +40,22 @@ int32 GeneralTypes::AStarShotest(ATile * start, ATile * goal, TArray<ATile*>& tr
 		for (AEdgeUnit* edge : towardsDirection) {
 			if (edge && !edge->IsBlocked()) {
 				temp = edge->GetOtherNeighbour(current);
-				if (temp && !temp->IsExpanded()) {
-					// mark prev tile node
-					temp->SetPrev(current);
+				if (temp && !temp->IsExpanded()) {			
 					cost = tempNode.cost + 1;
 					// if the tile is on fire, it cost extra ap
 					if (temp->GetFireStatus() == EFireStatus::Fire) {
 						cost++;
 					}
-					// insert a new node to the heap
-					searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
+					// check if this path is better
+					tempCost = temp->GetPathCost();
+					if (tempCost == -1 || cost < tempCost) {
+						// set the new path cost for the tile
+						temp->SetpathCost(cost);
+						// mark prev tile node
+						temp->SetPrev(current);
+						// insert a new node to the heap
+						searchNodes.HeapPush(FSearchNode(GetHeuristic(temp, goal) + cost, cost, temp));
+					}
 				}
 			}
 		}

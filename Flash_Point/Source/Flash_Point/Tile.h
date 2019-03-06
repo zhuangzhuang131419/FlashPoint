@@ -53,6 +53,9 @@ public:
 	// Getter and setter for expanded
 	bool IsExpanded();
 	void SetExpanded(bool exp);
+	// Getter and setter for the path cost
+	int32 GetPathCost();
+	void SetpathCost(int32 cost);
 	// reset the entire board for next operation
 	void ResetTile();
 	// check if the tile is a outside tile
@@ -144,6 +147,7 @@ protected:
 	AGameBoard* board = nullptr;	// a pointer to game board for clearing all tile status
 	ATile* prev = nullptr;	// a pointer to follow for path finding
 	int32 xLoc, yLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
+	int32 pathCost = -1;	// path cost used for A star search
 	bool canMoveTo = false;
 	bool isReady = false;
 	bool expanded = false;
