@@ -20,12 +20,13 @@ void AVictim::BeginPlay()
 	Super::BeginPlay();
 	// Create binding to on cursor click
 	FScriptDelegate onMouseClickedDel;
-	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
+	onMouseClickedDel.BindUFunction(this, "OnTileClicked");
 	OnClicked.Add(onMouseClickedDel);
 }
 
-void AVictim::OnCursorClicked(UPrimitiveComponent * Component)
+void AVictim::OnTileClicked(AActor * Target, FKey ButtonPressed)
 {
+	if (ButtonPressed != FKey("LeftMouseButton")) return;
 	UE_LOG(LogTemp, Warning, TEXT("Victim is been clicked"));
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (ensure(playerController))

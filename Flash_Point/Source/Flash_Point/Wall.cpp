@@ -41,8 +41,9 @@ void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(AWall, isChoped);
 }
 
-void AWall::OnCursorClicked(UPrimitiveComponent* Component) {
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Clicked"));
+void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
+	if (ButtonPressed != FKey("LeftMouseButton")) return;
+	UE_LOG(LogTemp, Warning, TEXT("Wall Clicked"));
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (playerController)
 	{
@@ -60,7 +61,7 @@ void AWall::BeginPlay()
 	Super::BeginPlay();
 	// Create binding to on cursor click
 	FScriptDelegate onMouseClickedDel;
-	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
+	onMouseClickedDel.BindUFunction(this, "OnWallClicked");
 	OnClicked.Add(onMouseClickedDel);
 }
 

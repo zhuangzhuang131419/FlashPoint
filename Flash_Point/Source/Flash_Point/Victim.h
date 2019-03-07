@@ -24,7 +24,7 @@ protected:
 
 	// Cursor clicked method
 	UFUNCTION()
-	void OnCursorClicked(UPrimitiveComponent* Component);
+	void OnTileClicked(AActor* Target, FKey ButtonPressed);
 
 public:	
 	// Called every frame

@@ -29,9 +29,12 @@ protected:
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Cursor clicked method
-	UFUNCTION()
-	void OnCursorClicked(UPrimitiveComponent* Component);
+	// UFUNCTION()
+	// void OnCursorClicked(UPrimitiveComponent* Component);
 	
+	UFUNCTION()
+	void OnWallClicked(AActor * Target, FKey ButtonPressed);
+
 	virtual void BeginPlay() override;
 	
 	
