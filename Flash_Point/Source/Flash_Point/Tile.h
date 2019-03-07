@@ -9,6 +9,7 @@
 #include "EdgeUnit.h"
 #include "FireFighterPawn.h"
 #include "FPPlayerController.h"
+#include "UnrealNetwork.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GeneralTypes.h"
 #include "Engine/World.h"
@@ -66,6 +67,8 @@ public:
 	EFireStatus GetFireStatus();
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	void SetFireStatus(EFireStatus status);
+	UFUNCTION()
+	void OnRep_SetBaseMat(UMaterialInterface* inBaseMat);
 
 
 protected:
@@ -81,27 +84,27 @@ protected:
 
 	// Color mat components
 	// Plane color for hidden quadrant view and attribute indicating is outside
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* hiddenMat = nullptr;
 	// Plane color for odd quadrant
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* oddMat = nullptr;
 	// Plane color for even quadrant
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* evenMat = nullptr;
 	// Here is the walkable color
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ableMat = nullptr;
 	// Here is the un-walkable color
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* unableMat = nullptr;
 	// Here is the fire engine parking lot color
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* engineParkMat = nullptr;
 	// Here is the ambulance parking lot color
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ambulanceParkMat = nullptr;
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditAnyWhere, Category = "Setup")
 	bool outside = false;	// for door edge class
 
 	// Edge class components
@@ -113,13 +116,13 @@ protected:
 	TSubclassOf<AEdgeUnit> DoorClass = nullptr;	// for door edge class
 
 	// Neighbour edge refences
-	UPROPERTY(EditAnyWhere, Category = "Map Associations")
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* leftWall = nullptr;
-	UPROPERTY(EditAnyWhere, Category = "Map Associations")
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* rightWall = nullptr;
-	UPROPERTY(EditAnyWhere, Category = "Map Associations")
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* frontWall = nullptr;
-	UPROPERTY(EditAnyWhere, Category = "Map Associations")
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	AEdgeUnit* backWall = nullptr;
 
 	// particle systems for fire status
@@ -131,22 +134,28 @@ protected:
 	UParticleSystemComponent* BlastEffect;
 
 	// located items and firefighters
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Units")
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Tile Units")
 	TArray<AFireFighterPawn*> placedFireFighters;
 
 	// Other references and variables
+	UPROPERTY(ReplicatedUsing = OnRep_SetBaseMat, EditAnyWhere, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
+	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	int32 quadrant = 0;	// default quarant of the tile
 	AFPPlayerController* localPlayer = nullptr;
 	AFireFighterPawn* localPawn = nullptr;
 	
 	// attributes to use for path finding
+	UPROPERTY(replicated)
 	AGameBoard* board = nullptr;	// a pointer to game board for clearing all tile status
 	ATile* prev = nullptr;	// a pointer to follow for path finding
-	int32 xLoc, yLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
+	UPROPERTY(replicated)
+	int32 xLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
+	UPROPERTY(replicated)
+	int32 yLoc = -1;
 	int32 pathCost = -1;	// path cost used for A star search
 	bool canMoveTo = false;
 	bool isReady = false;
@@ -168,6 +177,8 @@ protected:
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile
 	void FindPathToCurrent();
+	// Overriding setting all lifetime replicates function
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

@@ -10,6 +10,9 @@ ATile::ATile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	// this object should be replicated
+	bReplicates = true;
+
 	// Intialize the floor and plane objects
 	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Tile Mesh"));
 	ColorPlane = CreateDefaultSubobject<UStaticMeshComponent>(FName("Color Plane"));
@@ -52,11 +55,11 @@ void ATile::SetQuadrant(int32 quad)
 	// set quadrant and color of the tile
 	quadrant = quad;
 	if (quadrant % 2) {
-		baseMat = oddMat;
+		OnRep_SetBaseMat(oddMat);
 		PlaneColorSwitch(baseMat);
 	}
 	else {
-		baseMat = evenMat;
+		OnRep_SetBaseMat(evenMat);
 		PlaneColorSwitch(baseMat);
 	}
 }
@@ -274,6 +277,11 @@ void ATile::SetFireStatus(EFireStatus status)
 	fireStatus = status;
 }
 
+void ATile::OnRep_SetBaseMat(UMaterialInterface * inBaseMat)
+{
+	baseMat = inBaseMat;
+}
+
 // Here is the function to bind all input bindings
 void ATile::BindCursorFunc()
 {
@@ -426,13 +434,42 @@ void ATile::FindPathToCurrent()
 	UE_LOG(LogTemp, Warning, TEXT("After search"));
 }
 
+void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	// super first
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	// synchronize all possibly used materials
+	DOREPLIFETIME(ATile, hiddenMat);
+	DOREPLIFETIME(ATile, oddMat);
+	DOREPLIFETIME(ATile, evenMat);
+	DOREPLIFETIME(ATile, ableMat);
+	DOREPLIFETIME(ATile, unableMat);
+	DOREPLIFETIME(ATile, engineParkMat);
+	DOREPLIFETIME(ATile, ambulanceParkMat);
+	// mark all tile attributes as replicate to only do things on server
+	DOREPLIFETIME(ATile, leftWall);
+	DOREPLIFETIME(ATile, rightWall);
+	DOREPLIFETIME(ATile, frontWall);
+	DOREPLIFETIME(ATile, backWall);
+	DOREPLIFETIME(ATile, placedFireFighters);
+	DOREPLIFETIME(ATile, baseMat);
+	DOREPLIFETIME(ATile, quadrant);
+	DOREPLIFETIME(ATile, board);
+	DOREPLIFETIME(ATile, xLoc);
+	DOREPLIFETIME(ATile, yLoc);
+}
+
 // Called when the game starts or when spawned
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
 	
 	if (HasAuthority()) {
-		SetReplicates(true);		
+		// Set this object as replicate as well as all corresponding effects and materials
+		SetReplicates(true);
+		if (ensure(ColorPlane)) {
+			ColorPlane->SetIsReplicated(true);
+		}
 	}
 
 	BindCursorFunc();	
