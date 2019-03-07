@@ -2,6 +2,10 @@
 
 #include "FPPlayerController.h"
 #include "Victim.h"
+#include "Tile.h"
+#include "Wall.h"
+#include "EdgeUnit.h"
+#include "GameBoard.h"
 
 AFPPlayerController::AFPPlayerController() {
 	// enable mouse clicking and over events

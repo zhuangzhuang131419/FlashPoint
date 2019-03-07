@@ -4,10 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
+#include "UnrealNetwork.h"
 #include "GeneralTypes.h"
 #include "FPPlayerController.generated.h"
 
 class AVictim;
+class AWall;
+class ATile;
+class AEdgeUnit;
+class AGameBoard;
+
 /**
  * 
  */
