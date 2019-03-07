@@ -331,6 +331,7 @@ void ATile::OnCursorOver(UPrimitiveComponent * Component)
 
 void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 {
+	UE_LOG(LogTemp, Warning, TEXT("A tile has been clicked."));
 	if (ensure(localPlayer)) {
 		EGameOperations ops = localPlayer->GetCurrentOperation();
 		switch (ops)
@@ -338,12 +339,17 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 		case EGameOperations::PlaceFireFighter:
 			if (outside) {
 				// Place firefighter to current tile
-				localPlayer->GetPawn()->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-				localPlayer->SetNone();
-				// Add the firefighter to the current position actors
-				if (ensure(localPawn)) {
+				localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+				if (ensure(localPawn))
+				{
+					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+					localPlayer->SetNone();
+
+					// Add the firefighter to the current position actors
+
 					// Associate the firefighter with this tile
 					placedFireFighters.Add(localPawn);
+					UE_LOG(LogTemp, Warning, TEXT("Pawn location has been set"));
 					localPawn->SetPlacedOn(this);
 				}
 			}
