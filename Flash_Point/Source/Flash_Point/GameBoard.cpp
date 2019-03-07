@@ -370,6 +370,16 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	}
 }
 
+void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	// mark all replicated valus
+	DOREPLIFETIME(AGameBoard, boardTiles);
+	DOREPLIFETIME(AGameBoard, fireFighters);
+	DOREPLIFETIME(AGameBoard, players);
+	DOREPLIFETIME(AGameBoard, health);
+}
+
 // Called when the game starts or when spawned
 void AGameBoard::BeginPlay()
 {

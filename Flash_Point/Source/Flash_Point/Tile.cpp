@@ -10,9 +10,6 @@ ATile::ATile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
-	// this object should be replicated
-	bReplicates = true;
-
 	// Intialize the floor and plane objects
 	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("Tile Mesh"));
 	ColorPlane = CreateDefaultSubobject<UStaticMeshComponent>(FName("Color Plane"));
@@ -55,11 +52,11 @@ void ATile::SetQuadrant(int32 quad)
 	// set quadrant and color of the tile
 	quadrant = quad;
 	if (quadrant % 2) {
-		OnRep_SetBaseMat(oddMat);
+		baseMat = oddMat;
 		PlaneColorSwitch(baseMat);
 	}
 	else {
-		OnRep_SetBaseMat(evenMat);
+		baseMat = evenMat;
 		PlaneColorSwitch(baseMat);
 	}
 }
@@ -438,14 +435,6 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 {
 	// super first
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
-	// synchronize all possibly used materials
-	DOREPLIFETIME(ATile, hiddenMat);
-	DOREPLIFETIME(ATile, oddMat);
-	DOREPLIFETIME(ATile, evenMat);
-	DOREPLIFETIME(ATile, ableMat);
-	DOREPLIFETIME(ATile, unableMat);
-	DOREPLIFETIME(ATile, engineParkMat);
-	DOREPLIFETIME(ATile, ambulanceParkMat);
 	// mark all tile attributes as replicate to only do things on server
 	DOREPLIFETIME(ATile, leftWall);
 	DOREPLIFETIME(ATile, rightWall);
@@ -463,19 +452,11 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 void ATile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 	if (HasAuthority()) {
-		// Set this object as replicate as well as all corresponding effects and materials
 		SetReplicates(true);
-		if (ensure(ColorPlane)) {
-			ColorPlane->SetIsReplicated(true);
-		}
 	}
-
 	BindCursorFunc();	
-
-	// Assign temporary basic mat
-	baseMat = hiddenMat;
 
 	// Find the local player and local pawn
 	localPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());

@@ -84,25 +84,25 @@ protected:
 
 	// Color mat components
 	// Plane color for hidden quadrant view and attribute indicating is outside
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* hiddenMat = nullptr;
 	// Plane color for odd quadrant
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* oddMat = nullptr;
 	// Plane color for even quadrant
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* evenMat = nullptr;
 	// Here is the walkable color
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ableMat = nullptr;
 	// Here is the un-walkable color
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* unableMat = nullptr;
 	// Here is the fire engine parking lot color
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* engineParkMat = nullptr;
 	// Here is the ambulance parking lot color
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ambulanceParkMat = nullptr;
 	UPROPERTY(BlueprintReadWrite, EditAnyWhere, Category = "Setup")
 	bool outside = false;	// for door edge class
@@ -138,7 +138,7 @@ protected:
 	TArray<AFireFighterPawn*> placedFireFighters;
 
 	// Other references and variables
-	UPROPERTY(ReplicatedUsing = OnRep_SetBaseMat, EditAnyWhere, Category = "Setup")
+	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")

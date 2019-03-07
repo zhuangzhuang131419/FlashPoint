@@ -48,14 +48,18 @@ protected:
 	AFPPlayerController* currentPlayer = nullptr;
 	// A resonable height for camera to be above the board
 	UPROPERTY(EditAnyWhere, Category = "Setup")
-	int32 camHeight = 800;
+	int32 camHeight = 2800;
 	// the entire board are stored here
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
 	// The firefighters placed on the board
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFireFighterPawn*> fireFighters;
 	// All players in current map
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFPPlayerController*> players;
 	// The current gameboard health
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
 
 	// FUNCTIONS
@@ -65,6 +69,7 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void GenerateSpecified(FSpawnIndicator indicator);
 	// Called when the game starts or when spawned
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
 
 private:
