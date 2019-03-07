@@ -274,11 +274,6 @@ void ATile::SetFireStatus(EFireStatus status)
 	fireStatus = status;
 }
 
-void ATile::OnRep_SetBaseMat(UMaterialInterface * inBaseMat)
-{
-	baseMat = inBaseMat;
-}
-
 // Here is the function to bind all input bindings
 void ATile::BindCursorFunc()
 {

@@ -67,9 +67,6 @@ public:
 	EFireStatus GetFireStatus();
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	void SetFireStatus(EFireStatus status);
-	UFUNCTION()
-	void OnRep_SetBaseMat(UMaterialInterface* inBaseMat);
-
 
 protected:
 	// FIELDS
