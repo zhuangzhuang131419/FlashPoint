@@ -38,7 +38,10 @@ public:
 	void SetCarry();
 	AFPPlayerController();
 
+	UFUNCTION(BlueprintCallable)
 	AVictim* GetCarriedVictim();
+
+	UFUNCTION(BlueprintCallable)
 	void SetCarriedVictim(AVictim* victim);
 
 

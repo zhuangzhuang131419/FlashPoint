@@ -26,13 +26,11 @@ protected:
 	UFUNCTION()
 	void OnCursorClicked(UPrimitiveComponent* Component);
 
-	UPROPERTY(VisibleAnywhere)
-	UStaticMeshComponent* victimMesh = nullptr;
-
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* victimMesh = nullptr;
 	
 };

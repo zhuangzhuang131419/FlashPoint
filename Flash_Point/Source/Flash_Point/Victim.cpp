@@ -32,15 +32,14 @@ void AVictim::OnCursorClicked(UPrimitiveComponent * Component)
 	{
 		if (playerController->GetCurrentOperation() == EGameOperations::Carry)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Carry is been clicked"));
 			if (playerController->GetCarriedVictim() == nullptr)
 			{
-				playerController->SetCarriedVictim(this);
-				victimMesh->DestroyComponent();
-			}
-			else {
-				playerController->SetCarriedVictim(nullptr);
-				UE_LOG(LogTemp, Warning, TEXT("Already picked a Person"));
+				APawn* controlledPawn = Cast<APawn>(playerController);
+				// if (this->GetActorLocation() == controlledPawn->GetActorLocation())
+				{
+					playerController->SetCarriedVictim(this);
+					victimMesh->SetVisibility(false);
+				}
 			}
 		}
 	}
@@ -51,5 +50,3 @@ void AVictim::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
-
-
