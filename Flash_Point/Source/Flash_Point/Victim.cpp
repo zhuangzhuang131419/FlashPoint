@@ -1,0 +1,55 @@
+// Fill out your copyright notice in the Description page of Project Settings.
+
+#include "Victim.h"
+#include "Engine/World.h"
+#include "FPPlayerController.h"
+
+
+// Sets default values
+AVictim::AVictim()
+{
+ 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+
+	victimMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("victimMesh"));
+}
+
+// Called when the game starts or when spawned
+void AVictim::BeginPlay()
+{
+	Super::BeginPlay();
+	// Create binding to on cursor click
+	FScriptDelegate onMouseClickedDel;
+	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
+	OnClicked.Add(onMouseClickedDel);
+}
+
+void AVictim::OnCursorClicked(UPrimitiveComponent * Component)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Victim is been clicked"));
+	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (ensure(playerController))
+	{
+		if (playerController->GetCurrentOperation() == EGameOperations::Carry)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Carry is been clicked"));
+			if (playerController->GetCarriedVictim() == nullptr)
+			{
+				playerController->SetCarriedVictim(this);
+				victimMesh->DestroyComponent();
+			}
+			else {
+				playerController->SetCarriedVictim(nullptr);
+				UE_LOG(LogTemp, Warning, TEXT("Already picked a Person"));
+			}
+		}
+	}
+}
+
+// Called every frame
+void AVictim::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+}
+
+
