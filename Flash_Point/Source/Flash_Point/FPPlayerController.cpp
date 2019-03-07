@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FPPlayerController.h"
+#include "Victim.h"
 
 AFPPlayerController::AFPPlayerController() {
 	// enable mouse clicking and over events
@@ -8,6 +9,16 @@ AFPPlayerController::AFPPlayerController() {
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
 
+}
+
+AVictim * AFPPlayerController::GetCarriedVictim()
+{
+	return carriedVictim;
+}
+
+void AFPPlayerController::SetCarriedVictim(AVictim * victim)
+{
+	carriedVictim = victim;
 }
 
 void AFPPlayerController::BeginPlay()

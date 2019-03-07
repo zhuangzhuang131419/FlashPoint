@@ -7,6 +7,7 @@
 #include "GeneralTypes.h"
 #include "FPPlayerController.generated.h"
 
+class AVictim;
 /**
  * 
  */
@@ -37,11 +38,16 @@ public:
 	void SetCarry();
 	AFPPlayerController();
 
+	AVictim* GetCarriedVictim();
+	void SetCarriedVictim(AVictim* victim);
+
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	EGameOperations CurrentOperation = EGameOperations::None;
 	
+private:
+	AVictim* carriedVictim;
 	
 };

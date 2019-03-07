@@ -18,7 +18,6 @@ AWall::AWall() {
 
 void AWall::OnCursorClicked(UPrimitiveComponent* Component) {
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Clicked"));
-	UE_LOG(LogTemp, Warning, TEXT("Chop Wall has been selected."));
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (playerController)
 	{
