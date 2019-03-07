@@ -23,10 +23,26 @@ public:
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* DoorFrame;
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void CloseDoor();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void OpenDoor();
+
+	UFUNCTION(BlueprintCallable)
+	bool IsOpened();
+
+	UFUNCTION(BlueprintCallable)
+	void SetIsOpend(bool openStatus);
+
 	
 
 protected:
 	virtual void BeginPlay() override;
+
+	UFUNCTION()
+	void OnDoorClicked(AActor * Target, FKey ButtonPressed);
 
 private:
 	bool isOpened;
