@@ -68,6 +68,9 @@ protected:
 	// For blueprint to call on in order to generate a map as specified with indicator
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void GenerateSpecified(FSpawnIndicator indicator);
+	// A function to refresh synchronized board
+	UFUNCTION(Client, Reliable)
+	void RefreshBoard();
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	virtual void BeginPlay() override;

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GeneralTypes.h"
+#include "UnrealNetwork.h"
 #include "EdgeUnit.generated.h"
 
 class ATile;
@@ -35,24 +36,23 @@ public:
 protected:
 	// FIELDS
 	// neighbouring tiles of the edge
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	ATile* firstNeighbour = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	ATile* secondNeighbour = nullptr;
 	// informations about the edge unit
-	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
 	bool isBlocked = false;
-	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
 	EEdgeType edgeType = EEdgeType::Empty;
-	// Here are the neighbouring tiles of the edge
-	UPROPERTY(EditAnyWhere, Category = "Map Associations")
-	ATile* tile_a = nullptr;
-	UPROPERTY(EditAnyWhere, Category = "Map Associations")
-	ATile* tile_b = nullptr; 
-	UPROPERTY(BlueprintReadOnly, Category = "Map Associations")
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Map Associations")
 	AGameBoard* gameBoard = nullptr;
-	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite)
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* WallMesh = nullptr;
 
 	// FUNCTIONS
+	// mark all replicated properties
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

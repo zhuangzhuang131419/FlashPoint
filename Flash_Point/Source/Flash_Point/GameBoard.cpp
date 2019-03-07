@@ -370,6 +370,11 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	}
 }
 
+void AGameBoard::RefreshBoard_Implementation()
+{
+	ClearAllTile();
+}
+
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -408,6 +413,7 @@ void AGameBoard::BeginPlay()
 		}
 	}
 	Super::BeginPlay();
+	RefreshBoard();
 }
 
 // Called every frame

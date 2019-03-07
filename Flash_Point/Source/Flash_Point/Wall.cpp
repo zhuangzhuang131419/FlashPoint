@@ -11,9 +11,6 @@ AWall::AWall() {
 	isBlocked = true;
 	edgeType = EEdgeType::Wall;
 	isChoped = false;
-
-	SetReplicates(true);
-	SetReplicateMovement(true);
 }
 
 void AWall::OnCursorClicked(UPrimitiveComponent* Component) {
@@ -25,7 +22,7 @@ void AWall::OnCursorClicked(UPrimitiveComponent* Component) {
 			
 			if (isChoped)
 			{
-				WallMesh->DestroyComponent();
+				WallMesh->SetVisibility(false);
 				isBlocked = false;
 			}
 			else {
@@ -43,6 +40,12 @@ void AWall::OnCursorClicked(UPrimitiveComponent* Component) {
 
 void AWall::BeginPlay()
 {
+	if (HasAuthority()) {
+		SetReplicates(true);
+		SetReplicateMovement(true);
+		if (ensure(WallMesh)) {
+		}
+	}
 	Super::BeginPlay();
 	// Create binding to on cursor click
 	FScriptDelegate onMouseClickedDel;

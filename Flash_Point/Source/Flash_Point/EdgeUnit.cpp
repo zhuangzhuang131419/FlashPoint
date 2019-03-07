@@ -57,6 +57,17 @@ bool AEdgeUnit::IsBlocked()
 	return isBlocked;
 }
 
+void AEdgeUnit::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AEdgeUnit, firstNeighbour);
+	DOREPLIFETIME(AEdgeUnit, secondNeighbour);
+	DOREPLIFETIME(AEdgeUnit, isBlocked);
+	DOREPLIFETIME(AEdgeUnit, edgeType);
+	DOREPLIFETIME(AEdgeUnit, gameBoard);
+	DOREPLIFETIME(AEdgeUnit, WallMesh);
+}
+
 // Called when the game starts or when spawned
 void AEdgeUnit::BeginPlay()
 {
