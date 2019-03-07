@@ -410,11 +410,20 @@ void AGameBoard::BeginPlay()
 			tempPlayer->SetPlaceFireFighter();
 			UE_LOG(LogTemp, Warning, TEXT("relocating camera on player %s"), *tempPlayer->GetName());
 			// Detach and relocate the player controller's camera
-			Cast<AFireFighterPawn>(tempPlayer->GetPawn())->RelocateCamera(GetActorLocation() + FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
+			//Cast<AFireFighterPawn>(tempPlayer->GetPawn())->RelocateCamera(GetActorLocation() + FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
 		}
 	}
 	Super::BeginPlay();
 	RefreshBoard();
+	// relocate each player's camera
+	if (ensure(CameraClass)) {
+		AViewPortCamera* camera = GetWorld()->SpawnActor<AViewPortCamera>(
+			CameraClass,
+			FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight),
+			FRotator(270, 0, 0)
+			);
+		camera->RelocateAndSetToViewPort(FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
+	}
 }
 
 // Called every frame

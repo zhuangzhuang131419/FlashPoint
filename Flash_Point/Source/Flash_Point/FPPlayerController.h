@@ -44,6 +44,13 @@ public:
 	void SetCarry();
 	AFPPlayerController();
 
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerChopWall(AWall* wall);
+	// A function to update wall mesh on client
+	UFUNCTION(NetMulticast, Reliable, WithValidation)
+	void ClientWallMeshUpdate(AWall* wall, bool chopedDown);
+
+
 	UFUNCTION(BlueprintCallable)
 	AVictim* GetCarriedVictim();
 

@@ -21,17 +21,17 @@ public:
 	UPROPERTY(replicated, EditAnyWhere, Category = "SetUp")
 	bool isChoped;
 
-protected:
 	// A function to chop wall on the server
-	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerChop();
+	void ChopWall();
+	// A function to update wall mesh only on client
+	void UpdateWallMesh(bool chopedDown);
+
+protected:
+	
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Cursor clicked method
-	// UFUNCTION()
-	// void OnCursorClicked(UPrimitiveComponent* Component);
-	
 	UFUNCTION()
 	void OnWallClicked(AActor * Target, FKey ButtonPressed);
 

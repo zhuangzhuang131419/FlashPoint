@@ -13,7 +13,7 @@ AWall::AWall() {
 	isChoped = false;
 }
 
-void AWall::ServerChop_Implementation()
+void AWall::ChopWall()
 {
 	if (isChoped)
 	{
@@ -30,9 +30,15 @@ void AWall::ServerChop_Implementation()
 	gameBoard->SetCurrentGameHealth(currentHealth);
 }
 
-bool AWall::ServerChop_Validate()
+void AWall::UpdateWallMesh(bool chopedDown)
 {
-	return true;
+	if (chopedDown) {
+		WallMesh->SetVisibility(false);
+	}
+	else{
+		FVector newRotation3D = FVector(1.0f, 1.0f, 0.5f);
+		WallMesh->SetRelativeScale3D(newRotation3D);
+	}
 }
 
 void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -47,8 +53,14 @@ void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (playerController)
 	{
-		if (playerController->GetCurrentOperation() == EGameOperations::ChopWall) {
-			ServerChop();
+		if (playerController->GetCurrentOperation() == EGameOperations::ChopWall) {		
+			if (HasAuthority()) {
+				ChopWall();
+				playerController->ClientWallMeshUpdate(this, !isBlocked);
+			}
+			else {
+				playerController->ServerChopWall(this);
+			}
 		}
 	}
 }

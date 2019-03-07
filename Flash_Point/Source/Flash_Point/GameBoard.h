@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "Tile.h"
+#include "ViewPortCamera.h"
 #include "FPPlayerController.h"
 #include "FireFighterPawn.h"
 #include "GameBoard.generated.h"
@@ -43,6 +44,9 @@ protected:
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ATile> RoadClass = nullptr;
+	// A camera class to relocate player view port to
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AViewPortCamera> CameraClass = nullptr;
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* currentPlayer = nullptr;
