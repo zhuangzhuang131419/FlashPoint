@@ -404,6 +404,7 @@ void AGameBoard::BeginPlay()
 		// Get each player controller
 		tempPlayer = Cast<AFPPlayerController>(iterator->Get());
 		if (ensure(tempPlayer)) {
+			tempPlayer->SetInputMode(FInputModeGameAndUI());
 			players.Add(tempPlayer);
 			// Set the player's action mode to place initial fire fighter
 			tempPlayer->SetPlaceFireFighter();

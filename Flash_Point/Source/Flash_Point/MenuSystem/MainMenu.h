@@ -52,10 +52,15 @@ protected:
 
 	// Button functions
 	// New Game button
+	UFUNCTION()
 	void OnNewGameClicked();
+	UFUNCTION()
 	void OnJoinGameClicked();
+	UFUNCTION()
 	void OnLoadGameClicked();
+	UFUNCTION()
 	void OnOptionClicked();
+	UFUNCTION()
 	void OnExitClicked();
 	
 };

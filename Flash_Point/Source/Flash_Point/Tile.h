@@ -163,13 +163,13 @@ protected:
 	void BindCursorFunc();
 	// Cursor over method implementation
 	UFUNCTION()
-	void OnCursorOver(UPrimitiveComponent* Component);
+	void OnTileOver(UPrimitiveComponent* Component);
 	// Cursor clicked method
 	UFUNCTION()
-	void OnCursorClicked(UPrimitiveComponent* Component);
+	void OnTileClicked(AActor* Target, FKey ButtonPressed);
 	// Cursor leave method
 	UFUNCTION()
-	void OnCursorLeft(UPrimitiveComponent* Component);
+	void OnTileLeft(UPrimitiveComponent* Component);
 	// A method to set material of the plane
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile

@@ -279,21 +279,21 @@ void ATile::BindCursorFunc()
 {
 	// Create binding to on cursor over
 	FScriptDelegate onMouseOverDel;
-	onMouseOverDel.BindUFunction(this, "OnCursorOver");
+	onMouseOverDel.BindUFunction(this, "OnTileOver");
 	OnBeginCursorOver.Add(onMouseOverDel);
 
 	// Create binding to on cursor click
-	FScriptDelegate onMouseClickedDel;
-	onMouseClickedDel.BindUFunction(this, "OnCursorClicked");
-	OnClicked.Add(onMouseClickedDel);
+	/*FScriptDelegate onMouseClickedDel;
+	onMouseClickedDel.BindUFunction(this, "OnTileClicked");*/
+	OnClicked.AddUniqueDynamic(this, &ATile::OnTileClicked);
 
 	// Create binding to on cursor leave
 	FScriptDelegate onMouseLeftDel;
-	onMouseLeftDel.BindUFunction(this, "OnCursorLeft");
+	onMouseLeftDel.BindUFunction(this, "OnTileLeft");
 	OnEndCursorOver.Add(onMouseLeftDel);
 }
 
-void ATile::OnCursorOver(UPrimitiveComponent * Component)
+void ATile::OnTileOver(UPrimitiveComponent * Component)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
 	if (ensure(localPlayer)) {
@@ -329,8 +329,9 @@ void ATile::OnCursorOver(UPrimitiveComponent * Component)
 	}
 }
 
-void ATile::OnCursorClicked(UPrimitiveComponent* Component)
+void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 {
+	if (ButtonPressed != FKey("LeftMouseButton")) return;
 	UE_LOG(LogTemp, Warning, TEXT("A tile has been clicked."));
 	if (ensure(localPlayer)) {
 		EGameOperations ops = localPlayer->GetCurrentOperation();
@@ -383,7 +384,7 @@ void ATile::OnCursorClicked(UPrimitiveComponent* Component)
 	}
 }
 
-void ATile::OnCursorLeft(UPrimitiveComponent * Component)
+void ATile::OnTileLeft(UPrimitiveComponent * Component)
 {
 	board->ClearAllTile();
 	UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
