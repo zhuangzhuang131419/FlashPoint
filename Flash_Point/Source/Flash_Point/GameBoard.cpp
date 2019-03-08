@@ -42,12 +42,10 @@ void AGameBoard::ClearAllTile()
 void AGameBoard::AdvanceFire()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Advance fire."));
-	// int32 randomPosition = FMath::FRandRange(0, boardTiles.Num());
-	int32 randomPosition = 0;
+	int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 	while (boardTiles[randomPosition]->IsOutside())
 	{
-		// randomPosition = FMath::FRandRange(0, boardTiles.Num());
-		randomPosition++;
+		randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 	}
 
 	if (boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Clear)
@@ -453,27 +451,29 @@ void AGameBoard::BeginPlay()
 	Super::BeginPlay();
 
 	// Initialize the fire
-	int32 randomPosition = FMath::RandRange(0, boardTiles.Num());
-	for (size_t i = 0; i < FireInitializeNum; i++) // Initialize 3 fires
-	{
-		while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+	if (HasAuthority()) {
+		int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+		for (size_t i = 0; i < FireInitializeNum; i++) // Initialize 3 fires
 		{
-			randomPosition = FMath::RandRange(0, boardTiles.Num());
+			while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+			{
+				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			}
+			boardTiles[randomPosition]->AdvanceFire();
 		}
-		boardTiles[randomPosition]->AdvanceFire();
-	}
 
-	// Initialize the POI
-	randomPosition = FMath::RandRange(0, boardTiles.Num());
-	for (size_t i = 0; i < POIInitializeNum; i++)
-	{
-		while (boardTiles[randomPosition]->IsOutside() || 
-			boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
-			boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+		// Initialize the POI
+		randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+		for (size_t i = 0; i < POIInitializeNum; i++)
 		{
-			randomPosition = FMath::RandRange(0, boardTiles.Num());
+			while (boardTiles[randomPosition]->IsOutside() ||
+				boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+				boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+			{
+				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			}
+			boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
 		}
-		boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
 	}
 	
 
