@@ -62,6 +62,22 @@ void ADoor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ADoor, isDestroyed);
 }
 
+void ADoor::ChangeDoorStatus()
+{
+	if (opened)
+	{
+		opened = false;
+		isBlocked = true;
+		CloseDoor();
+	}
+	else
+	{
+		opened = true;
+		isBlocked = false;
+		OpenDoor();
+	}
+}
+
 void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
@@ -72,17 +88,11 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 	if (playerController)
 	{
 		if (playerController->GetCurrentOperation() == EGameOperations::OpenDoor) {
-			if (opened)
-			{
-				opened = false;
-				isBlocked = true;
-				CloseDoor();
+			if (HasAuthority()) {
+				ChangeDoorStatus();
 			}
-			else
-			{
-				opened = true;
-				isBlocked = false;
-				OpenDoor();
+			else {
+				playerController->ServerOpenDoor(this);
 			}
 		}
 	}

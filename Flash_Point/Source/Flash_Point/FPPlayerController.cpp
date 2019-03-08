@@ -4,7 +4,7 @@
 #include "Victim.h"
 #include "Tile.h"
 #include "Wall.h"
-#include "EdgeUnit.h"
+#include "Door.h"
 #include "GameBoard.h"
 
 AFPPlayerController::AFPPlayerController() {
@@ -17,7 +17,9 @@ AFPPlayerController::AFPPlayerController() {
 
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
-	wall->ChopWall();
+	if (ensure(wall)) {
+		wall->ChopWall();
+	}
 	//ClientWallMeshUpdate(wall, !wall->IsBlocked());
 }
 
@@ -26,12 +28,14 @@ bool AFPPlayerController::ServerChopWall_Validate(AWall * wall)
 	return true;
 }
 
-void AFPPlayerController::ClientWallMeshUpdate_Implementation(AWall * wall, bool chopedDown)
+void AFPPlayerController::ServerOpenDoor_Implementation(ADoor * door)
 {
-	//wall->UpdateWallMesh(chopedDown);
+	if (ensure(door)) {
+		door->ChangeDoorStatus();
+	}
 }
 
-bool AFPPlayerController::ClientWallMeshUpdate_Validate(AWall * wall, bool chopedDown)
+bool AFPPlayerController::ServerOpenDoor_Validate(ADoor * door)
 {
 	return true;
 }

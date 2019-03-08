@@ -36,6 +36,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsOpend(bool openStatus);
 
+	void ChangeDoorStatus();
+
 	
 
 protected:
@@ -55,7 +57,6 @@ protected:
 	void Rep_DoorExistence();
 	// mark all replicated properties
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
-
 	UFUNCTION()
 	void OnDoorClicked(AActor * Target, FKey ButtonPressed);
 

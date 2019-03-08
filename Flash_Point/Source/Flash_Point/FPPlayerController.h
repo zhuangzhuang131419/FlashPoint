@@ -11,6 +11,7 @@
 class AVictim;
 class AWall;
 class ATile;
+class ADoor;
 class AEdgeUnit;
 class AGameBoard;
 
@@ -44,11 +45,12 @@ public:
 	void SetCarry();
 	AFPPlayerController();
 
+	// choped wall on server
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerChopWall(AWall* wall);
-	// A function to update wall mesh on client
-	UFUNCTION(NetMulticast, Reliable, WithValidation)
-	void ClientWallMeshUpdate(AWall* wall, bool chopedDown);
+	// open door on server
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerOpenDoor(ADoor* door);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
