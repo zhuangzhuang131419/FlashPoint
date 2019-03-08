@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FireFighterPawn.h"
+#include "Victim.h"
 
 
 // Sets default values
@@ -50,26 +51,26 @@ void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-bool AFireFighterPawn::CarrayVictim(ACitizen * Citizen)
+bool AFireFighterPawn::CarrayVictim(AVictim* Citizen)
 {
 	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("Added"));
-	if (Victim == nullptr)
+	if (victim == nullptr)
 	{
-		Victim = Citizen;
+		victim = Citizen;
 		return true;
 	}
 
 	return false;
 }
 
-ACitizen * AFireFighterPawn::GetVictim()
+AVictim* AFireFighterPawn::GetVictim()
 {
-	return Victim;
+	return victim;
 }
 
-bool AFireFighterPawn::RemoveVictim()
+void AFireFighterPawn::SetVictim(AVictim * victim)
 {
-	Victim = nullptr;
-	return true;
+	this->victim = victim;
 }
+
 

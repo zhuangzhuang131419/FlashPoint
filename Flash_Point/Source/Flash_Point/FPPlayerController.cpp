@@ -36,32 +36,44 @@ bool AFPPlayerController::ClientWallMeshUpdate_Validate(AWall * wall, bool chope
 	return true;
 }
 
-AVictim * AFPPlayerController::GetCarriedVictim()
-{
-	return carriedVictim;
-}
-
-void AFPPlayerController::SetCarriedVictim(AVictim * victim)
-{
-	carriedVictim = victim;
-}
-
 void AFPPlayerController::DropVictim()
 {
-	if (ensure(carriedVictim))
+	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
 	{
-
+		ATile* currentTile = fireFighterPawn->GetPlacedOn();
+		if (ensure(currentTile))
+		{
+			fireFighterPawn->GetVictim()->victimMesh->SetVisibility(true);
+			FVector VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+			fireFighterPawn->GetVictim()->victimMesh->SetRelativeLocation(VictimSocketLocation);
+			currentTile->SetVictim(fireFighterPawn->GetVictim());
+			fireFighterPawn->SetVictim(nullptr);
+		}
 	}
 }
 
 void AFPPlayerController::CarryVictim()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Carry victim."));
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	ATile* currentTile = fireFighterPawn->GetPlacedOn();
-	if (currentTile->GetVictim())
+	if (ensure(fireFighterPawn))
 	{
-		carriedVictim = currentTile->GetVictim();
-		currentTile->SetVictim(nullptr);
+		ATile* currentTile = fireFighterPawn->GetPlacedOn();
+		UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s"), *currentTile->GetName());
+		if (ensure(currentTile))
+		{
+			if (currentTile->GetVictim())
+			{
+				fireFighterPawn->SetVictim(currentTile->GetVictim());
+				currentTile->GetVictim()->victimMesh->SetVisibility(false);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("No victim."));
+			}
+		}
 	}
 }
 

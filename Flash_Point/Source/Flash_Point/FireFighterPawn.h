@@ -8,7 +8,7 @@
 #include "FireFighterPawn.generated.h"
 
 class ATile;
-class ACitizen;
+class AVictim;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -54,14 +54,13 @@ public:
 
 
 public:
-	bool CarrayVictim(ACitizen* Citizen);
+	bool CarrayVictim(AVictim* Citizen);
 
 	UFUNCTION(BlueprintCallable, Category = "Citizen Carraying")
-	ACitizen* GetVictim();
-
+	AVictim* GetVictim();
 	UFUNCTION(BlueprintCallable, Category = "Citizen Carraying")
-	bool RemoveVictim();
+	void SetVictim(AVictim* victim);
 
 protected:
-	ACitizen* Victim = nullptr;
+	AVictim* victim = nullptr;
 };

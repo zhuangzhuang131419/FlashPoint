@@ -434,22 +434,23 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					placedFireFighters.Add(localPawn);
 					localPawn->GetPlacedOn()->placedFireFighters.Remove(localPawn);
 					localPawn->SetPlacedOn(this);
+
+					if (POIStatus == EPOIStatus::Hided)
+					{
+						UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
+						FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
+						AActor* newVictim = GetWorld()->SpawnActor<AActor>(
+							victimClass,
+							VictimSocketLocation,
+							FRotator(0, 0, 0)
+							);
+						POIOnTile->Destroy();
+						victim = Cast<AVictim>(newVictim);
+						POIStatus = EPOIStatus::Revealed;
+					}
 				}
 			}
 
-			if (POIStatus == EPOIStatus::Hided)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
-				FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
-				AActor* victim = GetWorld()->SpawnActor<AActor>(
-					victimClass,
-					VictimSocketLocation,
-					FRotator(0, 0, 0)
-					);
-				POIOnTile->Destroy();
-				POIOnTile = victim;
-				POIStatus = EPOIStatus::Revealed;
-			}
 			break;
 		case EGameOperations::ChopWall:
 			break;
@@ -526,23 +527,6 @@ void ATile::FindPathToCurrent()
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("After search"));
-}
-
-void ATile::CarryVictim(AVictim* victim)
-{
-	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (ensure(playerController))
-	{
-		if (playerController->GetCarriedVictim() == nullptr)
-		{
-			APawn* controlledPawn = Cast<APawn>(playerController);
-			// if (this->GetActorLocation() == controlledPawn->GetActorLocation())
-			{
-				playerController->SetCarriedVictim(victim);
-				victim->victimMesh->SetVisibility(false);
-			}
-		}
-	}
 }
 
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
