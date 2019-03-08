@@ -425,6 +425,20 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					localPawn->SetPlacedOn(this);
 				}
 			}
+
+			if (POIStatus == EPOIStatus::Hided)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
+				FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
+				AActor* victim = GetWorld()->SpawnActor<AActor>(
+					victimClass,
+					VictimSocketLocation,
+					FRotator(0, 0, 0)
+					);
+				POIOnTile->Destroy();
+				POIOnTile = victim;
+				POIStatus = EPOIStatus::Revealed;
+			}
 			break;
 		case EGameOperations::ChopWall:
 			break;

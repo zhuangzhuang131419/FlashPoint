@@ -170,6 +170,9 @@ protected:
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
 	AActor* POIOnTile = nullptr; // the default POI type of the tile
 
+	// A victim actor to spawn on tiles
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")
+	TSubclassOf<AVictim> victimClass = nullptr;
 	AVictim* victim = nullptr;
 
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")

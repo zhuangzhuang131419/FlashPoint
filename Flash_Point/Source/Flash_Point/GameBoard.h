@@ -62,6 +62,7 @@ protected:
 	// A POI actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> POIClass = nullptr;
+	
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* currentPlayer = nullptr;
