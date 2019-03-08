@@ -42,6 +42,12 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
+	UPROPERTY(BlueprintReadOnly)
+	int32 victimNum = 0;
+
+	UPROPERTY(BlueprintReadOnly)
+	int32 maxVictim = 4;
+
 protected:
 	// FIELDS
 	// The tile class for spawning
@@ -97,6 +103,7 @@ private:
 	const int32 TILE_SIZE = 400;
 	const int32 FireInitializeNum = 10;
 	const int32 POIInitializeNum = 3;
+	
 
 public:	
 	// Called every frame

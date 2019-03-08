@@ -71,6 +71,26 @@ void AGameBoard::AdvanceFire()
 
 void AGameBoard::AdvancePOI()
 {
+	int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+	while (boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty || boardTiles[randomPosition]->IsOutside())
+	{
+		randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+	}
+	if (boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire) 
+	{
+		victimNum++;
+	}
+	else {
+		boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
+		FVector POISocketLocation = boardTiles[randomPosition]->GetTileMesh()->GetSocketLocation(FName("POI"));
+		AActor* POI = GetWorld()->SpawnActor<AActor>(
+			POIClass,
+			POISocketLocation,
+			FRotator(0, 0, 0)
+			);
+		boardTiles[randomPosition]->SetPOIOnTile(POI);
+	}
+
 	UE_LOG(LogTemp, Warning, TEXT("Advance POI."));
 }
 
@@ -473,6 +493,13 @@ void AGameBoard::BeginPlay()
 				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 			}
 			boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
+			FVector POISocketLocation = boardTiles[randomPosition]->GetTileMesh()->GetSocketLocation(FName("POI"));
+			AActor* POI = GetWorld()->SpawnActor<AActor>(
+				POIClass,
+				POISocketLocation,
+				FRotator(0, 0, 0)
+				);
+			boardTiles[randomPosition]->SetPOIOnTile(POI);
 		}
 	}
 	

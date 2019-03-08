@@ -82,6 +82,13 @@ public:
 	UParticleSystemComponent* GetSmokeEffect();
 	UParticleSystemComponent* GetBlastEffect();
 
+	// Getter and Setter for POI
+	AActor* GetPOIOnTile();
+	void SetPOIOnTile(AActor* POI);
+
+	// Getter for TileMesh
+	UStaticMeshComponent* GetTileMesh();
+
 	void AdvanceFire();
 
 	void AdvanceSmoke();

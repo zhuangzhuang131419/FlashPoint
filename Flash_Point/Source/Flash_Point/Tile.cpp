@@ -300,7 +300,21 @@ UParticleSystemComponent * ATile::GetBlastEffect()
 	return BlastEffect;
 }
 
+AActor * ATile::GetPOIOnTile()
+{
+	return POIOnTile;
+}
 
+void ATile::SetPOIOnTile(AActor * POI)
+{
+	POIOnTile = POI;
+}
+
+
+UStaticMeshComponent * ATile::GetTileMesh()
+{
+	return TileMesh;
+}
 
 void ATile::AdvanceFire()
 {
