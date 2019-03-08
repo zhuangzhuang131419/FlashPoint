@@ -432,6 +432,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				if (ensure(localPawn)) {
 					// Associate the firefighter with this tile
 					placedFireFighters.Add(localPawn);
+					localPawn->GetPlacedOn()->placedFireFighters.Remove(localPawn);
 					localPawn->SetPlacedOn(this);
 				}
 			}

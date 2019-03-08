@@ -47,6 +47,14 @@ void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(AWall, isChoped);
 }
 
+void AWall::Rep_WallMesh()
+{
+	if (isChoped) {
+		FVector newRotation3D = FVector(1.0f, 1.0f, 0.5f);
+		WallMesh->SetRelativeScale3D(newRotation3D);
+	}
+}
+
 void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
 	UE_LOG(LogTemp, Warning, TEXT("Wall Clicked"));
@@ -56,7 +64,7 @@ void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
 		if (playerController->GetCurrentOperation() == EGameOperations::ChopWall) {		
 			if (HasAuthority()) {
 				ChopWall();
-				playerController->ClientWallMeshUpdate(this, !isBlocked);
+				//playerController->ClientWallMeshUpdate(this, !isBlocked);
 			}
 			else {
 				playerController->ServerChopWall(this);

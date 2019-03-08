@@ -18,7 +18,7 @@ AFPPlayerController::AFPPlayerController() {
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	wall->ChopWall();
-	ClientWallMeshUpdate(wall, !wall->IsBlocked());
+	//ClientWallMeshUpdate(wall, !wall->IsBlocked());
 }
 
 bool AFPPlayerController::ServerChopWall_Validate(AWall * wall)
@@ -28,7 +28,7 @@ bool AFPPlayerController::ServerChopWall_Validate(AWall * wall)
 
 void AFPPlayerController::ClientWallMeshUpdate_Implementation(AWall * wall, bool chopedDown)
 {
-	wall->UpdateWallMesh(chopedDown);
+	//wall->UpdateWallMesh(chopedDown);
 }
 
 bool AFPPlayerController::ClientWallMeshUpdate_Validate(AWall * wall, bool chopedDown)

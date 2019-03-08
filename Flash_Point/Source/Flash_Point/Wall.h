@@ -18,7 +18,7 @@ class FLASH_POINT_API AWall : public AEdgeUnit
 public:
 	AWall();
 
-	UPROPERTY(replicated, EditAnyWhere, Category = "SetUp")
+	UPROPERTY(ReplicatedUsing=Rep_WallMesh, EditAnyWhere, Category = "SetUp")
 	bool isChoped;
 
 	// A function to chop wall on the server
@@ -31,6 +31,9 @@ protected:
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
+	// A function to replicate wall mesh
+	UFUNCTION()
+	void Rep_WallMesh();
 	// Cursor clicked method
 	UFUNCTION()
 	void OnWallClicked(AActor * Target, FKey ButtonPressed);
