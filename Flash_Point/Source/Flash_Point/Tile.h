@@ -160,6 +160,8 @@ protected:
 	EPOIStatus POIStatus = EPOIStatus::Empty; // the default POI type of the tile
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
+	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
+	AActor* POIOnTile = nullptr; // the default POI type of the tile
 
 	AVictim* victim = nullptr;
 
