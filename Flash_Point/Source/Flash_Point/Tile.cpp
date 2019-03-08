@@ -2,6 +2,7 @@
 
 #include "Tile.h"
 #include "GameBoard.h"
+#include "Victim.h"
 
 
 // Sets default values
@@ -274,6 +275,32 @@ void ATile::SetFireStatus(EFireStatus status)
 	fireStatus = status;
 }
 
+EPOIStatus ATile::GetPOIStatus()
+{
+	return POIStatus;
+}
+
+void ATile::SetPOIStatus(EPOIStatus status)
+{
+	POIStatus = status;
+}
+
+void ATile::AdvanceFire()
+{
+	fireStatus = EFireStatus::Fire;
+	SmokeEffect->Deactivate();
+	FireEffect->Activate();
+	BlastEffect->Deactivate();
+}
+
+void ATile::AdvanceSmoke()
+{
+	fireStatus = EFireStatus::Smoke;
+	SmokeEffect->Activate();
+	FireEffect->Deactivate();
+	BlastEffect->Deactivate();
+}
+
 // Here is the function to bind all input bindings
 void ATile::BindCursorFunc()
 {
@@ -371,8 +398,27 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::ChopWall:
 			break;
 		case EGameOperations::ExtinguishFire:
+			if (fireStatus == EFireStatus::Fire)
+			{
+				FireEffect->Deactivate();
+				SmokeEffect->Activate();
+				fireStatus = EFireStatus::Smoke;
+			} 
+			else if (fireStatus == EFireStatus::Smoke)
+			{
+				FireEffect->Deactivate();
+				SmokeEffect->Deactivate();
+				fireStatus = EFireStatus::Clear;
+			}
 			break;
 		case EGameOperations::Carry:
+			if (POIStatus == EPOIStatus::Revealed)
+			{
+				if (ensure(victim))
+				{
+					CarryVictim(victim);
+				}
+			}
 			break;
 		case EGameOperations::OpenDoor:
 			break;
@@ -431,6 +477,23 @@ void ATile::FindPathToCurrent()
 		}
 	}
 	UE_LOG(LogTemp, Warning, TEXT("After search"));
+}
+
+void ATile::CarryVictim(AVictim* victim)
+{
+	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (ensure(playerController))
+	{
+		if (playerController->GetCarriedVictim() == nullptr)
+		{
+			APawn* controlledPawn = Cast<APawn>(playerController);
+			// if (this->GetActorLocation() == controlledPawn->GetActorLocation())
+			{
+				playerController->SetCarriedVictim(victim);
+				victim->victimMesh->SetVisibility(false);
+			}
+		}
+	}
 }
 
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

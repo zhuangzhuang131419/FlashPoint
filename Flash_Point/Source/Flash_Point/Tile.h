@@ -51,9 +51,11 @@ public:
 	// Getter and setters for the prev tile
 	ATile* GetPrev();
 	void SetPrev(ATile* prevTile);
+
 	// Getter and setter for expanded
 	bool IsExpanded();
 	void SetExpanded(bool exp);
+
 	// Getter and setter for the path cost
 	int32 GetPathCost();
 	void SetpathCost(int32 cost);
@@ -62,11 +64,22 @@ public:
 	// check if the tile is a outside tile
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	bool IsOutside();
+
 	// Getter and setter for fire status
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	EFireStatus GetFireStatus();
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	void SetFireStatus(EFireStatus status);
+
+	// Getter and setter for POI status
+	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
+	EPOIStatus GetPOIStatus();
+	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
+	void SetPOIStatus(EPOIStatus status);
+
+	void AdvanceFire();
+
+	void AdvanceSmoke();
 
 protected:
 	// FIELDS
@@ -138,8 +151,13 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
+	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
+	EPOIStatus POIStatus = EPOIStatus::Empty; // the default POI type of the tile
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
+
+	AVictim* victim = nullptr;
+
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	int32 quadrant = 0;	// default quarant of the tile
 	AFPPlayerController* localPlayer = nullptr;
@@ -174,6 +192,10 @@ protected:
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile
 	void FindPathToCurrent();
+
+	// Carry the victim
+	void CarryVictim(AVictim* victim);
+
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned

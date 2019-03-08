@@ -414,6 +414,33 @@ void AGameBoard::BeginPlay()
 		}
 	}
 	Super::BeginPlay();
+
+	// Initialize the fire
+	int32 randomPosition = FMath::RandRange(0, boardTiles.Num());
+	for (size_t i = 0; i < FireInitializeNum; i++) // Initialize 3 fires
+	{
+		while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+		{
+			randomPosition = FMath::RandRange(0, boardTiles.Num());
+		}
+		boardTiles[randomPosition]->AdvanceFire();
+	}
+
+	// Initialize the POI
+	randomPosition = FMath::RandRange(0, boardTiles.Num());
+	for (size_t i = 0; i < POIInitializeNum; i++)
+	{
+		while (boardTiles[randomPosition]->IsOutside() || 
+			boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+			boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+		{
+			randomPosition = FMath::RandRange(0, boardTiles.Num());
+		}
+		boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
+	}
+	
+
+
 	RefreshBoard();
 	// relocate each player's camera
 	if (ensure(CameraClass)) {

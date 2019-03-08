@@ -80,10 +80,14 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
+	void InitializeFire();
+
 	// PRIVATE FIELDS
 	const int32 boardWidth = 10;
 	const int32 boardLength = 8;
 	const int32 TILE_SIZE = 400;
+	const int32 FireInitializeNum = 10;
+	const int32 POIInitializeNum = 3;
 
 public:	
 	// Called every frame

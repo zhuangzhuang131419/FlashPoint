@@ -51,6 +51,15 @@ enum class EFireStatus : uint8
 	Fire
 };
 
+// An enum for POI status
+UENUM(BlueprintType)
+enum class EPOIStatus : uint8
+{
+	Empty,
+	Revealed,
+	Hided
+};
+
 // A struct used to indicate map generation
 USTRUCT(BlueprintType)
 struct FSpawnIndicator
