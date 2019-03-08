@@ -285,6 +285,23 @@ void ATile::SetPOIStatus(EPOIStatus status)
 	POIStatus = status;
 }
 
+UParticleSystemComponent * ATile::GetFireEffect()
+{
+	return FireEffect;
+}
+
+UParticleSystemComponent * ATile::GetSmokeEffect()
+{
+	return SmokeEffect;
+}
+
+UParticleSystemComponent * ATile::GetBlastEffect()
+{
+	return BlastEffect;
+}
+
+
+
 void ATile::AdvanceFire()
 {
 	fireStatus = EFireStatus::Fire;

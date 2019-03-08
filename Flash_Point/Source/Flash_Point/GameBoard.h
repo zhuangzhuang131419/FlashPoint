@@ -32,6 +32,12 @@ public:
 	// to clear all tile status, used in path finding
 	void ClearAllTile();
 
+	UFUNCTION(BlueprintCallable)
+	void AdvanceFire();
+
+	UFUNCTION(BlueprintCallable)
+	void AdvancePOI();
+
 	// Max health of the board to be specified at begining
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;

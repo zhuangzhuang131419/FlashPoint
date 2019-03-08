@@ -39,6 +39,43 @@ void AGameBoard::ClearAllTile()
 	}
 }
 
+void AGameBoard::AdvanceFire()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Advance fire."));
+	// int32 randomPosition = FMath::FRandRange(0, boardTiles.Num());
+	int32 randomPosition = 0;
+	while (boardTiles[randomPosition]->IsOutside())
+	{
+		// randomPosition = FMath::FRandRange(0, boardTiles.Num());
+		randomPosition++;
+	}
+
+	if (boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Clear)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Advance smoke at.%s"), *boardTiles[randomPosition]->GetName());
+		boardTiles[randomPosition]->SetFireStatus(EFireStatus::Smoke);
+		boardTiles[randomPosition]->GetSmokeEffect()->Activate();
+	}
+	else if (boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Smoke)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Advance fire at.%s"), *boardTiles[randomPosition]->GetName());
+		boardTiles[randomPosition]->SetFireStatus(EFireStatus::Fire);
+		boardTiles[randomPosition]->GetFireEffect()->Activate();
+		boardTiles[randomPosition]->GetSmokeEffect()->Deactivate();
+	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Advance blast at.%s"), *boardTiles[randomPosition]->GetName());
+		boardTiles[randomPosition]->GetBlastEffect()->Activate();
+		boardTiles[randomPosition]->GetBlastEffect()->Deactivate();
+	}
+}
+
+void AGameBoard::AdvancePOI()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Advance POI."));
+}
+
 void AGameBoard::InitializeDefaultBoard()
 {
 	// This is only done on the server

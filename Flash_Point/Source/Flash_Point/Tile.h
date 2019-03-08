@@ -77,6 +77,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Tile Attributes")
 	void SetPOIStatus(EPOIStatus status);
 
+	// Getter for fire effect
+	UParticleSystemComponent* GetFireEffect();
+	UParticleSystemComponent* GetSmokeEffect();
+	UParticleSystemComponent* GetBlastEffect();
+
 	void AdvanceFire();
 
 	void AdvanceSmoke();
