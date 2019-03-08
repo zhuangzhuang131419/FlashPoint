@@ -18,32 +18,6 @@ AVictim::AVictim()
 void AVictim::BeginPlay()
 {
 	Super::BeginPlay();
-	// Create binding to on cursor click
-	FScriptDelegate onMouseClickedDel;
-	onMouseClickedDel.BindUFunction(this, "OnTileClicked");
-	OnClicked.Add(onMouseClickedDel);
-}
-
-void AVictim::OnTileClicked(AActor * Target, FKey ButtonPressed)
-{
-	if (ButtonPressed != FKey("LeftMouseButton")) return;
-	UE_LOG(LogTemp, Warning, TEXT("Victim is been clicked"));
-	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (ensure(playerController))
-	{
-		if (playerController->GetCurrentOperation() == EGameOperations::Carry)
-		{
-			if (playerController->GetCarriedVictim() == nullptr)
-			{
-				APawn* controlledPawn = Cast<APawn>(playerController);
-				// if (this->GetActorLocation() == controlledPawn->GetActorLocation())
-				{
-					playerController->SetCarriedVictim(this);
-					victimMesh->SetVisibility(false);
-				}
-			}
-		}
-	}
 }
 
 // Called every frame

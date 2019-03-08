@@ -214,9 +214,6 @@ protected:
 	// A method to find path to current tile from player pawn's tile
 	void FindPathToCurrent();
 
-	// Carry the victim
-	void CarryVictim(AVictim* victim);
-
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
