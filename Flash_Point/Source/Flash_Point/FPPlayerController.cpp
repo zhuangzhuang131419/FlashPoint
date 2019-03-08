@@ -40,6 +40,30 @@ bool AFPPlayerController::ServerOpenDoor_Validate(ADoor * door)
 	return true;
 }
 
+void AFPPlayerController::ServerMovePawn_Implementation(ATile * tile, AFireFighterPawn * pawnToMove, const TArray<ATile*>& trace)
+{
+	if (ensure(tile)) {
+		tile->PawnMoveToHere(pawnToMove, trace);
+	}
+}
+
+bool AFPPlayerController::ServerMovePawn_Validate(ATile * tile, AFireFighterPawn * pawnToMove, const TArray<ATile*>& trace)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerPlacePawn_Implementation(ATile * tile, AFireFighterPawn * pawnToPlace)
+{
+	if (ensure(tile)) {
+		tile->PlacePawnHere(pawnToPlace);
+	}
+}
+
+bool AFPPlayerController::ServerPlacePawn_Validate(ATile * tile, AFireFighterPawn * pawnToPlace)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));

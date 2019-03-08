@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Engine.h"
+#include "UnrealNetwork.h"
 #include "FireFighterPawn.generated.h"
 
 class ATile;
@@ -34,14 +35,17 @@ public:
 
 protected:
 	// current firefighter position
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ATile* placedOn = nullptr;
 	// The firefighter's current ap value and max ap value
-	UPROPERTY(BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 currentAP = 4;	// initial AP for all firefighters are 4
-	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;	// Firefighter max ap
 
 
+	// Overriding setting all lifetime replicates function
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
