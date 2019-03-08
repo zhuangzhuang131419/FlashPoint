@@ -89,6 +89,10 @@ public:
 	// Getter for TileMesh
 	UStaticMeshComponent* GetTileMesh();
 
+	// Getter for Victim
+	AVictim* GetVictim();
+	void SetVictim(AVictim* victim);
+
 	void AdvanceFire();
 
 	void AdvanceSmoke();

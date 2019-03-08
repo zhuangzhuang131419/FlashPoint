@@ -50,12 +50,17 @@ public:
 	UFUNCTION(NetMulticast, Reliable, WithValidation)
 	void ClientWallMeshUpdate(AWall* wall, bool chopedDown);
 
-
+	// Getter and Setter for carried victim
 	UFUNCTION(BlueprintCallable)
 	AVictim* GetCarriedVictim();
-
 	UFUNCTION(BlueprintCallable)
 	void SetCarriedVictim(AVictim* victim);
+
+	UFUNCTION(BlueprintCallable)
+	void DropVictim();
+
+	UFUNCTION(BlueprintCallable)
+	void CarryVictim();
 
 
 protected:

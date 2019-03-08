@@ -316,6 +316,16 @@ UStaticMeshComponent * ATile::GetTileMesh()
 	return TileMesh;
 }
 
+AVictim * ATile::GetVictim()
+{
+	return victim;
+}
+
+void ATile::SetVictim(AVictim * victim)
+{
+	this->victim = victim;
+}
+
 void ATile::AdvanceFire()
 {
 	fireStatus = EFireStatus::Fire;
@@ -457,13 +467,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::Carry:
-			if (POIStatus == EPOIStatus::Revealed)
-			{
-				if (ensure(victim))
-				{
-					CarryVictim(victim);
-				}
-			}
 			break;
 		case EGameOperations::OpenDoor:
 			break;

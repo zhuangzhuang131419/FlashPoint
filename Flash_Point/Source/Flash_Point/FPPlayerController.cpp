@@ -46,6 +46,25 @@ void AFPPlayerController::SetCarriedVictim(AVictim * victim)
 	carriedVictim = victim;
 }
 
+void AFPPlayerController::DropVictim()
+{
+	if (ensure(carriedVictim))
+	{
+
+	}
+}
+
+void AFPPlayerController::CarryVictim()
+{
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	ATile* currentTile = fireFighterPawn->GetPlacedOn();
+	if (currentTile->GetVictim())
+	{
+		carriedVictim = currentTile->GetVictim();
+		currentTile->SetVictim(nullptr);
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
 
