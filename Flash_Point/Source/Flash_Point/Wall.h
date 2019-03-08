@@ -31,6 +31,9 @@ protected:
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
+	// override the is blocked rep notify
+	UFUNCTION()
+	virtual void Rep_BlockStatus() override;
 	// A function to replicate wall mesh
 	UFUNCTION()
 	void Rep_WallMesh();

@@ -41,7 +41,7 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
 	ATile* secondNeighbour = nullptr;
 	// informations about the edge unit
-	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
+	UPROPERTY(ReplicatedUsing=Rep_BlockStatus, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
 	bool isBlocked = false;
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
 	EEdgeType edgeType = EEdgeType::Empty;
@@ -51,6 +51,9 @@ protected:
 	UStaticMeshComponent* WallMesh = nullptr;
 
 	// FUNCTIONS
+	// Function to update block related mesh view 
+	UFUNCTION()
+	virtual void Rep_BlockStatus();
 	// mark all replicated properties
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
