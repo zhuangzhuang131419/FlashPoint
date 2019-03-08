@@ -47,6 +47,15 @@ void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(AWall, isChoped);
 }
 
+void AWall::Rep_BlockStatus()
+{
+	if (!isBlocked) {
+		if (ensure(WallMesh)) {
+			WallMesh->SetVisibility(false);
+		}
+	}
+}
+
 void AWall::Rep_WallMesh()
 {
 	if (isChoped) {
