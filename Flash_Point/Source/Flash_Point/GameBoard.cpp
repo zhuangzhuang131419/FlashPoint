@@ -65,6 +65,7 @@ void AGameBoard::AdvanceFire()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Advance blast at.%s"), *boardTiles[randomPosition]->GetName());
 		boardTiles[randomPosition]->GetBlastEffect()->Activate();
+		AdvanceExplosion();
 		boardTiles[randomPosition]->GetBlastEffect()->Deactivate();
 	}
 }
@@ -428,6 +429,16 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 void AGameBoard::RefreshBoard_Implementation()
 {
 	ClearAllTile();
+}
+
+void AGameBoard::AdvanceExplosion()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Explosion!!!"));
+	
+	for (size_t i = 0; i < 4; i++)
+	{
+
+	}
 }
 
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

@@ -91,6 +91,9 @@ protected:
 	// A function to refresh synchronized board
 	UFUNCTION(Client, Reliable)
 	void RefreshBoard();
+
+	void AdvanceExplosion();
+
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
