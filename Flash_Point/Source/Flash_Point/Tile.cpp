@@ -220,7 +220,26 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 			if (!ensure(POIOnTile)) return;
 			if (POIOnTile->isAlarm)
 			{
-				FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
+				FVector VictimSocketLocation;
+				switch (GetVictims()->Num())
+				{
+				case 0:
+					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim"));
+					break;
+				case 1:
+					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim1"));
+					break;
+				case 2:
+					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim3"));
+					break;
+				case 3:
+					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim4"));
+					break;
+				default:
+					UE_LOG(LogTemp, Warning, TEXT("No more position"))
+						VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim"));
+					break;
+				}
 				AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
 					victimClass,
 					VictimSocketLocation,
@@ -810,6 +829,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, xLoc);
 	DOREPLIFETIME(ATile, yLoc);
 	DOREPLIFETIME(ATile, fireStatus);
+	DOREPLIFETIME(ATile, victims);
 	DOREPLIFETIME(ATile, POIOnTile);
 	DOREPLIFETIME(ATile, POIStatus);
 	DOREPLIFETIME(ATile, blastOccured);

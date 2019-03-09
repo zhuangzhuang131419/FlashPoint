@@ -14,6 +14,27 @@ AVictim::AVictim()
 	victimMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("victimMesh"));
 }
 
+void AVictim::SetIsCarried(bool carried)
+{
+	isCarried = carried;
+}
+
+void AVictim::Rep_OnCarry()
+{
+	if (isCarried) {
+		victimMesh->SetVisibility(false);
+	}
+	else {
+		victimMesh->SetVisibility(true);
+	}
+}
+
+void AVictim::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AVictim, isCarried);
+}
+
 // Called when the game starts or when spawned
 void AVictim::BeginPlay()
 {
@@ -22,6 +43,7 @@ void AVictim::BeginPlay()
 	if (HasAuthority()) {
 		SetReplicates(true);
 	}
+
 }
 
 // Called every frame

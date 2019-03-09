@@ -100,44 +100,116 @@ bool AFPPlayerController::ServerAdvancePOI_Validate(AGameBoard * board)
 	return true;
 }
 
+void AFPPlayerController::ServerDrop_Implementation(AFireFighterPawn * fireFighterPawn)
+{
+	ATile* currentTile = fireFighterPawn->GetPlacedOn();
+	if (ensure(currentTile))
+	{
+		AVictim* tempVictim = fireFighterPawn->GetVictim();
+		if (!ensure(tempVictim)) return;
+		tempVictim->victimMesh->SetVisibility(true);
+		tempVictim->SetIsCarried(false);
+		FVector VictimSocketLocation;
+		switch (currentTile->GetVictims()->Num())
+		{
+		case 0:
+			VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+			break;
+		case 1:
+			VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim1"));
+			break;
+		case 2:
+			VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim3"));
+			break;
+		case 3:
+			VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
+			break;
+		default:
+			UE_LOG(LogTemp, Warning, TEXT("No more position"))
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+			break;
+		}
+
+		tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+		currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
+		UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+		fireFighterPawn->SetVictim(nullptr);
+		currentTile->SetPOIStatus(EPOIStatus::Hided);
+	}
+}
+
+bool AFPPlayerController::ServerDrop_Validate(AFireFighterPawn * fireFighterPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fireFighterPawn)
+{
+	ATile* currentTile = fireFighterPawn->GetPlacedOn();
+	if (ensure(currentTile))
+	{
+		if (ensure(currentTile->GetPOIStatus() == EPOIStatus::Revealed))
+		{
+			if (currentTile->GetVictims()->Num() > 0)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Before pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+				AVictim* carriedVictim = currentTile->GetVictims()->Pop(true);
+				if (!ensure(carriedVictim)) return;
+				carriedVictim->SetIsCarried(true);
+				UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+				fireFighterPawn->SetVictim(carriedVictim);
+				carriedVictim->victimMesh->SetVisibility(false);
+				currentTile->SetPOIStatus(EPOIStatus::Empty);
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("No victim."));
+			}
+		}
+	}
+}
+
+bool AFPPlayerController::ServerCarryVictim_Validate(AFireFighterPawn * fireFighterPawn)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
-		ATile* currentTile = fireFighterPawn->GetPlacedOn();
-		if (ensure(currentTile))
-		{
-			fireFighterPawn->GetVictim()->victimMesh->SetVisibility(true);
+		// for client only, do the victim position visual settings
+		if (!HasAuthority()) {
+			ATile* currentTile = fireFighterPawn->GetPlacedOn();
+			if (!ensure(currentTile)) return;
 			FVector VictimSocketLocation;
 			switch (currentTile->GetVictims()->Num())
 			{
-				case 0:
-					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
-					break;
-				case 1:
-					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim1"));
-					break;
-				case 2:
-					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim3"));
-					break;
-				case 3:
-					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
-					break;
-				default:
-					UE_LOG(LogTemp, Warning, TEXT("No more position"))
-					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
-					break;
+			case 0:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+				break;
+			case 1:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim1"));
+				break;
+			case 2:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim3"));
+				break;
+			case 3:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
+				break;
+			default:
+				UE_LOG(LogTemp, Warning, TEXT("No more position"));
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+				break;
 			}
-			
-			fireFighterPawn->GetVictim()->victimMesh->SetRelativeLocation(VictimSocketLocation);
-			UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num())
-			currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
-			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-			fireFighterPawn->SetVictim(nullptr);
-			currentTile->SetPOIStatus(EPOIStatus::Hided);
+			AVictim* tempVictim = fireFighterPawn->GetVictim();
+			if (!ensure(tempVictim)) return;
+			tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
 		}
+		ServerDrop(fireFighterPawn);
 	}
 }
 
@@ -148,26 +220,7 @@ void AFPPlayerController::CarryVictim()
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
-		ATile* currentTile = fireFighterPawn->GetPlacedOn();
-		if (ensure(currentTile))
-		{
-			if (ensure(currentTile->GetPOIStatus() == EPOIStatus::Revealed))
-			{
-				if (currentTile->GetVictims()->Num() > 0)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Before pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-					AVictim* carriedVictim = currentTile->GetVictims()->Pop(true);
-					UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-					fireFighterPawn->SetVictim(carriedVictim);
-					carriedVictim->victimMesh->SetVisibility(false);
-					currentTile->SetPOIStatus(EPOIStatus::Empty);
-				}
-				else
-				{
-					UE_LOG(LogTemp, Warning, TEXT("No victim."));
-				}
-			}
-		}
+		ServerCarryVictim(fireFighterPawn);
 	}
 }
 

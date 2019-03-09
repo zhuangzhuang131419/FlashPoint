@@ -68,12 +68,20 @@ public:
 	// server replenish POI
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdvancePOI(AGameBoard* board);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDrop(AFireFighterPawn * fireFighterPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerCarryVictim(AFireFighterPawn * fireFighterPawn);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
 
+	
+
 	UFUNCTION(BlueprintCallable)
 	void CarryVictim();
+
+	
 
 
 protected:

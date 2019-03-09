@@ -191,7 +191,7 @@ protected:
 	// A victim actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")
 	TSubclassOf<AVictim> victimClass = nullptr;
-	UPROPERTY(VisibleAnyWhere)
+	UPROPERTY(replicated, VisibleAnyWhere)
 	TArray<AVictim*> victims;
 
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")

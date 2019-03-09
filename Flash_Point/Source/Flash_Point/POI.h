@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UnrealNetwork.h"
 #include "POI.generated.h"
 
 UCLASS()
@@ -16,10 +17,13 @@ public:
 	APOI();
 
 	// FIELD
-	UPROPERTY(VisibleAnyWhere)
+	UPROPERTY(replicated, VisibleAnyWhere)
 	bool isAlarm;
 
 protected:
+
+	// replicate all needed properties
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

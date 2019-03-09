@@ -11,6 +11,12 @@ APOI::APOI()
 
 }
 
+void APOI::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(APOI, isAlarm);
+}
+
 // Called when the game starts or when spawned
 void APOI::BeginPlay()
 {

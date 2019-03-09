@@ -87,5 +87,6 @@ public:
 	void SetVictim(AVictim* victim);
 
 protected:
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AVictim* victim = nullptr;
 };

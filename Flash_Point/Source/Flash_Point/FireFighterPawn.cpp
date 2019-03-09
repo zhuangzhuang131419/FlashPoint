@@ -81,6 +81,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, moveConsumption);
 	DOREPLIFETIME(AFireFighterPawn, openConsumption);
 	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
+	DOREPLIFETIME(AFireFighterPawn, victim);
 }
 
 // Called when the game starts or when spawned
