@@ -114,9 +114,8 @@ void AFPPlayerController::DropVictim()
 					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
 					break;
 				default:
-					UE_LOG(LogTemp, Warning, TEXT("No more position"))
 					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
-					break;
+				break;
 			}
 			
 			fireFighterPawn->GetVictim()->victimMesh->SetRelativeLocation(VictimSocketLocation);
