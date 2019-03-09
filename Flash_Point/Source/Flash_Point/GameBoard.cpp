@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "GameBoard.h"
+#include "POI.h"
 
 
 // Sets default values
@@ -72,27 +73,34 @@ void AGameBoard::AdvanceFire()
 
 void AGameBoard::AdvancePOI()
 {
-	int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-	while (boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty || boardTiles[randomPosition]->IsOutside())
+	if (currentPOI < maxPOI)
 	{
-		randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-	}
-	if (boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire) 
-	{
-		victimNum++;
-	}
-	else {
+		int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+		while (boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty
+			|| boardTiles[randomPosition]->IsOutside()
+			|| boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+		{
+			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+		}
+
 		boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
 		FVector POISocketLocation = boardTiles[randomPosition]->GetTileMesh()->GetSocketLocation(FName("POI"));
-		AActor* POI = GetWorld()->SpawnActor<AActor>(
+		APOI* inPOI = GetWorld()->SpawnActor<APOI>(
 			POIClass,
 			POISocketLocation,
 			FRotator(0, 0, 0)
 			);
-		boardTiles[randomPosition]->SetPOIOnTile(POI);
+		bool placedSuccess = false;
+		setPOIalarm(inPOI);
+		currentPOI++;
+		boardTiles[randomPosition]->SetPOIOnTile(inPOI);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No advance POI."));
 	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Advance POI."));
+	
 }
 
 void AGameBoard::InitializeDefaultBoard()
@@ -495,13 +503,16 @@ void AGameBoard::BeginPlay()
 			}
 			boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
 			FVector POISocketLocation = boardTiles[randomPosition]->GetTileMesh()->GetSocketLocation(FName("POI"));
-			AActor* POI = GetWorld()->SpawnActor<AActor>(
+			APOI* inPOI = GetWorld()->SpawnActor<APOI>(
 				POIClass,
 				POISocketLocation,
 				FRotator(0, 0, 0)
 				);
-			boardTiles[randomPosition]->SetPOIOnTile(POI);
+			
+			setPOIalarm(inPOI);
+			boardTiles[randomPosition]->SetPOIOnTile(inPOI);
 		}
+		currentPOI = maxPOI;
 	}
 	
 
@@ -515,6 +526,33 @@ void AGameBoard::BeginPlay()
 			FRotator(270, 0, 0)
 			);
 		camera->RelocateAndSetToViewPort(FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
+	}
+}
+
+void AGameBoard::setPOIalarm(APOI* inPOI)
+{
+	bool placedSuccess = false;
+	while (!placedSuccess)
+	{
+		if (FMath::RandRange(-2, 2) > 0)
+		{
+			if (falseAlarmNum)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("isfalseAlarm"));
+				inPOI->isAlarm = false;
+				falseAlarmNum--;
+				placedSuccess = true;
+			}
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("isAlarm"));
+			if (totalVictimNum)
+			{
+				inPOI->isAlarm = true;
+				totalVictimNum--;
+				placedSuccess = true;
+			}
+		}
 	}
 }
 

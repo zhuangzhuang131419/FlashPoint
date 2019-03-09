@@ -42,11 +42,23 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
-	UPROPERTY(BlueprintReadOnly)
-	int32 victimNum = 0;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	int32 victimLostNum = 0;
 
 	UPROPERTY(BlueprintReadOnly)
 	int32 maxVictim = 4;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	int32 currentPOI = 0;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	int32 maxPOI = 3;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	int32 falseAlarmNum = 5;
+
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	int32 totalVictimNum = 10;
 
 protected:
 	// FIELDS
@@ -61,7 +73,7 @@ protected:
 	TSubclassOf<AViewPortCamera> CameraClass = nullptr;
 	// A POI actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<AActor> POIClass = nullptr;
+	TSubclassOf<APOI> POIClass = nullptr;
 	
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
@@ -96,6 +108,8 @@ protected:
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
 
+	void setPOIalarm(APOI* inPOI);
+
 private:
 	void InitializeFire();
 
@@ -105,6 +119,8 @@ private:
 	const int32 TILE_SIZE = 400;
 	const int32 FireInitializeNum = 10;
 	const int32 POIInitializeNum = 3;
+
+	
 	
 
 public:	

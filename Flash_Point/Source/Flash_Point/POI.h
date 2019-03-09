@@ -16,6 +16,7 @@ public:
 	APOI();
 
 	// FIELD
+	UPROPERTY(VisibleAnyWhere)
 	bool isAlarm;
 
 protected:

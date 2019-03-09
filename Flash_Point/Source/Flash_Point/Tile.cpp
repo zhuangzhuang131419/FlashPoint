@@ -4,6 +4,7 @@
 #include "GameBoard.h"
 #include "Victim.h"
 #include "Wall.h"
+#include "POI.h"
 #include "Door.h"
 
 
@@ -216,17 +217,21 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		if (POIStatus == EPOIStatus::Hided)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
-			FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
-			AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
-				victimClass,
-				VictimSocketLocation,
-				FRotator(0, 0, 0)
-				);
-			POIOnTile->Destroy();
-			if (ensure(newVictim))
+			if (POIOnTile->isAlarm)
 			{
-				victims.Add(newVictim);
+				FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
+				AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
+					victimClass,
+					VictimSocketLocation,
+					FRotator(0, 0, 0)
+					);
+				if (ensure(newVictim))
+				{
+					victims.Add(newVictim);
+				}
 			}
+			POIOnTile->Destroy();
+			board->currentPOI--;
 			POIStatus = EPOIStatus::Revealed;
 		}
 	}
@@ -342,14 +347,14 @@ UParticleSystemComponent * ATile::GetBlastEffect()
 	return BlastEffect;
 }
 
-AActor * ATile::GetPOIOnTile()
+APOI* ATile::GetPOIOnTile()
 {
 	return POIOnTile;
 }
 
-void ATile::SetPOIOnTile(AActor * POI)
+void ATile::SetPOIOnTile(APOI* inPOI)
 {
-	POIOnTile = POI;
+	POIOnTile = inPOI;
 }
 
 

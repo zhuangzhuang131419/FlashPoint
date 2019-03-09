@@ -9,6 +9,7 @@
 #include "EdgeUnit.h"
 #include "FireFighterPawn.h"
 #include "FPPlayerController.h"
+#include "POI.h"
 #include "UnrealNetwork.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "GeneralTypes.h"
@@ -83,8 +84,8 @@ public:
 	UParticleSystemComponent* GetBlastEffect();
 
 	// Getter and Setter for POI
-	AActor* GetPOIOnTile();
-	void SetPOIOnTile(AActor* POI);
+	APOI* GetPOIOnTile();
+	void SetPOIOnTile(APOI* inPOI);
 
 	// Getter for TileMesh
 	UStaticMeshComponent* GetTileMesh();
@@ -183,7 +184,7 @@ protected:
 	UPROPERTY(ReplicatedUsing=Rep_FireStatus, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
-	AActor* POIOnTile = nullptr; // the default POI type of the tile
+	APOI* POIOnTile = nullptr; // the default POI type of the tile
 
 	// A victim actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")
