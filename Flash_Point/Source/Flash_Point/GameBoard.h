@@ -46,8 +46,14 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
 
-	UPROPERTY(BlueprintReadOnly)
-	int32 maxVictim = 4;
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+	int32 maxLostVictim = 4;
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	int32 victimSavedNum = 0;
+
+	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+	int32 maxSavedVictim = 7;
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 currentPOI = 0;
