@@ -365,18 +365,29 @@ void ATile::SetVictim(AVictim * victim)
 
 void ATile::AdvanceFire()
 {
-	fireStatus = EFireStatus::Fire;
+	if (HasAuthority()) {
+		fireStatus = EFireStatus::Fire;
+	}
 	SmokeEffect->Deactivate();
 	FireEffect->Activate();
-	BlastEffect->Deactivate();
 }
 
-void ATile::AdvanceSmoke()
+void ATile::SetSmokeOnTile()
 {
-	fireStatus = EFireStatus::Smoke;
+	if (HasAuthority()) {
+		fireStatus = EFireStatus::Smoke;
+	}
 	SmokeEffect->Activate();
 	FireEffect->Deactivate();
-	BlastEffect->Deactivate();
+}
+
+void ATile::SetClearOnTile()
+{
+	if (HasAuthority()) {
+		fireStatus = EFireStatus::Clear;
+	}
+	FireEffect->Deactivate();
+	SmokeEffect->Deactivate();
 }
 
 // Here is the function to bind all input bindings
@@ -434,6 +445,22 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 	}
 }
 
+void ATile::ExitinguishFireOnTile()
+{
+	if (fireStatus == EFireStatus::Fire)
+	{
+		if (HasAuthority()) {
+			SetSmokeOnTile();
+		}
+	}
+	else if (fireStatus == EFireStatus::Smoke)
+	{
+		if (HasAuthority()) {
+			SetClearOnTile();
+		}
+	}
+}
+
 void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
@@ -481,17 +508,11 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::ChopWall:
 			break;
 		case EGameOperations::ExtinguishFire:
-			if (fireStatus == EFireStatus::Fire)
-			{
-				FireEffect->Deactivate();
-				SmokeEffect->Activate();
-				fireStatus = EFireStatus::Smoke;
-			} 
-			else if (fireStatus == EFireStatus::Smoke)
-			{
-				FireEffect->Deactivate();
-				SmokeEffect->Deactivate();
-				fireStatus = EFireStatus::Clear;
+			if (HasAuthority()) {
+				ExitinguishFireOnTile();
+			}
+			else {
+				localPlayer->ServerExtinguishFire(this);
 			}
 			break;
 		case EGameOperations::Carry:
@@ -562,6 +583,26 @@ void ATile::Rep_BaseMat()
 	}
 }
 
+void ATile::Rep_FireStatus()
+{
+	if (!ensure(FireEffect) || !ensure(SmokeEffect) || !ensure(BlastEffect))	return;
+	switch (fireStatus)
+	{
+	case EFireStatus::Clear:
+		SetClearOnTile();
+		break;
+	case EFireStatus::Smoke:
+		SetSmokeOnTile();
+		break;
+	case EFireStatus::Fire:
+		FireEffect->Activate();
+		SmokeEffect->Deactivate();
+		break;
+	default:
+		break;
+	}
+}
+
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	// super first
@@ -577,6 +618,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, board);
 	DOREPLIFETIME(ATile, xLoc);
 	DOREPLIFETIME(ATile, yLoc);
+	DOREPLIFETIME(ATile, fireStatus);
 }
 
 // Called when the game starts or when spawned

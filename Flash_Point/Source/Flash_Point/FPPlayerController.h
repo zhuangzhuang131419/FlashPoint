@@ -59,6 +59,9 @@ public:
 	// Place a pawn on server
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerPlacePawn(ATile* tile, AFireFighterPawn* pawnToPlace);
+	// Extinguish fire on a certain tile to be done on server
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerExtinguishFire(ATile* tile);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

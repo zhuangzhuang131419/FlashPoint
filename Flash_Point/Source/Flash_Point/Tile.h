@@ -93,14 +93,14 @@ public:
 	AVictim* GetVictim();
 	void SetVictim(AVictim* victim);
 
-	void AdvanceFire();
-
-	void AdvanceSmoke();
-
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
+	void AdvanceFire();
+	void SetSmokeOnTile();
+	void SetClearOnTile();
+	void ExitinguishFireOnTile();
 
 protected:
 	// FIELDS
@@ -174,7 +174,7 @@ protected:
 	ETileType type = ETileType::Default;	// the default type of the tile
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
 	EPOIStatus POIStatus = EPOIStatus::Empty; // the default POI type of the tile
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
+	UPROPERTY(ReplicatedUsing=Rep_FireStatus, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
 	AActor* POIOnTile = nullptr; // the default POI type of the tile
@@ -223,6 +223,8 @@ protected:
 	// Replication functions
 	UFUNCTION()
 	void Rep_BaseMat();
+	UFUNCTION()
+	void Rep_FireStatus();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

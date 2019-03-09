@@ -64,6 +64,18 @@ bool AFPPlayerController::ServerPlacePawn_Validate(ATile * tile, AFireFighterPaw
 	return true;
 }
 
+void AFPPlayerController::ServerExtinguishFire_Implementation(ATile * tile)
+{
+	if (ensure(tile)) {
+		tile->ExitinguishFireOnTile();
+	}
+}
+
+bool AFPPlayerController::ServerExtinguishFire_Validate(ATile * tile)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
