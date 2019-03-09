@@ -124,6 +124,7 @@ void AFPPlayerController::DropVictim()
 			currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
 			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 			fireFighterPawn->SetVictim(nullptr);
+			currentTile->SetPOIStatus(EPOIStatus::Hided);
 		}
 	}
 }
@@ -131,23 +132,28 @@ void AFPPlayerController::DropVictim()
 void AFPPlayerController::CarryVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Carry victim."));
+	
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
 		ATile* currentTile = fireFighterPawn->GetPlacedOn();
 		if (ensure(currentTile))
 		{
-			if (currentTile->GetVictims()->Num() > 0)
+			if (ensure(currentTile->GetPOIStatus() == EPOIStatus::Revealed))
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Before pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-				AVictim* carriedVictim = currentTile->GetVictims()->Pop(true);
-				UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-				fireFighterPawn->SetVictim(carriedVictim);
-				carriedVictim->victimMesh->SetVisibility(false);
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("No victim."));
+				if (currentTile->GetVictims()->Num() > 0)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Before pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+					AVictim* carriedVictim = currentTile->GetVictims()->Pop(true);
+					UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+					fireFighterPawn->SetVictim(carriedVictim);
+					carriedVictim->victimMesh->SetVisibility(false);
+					currentTile->SetPOIStatus(EPOIStatus::Empty);
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("No victim."));
+				}
 			}
 		}
 	}

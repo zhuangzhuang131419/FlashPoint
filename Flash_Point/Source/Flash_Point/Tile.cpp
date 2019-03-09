@@ -229,10 +229,15 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 				{
 					victims.Add(newVictim);
 				}
+				POIStatus = EPOIStatus::Revealed;
+			}
+			else
+			{
+				POIStatus = EPOIStatus::Empty;
 			}
 			POIOnTile->Destroy();
 			board->currentPOI--;
-			POIStatus = EPOIStatus::Revealed;
+			
 		}
 	}
 }
