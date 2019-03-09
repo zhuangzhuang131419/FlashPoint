@@ -57,6 +57,21 @@ bool AEdgeUnit::IsBlocked()
 	return isBlocked;
 }
 
+void AEdgeUnit::SetIsBlocked(bool blocked)
+{
+	isBlocked = blocked;
+}
+
+EEdgeType AEdgeUnit::GetEdgeType()
+{
+	return edgeType;
+}
+
+UStaticMeshComponent * AEdgeUnit::GetWallMesh()
+{
+	return WallMesh;
+}
+
 void AEdgeUnit::Rep_BlockStatus()
 {
 	// not really doing anything here since edge unit's isblocked status is not likely to change

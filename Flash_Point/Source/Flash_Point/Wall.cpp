@@ -41,6 +41,13 @@ void AWall::UpdateWallMesh(bool chopedDown)
 	}
 }
 
+/*
+void AWall::Damage()
+{
+
+}
+*/
+
 void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

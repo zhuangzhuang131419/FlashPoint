@@ -30,8 +30,18 @@ public:
 	void OnOpenDoor();
 	// Get other neighbour of the edge, used in move searching
 	ATile* GetOtherNeighbour(ATile* current);
-	// Check if the edge is blocked
+
+
+	// Getter and setter
 	bool IsBlocked();
+	void SetIsBlocked(bool blocked);
+
+	// virtual void Damage();
+
+	// Getter and setter
+	EEdgeType GetEdgeType();
+
+	UStaticMeshComponent* GetWallMesh();
 
 protected:
 	// FIELDS

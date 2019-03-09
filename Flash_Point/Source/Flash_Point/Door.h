@@ -38,6 +38,8 @@ public:
 
 	void ChangeDoorStatus();
 
+	// virtual void Damage() override;
+
 	
 
 protected:

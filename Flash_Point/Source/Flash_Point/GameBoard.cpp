@@ -65,7 +65,7 @@ void AGameBoard::AdvanceFire()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Advance blast at.%s"), *boardTiles[randomPosition]->GetName());
 		boardTiles[randomPosition]->GetBlastEffect()->Activate();
-		AdvanceExplosion();
+		boardTiles[randomPosition]->AdvanceExplosion();
 		boardTiles[randomPosition]->GetBlastEffect()->Deactivate();
 	}
 }
@@ -431,16 +431,6 @@ void AGameBoard::RefreshBoard_Implementation()
 	ClearAllTile();
 }
 
-void AGameBoard::AdvanceExplosion()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Explosion!!!"));
-	
-	for (size_t i = 0; i < 4; i++)
-	{
-
-	}
-}
-
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -516,7 +506,7 @@ void AGameBoard::BeginPlay()
 	
 
 
-	RefreshBoard();
+	//RefreshBoard();
 	// relocate each player's camera
 	if (ensure(CameraClass)) {
 		AViewPortCamera* camera = GetWorld()->SpawnActor<AViewPortCamera>(

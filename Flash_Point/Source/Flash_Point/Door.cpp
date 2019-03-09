@@ -78,6 +78,13 @@ void ADoor::ChangeDoorStatus()
 	}
 }
 
+/*
+void ADoor::Damage()
+{
+
+}
+*/
+
 void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;

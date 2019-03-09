@@ -60,6 +60,16 @@ enum class EPOIStatus : uint8
 	Hided
 };
 
+// An enum for direction
+UENUM(BlueprintType)
+enum class EDirection : uint8
+{
+	Up,
+	Down,
+	Left,
+	Right
+};
+
 // A struct used to indicate map generation
 USTRUCT(BlueprintType)
 struct FSpawnIndicator

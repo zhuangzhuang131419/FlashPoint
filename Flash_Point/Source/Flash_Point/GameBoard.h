@@ -68,7 +68,7 @@ protected:
 	AFPPlayerController* currentPlayer = nullptr;
 	// A resonable height for camera to be above the board
 	UPROPERTY(EditAnyWhere, Category = "Setup")
-	int32 camHeight = 2800;
+	int32 camHeight = 2900;
 	// the entire board are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
@@ -91,8 +91,6 @@ protected:
 	// A function to refresh synchronized board
 	UFUNCTION(Client, Reliable)
 	void RefreshBoard();
-
-	void AdvanceExplosion();
 
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

@@ -3,6 +3,8 @@
 #include "Tile.h"
 #include "GameBoard.h"
 #include "Victim.h"
+#include "Wall.h"
+#include "Door.h"
 
 
 // Sets default values
@@ -202,6 +204,43 @@ void ATile::BindRightEdge(AEdgeUnit * edge)
 	}
 }
 
+void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace)
+{
+	if (ensure(movingPawn)) {
+		movingPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+		// Associate the firefighter with this tile
+		placedFireFighters.Add(movingPawn);
+		movingPawn->GetPlacedOn()->placedFireFighters.Remove(movingPawn);
+		movingPawn->SetPlacedOn(this);
+
+		if (POIStatus == EPOIStatus::Hided)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
+			FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
+			AActor* newVictim = GetWorld()->SpawnActor<AActor>(
+				victimClass,
+				VictimSocketLocation,
+				FRotator(0, 0, 0)
+				);
+			POIOnTile->Destroy();
+			victim = Cast<AVictim>(newVictim);
+			POIStatus = EPOIStatus::Revealed;
+		}
+	}
+}
+
+void ATile::PlacePawnHere(AFireFighterPawn* placingPawn)
+{
+	if (ensure(placingPawn)) {
+		// Add the firefighter to the current position actors
+		placingPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+		// Associate the firefighter with this tile
+		placedFireFighters.Add(placingPawn);
+		UE_LOG(LogTemp, Warning, TEXT("Pawn location has been set"));
+		placingPawn->SetPlacedOn(this);
+	}
+}
+
 AEdgeUnit * ATile::GetFront()
 {
 	return frontWall;
@@ -328,18 +367,100 @@ void ATile::SetVictim(AVictim * victim)
 
 void ATile::AdvanceFire()
 {
-	fireStatus = EFireStatus::Fire;
+	if (HasAuthority()) {
+		fireStatus = EFireStatus::Fire;
+	}
 	SmokeEffect->Deactivate();
 	FireEffect->Activate();
-	BlastEffect->Deactivate();
 }
 
-void ATile::AdvanceSmoke()
+void ATile::SetSmokeOnTile()
 {
-	fireStatus = EFireStatus::Smoke;
+	if (HasAuthority()) {
+		fireStatus = EFireStatus::Smoke;
+	}
 	SmokeEffect->Activate();
 	FireEffect->Deactivate();
-	BlastEffect->Deactivate();
+}
+
+void ATile::SetClearOnTile()
+{
+	if (HasAuthority()) {
+		fireStatus = EFireStatus::Clear;
+	}
+	FireEffect->Deactivate();
+	SmokeEffect->Deactivate();
+}
+
+void ATile::AdvanceExplosion(EDirection direction)
+{
+	AEdgeUnit* adjacentWall = nullptr;
+	switch (direction) 
+	{
+		case EDirection::Down:
+			adjacentWall = backWall;
+			break;
+		case EDirection::Left:
+			adjacentWall = leftWall;
+			break;
+		case EDirection::Right:
+			adjacentWall = rightWall;
+			break;
+		case EDirection::Up:
+			adjacentWall = frontWall;
+			break;
+	}
+
+	if (adjacentWall)
+	{
+		if (adjacentWall->IsBlocked())
+		{
+			if (adjacentWall->GetEdgeType() == EEdgeType::Door)
+			{
+				// (Cast<ADoor>(adjacentWall))->Damage();
+				adjacentWall->GetWallMesh()->SetVisibility(false);
+				(Cast<ADoor>(adjacentWall))->Door->SetVisibility(false);
+				(Cast<ADoor>(adjacentWall))->DoorFrame->SetVisibility(false);
+				adjacentWall->SetIsBlocked(false);
+			}
+			else if (adjacentWall->GetEdgeType() == EEdgeType::Wall)
+			{
+				// (Cast<AWall>(adjacentWall))->Damage();
+				Cast<AWall>(adjacentWall)->ChopWall();
+			}
+		}
+		else
+		{
+			if (adjacentWall->GetOtherNeighbour(this))
+			{
+				if (adjacentWall->GetOtherNeighbour(this)->GetFireStatus() != EFireStatus::Fire)
+				{
+					if (adjacentWall->GetOtherNeighbour(this)->GetFireStatus() == EFireStatus::Smoke)
+					{
+						adjacentWall->GetOtherNeighbour(this)->FireEffect->Activate();
+						adjacentWall->GetOtherNeighbour(this)->SmokeEffect->Deactivate();
+					}
+					else
+					{
+						adjacentWall->GetOtherNeighbour(this)->FireEffect->Activate();
+					}
+					adjacentWall->GetOtherNeighbour(this)->SetFireStatus(EFireStatus::Fire);
+				}
+				else
+				{
+					adjacentWall->GetOtherNeighbour(this)->AdvanceExplosion(direction);
+				}
+			}
+		}
+	}
+}
+
+void ATile::AdvanceExplosion()
+{
+	AdvanceExplosion(EDirection::Down);
+	AdvanceExplosion(EDirection::Left);
+	AdvanceExplosion(EDirection::Right);
+	AdvanceExplosion(EDirection::Up);
 }
 
 // Here is the function to bind all input bindings
@@ -397,6 +518,22 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 	}
 }
 
+void ATile::ExitinguishFireOnTile()
+{
+	if (fireStatus == EFireStatus::Fire)
+	{
+		if (HasAuthority()) {
+			SetSmokeOnTile();
+		}
+	}
+	else if (fireStatus == EFireStatus::Smoke)
+	{
+		if (HasAuthority()) {
+			SetClearOnTile();
+		}
+	}
+}
+
 void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
@@ -406,20 +543,20 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		switch (ops)
 		{
 		case EGameOperations::PlaceFireFighter:
+			localPlayer->SetNone();
 			if (outside) {
 				// Place firefighter to current tile
 				localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
 				if (ensure(localPawn))
 				{
-					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-					localPlayer->SetNone();
-
-					// Add the firefighter to the current position actors
-
-					// Associate the firefighter with this tile
-					placedFireFighters.Add(localPawn);
-					UE_LOG(LogTemp, Warning, TEXT("Pawn location has been set"));
-					localPawn->SetPlacedOn(this);
+					if (HasAuthority()) {
+						PlacePawnHere(localPawn);
+					}
+					else {
+						localPlayer->ServerPlacePawn(this, localPawn);
+						// to make the placing visible to operation client
+						localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+					}
 				}
 			}
 			break;
@@ -427,27 +564,16 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::Move:
 			if (isReady && canMoveTo) {
-				localPlayer->GetPawn()->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+				if (!ensure(localPlayer)) return;
+				if (!ensure(localPawn)) return;
 				localPlayer->SetNone();
-				if (ensure(localPawn)) {
-					// Associate the firefighter with this tile
-					placedFireFighters.Add(localPawn);
-					localPawn->GetPlacedOn()->placedFireFighters.Remove(localPawn);
-					localPawn->SetPlacedOn(this);
-
-					if (POIStatus == EPOIStatus::Hided)
-					{
-						UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
-						FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
-						AActor* newVictim = GetWorld()->SpawnActor<AActor>(
-							victimClass,
-							VictimSocketLocation,
-							FRotator(0, 0, 0)
-							);
-						POIOnTile->Destroy();
-						victim = Cast<AVictim>(newVictim);
-						POIStatus = EPOIStatus::Revealed;
-					}
+				if (HasAuthority()) {
+					PawnMoveToHere(localPawn, pathToHere);
+				}
+				else {
+					localPlayer->ServerMovePawn(this, localPawn, pathToHere);
+					// to make the placing visible to operation client
+					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 				}
 			}
 
@@ -455,17 +581,11 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::ChopWall:
 			break;
 		case EGameOperations::ExtinguishFire:
-			if (fireStatus == EFireStatus::Fire)
-			{
-				FireEffect->Deactivate();
-				SmokeEffect->Activate();
-				fireStatus = EFireStatus::Smoke;
-			} 
-			else if (fireStatus == EFireStatus::Smoke)
-			{
-				FireEffect->Deactivate();
-				SmokeEffect->Deactivate();
-				fireStatus = EFireStatus::Clear;
+			if (HasAuthority()) {
+				ExitinguishFireOnTile();
+			}
+			else {
+				localPlayer->ServerExtinguishFire(this);
 			}
 			break;
 		case EGameOperations::Carry:
@@ -529,6 +649,33 @@ void ATile::FindPathToCurrent()
 	UE_LOG(LogTemp, Warning, TEXT("After search"));
 }
 
+void ATile::Rep_BaseMat()
+{
+	if (ensure(baseMat)) {
+		PlaneColorSwitch(baseMat);
+	}
+}
+
+void ATile::Rep_FireStatus()
+{
+	if (!ensure(FireEffect) || !ensure(SmokeEffect) || !ensure(BlastEffect))	return;
+	switch (fireStatus)
+	{
+	case EFireStatus::Clear:
+		SetClearOnTile();
+		break;
+	case EFireStatus::Smoke:
+		SetSmokeOnTile();
+		break;
+	case EFireStatus::Fire:
+		FireEffect->Activate();
+		SmokeEffect->Deactivate();
+		break;
+	default:
+		break;
+	}
+}
+
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	// super first
@@ -544,6 +691,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, board);
 	DOREPLIFETIME(ATile, xLoc);
 	DOREPLIFETIME(ATile, yLoc);
+	DOREPLIFETIME(ATile, fireStatus);
 }
 
 // Called when the game starts or when spawned
