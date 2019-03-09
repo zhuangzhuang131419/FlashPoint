@@ -83,7 +83,7 @@ void AGameBoard::AdvanceFire()
 	}
 }
 
-void AGameBoard::AdvancePOI()
+void AGameBoard::AdvancePOIOnBoard()
 {
 	if (currentPOI < maxPOI)
 	{
@@ -111,8 +111,18 @@ void AGameBoard::AdvancePOI()
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No advance POI."));
 	}
+}
 
-	
+void AGameBoard::AdvancePOI()
+{
+	if (HasAuthority()) {
+		AdvancePOIOnBoard();
+	}
+	else {
+		if (ensure(localPlayer)) {
+			localPlayer->ServerAdvancePOI(this);
+		}
+	}
 }
 
 void AGameBoard::InitializeDefaultBoard()

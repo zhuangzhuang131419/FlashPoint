@@ -35,7 +35,7 @@ public:
 	void AdvanceFireOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void AdvanceFire();
-
+	void AdvancePOIOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void AdvancePOI();
 

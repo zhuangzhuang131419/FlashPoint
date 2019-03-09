@@ -79,11 +79,23 @@ bool AFPPlayerController::ServerExtinguishFire_Validate(ATile * tile)
 void AFPPlayerController::ServerAdvanceFire_Implementation(AGameBoard * board)
 {
 	if (ensure(board)) {
-		board->AdvanceFire();
+		board->AdvanceFireOnBoard();
 	}
 }
 
 bool AFPPlayerController::ServerAdvanceFire_Validate(AGameBoard * board)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerAdvancePOI_Implementation(AGameBoard * board)
+{
+	if (ensure(board)) {
+		board->AdvancePOIOnBoard();
+	}
+}
+
+bool AFPPlayerController::ServerAdvancePOI_Validate(AGameBoard * board)
 {
 	return true;
 }

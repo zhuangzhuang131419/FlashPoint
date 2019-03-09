@@ -217,6 +217,7 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		if (POIStatus == EPOIStatus::Hided)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
+			if (!ensure(POIOnTile)) return;
 			if (POIOnTile->isAlarm)
 			{
 				FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
@@ -231,6 +232,7 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 				}
 			}
 			POIOnTile->Destroy();
+			POIOnTile = nullptr;
 			board->currentPOI--;
 			POIStatus = EPOIStatus::Revealed;
 		}
@@ -803,6 +805,8 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, xLoc);
 	DOREPLIFETIME(ATile, yLoc);
 	DOREPLIFETIME(ATile, fireStatus);
+	DOREPLIFETIME(ATile, POIOnTile);
+	DOREPLIFETIME(ATile, POIStatus);
 	DOREPLIFETIME(ATile, blastOccured);
 }
 

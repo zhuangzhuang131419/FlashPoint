@@ -15,6 +15,11 @@ APOI::APOI()
 void APOI::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// replicate this item
+	if (HasAuthority()) {
+		SetReplicates(true);
+	}
 	
 }
 

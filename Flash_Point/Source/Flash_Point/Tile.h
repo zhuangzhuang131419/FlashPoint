@@ -179,11 +179,11 @@ protected:
 	UPROPERTY(ReplicatedUsing=Rep_BaseMat, EditAnyWhere, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
-	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
 	EPOIStatus POIStatus = EPOIStatus::Empty; // the default POI type of the tile
 	UPROPERTY(ReplicatedUsing=Rep_FireStatus, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
-	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
 	APOI* POIOnTile = nullptr; // the default POI type of the tile
 	UPROPERTY(ReplicatedUsing = Rep_BlastEffect, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	bool blastOccured = false;	// used fore synchronization of the blast effect

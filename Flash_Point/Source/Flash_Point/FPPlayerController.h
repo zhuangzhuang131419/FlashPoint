@@ -65,6 +65,9 @@ public:
 	// Server advance fire
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdvanceFire(AGameBoard* board);
+	// server replenish POI
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAdvancePOI(AGameBoard* board);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

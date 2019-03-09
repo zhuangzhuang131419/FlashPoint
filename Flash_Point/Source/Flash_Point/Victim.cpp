@@ -18,6 +18,10 @@ AVictim::AVictim()
 void AVictim::BeginPlay()
 {
 	Super::BeginPlay();
+	// replicate the victim
+	if (HasAuthority()) {
+		SetReplicates(true);
+	}
 }
 
 // Called every frame
