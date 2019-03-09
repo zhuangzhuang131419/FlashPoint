@@ -9,6 +9,8 @@ AFireFighterPawn::AFireFighterPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	bReplicates = true;
+	bReplicateMovement = true;
 
 }
 
@@ -30,6 +32,14 @@ int32 AFireFighterPawn::GetCurrentAP()
 void AFireFighterPawn::SetCurrentAP(int32 current)
 {
 	currentAP = current;
+}
+
+void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AFireFighterPawn, placedOn);
+	DOREPLIFETIME(AFireFighterPawn, currentAP);
+	DOREPLIFETIME(AFireFighterPawn, maxAP);
 }
 
 // Called when the game starts or when spawned

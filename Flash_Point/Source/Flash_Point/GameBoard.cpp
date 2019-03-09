@@ -505,7 +505,7 @@ void AGameBoard::BeginPlay()
 	
 
 
-	RefreshBoard();
+	//RefreshBoard();
 	// relocate each player's camera
 	if (ensure(CameraClass)) {
 		AViewPortCamera* camera = GetWorld()->SpawnActor<AViewPortCamera>(

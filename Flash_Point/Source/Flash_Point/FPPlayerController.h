@@ -8,6 +8,7 @@
 #include "GeneralTypes.h"
 #include "FPPlayerController.generated.h"
 
+class AFireFighterPawn;
 class AVictim;
 class AWall;
 class ATile;
@@ -45,12 +46,22 @@ public:
 	void SetCarry();
 	AFPPlayerController();
 
+	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerChopWall(AWall* wall);
 	// open door on server
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerOpenDoor(ADoor* door);
+	// Move a pawn on server
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerMovePawn(ATile* tile, AFireFighterPawn* pawnToMove, const TArray<ATile*>& trace);
+	// Place a pawn on server
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerPlacePawn(ATile* tile, AFireFighterPawn* pawnToPlace);
+	// Extinguish fire on a certain tile to be done on server
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerExtinguishFire(ATile* tile);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

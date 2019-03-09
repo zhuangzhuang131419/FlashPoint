@@ -93,9 +93,14 @@ public:
 	AVictim* GetVictim();
 	void SetVictim(AVictim* victim);
 
+	// methods for operations to be done
+	// A method to move a pawn to this specific location
+	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
+	void PlacePawnHere(AFireFighterPawn* placingPawn);
 	void AdvanceFire();
-
-	void AdvanceSmoke();
+	void SetSmokeOnTile();
+	void SetClearOnTile();
+	void ExitinguishFireOnTile();
 
 protected:
 	// FIELDS
@@ -164,12 +169,12 @@ protected:
 	TArray<AFireFighterPawn*> placedFireFighters;
 
 	// Other references and variables
-	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
+	UPROPERTY(ReplicatedUsing=Rep_BaseMat, EditAnyWhere, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
 	ETileType type = ETileType::Default;	// the default type of the tile
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
 	EPOIStatus POIStatus = EPOIStatus::Empty; // the default POI type of the tile
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
+	UPROPERTY(ReplicatedUsing=Rep_FireStatus, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
 	AActor* POIOnTile = nullptr; // the default POI type of the tile
@@ -193,6 +198,7 @@ protected:
 	UPROPERTY(replicated)
 	int32 yLoc = -1;
 	int32 pathCost = -1;	// path cost used for A star search
+	TArray<ATile*> pathToHere;
 	bool canMoveTo = false;
 	bool isReady = false;
 	bool expanded = false;
@@ -213,6 +219,12 @@ protected:
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile
 	void FindPathToCurrent();
+
+	// Replication functions
+	UFUNCTION()
+	void Rep_BaseMat();
+	UFUNCTION()
+	void Rep_FireStatus();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
