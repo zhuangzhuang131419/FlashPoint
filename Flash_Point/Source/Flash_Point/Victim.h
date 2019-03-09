@@ -21,15 +21,21 @@ public:
 
 	// setter for is carried
 	void SetIsCarried(bool carried);
+	// setter for the actor's new world location
+	void SetVictimLoc(FVector loc);
 
 protected:
 	// REPLICATED FIELDS
 	UPROPERTY(ReplicatedUsing = Rep_OnCarry, VisibleAnyWhere)
 	bool isCarried = false;
+	UPROPERTY(ReplicatedUsing = Rep_OnVictimLocationChanged, VisibleAnyWhere)
+	FVector victimLoc;
 
 	// Replication functions
 	UFUNCTION()
 	void Rep_OnCarry();
+	UFUNCTION()
+	void Rep_OnVictimLocationChanged();
 
 	// rep props
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
