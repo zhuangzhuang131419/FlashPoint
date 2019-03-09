@@ -32,6 +32,21 @@ public:
 	int32 GetCurrentAP();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCurrentAP(int32 current);
+	// getter and setter for all consumptions
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetMoveConsumption();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetMoveConsumption(int32 current);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetOpenConsumption();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetOpenConsumption(int32 current);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetExtinguishConsumption();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetExtinguishConsumption(int32 current);
+	// chceking if a operation can be performed by the pawn
+	bool CheckCanExtinguish(int32 baseCost);
 
 protected:
 	// current firefighter position
@@ -42,6 +57,12 @@ protected:
 	int32 currentAP = 4;	// initial AP for all firefighters are 4
 	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;	// Firefighter max ap
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 moveConsumption = 1;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 openConsumption = 1;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 extinguishConsumption = 1;
 
 
 	// Overriding setting all lifetime replicates function

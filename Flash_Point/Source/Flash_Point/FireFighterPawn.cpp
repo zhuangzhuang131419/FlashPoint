@@ -34,12 +34,53 @@ void AFireFighterPawn::SetCurrentAP(int32 current)
 	currentAP = current;
 }
 
+int32 AFireFighterPawn::GetMoveConsumption()
+{
+	return moveConsumption;
+}
+
+void AFireFighterPawn::SetMoveConsumption(int32 current)
+{
+	moveConsumption = current;
+}
+
+int32 AFireFighterPawn::GetOpenConsumption()
+{
+	return openConsumption;
+}
+
+void AFireFighterPawn::SetOpenConsumption(int32 current)
+{
+	openConsumption = current;
+}
+
+int32 AFireFighterPawn::GetExtinguishConsumption()
+{
+	return extinguishConsumption;
+}
+
+void AFireFighterPawn::SetExtinguishConsumption(int32 current)
+{
+	extinguishConsumption = current;
+}
+
+bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
+{
+	int32 actualCost = baseCost * extinguishConsumption;
+	// TODO for later fire fighter with row, do extra checks
+	if (actualCost < currentAP)	return true;
+	return false;
+}
+
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AFireFighterPawn, placedOn);
 	DOREPLIFETIME(AFireFighterPawn, currentAP);
 	DOREPLIFETIME(AFireFighterPawn, maxAP);
+	DOREPLIFETIME(AFireFighterPawn, moveConsumption);
+	DOREPLIFETIME(AFireFighterPawn, openConsumption);
+	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
 }
 
 // Called when the game starts or when spawned

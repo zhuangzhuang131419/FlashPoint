@@ -139,6 +139,9 @@ protected:
 	// Here is the ambulance parking lot color
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	UMaterialInterface* ambulanceParkMat = nullptr;
+	// Here is the ambulance parking lot color
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	UMaterialInterface* halfExtinguishableMat = nullptr;
 	UPROPERTY(BlueprintReadWrite, EditAnyWhere, Category = "Setup")
 	bool outside = false;	// for door edge class
 
@@ -205,6 +208,7 @@ protected:
 	TArray<ATile*> pathToHere;
 	bool canMoveTo = false;
 	bool isReady = false;
+	int32 costToHere = 0;
 	bool expanded = false;
 
 	// FUNCTIONS
@@ -223,6 +227,8 @@ protected:
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile
 	void FindPathToCurrent();
+	// A method to check if the tile is neighbouring tile of the pawn
+	bool AdjacentToPawn();
 
 	// Replication functions
 	UFUNCTION()

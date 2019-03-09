@@ -505,6 +505,31 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::ChopWall:
 			break;
 		case EGameOperations::ExtinguishFire:
+			if (!ensure(localPawn)) return;
+			// check if the player can extinguish fire on this tile
+			if (AdjacentToPawn()) {
+				// switch on fire status to set the tile color
+				switch (fireStatus)
+				{
+				case EFireStatus::Clear:
+					// no fire or smoke on the position, unable to perform extinguish
+					PlaneColorSwitch(unableMat);
+					break;
+				case EFireStatus::Smoke:
+					// smoke here, check if ap enough to extinguish it
+					if (localPawn->CheckCanExtinguish(1)) { PlaneColorSwitch(ableMat); }
+					else { PlaneColorSwitch(unableMat); }
+					break;
+				case EFireStatus::Fire:
+					// check if the fire can be extinguished to nothing or just can be to smoke
+					if (localPawn->CheckCanExtinguish(2)) { PlaneColorSwitch(ableMat); }
+					else if (localPawn->CheckCanExtinguish(1)) { PlaneColorSwitch(halfExtinguishableMat); }
+					else { PlaneColorSwitch(unableMat); }
+					break;
+				default:
+					break;
+				}
+			}
 			break;
 		case EGameOperations::Carry:
 			break;
@@ -581,6 +606,8 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::ChopWall:
 			break;
 		case EGameOperations::ExtinguishFire:
+			// check if the fire is adjacent
+			if (!AdjacentToPawn()) return;
 			if (HasAuthority()) {
 				ExitinguishFireOnTile();
 			}
@@ -607,6 +634,7 @@ void ATile::OnTileLeft(UPrimitiveComponent * Component)
 	// Reset move related attributes
 	isReady = false;
 	canMoveTo = false;
+	costToHere = 0;
 }
 
 void ATile::PlaneColorSwitch(UMaterialInterface * mat)
@@ -625,9 +653,29 @@ void ATile::FindPathToCurrent()
 	ATile* goal = this;
 	UE_LOG(LogTemp, Warning, TEXT("Before search"));
 	int32 cost = GeneralTypes::AStarShotest(localPawn->GetCurrentAP(), start, goal, traceTiles);
+	// check if the player is carrying a victim and the trace has fire
+	bool hasFire = false;
+	for (ATile* traceTile : traceTiles) {
+		if (traceTile->GetFireStatus() == EFireStatus::Fire) {
+			hasFire = true;
+			break;
+		}
+	}
 	if (cost != 0) {
-		// here the goal is successfully found
-		if (cost <= localPawn->GetCurrentAP()) {
+		// if the firefighter is carrying some victim, the cost is doubled
+		cost = cost * localPawn->GetMoveConsumption();
+		if (localPawn->GetVictim()) {
+			// if carrying any victim, double the cost
+			cost = cost * 2;
+		}
+		// here is the case if the firefighter is carring some victim but the trace has fire
+		if (hasFire && localPawn->GetVictim()) {
+			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+				traceTiles[i]->PlaneColorSwitch(unableMat);
+			}
+		}
+		// here the goal is successfully found and could be moved to
+		else if (cost <= localPawn->GetCurrentAP()) {
 			canMoveTo = true;
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(ableMat);
@@ -646,7 +694,58 @@ void ATile::FindPathToCurrent()
 			PlaneColorSwitch(ableMat);
 		}
 	}
+	// change cost to here
+	costToHere = cost;
 	UE_LOG(LogTemp, Warning, TEXT("After search"));
+}
+
+bool ATile::AdjacentToPawn()
+{
+	if (ensure(localPawn)) {
+		// check if the pawn is on the tile
+		if (localPawn->GetPlacedOn() == this) {
+			return true;
+		}
+		// check if the pawn is around the tile
+		ATile* tempTile = nullptr;
+		// check on front tile
+		if (frontWall) {			
+			tempTile = frontWall->GetOtherNeighbour(this);
+			if (ensure(tempTile)) {
+				if (tempTile->placedFireFighters.Contains(localPawn)) {
+					return true;
+				}
+			}
+		}
+		// check on back tile
+		if (backWall) {
+			tempTile = backWall->GetOtherNeighbour(this);
+			if (ensure(tempTile)) {
+				if (tempTile->placedFireFighters.Contains(localPawn)) {
+					return true;
+				}
+			}
+		}
+		// check on left tile
+		if (leftWall) {
+			tempTile = leftWall->GetOtherNeighbour(this);
+			if (ensure(tempTile)) {
+				if (tempTile->placedFireFighters.Contains(localPawn)) {
+					return true;
+				}
+			}
+		}
+		// check on right tile
+		if (rightWall) {
+			tempTile = rightWall->GetOtherNeighbour(this);
+			if (ensure(tempTile)) {
+				if (tempTile->placedFireFighters.Contains(localPawn)) {
+					return true;
+				}
+			}
+		}
+	}
+	return false;
 }
 
 void ATile::Rep_BaseMat()
