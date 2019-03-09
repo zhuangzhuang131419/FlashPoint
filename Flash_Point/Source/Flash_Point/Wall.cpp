@@ -45,7 +45,9 @@ void AWall::UpdateWallMesh(bool chopedDown)
 void AWall::Damage()
 {
 	Super::Damage();
-
+	int32 currentHealth = gameBoard->GetCurrentGameHealth();
+	currentHealth--;
+	gameBoard->SetCurrentGameHealth(currentHealth);
 }
 
 

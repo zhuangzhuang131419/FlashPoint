@@ -2,6 +2,7 @@
 
 #include "Door.h"
 #include "Engine/World.h"
+#include "GameBoard.h"
 #include "FPPlayerController.h"
 
 ADoor::ADoor() 
@@ -80,7 +81,11 @@ void ADoor::ChangeDoorStatus()
 
 void ADoor::Damage()
 {
-	Super::Damage();
+	int32 currentHealth = gameBoard->GetCurrentGameHealth();
+	currentHealth-=2;
+	gameBoard->SetCurrentGameHealth(currentHealth);
+	isDestroyed = true;
+	isBlocked = false;
 	Door->SetVisibility(false);
 	DoorFrame->SetVisibility(false);
 }
