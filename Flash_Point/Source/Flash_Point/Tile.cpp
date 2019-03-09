@@ -417,16 +417,18 @@ void ATile::AdvanceExplosion(EDirection direction)
 		{
 			if (adjacentWall->GetEdgeType() == EEdgeType::Door)
 			{
-				// (Cast<ADoor>(adjacentWall))->Damage();
-				adjacentWall->GetWallMesh()->SetVisibility(false);
-				(Cast<ADoor>(adjacentWall))->Door->SetVisibility(false);
-				(Cast<ADoor>(adjacentWall))->DoorFrame->SetVisibility(false);
-				adjacentWall->SetIsBlocked(false);
+				(Cast<ADoor>(adjacentWall))->Damage();
 			}
 			else if (adjacentWall->GetEdgeType() == EEdgeType::Wall)
 			{
-				// (Cast<AWall>(adjacentWall))->Damage();
-				Cast<AWall>(adjacentWall)->ChopWall();
+				if (Cast<AWall>(adjacentWall)->isChoped)
+				{
+					(Cast<AWall>(adjacentWall))->Damage();
+				}
+				else {
+					// TODO need to fix
+					Cast<AWall>(adjacentWall)->ChopWall();
+				}
 			}
 		}
 		else

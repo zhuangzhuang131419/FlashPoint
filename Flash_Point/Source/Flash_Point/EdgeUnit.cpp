@@ -52,6 +52,12 @@ ATile * AEdgeUnit::GetOtherNeighbour(ATile * current)
 	}
 }
 
+void AEdgeUnit::Damage()
+{
+	WallMesh->SetVisibility(false);
+	isBlocked = false;
+}
+
 bool AEdgeUnit::IsBlocked()
 {
 	return isBlocked;

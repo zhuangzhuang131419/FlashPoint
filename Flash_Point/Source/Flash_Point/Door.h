@@ -38,7 +38,7 @@ public:
 
 	void ChangeDoorStatus();
 
-	// virtual void Damage() override;
+	virtual void Damage() override;
 
 	
 

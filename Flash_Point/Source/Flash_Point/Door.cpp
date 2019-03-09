@@ -78,12 +78,12 @@ void ADoor::ChangeDoorStatus()
 	}
 }
 
-/*
 void ADoor::Damage()
 {
-
+	Super::Damage();
+	Door->SetVisibility(false);
+	DoorFrame->SetVisibility(false);
 }
-*/
 
 void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 {

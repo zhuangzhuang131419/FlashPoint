@@ -166,6 +166,3 @@ EGameOperations AFPPlayerController::GetCurrentOperation()
 {
 	return CurrentOperation;
 }
-
-
-

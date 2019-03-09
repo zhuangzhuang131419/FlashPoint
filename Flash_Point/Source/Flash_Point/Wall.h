@@ -26,7 +26,7 @@ public:
 	// A function to update wall mesh only on client
 	void UpdateWallMesh(bool chopedDown);
 
-	// virtual void Damage() override;
+	virtual void Damage() override;
 
 protected:
 	

@@ -41,12 +41,13 @@ void AWall::UpdateWallMesh(bool chopedDown)
 	}
 }
 
-/*
+
 void AWall::Damage()
 {
+	Super::Damage();
 
 }
-*/
+
 
 void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
@@ -100,6 +101,3 @@ void AWall::BeginPlay()
 	onMouseClickedDel.BindUFunction(this, "OnWallClicked");
 	OnClicked.Add(onMouseClickedDel);
 }
-
-
-

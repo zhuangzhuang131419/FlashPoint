@@ -31,6 +31,8 @@ public:
 	// Get other neighbour of the edge, used in move searching
 	ATile* GetOtherNeighbour(ATile* current);
 
+	virtual void Damage();
+
 
 	// Getter and setter
 	bool IsBlocked();
