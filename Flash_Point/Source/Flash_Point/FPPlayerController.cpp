@@ -88,7 +88,9 @@ void AFPPlayerController::DropVictim()
 			fireFighterPawn->GetVictim()->victimMesh->SetVisibility(true);
 			FVector VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
 			fireFighterPawn->GetVictim()->victimMesh->SetRelativeLocation(VictimSocketLocation);
-			currentTile->SetVictim(fireFighterPawn->GetVictim());
+			UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num())
+			currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
+			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 			fireFighterPawn->SetVictim(nullptr);
 		}
 	}
@@ -101,13 +103,15 @@ void AFPPlayerController::CarryVictim()
 	if (ensure(fireFighterPawn))
 	{
 		ATile* currentTile = fireFighterPawn->GetPlacedOn();
-		UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s"), *currentTile->GetName());
 		if (ensure(currentTile))
 		{
-			if (currentTile->GetVictim())
+			if (currentTile->GetVictims()->Num() > 0)
 			{
-				fireFighterPawn->SetVictim(currentTile->GetVictim());
-				currentTile->GetVictim()->victimMesh->SetVisibility(false);
+				UE_LOG(LogTemp, Warning, TEXT("Before pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+				AVictim* carriedVictim = currentTile->GetVictims()->Pop(true);
+				UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+				fireFighterPawn->SetVictim(carriedVictim);
+				carriedVictim->victimMesh->SetVisibility(false);
 			}
 			else
 			{

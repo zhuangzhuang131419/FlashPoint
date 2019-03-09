@@ -217,13 +217,16 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		{
 			UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
 			FVector VictimSocketLocation = TileMesh->GetSocketLocation(FName("Victim"));
-			AActor* newVictim = GetWorld()->SpawnActor<AActor>(
+			AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
 				victimClass,
 				VictimSocketLocation,
 				FRotator(0, 0, 0)
 				);
 			POIOnTile->Destroy();
-			victim = Cast<AVictim>(newVictim);
+			if (ensure(newVictim))
+			{
+				victims.Add(newVictim);
+			}
 			POIStatus = EPOIStatus::Revealed;
 		}
 	}
@@ -355,14 +358,9 @@ UStaticMeshComponent * ATile::GetTileMesh()
 	return TileMesh;
 }
 
-AVictim * ATile::GetVictim()
+TArray<AVictim*>* ATile::GetVictims()
 {
-	return victim;
-}
-
-void ATile::SetVictim(AVictim * victim)
-{
-	this->victim = victim;
+	return &victims;
 }
 
 void ATile::AdvanceFire()
@@ -486,7 +484,7 @@ void ATile::BindCursorFunc()
 
 void ATile::OnTileOver(UPrimitiveComponent * Component)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
+	// UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
 	if (ensure(localPlayer)) {
 		EGameOperations ops = localPlayer->GetCurrentOperation();
 		switch (ops)
@@ -632,7 +630,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 void ATile::OnTileLeft(UPrimitiveComponent * Component)
 {
 	board->ClearAllTile();
-	UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
+	// UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
 	// Reset move related attributes
 	isReady = false;
 	canMoveTo = false;

@@ -89,9 +89,8 @@ public:
 	// Getter for TileMesh
 	UStaticMeshComponent* GetTileMesh();
 
-	// Getter for Victim
-	AVictim* GetVictim();
-	void SetVictim(AVictim* victim);
+	// Getter for Victims
+	TArray<AVictim*>* GetVictims();
 
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
@@ -189,7 +188,8 @@ protected:
 	// A victim actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")
 	TSubclassOf<AVictim> victimClass = nullptr;
-	AVictim* victim = nullptr;
+	UPROPERTY(VisibleAnyWhere)
+	TArray<AVictim*> victims;
 
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	int32 quadrant = 0;	// default quarant of the tile
