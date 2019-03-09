@@ -64,9 +64,9 @@ void AGameBoard::AdvanceFire()
 	else 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Advance blast at.%s"), *boardTiles[randomPosition]->GetName());
-		boardTiles[randomPosition]->GetBlastEffect()->Activate();
+		boardTiles[randomPosition]->GetBlastEffect()->DeactivateSystem();
+		boardTiles[randomPosition]->GetBlastEffect()->ActivateSystem();
 		boardTiles[randomPosition]->AdvanceExplosion();
-		boardTiles[randomPosition]->GetBlastEffect()->Deactivate();
 	}
 }
 
