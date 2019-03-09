@@ -131,6 +131,7 @@ void AFPPlayerController::ServerDrop_Implementation(AFireFighterPawn * fireFight
 		}
 
 		tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
+		tempVictim->SetVictimLoc(tempVictim->GetActorLocation());
 		UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 		currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
 		UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());

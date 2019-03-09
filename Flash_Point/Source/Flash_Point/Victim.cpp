@@ -19,6 +19,11 @@ void AVictim::SetIsCarried(bool carried)
 	isCarried = carried;
 }
 
+void AVictim::SetVictimLoc(FVector loc)
+{
+	victimLoc = loc;
+}
+
 void AVictim::Rep_OnCarry()
 {
 	if (isCarried) {
@@ -29,17 +34,24 @@ void AVictim::Rep_OnCarry()
 	}
 }
 
+void AVictim::Rep_OnVictimLocationChanged()
+{
+	// when the actor's world location changed, reset it
+	SetActorLocation(victimLoc);
+}
+
 void AVictim::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AVictim, isCarried);
+	DOREPLIFETIME(AVictim, victimLoc);
 }
 
 // Called when the game starts or when spawned
 void AVictim::BeginPlay()
 {
 	Super::BeginPlay();
-	// replicate the victim
+
 	if (HasAuthority()) {
 		SetReplicates(true);
 	}
