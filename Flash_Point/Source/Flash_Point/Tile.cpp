@@ -709,7 +709,7 @@ bool ATile::AdjacentToPawn()
 		// check if the pawn is around the tile
 		ATile* tempTile = nullptr;
 		// check on front tile
-		if (frontWall) {			
+		if (frontWall && !frontWall->IsBlocked()) {			
 			tempTile = frontWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
 				if (tempTile->placedFireFighters.Contains(localPawn)) {
@@ -718,7 +718,7 @@ bool ATile::AdjacentToPawn()
 			}
 		}
 		// check on back tile
-		if (backWall) {
+		if (backWall && !backWall->IsBlocked()) {
 			tempTile = backWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
 				if (tempTile->placedFireFighters.Contains(localPawn)) {
@@ -727,7 +727,7 @@ bool ATile::AdjacentToPawn()
 			}
 		}
 		// check on left tile
-		if (leftWall) {
+		if (leftWall && !leftWall->IsBlocked()) {
 			tempTile = leftWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
 				if (tempTile->placedFireFighters.Contains(localPawn)) {
@@ -736,7 +736,7 @@ bool ATile::AdjacentToPawn()
 			}
 		}
 		// check on right tile
-		if (rightWall) {
+		if (rightWall && !rightWall->IsBlocked()) {
 			tempTile = rightWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
 				if (tempTile->placedFireFighters.Contains(localPawn)) {
