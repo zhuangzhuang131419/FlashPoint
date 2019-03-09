@@ -462,6 +462,7 @@ void ATile::AdvanceExplosion(EDirection direction)
 
 void ATile::AdvanceExplosion()
 {
+	blastOccured = !blastOccured;
 	AdvanceExplosion(EDirection::Down);
 	AdvanceExplosion(EDirection::Left);
 	AdvanceExplosion(EDirection::Right);
@@ -780,6 +781,12 @@ void ATile::Rep_FireStatus()
 	}
 }
 
+void ATile::Rep_BlastEffect()
+{
+	BlastEffect->DeactivateSystem();
+	BlastEffect->ActivateSystem();
+}
+
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	// super first
@@ -796,6 +803,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, xLoc);
 	DOREPLIFETIME(ATile, yLoc);
 	DOREPLIFETIME(ATile, fireStatus);
+	DOREPLIFETIME(ATile, blastOccured);
 }
 
 // Called when the game starts or when spawned

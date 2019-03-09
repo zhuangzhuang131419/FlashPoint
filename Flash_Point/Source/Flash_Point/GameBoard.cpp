@@ -40,7 +40,7 @@ void AGameBoard::ClearAllTile()
 	}
 }
 
-void AGameBoard::AdvanceFire()
+void AGameBoard::AdvanceFireOnBoard()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Advance fire."));
 	int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
@@ -62,12 +62,24 @@ void AGameBoard::AdvanceFire()
 		boardTiles[randomPosition]->GetFireEffect()->Activate();
 		boardTiles[randomPosition]->GetSmokeEffect()->Deactivate();
 	}
-	else 
+	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Advance blast at.%s"), *boardTiles[randomPosition]->GetName());
 		boardTiles[randomPosition]->GetBlastEffect()->DeactivateSystem();
 		boardTiles[randomPosition]->GetBlastEffect()->ActivateSystem();
 		boardTiles[randomPosition]->AdvanceExplosion();
+	}
+}
+
+void AGameBoard::AdvanceFire()
+{
+	if (HasAuthority()) {
+		AdvanceFireOnBoard();
+	}
+	else {
+		if (ensure(localPlayer)) {
+			localPlayer->ServerAdvanceFire(this);
+		}
 	}
 }
 
@@ -527,6 +539,9 @@ void AGameBoard::BeginPlay()
 			);
 		camera->RelocateAndSetToViewPort(FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
 	}
+
+	// get the local player reference
+	localPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 }
 
 void AGameBoard::setPOIalarm(APOI* inPOI)

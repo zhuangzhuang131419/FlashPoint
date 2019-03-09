@@ -31,7 +31,8 @@ public:
 	void SetCurrentGameHealth(int32 currentHealth);
 	// to clear all tile status, used in path finding
 	void ClearAllTile();
-
+	// below functions are used to advance fire and replenish POI
+	void AdvanceFireOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void AdvanceFire();
 
@@ -73,7 +74,9 @@ protected:
 	TSubclassOf<AViewPortCamera> CameraClass = nullptr;
 	// A POI actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<APOI> POIClass = nullptr;
+	TSubclassOf<AActor> POIClass = nullptr;
+	// A local player to call server functions on
+	AFPPlayerController* localPlayer = nullptr;
 	
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")

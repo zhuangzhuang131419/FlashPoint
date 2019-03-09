@@ -76,6 +76,18 @@ bool AFPPlayerController::ServerExtinguishFire_Validate(ATile * tile)
 	return true;
 }
 
+void AFPPlayerController::ServerAdvanceFire_Implementation(AGameBoard * board)
+{
+	if (ensure(board)) {
+		board->AdvanceFire();
+	}
+}
+
+bool AFPPlayerController::ServerAdvanceFire_Validate(AGameBoard * board)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));

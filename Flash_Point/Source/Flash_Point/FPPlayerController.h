@@ -62,6 +62,9 @@ public:
 	// Extinguish fire on a certain tile to be done on server
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerExtinguishFire(ATile* tile);
+	// Server advance fire
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAdvanceFire(AGameBoard* board);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

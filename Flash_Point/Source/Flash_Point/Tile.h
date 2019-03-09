@@ -185,6 +185,8 @@ protected:
 	EFireStatus fireStatus = EFireStatus::Clear;	// the default status of the tile
 	UPROPERTY(VisibleAnyWhere, Category = "Tile Attributes")
 	APOI* POIOnTile = nullptr; // the default POI type of the tile
+	UPROPERTY(ReplicatedUsing = Rep_BlastEffect, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
+	bool blastOccured = false;	// used fore synchronization of the blast effect
 
 	// A victim actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")
@@ -236,6 +238,8 @@ protected:
 	void Rep_BaseMat();
 	UFUNCTION()
 	void Rep_FireStatus();
+	UFUNCTION()
+	void Rep_BlastEffect();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
