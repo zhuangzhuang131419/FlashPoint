@@ -33,6 +33,12 @@ public:
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }
 
+	// Getter for ambulanceTile
+	TArray<ATile*> GetAmbulanceTiles() { return ambulanceTiles; }
+
+	// Getter for engineTile
+	TArray<ATile*> GetEngineTiles() { return engineTiles; }
+
 	// to clear all tile status, used in path finding
 	void ClearAllTile();
 	// below functions are used to advance fire and replenish POI

@@ -101,35 +101,38 @@ void AFireFighterPawn::KnockDown()
 	
 	if (tile) 
 	{
-		
-		int32 x;
-		int32 y;
-		
-
+		// current pawn location
+		int32 x, y;
 		if (tile->GetLocation(x, y))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("%d, %d"), x, y);
+			// gameboard
 			if (playingBoard)
 			{
-				
-				if (x < playingBoard->GetBoardWidth() && y < playingBoard->GetBoardLength())
+				int32 shortestPath = 80;
+				ATile* targetTile = nullptr;
+				for (ATile* ambulanceTile : playingBoard->GetAmbulanceTiles())
 				{
-					// left down corner
-					UE_LOG(LogTemp, Warning, TEXT("left down corner"));
+					if (ambulanceTile)
+					{
+						int32 ambulanceTile_x, ambulanceTile_y;
+						if (ambulanceTile->GetLocation(ambulanceTile_x, ambulanceTile_y))
+						{
+							int32 pathCost = FMath::Abs(ambulanceTile_x - x) + FMath::Abs(ambulanceTile_y - y);
+							if (pathCost < shortestPath)
+							{
+								shortestPath = pathCost;
+								targetTile = ambulanceTile;
+							}
+						}
+					}
 				}
-				else if (x >= playingBoard->GetBoardWidth() && y < playingBoard->GetBoardLength())
+				if (targetTile)
 				{
-					// right down corner
-					UE_LOG(LogTemp, Warning, TEXT("right down corner"));
-				}
-				else if (x < playingBoard->GetBoardWidth() && y >= playingBoard->GetBoardLength())
-				{
-					// left up corner
-					UE_LOG(LogTemp, Warning, TEXT("left up corner"));
-				}
-				else {
-					// right up corner
-					UE_LOG(LogTemp, Warning, TEXT("right up corner"));
+					placedOn->GetPlacedFireFighters()->Remove(this);
+					SetActorLocation(targetTile->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+					placedOn = targetTile;
+					placedOn->GetPlacedFireFighters()->Add(this);
 				}
 			}
 		}
