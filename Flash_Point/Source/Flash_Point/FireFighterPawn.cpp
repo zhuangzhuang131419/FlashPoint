@@ -82,13 +82,18 @@ int32 AFireFighterPawn::GetFireFighterID()
 
 void AFireFighterPawn::SetFireFighterID(int32 inID)
 {
+	if (HasAuthority()) {
+		FireFighterSwitchColor(inID);
+	}
 	fireFighterID = inID;
 }
 
 void AFireFighterPawn::Rep_PawnID()
 {
 	// when id got, set it the the player
-	if (ensure(myOwner) && fireFighterID >= 0) {
+	if (fireFighterID < 0) return;
+	FireFighterSwitchColor(fireFighterID);
+	if (ensure(myOwner)) {
 		myOwner->SetTurnNum(fireFighterID);
 	}
 }
