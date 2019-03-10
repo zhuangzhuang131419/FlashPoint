@@ -24,6 +24,8 @@ public:
 	// FUNCTIONS
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyTurnBegin();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
+	void NotifyTurnEnd();
 	// Getter and setter for related fields
 	AGameBoard* GetGameBoard();
 	void SetGameBoard(AGameBoard* inGameBoard);

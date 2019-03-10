@@ -36,6 +36,30 @@ void AFPPlayerController::SetTurnNum(int32 turnNum)
 	UE_LOG(LogTemp, Warning, TEXT("My turn num is: %d"), myTurnNum);
 }
 
+void AFPPlayerController::NotifyPlayerTurn()
+{
+	if (ensure(inGameUI)) {
+		inGameUI->NotifyTurnBegin();
+	}
+}
+
+void AFPPlayerController::EndPlayerTurn()
+{
+	// disable all operations
+	SetNone();
+	if (ensure(inGameUI)) {
+		inGameUI->NotifyTurnEnd();
+	}
+	if (HasAuthority()) {
+		if (ensure(gameBoard)) {
+			gameBoard->TurnSwitch();
+		}
+	}
+	else {
+		ServerEndTurn(gameBoard);
+	}
+}
+
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	if (ensure(wall)) {
@@ -234,7 +258,7 @@ bool AFPPlayerController::ServerGetFireFighterID_Validate(AFireFighterPawn * fir
 void AFPPlayerController::ServerEndTurn_Implementation(AGameBoard * inGameBoard)
 {
 	if (ensure(inGameBoard)) {
-
+		inGameBoard->TurnSwitch();
 	}
 }
 

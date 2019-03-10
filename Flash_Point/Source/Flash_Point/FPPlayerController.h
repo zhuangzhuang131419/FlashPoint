@@ -48,14 +48,18 @@ public:
 	AFPPlayerController();
 
 	// Getter and setters for attributes
-	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void SetGameBoard(AGameBoard* inGame);
-	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	AGameBoard* GetGameBoard();
-	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	int32 GetTurnNum();
-	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void SetTurnNum(int32 turnNum);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void NotifyPlayerTurn();
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void EndPlayerTurn();
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server

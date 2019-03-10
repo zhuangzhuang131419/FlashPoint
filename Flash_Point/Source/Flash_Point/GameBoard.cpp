@@ -204,6 +204,12 @@ void AGameBoard::TurnSwitch()
 {
 	if (HasAuthority()) {
 		currentTurn = (currentTurn + 1) % joinedPlayerNum;
+		if (ensure(localPlayer)) {
+			if (localPlayer->GetTurnNum() == currentTurn) {
+				// special notify for player on server
+				localPlayer->NotifyPlayerTurn();
+			}
+		}
 	}
 }
 
@@ -559,6 +565,10 @@ void AGameBoard::RefreshBoard_Implementation()
 
 void AGameBoard::Rep_TurnNotify()
 {
+	if (!ensure(localPlayer)) return;
+	if (currentTurn == localPlayer->GetTurnNum()) {
+		localPlayer->NotifyPlayerTurn();
+	}
 }
 
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
