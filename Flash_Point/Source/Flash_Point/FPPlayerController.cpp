@@ -77,6 +77,10 @@ void AFPPlayerController::ServerPlacePawn_Implementation(ATile * tile, AFireFigh
 {
 	if (ensure(tile)) {
 		tile->PlacePawnHere(pawnToPlace);
+		AGameBoard* tempBoard = tile->GetGameBoard();
+		if (ensure(tempBoard)) {
+			tempBoard->InitialPlacing();
+		}
 	}
 }
 
@@ -227,6 +231,18 @@ bool AFPPlayerController::ServerGetFireFighterID_Validate(AFireFighterPawn * fir
 	return true;
 }
 
+void AFPPlayerController::ServerEndTurn_Implementation(AGameBoard * inGameBoard)
+{
+	if (ensure(inGameBoard)) {
+
+	}
+}
+
+bool AFPPlayerController::ServerEndTurn_Validate(AGameBoard * inGameBoard)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -291,11 +307,30 @@ void AFPPlayerController::FindGameBoard()
 	}
 }
 
+void AFPPlayerController::MakeBasicFireFighterUI()
+{
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn) && ensure(gameBoard))
+	{
+		if (ensure(BasicFireFighterClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, BasicFireFighterClass);
+			if (ensure(inGameUI)) {
+				inGameUI->SetGameBoard(gameBoard);
+				inGameUI->SetRelatedPlayer(this);
+				inGameUI->SetRelatedPawn(fireFighterPawn);
+				inGameUI->AddToViewport();
+			}
+		}
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
 	UE_LOG(LogTemp, Warning, TEXT("Player GIAO!"));
 	FindGameBoard();
+	// TODO on later version make different UI with regard of different game
+	MakeBasicFireFighterUI();
 }
 
 void AFPPlayerController::SetOpenDoor()

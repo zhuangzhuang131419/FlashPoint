@@ -659,6 +659,9 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				{
 					if (HasAuthority()) {
 						PlacePawnHere(localPawn);
+						if (ensure(board)) {
+							board->InitialPlacing();
+						}
 					}
 					else {
 						localPlayer->ServerPlacePawn(this, localPawn);

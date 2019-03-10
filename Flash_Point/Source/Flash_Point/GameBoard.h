@@ -51,9 +51,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void flashover();
 
-	// Functions for joining or creating the game
+	// Functions of turn related operaetions
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	int32 JoinBoard();
+	UFUNCTION(BlueprintCallable, Category = "Take turn")
+	void TurnSwitch();
+	UFUNCTION(BlueprintCallable, Category = "Take turn")
+	void InitialPlacing();
 
 	// Max health of the board to be specified at begining
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")

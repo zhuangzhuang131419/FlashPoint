@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "UnrealNetwork.h"
+#include "MenuSystem/FireFighterUI.h"
 #include "GeneralTypes.h"
 #include "FPPlayerController.generated.h"
 
@@ -84,6 +85,8 @@ public:
 	void ServerCarryVictim(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetFireFighterID(AFireFighterPawn * fireFighterPawn, AGameBoard* inGameBoard);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerEndTurn(AGameBoard* inGameBoard);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
@@ -93,7 +96,8 @@ public:
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")
 	void FindGameBoard();
-
+	UFUNCTION(BlueprintCallable, Category = "Role switch")
+	void MakeBasicFireFighterUI();
 	
 
 
@@ -103,6 +107,12 @@ protected:
 	AGameBoard* gameBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	int32 myTurnNum = -1;
+
+	// UI related fields
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	UFireFighterUI* inGameUI = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> BasicFireFighterClass = nullptr;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

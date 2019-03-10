@@ -200,6 +200,23 @@ int32 AGameBoard::JoinBoard()
 	return -1;
 }
 
+void AGameBoard::TurnSwitch()
+{
+	if (HasAuthority()) {
+		currentTurn = (currentTurn + 1) % joinedPlayerNum;
+	}
+}
+
+void AGameBoard::InitialPlacing()
+{
+	if (HasAuthority()) {
+		placedNum++;
+		if (placedNum == joinedPlayerNum) {
+			TurnSwitch();
+		}
+	}
+}
+
 void AGameBoard::InitializeDefaultBoard()
 {
 	// This is only done on the server

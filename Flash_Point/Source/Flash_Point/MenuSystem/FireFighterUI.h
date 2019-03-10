@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "Components/MultiLineEditableText.h"
+#include "Components/MultiLineEditableTextBox.h"
 #include "Components/WidgetComponent.h"
-#include "GameBoard.h"
 #include "FireFighterUI.generated.h"
+
+class AGameBoard;
+class AFireFighterPawn;
+class AFPPlayerController;
 
 /**
  * 
@@ -32,11 +35,11 @@ public:
 protected:
 	// BINDED WIDGETS
 	// A text box to add text on during chat
-	UPROPERTY(meta = (BindWidget))
-	UMultiLineEditableText* LobbyChatText = nullptr;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UMultiLineEditableTextBox* LobbyChatText = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* YourTurnPrompt = nullptr;
-	UPROPERTY(meta = (BindWidget))
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* AbilityBar = nullptr;
 
 	// FIELDS
