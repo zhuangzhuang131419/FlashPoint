@@ -249,7 +249,10 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 				UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 				fireFighterPawn->SetVictim(carriedVictim);
 				carriedVictim->victimMesh->SetVisibility(false);
-				currentTile->SetPOIStatus(EPOIStatus::Empty);
+				if (currentTile->GetVictims()->Num() == 0)
+				{
+					currentTile->SetPOIStatus(EPOIStatus::Empty);
+				}
 			}
 			else
 			{

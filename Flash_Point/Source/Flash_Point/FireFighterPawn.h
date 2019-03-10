@@ -61,11 +61,18 @@ public:
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 	bool IsAdjacentToWall(AEdgeUnit* inEdge);
+
 	// Getter and setters for firefighter pawn id
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetFireFighterID();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterID(int32 inID);
+
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	AVictim* GetVictim();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetVictim(AVictim* victim);
+
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
 	// a function for setting fire fighter material
@@ -113,15 +120,6 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-
-public:
-	bool CarrayVictim(AVictim* Citizen);
-
-	UFUNCTION(BlueprintCallable, Category = "Citizen Carraying")
-	AVictim* GetVictim();
-	UFUNCTION(BlueprintCallable, Category = "Citizen Carraying")
-	void SetVictim(AVictim* victim);
 
 protected:
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")

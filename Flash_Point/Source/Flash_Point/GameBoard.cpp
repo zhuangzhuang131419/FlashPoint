@@ -108,7 +108,8 @@ void AGameBoard::AdvancePOIOnBoard()
 		int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 		while (boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty
 			|| boardTiles[randomPosition]->IsOutside()
-			|| boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+			|| boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire
+			|| boardTiles[randomPosition]->GetPlacedFireFighters()->Num() > 0)
 		{
 			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 		}

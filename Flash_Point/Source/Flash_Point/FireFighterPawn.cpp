@@ -185,6 +185,14 @@ void AFireFighterPawn::KnockDown()
 					placedOn = targetTile;
 					placedOn->GetPlacedFireFighters()->Add(this);
 				}
+
+				if (victim)
+				{
+					playingBoard->SetVictimLostNum(playingBoard->victimLostNum + 1);
+					victim->Destroy();
+					victim = nullptr;
+					playingBoard->SetCurrentPOI(playingBoard->currentPOI - 1);
+				}
 			}
 		}
 	}
@@ -255,18 +263,6 @@ void AFireFighterPawn::Tick(float DeltaTime)
 void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-bool AFireFighterPawn::CarrayVictim(AVictim* Citizen)
-{
-	//GEngine->AddOnScreenDebugMessage(-1, 3, FColor::Blue, TEXT("Added"));
-	if (victim == nullptr)
-	{
-		victim = Citizen;
-		return true;
-	}
-
-	return false;
 }
 
 AVictim* AFireFighterPawn::GetVictim()
