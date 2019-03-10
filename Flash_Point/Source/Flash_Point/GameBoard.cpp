@@ -136,10 +136,18 @@ void AGameBoard::AdvancePOI()
 void AGameBoard::flashover()
 {	
 	UE_LOG(LogTemp, Warning, TEXT("Flash Over"));
-	for (ATile* tile : boardTiles)
+	bool isDone;
+	do
 	{
-		tile->Flashover();
-	}
+		isDone = true;
+		for (ATile* tile : boardTiles)
+		{
+			if (!tile->Flashover())
+			{
+				isDone = false;
+			}
+		}
+	} while (!isDone);
 
 	for (ATile* tile : boardTiles)
 	{
