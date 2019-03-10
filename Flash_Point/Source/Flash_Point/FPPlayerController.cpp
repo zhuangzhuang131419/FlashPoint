@@ -15,6 +15,26 @@ AFPPlayerController::AFPPlayerController() {
 
 }
 
+void AFPPlayerController::SetGameBoard(AGameBoard * inGame)
+{
+	gameBoard = inGame;
+}
+
+AGameBoard * AFPPlayerController::GetGameBoard()
+{
+	return gameBoard;
+}
+
+int32 AFPPlayerController::GetTurnNum()
+{
+	return myTurnNum;
+}
+
+void AFPPlayerController::SetTurnNum(int32 turnNum)
+{
+	myTurnNum = turnNum;
+}
+
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	if (ensure(wall)) {
@@ -176,6 +196,18 @@ bool AFPPlayerController::ServerCarryVictim_Validate(AFireFighterPawn * fireFigh
 	return true;
 }
 
+void AFPPlayerController::ServerGetFireFighterID_Implementation(AFireFighterPawn * fireFighterPawn, AGameBoard * inGameBoard)
+{
+	if (ensure(fireFighterPawn) && ensure(inGameBoard)) {
+		fireFighterPawn->SetFireFighterID(inGameBoard->JoinBoard());
+	}
+}
+
+bool AFPPlayerController::ServerGetFireFighterID_Validate(AFireFighterPawn * fireFighterPawn, AGameBoard * inGameBoard)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -225,9 +257,26 @@ void AFPPlayerController::CarryVictim()
 	}
 }
 
+void AFPPlayerController::FindGameBoard()
+{
+	// ensure there is a world
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		TArray<AActor*> allGameBoard;
+		UGameplayStatics::GetAllActorsOfClass(world, AGameBoard::StaticClass(), allGameBoard);
+		// only assign correct game board if there is one found
+		if (allGameBoard.Num() > 0) {
+			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			gameBoard = Cast<AGameBoard>(allGameBoard[0]);
+		}
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
-
+	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Player GIAO!"));
+	FindGameBoard();
 }
 
 void AFPPlayerController::SetOpenDoor()

@@ -46,6 +46,16 @@ public:
 	void SetCarry();
 	AFPPlayerController();
 
+	// Getter and setters for attributes
+	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	void SetGameBoard(AGameBoard* inGame);
+	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	AGameBoard* GetGameBoard();
+	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	int32 GetTurnNum();
+	UFUNCTION(BlueprintCallable, Category = "Player Attributes")
+	void SetTurnNum(int32 turnNum);
+
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -72,19 +82,27 @@ public:
 	void ServerDrop(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerCarryVictim(AFireFighterPawn * fireFighterPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerGetFireFighterID(AFireFighterPawn * fireFighterPawn, AGameBoard* inGameBoard);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
-
-	
-
 	UFUNCTION(BlueprintCallable)
 	void CarryVictim();
 
+	// FUNCTIONS for joining or creating games
+	UFUNCTION(BlueprintCallable, Category = "Join Game")
+	void FindGameBoard();
 	
 
 
 protected:
+	// FIELDS
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
+	AGameBoard* gameBoard = nullptr;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
+	int32 myTurnNum = -1;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 	EGameOperations CurrentOperation = EGameOperations::None;

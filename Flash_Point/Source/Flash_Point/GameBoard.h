@@ -39,6 +39,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void AdvancePOI();
 
+	// Functions for joining or creating the game
+	UFUNCTION(BlueprintCallable, Category = "Take turn")
+	int32 JoinBoard();
+
 	// Max health of the board to be specified at begining
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
@@ -102,6 +106,9 @@ protected:
 	// The current gameboard health
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
+	// A to indicate how many player are currently in the game
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
+	int32 joinedPlayerNum = 0;
 
 	// FUNCTIONS
 	// This method will initilize the default board

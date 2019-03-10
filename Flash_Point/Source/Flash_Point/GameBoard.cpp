@@ -125,6 +125,15 @@ void AGameBoard::AdvancePOI()
 	}
 }
 
+int32 AGameBoard::JoinBoard()
+{
+	if (HasAuthority()) {
+		joinedPlayerNum++;
+		return joinedPlayerNum - 1;
+	}
+	return -1;
+}
+
 void AGameBoard::InitializeDefaultBoard()
 {
 	// This is only done on the server
@@ -469,6 +478,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, fireFighters);
 	DOREPLIFETIME(AGameBoard, players);
 	DOREPLIFETIME(AGameBoard, health);
+	DOREPLIFETIME(AGameBoard, joinedPlayerNum);
 }
 
 // Called when the game starts or when spawned

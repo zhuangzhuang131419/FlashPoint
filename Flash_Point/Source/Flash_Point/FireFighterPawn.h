@@ -10,6 +10,8 @@
 
 class ATile;
 class AVictim;
+class AGameBoard;
+class AFPPlayerController;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -47,6 +49,13 @@ public:
 	void SetExtinguishConsumption(int32 current);
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
+	// Getter and setters for firefighter pawn id
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetFireFighterID();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterID(int32 inID);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void InitializeFireFighter();
 
 protected:
 	// current firefighter position
@@ -63,6 +72,15 @@ protected:
 	int32 openConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 extinguishConsumption = 1;
+	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	int32 fireFighterID = -1;
+	AGameBoard* playingBoard = nullptr;
+	AFPPlayerController* myOwner = nullptr;
+
+
+	// REPLICATION FUNCTIONS
+	UFUNCTION()
+	void Rep_PawnID();
 
 
 	// Overriding setting all lifetime replicates function

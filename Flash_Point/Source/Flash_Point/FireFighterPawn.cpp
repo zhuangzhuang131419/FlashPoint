@@ -2,6 +2,8 @@
 
 #include "FireFighterPawn.h"
 #include "Victim.h"
+#include "GameBoard.h"
+#include "FPPlayerController.h"
 
 
 // Sets default values
@@ -72,6 +74,20 @@ bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
 	return false;
 }
 
+int32 AFireFighterPawn::GetFireFighterID()
+{
+	return fireFighterID;
+}
+
+void AFireFighterPawn::SetFireFighterID(int32 inID)
+{
+	fireFighterID = inID;
+}
+
+void AFireFighterPawn::Rep_PawnID()
+{
+}
+
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -82,13 +98,38 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, openConsumption);
 	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
 	DOREPLIFETIME(AFireFighterPawn, victim);
+	DOREPLIFETIME(AFireFighterPawn, fireFighterID);
+}
+
+void AFireFighterPawn::InitializeFireFighter()
+{
+	// find the owner of the firefighter
+	AFPPlayerController* owningPlayer = Cast<AFPPlayerController>(GetOwner());
+	if (ensure(owningPlayer)) {
+		UE_LOG(LogTemp, Warning, TEXT("Got Player controller"));
+		myOwner = owningPlayer;
+		playingBoard = myOwner->GetGameBoard();
+	}
+
+	// get the firefighter ID of the firefighter
+	if (ensure(playingBoard)) {
+		UE_LOG(LogTemp, Warning, TEXT("Got board"));
+		if (HasAuthority()) {
+			fireFighterID = playingBoard->JoinBoard();
+		}
+		else {
+			if (ensure(owningPlayer)) {
+				owningPlayer->ServerGetFireFighterID(this, playingBoard);
+			}
+		}
+	}
 }
 
 // Called when the game starts or when spawned
 void AFireFighterPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 // Called every frame
