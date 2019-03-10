@@ -106,6 +106,12 @@ protected:
 	// the entire board are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
+	// the ambulance parking tiles are stored here
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	TArray<ATile*> ambulanceTiles;
+	// the engine parking tiles are stored here
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	TArray<ATile*> engineTiles;
 	// The firefighters placed on the board
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFireFighterPawn*> fireFighters;
@@ -115,9 +121,14 @@ protected:
 	// The current gameboard health
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
+	// TURN RELATED FIELDS
 	// A to indicate how many player are currently in the game
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
 	int32 joinedPlayerNum = 0;
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
+	int32 placedNum = 0;	// when this number is the same as joined number, the game can start by changing turn
+	UPROPERTY(ReplicatedUsing = Rep_TurnNotify, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
+	int32 currentTurn = -1;	// this is initialized to -1 to indicate a placing firefighter state
 
 	// FUNCTIONS
 	// This method will initilize the default board
@@ -128,6 +139,10 @@ protected:
 	// A function to refresh synchronized board
 	UFUNCTION(Client, Reliable)
 	void RefreshBoard();
+
+	// REPLICATION FUNCTIONS
+	UFUNCTION()
+	void Rep_TurnNotify();
 
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

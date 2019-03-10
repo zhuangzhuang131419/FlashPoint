@@ -86,6 +86,10 @@ void AFireFighterPawn::SetFireFighterID(int32 inID)
 
 void AFireFighterPawn::Rep_PawnID()
 {
+	// when id got, set it the the player
+	if (ensure(myOwner) && fireFighterID >= 0) {
+		myOwner->SetTurnNum(fireFighterID);
+	}
 }
 
 void AFireFighterPawn::KnockDown()
@@ -124,6 +128,7 @@ void AFireFighterPawn::InitializeFireFighter()
 		UE_LOG(LogTemp, Warning, TEXT("Got board"));
 		if (HasAuthority()) {
 			fireFighterID = playingBoard->JoinBoard();
+			owningPlayer->SetTurnNum(fireFighterID);
 		}
 		else {
 			if (ensure(owningPlayer)) {

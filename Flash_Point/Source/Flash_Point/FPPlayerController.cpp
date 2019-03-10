@@ -33,6 +33,7 @@ int32 AFPPlayerController::GetTurnNum()
 void AFPPlayerController::SetTurnNum(int32 turnNum)
 {
 	myTurnNum = turnNum;
+	UE_LOG(LogTemp, Warning, TEXT("My turn num is: %d"), myTurnNum);
 }
 
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)

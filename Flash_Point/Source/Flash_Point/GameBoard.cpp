@@ -394,6 +394,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			tempTile = boardTiles[indicator.engineParkLoc[i]];
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::FireEnginePark);
+				engineTiles.Add(tempTile);
 			}
 			// set up for the second tile on the specified location
 			if (i % 4 == 0 || i % 4 == 1) {
@@ -404,6 +405,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::FireEnginePark);
+				engineTiles.Add(tempTile);
 			}
 		}
 	}
@@ -413,6 +415,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			tempTile = boardTiles[indicator.ambulanceParkLoc[i]];
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::AmbulancePark);
+				ambulanceTiles.Add(tempTile);
 			}
 			// set up for the second tile on the specified location
 			if (i % 4 == 0 || i % 4 == 1) {
@@ -423,6 +426,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::AmbulancePark);
+				ambulanceTiles.Add(tempTile);
 			}
 		}
 	}
@@ -525,15 +529,23 @@ void AGameBoard::RefreshBoard_Implementation()
 	ClearAllTile();
 }
 
+void AGameBoard::Rep_TurnNotify()
+{
+}
+
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	// mark all replicated valus
 	DOREPLIFETIME(AGameBoard, boardTiles);
+	DOREPLIFETIME(AGameBoard, ambulanceTiles);
+	DOREPLIFETIME(AGameBoard, engineTiles);
 	DOREPLIFETIME(AGameBoard, fireFighters);
 	DOREPLIFETIME(AGameBoard, players);
 	DOREPLIFETIME(AGameBoard, health);
 	DOREPLIFETIME(AGameBoard, joinedPlayerNum);
+	DOREPLIFETIME(AGameBoard, placedNum);
+	DOREPLIFETIME(AGameBoard, currentTurn);
 }
 
 // Called when the game starts or when spawned
