@@ -211,9 +211,9 @@ protected:
 	UPROPERTY(replicated)
 	AGameBoard* board = nullptr;	// a pointer to game board for clearing all tile status
 	ATile* prev = nullptr;	// a pointer to follow for path finding
-	UPROPERTY(replicated)
+	UPROPERTY(replicated, VisibleAnyWhere)
 	int32 xLoc = -1;	// location of the tile, to be specified with resonable value at instantiation
-	UPROPERTY(replicated)
+	UPROPERTY(replicated, VisibleAnyWhere)
 	int32 yLoc = -1;
 	int32 pathCost = -1;	// path cost used for A star search
 	TArray<ATile*> pathToHere;
