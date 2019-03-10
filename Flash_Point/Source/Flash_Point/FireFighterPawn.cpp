@@ -4,6 +4,7 @@
 #include "Victim.h"
 #include "GameBoard.h"
 #include "FPPlayerController.h"
+#include "Tile.h"
 
 
 // Sets default values
@@ -91,6 +92,19 @@ void AFireFighterPawn::Rep_PawnID()
 void AFireFighterPawn::KnockDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
+	ATile* tile = GetPlacedOn();
+	int32 x;
+	int32 y;
+	if (tile->GetLocation(x, y))
+	{
+		if (x < 4)
+		{
+
+		}
+	}
+	
+	
+
 }
 
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
