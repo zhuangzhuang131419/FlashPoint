@@ -93,6 +93,9 @@ public:
 	// Getter for Victims
 	TArray<AVictim*>* GetVictims();
 
+	// Getter for gameboard
+	AGameBoard* GetGameBoard();
+
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);

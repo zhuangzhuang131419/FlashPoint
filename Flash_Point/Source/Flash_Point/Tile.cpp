@@ -254,11 +254,10 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 			else
 			{
 				POIStatus = EPOIStatus::Empty;
+				board->SetCurrentPOI(board->currentPOI - 1);
 			}
 			POIOnTile->Destroy();
-			POIOnTile = nullptr;
-			board->currentPOI--;
-			
+			POIOnTile = nullptr;			
 		}
 	}
 }
@@ -392,6 +391,11 @@ UStaticMeshComponent * ATile::GetTileMesh()
 TArray<AVictim*>* ATile::GetVictims()
 {
 	return &victims;
+}
+
+AGameBoard * ATile::GetGameBoard()
+{
+	return board;
 }
 
 void ATile::AdvanceFire()

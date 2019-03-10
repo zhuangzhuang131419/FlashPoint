@@ -43,8 +43,11 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
+
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
+
+	void SetVictimLostNum(int32 num) { victimLostNum = num; }
 
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
 	int32 maxLostVictim = 4;
@@ -52,12 +55,16 @@ public:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimSavedNum = 0;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Setup")
+	void SetVictimSavedNum(int32 num) { victimSavedNum = num; }
+
+	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 maxSavedVictim = 7;
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 currentPOI = 0;
 
+	void SetCurrentPOI(int32 num) { currentPOI = num; }
+		 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 maxPOI = 3;
 
