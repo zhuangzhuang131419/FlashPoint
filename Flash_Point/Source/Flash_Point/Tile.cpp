@@ -407,6 +407,42 @@ void ATile::AdvanceFire()
 	FireEffect->Activate();
 }
 
+void ATile::AdvancePOI()
+{
+	if (ensure(fireStatus != EFireStatus::Fire))
+	{
+		if (ensure(board->currentPOI < board->maxPOI))
+		{
+			if (ensure(!POIOnTile))
+			{
+				if (ensure(POIStatus == EPOIStatus::Empty))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Advance POI"));
+					
+					SetPOIStatus(EPOIStatus::Hided);
+					FVector POISocketLocation = TileMesh->GetSocketLocation(FName("POI"));
+					APOI* inPOI = GetWorld()->SpawnActor<APOI>(
+						POIClass,
+						POISocketLocation,
+						FRotator(0, 0, 0)
+						);
+					if (board)
+					{
+						board->setPOIalarm(inPOI);
+						board->SetCurrentPOI(board->currentPOI + 1);
+						SetPOIOnTile(inPOI);
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Wrong"));
+					}
+					
+				}
+			}
+		}
+	}
+}
+
 void ATile::SetSmokeOnTile()
 {
 	if (HasAuthority()) {

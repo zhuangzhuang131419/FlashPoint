@@ -70,6 +70,24 @@ enum class EDirection : uint8
 	Right
 };
 
+// A struct indicate the location
+USTRUCT(BlueprintType)
+struct FLocation
+{
+	GENERATED_USTRUCT_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location info")
+	int32 xLoc;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Location info")
+	int32 yLoc;
+	FLocation() : xLoc(0), yLoc(0) {}
+	FLocation(int32 x, int32 y) 
+	{
+		xLoc = x;
+		yLoc = y;
+	}
+};
+
 // A struct used to indicate map generation
 USTRUCT(BlueprintType)
 struct FSpawnIndicator

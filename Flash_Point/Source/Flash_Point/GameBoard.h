@@ -59,6 +59,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	void InitialPlacing();
 
+	// Set alarm type for POI
+	void setPOIalarm(APOI* inPOI);
+
 	// Max health of the board to be specified at begining
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
@@ -117,6 +120,17 @@ protected:
 	// A resonable height for camera to be above the board
 	UPROPERTY(EditAnyWhere, Category = "Setup")
 	int32 camHeight = 2900;
+
+	// whether initialize fire and POI randomly or not
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	bool isRandom = false;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TArray<FLocation> fireInitializeLocation;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TArray<FLocation> POIInitializeLocation;
+
 	// the entire board are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
@@ -162,7 +176,7 @@ protected:
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	virtual void BeginPlay() override;
 
-	void setPOIalarm(APOI* inPOI);
+	
 
 private:
 	void InitializeFire();

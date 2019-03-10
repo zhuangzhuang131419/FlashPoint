@@ -10,6 +10,23 @@ AGameBoard::AGameBoard()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	// family rule default set up
+	POIInitializeLocation.Add(FLocation(5, 2));
+	POIInitializeLocation.Add(FLocation(8, 5));
+	POIInitializeLocation.Add(FLocation(1, 5));
+
+	fireInitializeLocation.Add(FLocation(7, 2));
+	fireInitializeLocation.Add(FLocation(6, 2));
+	fireInitializeLocation.Add(FLocation(7, 3));
+	fireInitializeLocation.Add(FLocation(6, 3));
+	fireInitializeLocation.Add(FLocation(5, 3));
+	fireInitializeLocation.Add(FLocation(4, 3));
+	fireInitializeLocation.Add(FLocation(5, 4));
+	fireInitializeLocation.Add(FLocation(3, 5));
+	fireInitializeLocation.Add(FLocation(2, 5));
+	fireInitializeLocation.Add(FLocation(3, 6));
+
 }
 
 AFPPlayerController * AGameBoard::GetCurrentPlayer()
@@ -96,17 +113,7 @@ void AGameBoard::AdvancePOIOnBoard()
 			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 		}
 
-		boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
-		FVector POISocketLocation = boardTiles[randomPosition]->GetTileMesh()->GetSocketLocation(FName("POI"));
-		APOI* inPOI = GetWorld()->SpawnActor<APOI>(
-			POIClass,
-			POISocketLocation,
-			FRotator(0, 0, 0)
-			);
-		bool placedSuccess = false;
-		setPOIalarm(inPOI);
-		currentPOI++;
-		boardTiles[randomPosition]->SetPOIOnTile(inPOI);
+		boardTiles[randomPosition]->AdvancePOI();
 	}
 	else
 	{
@@ -186,9 +193,6 @@ void AGameBoard::flashover()
 			tile->GetSmokeEffect()->Deactivate();
 		}
 	}
-
-
-	
 }
 
 int32 AGameBoard::JoinBoard()
@@ -616,38 +620,49 @@ void AGameBoard::BeginPlay()
 	}
 	Super::BeginPlay();
 
-	// Initialize the fire
+	
 	if (HasAuthority()) {
-		int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-		for (size_t i = 0; i < FireInitializeNum; i++) // Initialize 3 fires
-		{
-			while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
-			{
-				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-			}
-			boardTiles[randomPosition]->AdvanceFire();
-		}
+		int32 randomPosition;
 
-		// Initialize the POI
-		randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-		for (size_t i = 0; i < POIInitializeNum; i++)
+		if (isRandom)
 		{
-			while (boardTiles[randomPosition]->IsOutside() ||
-				boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
-				boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+			// Initialize the fire
+			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			for (size_t i = 0; i < FireInitializeNum; i++) // Initialize 3 fires
 			{
-				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				boardTiles[randomPosition]->AdvanceFire();
 			}
-			boardTiles[randomPosition]->SetPOIStatus(EPOIStatus::Hided);
-			FVector POISocketLocation = boardTiles[randomPosition]->GetTileMesh()->GetSocketLocation(FName("POI"));
-			APOI* inPOI = GetWorld()->SpawnActor<APOI>(
-				POIClass,
-				POISocketLocation,
-				FRotator(0, 0, 0)
-				);
-			
-			setPOIalarm(inPOI);
-			boardTiles[randomPosition]->SetPOIOnTile(inPOI);
+
+			// Initialize the POI
+			for (size_t i = 0; i < POIInitializeNum; i++)
+			{
+				while (boardTiles[randomPosition]->IsOutside() || 
+					boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+					boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				boardTiles[randomPosition]->AdvancePOI();
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Initialize fire un randomly."));
+			// Initialize the fire
+			for (FLocation loc : fireInitializeLocation)
+			{
+				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceFire();
+			}
+
+			// Initialize the POI
+			for (FLocation loc : POIInitializeLocation)
+			{
+				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvancePOI();
+			}
 		}
 		currentPOI = maxPOI;
 	}

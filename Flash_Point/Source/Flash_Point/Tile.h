@@ -103,6 +103,7 @@ public:
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
 	void AdvanceFire();
+	void AdvancePOI();
 	void SetSmokeOnTile();
 	void SetClearOnTile();
 	void ExitinguishFireOnTile();
@@ -160,6 +161,8 @@ protected:
 	TSubclassOf<AEdgeUnit> WallClass = nullptr;	// for wall edge class
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AEdgeUnit> DoorClass = nullptr;	// for door edge class
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AActor> POIClass = nullptr;
 
 	// Neighbour edge refences
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
