@@ -50,6 +50,22 @@ void AFPPlayerController::NotifyPlayerTurn()
 
 void AFPPlayerController::EndPlayerTurn()
 {
+	// restore AP
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn)) {
+		int32 currentAP = fireFighterPawn->GetCurrentAP();
+		int32 apToRestore = 0;
+		if (currentAP + fireFighterPawn->GetRestoreAP() > fireFighterPawn->GetMaxAP()) {
+			apToRestore = fireFighterPawn->GetMaxAP() - currentAP;
+		}
+		else {
+			apToRestore = fireFighterPawn->GetRestoreAP();
+		}
+		// if ap to restore is more than 0 restore AP
+		if (apToRestore > 0) {
+			fireFighterPawn->AdjustFireFighterAP(apToRestore);
+		}
+	}
 	// disable all operations
 	SetNone();
 	if (ensure(inGameUI)) {
@@ -432,4 +448,14 @@ void AFPPlayerController::SetCarry()
 EGameOperations AFPPlayerController::GetCurrentOperation()
 {
 	return CurrentOperation;
+}
+
+void AFPPlayerController::ServerFlashOver_Implementation(AGameBoard * board)
+{
+	board->FlashOverOnBoard();
+}
+
+bool AFPPlayerController::ServerFlashOver_Validate(AGameBoard * board)
+{
+	return true;
 }

@@ -37,6 +37,16 @@ void AFireFighterPawn::SetCurrentAP(int32 current)
 	currentAP = current;
 }
 
+int32 AFireFighterPawn::GetMaxAP()
+{
+	return maxAP;
+}
+
+int32 AFireFighterPawn::GetRestoreAP()
+{
+	return restoreAP;
+}
+
 void AFireFighterPawn::AdjustFireFighterAP(int32 adjustAP)
 {
 	if (!ensure(myOwner)) return;
@@ -189,6 +199,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AFireFighterPawn, placedOn);
+	DOREPLIFETIME(AFireFighterPawn, restoreAP);
 	DOREPLIFETIME(AFireFighterPawn, currentAP);
 	DOREPLIFETIME(AFireFighterPawn, maxAP);
 	DOREPLIFETIME(AFireFighterPawn, moveConsumption);

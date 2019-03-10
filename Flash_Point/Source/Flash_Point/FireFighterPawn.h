@@ -36,6 +36,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCurrentAP(int32 current);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetMaxAP();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetRestoreAP();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void AdjustFireFighterAP(int32 adjustAP);
 	// getter and setter for all consumptions
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
@@ -78,6 +82,8 @@ protected:
 	int32 currentAP = 4;	// initial AP for all firefighters are 4
 	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;	// Firefighter max ap
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 restoreAP = 4;	// AP for restoration for firefighters are initialized to 4
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 moveConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")

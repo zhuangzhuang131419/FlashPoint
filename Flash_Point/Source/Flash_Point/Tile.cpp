@@ -482,11 +482,7 @@ void ATile::AdvanceExplosion(EDirection direction)
 
 	if (adjacentWall)
 	{
-		if (adjacentWall->GetEdgeType() == EEdgeType::Door)
-		{
-			(Cast<ADoor>(adjacentWall))->Damage();
-		}
-		else if (adjacentWall->IsBlocked())
+		if (adjacentWall->IsBlocked())
 		{			
 			if (ensure(adjacentWall->GetEdgeType() == EEdgeType::Wall))
 			{
@@ -498,9 +494,15 @@ void ATile::AdvanceExplosion(EDirection direction)
 					Cast<AWall>(adjacentWall)->ChopWall();
 				}
 			}
+			else if (adjacentWall->GetEdgeType() == EEdgeType::Door) {
+				(Cast<ADoor>(adjacentWall))->Damage();
+			}
 		}
 		else
 		{
+			if (adjacentWall->GetEdgeType() == EEdgeType::Door) {
+				(Cast<ADoor>(adjacentWall))->Damage();
+			}
 			if (adjacentWall->GetOtherNeighbour(this))
 			{
 				if (adjacentWall->GetOtherNeighbour(this)->GetFireStatus() != EFireStatus::Fire)

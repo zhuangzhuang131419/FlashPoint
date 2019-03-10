@@ -86,6 +86,9 @@ public:
 	// server replenish POI
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdvancePOI(AGameBoard* board);
+	// server flash over
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerFlashOver(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerDrop(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)

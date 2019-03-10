@@ -130,8 +130,8 @@ void AGameBoard::AdvancePOI()
 	}
 }
 
-void AGameBoard::flashover()
-{	
+void AGameBoard::FlashOverOnBoard()
+{
 	UE_LOG(LogTemp, Warning, TEXT("Flash Over"));
 	bool isDone;
 	do
@@ -152,10 +152,10 @@ void AGameBoard::flashover()
 		if (tile->GetPlacedFireFighters()->Num() > 0 && tile->GetFireStatus() == EFireStatus::Fire)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("number: %d"), tile->GetPlacedFireFighters()->Num());
-			
+
 			for (AFireFighterPawn* fireFighterPawn : *(tile->GetPlacedFireFighters()))
 			{
-				
+
 				if (fireFighterPawn)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("right"));
@@ -196,6 +196,18 @@ void AGameBoard::flashover()
 			tile->SetFireStatus(EFireStatus::Clear);
 			tile->GetFireEffect()->Deactivate();
 			tile->GetSmokeEffect()->Deactivate();
+		}
+	}
+}
+
+void AGameBoard::flashover()
+{	
+	if (HasAuthority()) {
+		FlashOverOnBoard();
+	}
+	else {
+		if (ensure(localPlayer)) {
+			localPlayer->ServerFlashOver(this);
 		}
 	}
 }
@@ -593,6 +605,8 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, joinedPlayerNum);
 	DOREPLIFETIME(AGameBoard, placedNum);
 	DOREPLIFETIME(AGameBoard, currentTurn);
+	DOREPLIFETIME(AGameBoard, maxPOI);
+	DOREPLIFETIME(AGameBoard, currentPOI);
 }
 
 // Called when the game starts or when spawned

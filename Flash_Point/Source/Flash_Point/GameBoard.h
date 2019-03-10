@@ -48,6 +48,8 @@ public:
 	void AdvancePOIOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void AdvancePOI();
+	// for server to call in order to do flash over
+	void FlashOverOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void flashover();
 
@@ -83,12 +85,12 @@ public:
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 maxSavedVictim = 7;
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 currentPOI = 0;
 
 	void SetCurrentPOI(int32 num) { currentPOI = num; }
 		 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 maxPOI = 3;
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
