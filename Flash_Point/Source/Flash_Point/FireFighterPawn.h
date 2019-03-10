@@ -48,6 +48,8 @@ public:
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 
+	void KnockDown();
+
 protected:
 	// current firefighter position
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")

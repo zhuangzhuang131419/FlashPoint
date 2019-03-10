@@ -72,6 +72,11 @@ bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
 	return false;
 }
 
+void AFireFighterPawn::KnockDown()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
+}
+
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

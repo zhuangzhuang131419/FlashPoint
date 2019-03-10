@@ -38,6 +38,8 @@ public:
 	void AdvancePOIOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void AdvancePOI();
+	UFUNCTION(BlueprintCallable)
+	void flashover();
 
 	// Max health of the board to be specified at begining
 	UPROPERTY(BlueprintReadOnly, Category = "Map Attributes")
@@ -57,7 +59,7 @@ public:
 
 	void SetVictimSavedNum(int32 num) { victimSavedNum = num; }
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 maxSavedVictim = 7;
 
 	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
