@@ -92,19 +92,49 @@ void AFireFighterPawn::Rep_PawnID()
 void AFireFighterPawn::KnockDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
+	
 	ATile* tile = GetPlacedOn();
-	int32 x;
-	int32 y;
-	if (tile->GetLocation(x, y))
+	
+	if (tile) 
 	{
-		if (x < 4)
-		{
+		
+		int32 x;
+		int32 y;
+		
 
+		if (tile->GetLocation(x, y))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%d, %d"), x, y);
+			if (playingBoard)
+			{
+				
+				if (x < playingBoard->GetBoardWidth() && y < playingBoard->GetBoardLength())
+				{
+					// left down corner
+					UE_LOG(LogTemp, Warning, TEXT("left down corner"));
+				}
+				else if (x >= playingBoard->GetBoardWidth() && y < playingBoard->GetBoardLength())
+				{
+					// right down corner
+					UE_LOG(LogTemp, Warning, TEXT("right down corner"));
+				}
+				else if (x < playingBoard->GetBoardWidth() && y >= playingBoard->GetBoardLength())
+				{
+					// left up corner
+					UE_LOG(LogTemp, Warning, TEXT("left up corner"));
+				}
+				else {
+					// right up corner
+					UE_LOG(LogTemp, Warning, TEXT("right up corner"));
+				}
+			}
 		}
 	}
+	else 
+	{
+		UE_LOG(LogTemp, Warning, TEXT("wrong"));
+	}
 	
-	
-
 }
 
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

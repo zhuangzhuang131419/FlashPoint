@@ -29,6 +29,10 @@ public:
 	int32 GetCurrentGameHealth();
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SetCurrentGameHealth(int32 currentHealth);
+
+	int32 GetBoardWidth() { return boardWidth; }
+	int32 GetBoardLength() { return boardLength; }
+
 	// to clear all tile status, used in path finding
 	void ClearAllTile();
 	// below functions are used to advance fire and replenish POI
