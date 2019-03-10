@@ -88,6 +88,11 @@ void AFireFighterPawn::Rep_PawnID()
 {
 }
 
+void AFireFighterPawn::KnockDown()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
+}
+
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

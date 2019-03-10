@@ -254,11 +254,10 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 			else
 			{
 				POIStatus = EPOIStatus::Empty;
+				board->SetCurrentPOI(board->currentPOI - 1);
 			}
 			POIOnTile->Destroy();
-			POIOnTile = nullptr;
-			board->currentPOI--;
-			
+			POIOnTile = nullptr;			
 		}
 	}
 }
@@ -394,6 +393,11 @@ TArray<AVictim*>* ATile::GetVictims()
 	return &victims;
 }
 
+AGameBoard * ATile::GetGameBoard()
+{
+	return board;
+}
+
 void ATile::AdvanceFire()
 {
 	if (HasAuthority()) {
@@ -442,20 +446,19 @@ void ATile::AdvanceExplosion(EDirection direction)
 
 	if (adjacentWall)
 	{
-		if (adjacentWall->IsBlocked())
+		if (adjacentWall->GetEdgeType() == EEdgeType::Door)
 		{
-			if (adjacentWall->GetEdgeType() == EEdgeType::Door)
-			{
-				(Cast<ADoor>(adjacentWall))->Damage();
-			}
-			else if (adjacentWall->GetEdgeType() == EEdgeType::Wall)
+			(Cast<ADoor>(adjacentWall))->Damage();
+		}
+		else if (adjacentWall->IsBlocked())
+		{			
+			if (ensure(adjacentWall->GetEdgeType() == EEdgeType::Wall))
 			{
 				if (Cast<AWall>(adjacentWall)->isChoped)
 				{
 					(Cast<AWall>(adjacentWall))->Damage();
 				}
 				else {
-					// TODO need to fix
 					Cast<AWall>(adjacentWall)->ChopWall();
 				}
 			}
@@ -493,6 +496,54 @@ void ATile::AdvanceExplosion()
 	AdvanceExplosion(EDirection::Left);
 	AdvanceExplosion(EDirection::Right);
 	AdvanceExplosion(EDirection::Up);
+}
+
+void ATile::Flashover(EDirection direction)
+{
+	AEdgeUnit* adjacentWall = nullptr;
+	switch (direction)
+	{
+	case EDirection::Down:
+		adjacentWall = backWall;
+		break;
+	case EDirection::Left:
+		adjacentWall = leftWall;
+		break;
+	case EDirection::Right:
+		adjacentWall = rightWall;
+		break;
+	case EDirection::Up:
+		adjacentWall = frontWall;
+		break;
+	}
+
+	if (adjacentWall)
+	{
+		if (!adjacentWall->IsBlocked())
+		{
+			ATile* adjacentTile = adjacentWall->GetOtherNeighbour(this);
+			if (adjacentTile)
+			{
+				if (adjacentTile->GetFireStatus() == EFireStatus::Fire)
+				{
+					this->SetFireStatus(EFireStatus::Fire);
+					this->FireEffect->Activate();
+					this->SmokeEffect->Deactivate();
+				}
+			}
+		}
+	}
+}
+
+void ATile::Flashover()
+{
+	if (GetFireStatus() == EFireStatus::Smoke) 
+	{
+		Flashover(EDirection::Down);
+		Flashover(EDirection::Up);
+		Flashover(EDirection::Left);
+		Flashover(EDirection::Right);
+	}
 }
 
 // Here is the function to bind all input bindings

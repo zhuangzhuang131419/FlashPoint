@@ -2,6 +2,7 @@
 
 #include "GameBoard.h"
 #include "POI.h"
+#include "Victim.h"
 
 
 // Sets default values
@@ -123,6 +124,60 @@ void AGameBoard::AdvancePOI()
 			localPlayer->ServerAdvancePOI(this);
 		}
 	}
+}
+
+void AGameBoard::flashover()
+{	
+	UE_LOG(LogTemp, Warning, TEXT("Flash Over"));
+	for (ATile* tile : boardTiles)
+	{
+		tile->Flashover();
+	}
+
+	for (ATile* tile : boardTiles)
+	{
+		// Any firefighters in a space with fire are knocked down
+		if (tile->GetPlacedFireFighters().Num() > 0 && tile->GetFireStatus() == EFireStatus::Fire)
+		{
+			for (AFireFighterPawn* fireFighterPawn : tile->GetPlacedFireFighters()) {
+				fireFighterPawn->KnockDown();
+			}
+		}
+
+		// Any victims or POI in a space with fire are lost
+		if (tile->GetPOIOnTile())
+		{
+			if (tile->GetFireStatus() == EFireStatus::Fire)
+			{
+				tile->GetPOIOnTile()->Destroy();
+				tile->GetGameBoard()->SetCurrentPOI(tile->GetGameBoard()->currentPOI - 1);
+			}
+		}
+
+		if (tile->GetVictims()->Num() > 0)
+		{
+			if (tile->GetFireStatus() == EFireStatus::Fire)
+			{
+				for (AVictim* victim : *tile->GetVictims())
+				{
+					victim->Destroy();
+					tile->GetGameBoard()->SetCurrentPOI(tile->GetGameBoard()->currentPOI - 1);
+					tile->GetGameBoard()->SetVictimLostNum(tile->GetGameBoard()->victimLostNum + 1);
+				}
+			}
+		}
+
+		// Remove any fire markers that were placed outside of the building
+		if (tile->IsOutside())
+		{
+			tile->SetFireStatus(EFireStatus::Clear);
+			tile->GetFireEffect()->Deactivate();
+			tile->GetSmokeEffect()->Deactivate();
+		}
+	}
+
+
+	
 }
 
 int32 AGameBoard::JoinBoard()

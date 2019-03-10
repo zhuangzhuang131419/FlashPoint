@@ -93,6 +93,11 @@ public:
 	// Getter for Victims
 	TArray<AVictim*>* GetVictims();
 
+	// Getter for gameboard
+	AGameBoard* GetGameBoard();
+
+	TArray<AFireFighterPawn*> GetPlacedFireFighters() { return placedFireFighters; }
+
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
@@ -103,8 +108,11 @@ public:
 	void ExitinguishFireOnTile();
 
 	void AdvanceExplosion(EDirection direction);
-
 	void AdvanceExplosion();
+
+	void Flashover(EDirection direction);
+	void Flashover();
+
 
 protected:
 	// FIELDS

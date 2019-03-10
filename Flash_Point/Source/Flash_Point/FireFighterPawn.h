@@ -57,6 +57,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
 
+	void KnockDown();
+
 protected:
 	// current firefighter position
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")
