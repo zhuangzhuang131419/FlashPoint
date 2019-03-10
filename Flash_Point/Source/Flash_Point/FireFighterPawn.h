@@ -9,6 +9,7 @@
 #include "FireFighterPawn.generated.h"
 
 class ATile;
+class AEdgeUnit;
 class AVictim;
 class AGameBoard;
 class AFPPlayerController;
@@ -34,6 +35,8 @@ public:
 	int32 GetCurrentAP();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCurrentAP(int32 current);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void AdjustFireFighterAP(int32 adjustAP);
 	// getter and setter for all consumptions
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetMoveConsumption();
@@ -44,11 +47,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetOpenConsumption(int32 current);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetChopConsumption();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetChopConsumption(int32 current);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetExtinguishConsumption();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetExtinguishConsumption(int32 current);
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
+	bool IsAdjacentToWall(AEdgeUnit* inEdge);
 	// Getter and setters for firefighter pawn id
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetFireFighterID();
@@ -74,6 +82,8 @@ protected:
 	int32 moveConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 openConsumption = 1;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 chopConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 extinguishConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")

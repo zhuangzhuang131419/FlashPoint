@@ -125,10 +125,10 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	bool isRandom = false;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(EditAnyWhere, Category = "Setup")
 	TArray<FLocation> fireInitializeLocation;
 
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(EditAnyWhere, Category = "Setup")
 	TArray<FLocation> POIInitializeLocation;
 
 	// the entire board are stored here

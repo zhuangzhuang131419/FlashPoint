@@ -37,6 +37,20 @@ void AFireFighterPawn::SetCurrentAP(int32 current)
 	currentAP = current;
 }
 
+void AFireFighterPawn::AdjustFireFighterAP(int32 adjustAP)
+{
+	if (!ensure(myOwner)) return;
+	if (currentAP + adjustAP < 0) return;	// negative ap is impossible
+	// This is cheating for test purpose
+	if (!myOwner->ConsumptionOn() && adjustAP <= 0) return;
+	if (HasAuthority()) {
+		currentAP += adjustAP;
+	}
+	else {
+		myOwner->ServerAdjustAP(this, adjustAP);
+	}
+}
+
 int32 AFireFighterPawn::GetMoveConsumption()
 {
 	return moveConsumption;
@@ -57,6 +71,16 @@ void AFireFighterPawn::SetOpenConsumption(int32 current)
 	openConsumption = current;
 }
 
+int32 AFireFighterPawn::GetChopConsumption()
+{
+	return chopConsumption;
+}
+
+void AFireFighterPawn::SetChopConsumption(int32 current)
+{
+	chopConsumption = current;
+}
+
 int32 AFireFighterPawn::GetExtinguishConsumption()
 {
 	return extinguishConsumption;
@@ -72,6 +96,18 @@ bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
 	int32 actualCost = baseCost * extinguishConsumption;
 	// TODO for later fire fighter with row, do extra checks
 	if (actualCost < currentAP)	return true;
+	return false;
+}
+
+bool AFireFighterPawn::IsAdjacentToWall(AEdgeUnit * inEdge)
+{
+	ATile* tempTile = GetPlacedOn();
+	if (ensure(tempTile)) {
+		if (tempTile->GetFront() == inEdge) { return true; }
+		if (tempTile->GetBack() == inEdge) { return true; }
+		if (tempTile->GetLeft() == inEdge) { return true; }
+		if (tempTile->GetRight() == inEdge) { return true; }
+	}
 	return false;
 }
 
@@ -157,6 +193,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, maxAP);
 	DOREPLIFETIME(AFireFighterPawn, moveConsumption);
 	DOREPLIFETIME(AFireFighterPawn, openConsumption);
+	DOREPLIFETIME(AFireFighterPawn, chopConsumption);
 	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
 	DOREPLIFETIME(AFireFighterPawn, victim);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterID);

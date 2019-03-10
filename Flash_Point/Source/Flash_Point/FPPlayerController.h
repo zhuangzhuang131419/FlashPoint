@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/PlayerController.h"
 #include "UnrealNetwork.h"
+#include "Engine/Engine.h"
 #include "MenuSystem/FireFighterUI.h"
 #include "GeneralTypes.h"
 #include "FPPlayerController.generated.h"
@@ -45,6 +46,8 @@ public:
 	void SetExtinguishFire();
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetCarry();
+	UFUNCTION(BlueprintCallable, Category = "Cheating")
+	bool ConsumptionOn();
 	AFPPlayerController();
 
 	// Getter and setters for attributes
@@ -91,6 +94,8 @@ public:
 	void ServerGetFireFighterID(AFireFighterPawn * fireFighterPawn, AGameBoard* inGameBoard);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerEndTurn(AGameBoard* inGameBoard);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAdjustAP(AFireFighterPawn* fireFighterPawn, int32 adjustAP);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
@@ -102,6 +107,10 @@ public:
 	void FindGameBoard();
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void MakeBasicFireFighterUI();
+
+	// cheating functions
+	UFUNCTION(Exec, Category = "Cheating")
+	void EnableAPConsumption(int32 flag);
 	
 
 
@@ -111,6 +120,10 @@ protected:
 	AGameBoard* gameBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	int32 myTurnNum = -1;
+
+	// Cheating flags
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Cheating")
+	bool apConsumptionOn = true;
 
 	// UI related fields
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")

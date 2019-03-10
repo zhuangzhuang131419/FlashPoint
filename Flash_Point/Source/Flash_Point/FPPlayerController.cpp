@@ -7,6 +7,11 @@
 #include "Door.h"
 #include "GameBoard.h"
 
+bool AFPPlayerController::ConsumptionOn()
+{
+	return apConsumptionOn;
+}
+
 AFPPlayerController::AFPPlayerController() {
 	// enable mouse clicking and over events
 	bShowMouseCursor = true;
@@ -267,6 +272,19 @@ bool AFPPlayerController::ServerEndTurn_Validate(AGameBoard * inGameBoard)
 	return true;
 }
 
+void AFPPlayerController::ServerAdjustAP_Implementation(AFireFighterPawn* fireFighterPawn, int32 adjustAP)
+{
+	if (ensure(fireFighterPawn)) {
+		int32 currentAP = fireFighterPawn->GetCurrentAP();
+		fireFighterPawn->SetCurrentAP(currentAP + adjustAP);
+	}
+}
+
+bool AFPPlayerController::ServerAdjustAP_Validate(AFireFighterPawn* fireFighterPawn, int32 adjustAP)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -345,6 +363,20 @@ void AFPPlayerController::MakeBasicFireFighterUI()
 				inGameUI->AddToViewport();
 			}
 		}
+	}
+}
+
+void AFPPlayerController::EnableAPConsumption(int32 flag)
+{
+	if (flag) {
+		apConsumptionOn = true;
+		if (!ensure(GEngine)) return;
+		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("AP Consumption Enabled"));		
+	}
+	else {
+		apConsumptionOn = false;
+		if (!ensure(GEngine)) return;
+		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("AP Consumption Disabled"));
 	}
 }
 

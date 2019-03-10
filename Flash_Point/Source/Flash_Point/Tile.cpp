@@ -664,6 +664,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 
 void ATile::ExitinguishFireOnTile()
 {
+	// if the ap is not enough, return
 	if (fireStatus == EFireStatus::Fire)
 	{
 		if (HasAuthority()) {
@@ -710,6 +711,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
+			// Move operations are done below
 			if (isReady && canMoveTo) {
 				if (!ensure(localPlayer)) return;
 				if (!ensure(localPawn)) return;
@@ -722,6 +724,11 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 				}
+				// do ap adjustment
+				localPawn->AdjustFireFighterAP(-costToHere);
+				canMoveTo = false;
+				isReady = false;
+				costToHere = 0;
 			}
 
 			break;
@@ -730,6 +737,9 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::ExtinguishFire:
 			// check if the fire is adjacent
 			if (!AdjacentToPawn()) return;
+			if (!ensure(localPawn)) return;
+			if (localPawn->GetCurrentAP() < localPawn->GetExtinguishConsumption()) return;
+			localPawn->AdjustFireFighterAP(-localPawn->GetExtinguishConsumption());
 			if (HasAuthority()) {
 				ExitinguishFireOnTile();
 			}

@@ -12,11 +12,11 @@ AGameBoard::AGameBoard()
 	PrimaryActorTick.bCanEverTick = true;
 
 	// family rule default set up
-	POIInitializeLocation.Add(FLocation(5, 2));
+	/*POIInitializeLocation.Add(FLocation(5, 2));
 	POIInitializeLocation.Add(FLocation(8, 5));
-	POIInitializeLocation.Add(FLocation(1, 5));
+	POIInitializeLocation.Add(FLocation(1, 5));*/
 
-	fireInitializeLocation.Add(FLocation(7, 2));
+	/*fireInitializeLocation.Add(FLocation(7, 2));
 	fireInitializeLocation.Add(FLocation(6, 2));
 	fireInitializeLocation.Add(FLocation(7, 3));
 	fireInitializeLocation.Add(FLocation(6, 3));
@@ -25,7 +25,7 @@ AGameBoard::AGameBoard()
 	fireInitializeLocation.Add(FLocation(5, 4));
 	fireInitializeLocation.Add(FLocation(3, 5));
 	fireInitializeLocation.Add(FLocation(2, 5));
-	fireInitializeLocation.Add(FLocation(3, 6));
+	fireInitializeLocation.Add(FLocation(3, 6));*/
 
 }
 
