@@ -137,11 +137,11 @@ void AGameBoard::flashover()
 	for (ATile* tile : boardTiles)
 	{
 		// Any firefighters in a space with fire are knocked down
-		if (tile->GetPlacedFireFighters().Num() > 0 && tile->GetFireStatus() == EFireStatus::Fire)
+		if (tile->GetPlacedFireFighters()->Num() > 0 && tile->GetFireStatus() == EFireStatus::Fire)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("number: %d"), tile->GetPlacedFireFighters().Num());
+			UE_LOG(LogTemp, Warning, TEXT("number: %d"), tile->GetPlacedFireFighters()->Num());
 			
-			for (AFireFighterPawn* fireFighterPawn : tile->GetPlacedFireFighters())
+			for (AFireFighterPawn* fireFighterPawn : *(tile->GetPlacedFireFighters()))
 			{
 				
 				if (fireFighterPawn)

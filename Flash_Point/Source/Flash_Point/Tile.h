@@ -96,7 +96,7 @@ public:
 	// Getter for gameboard
 	AGameBoard* GetGameBoard();
 
-	TArray<AFireFighterPawn*> GetPlacedFireFighters() { return placedFireFighters; }
+	TArray<AFireFighterPawn*>* GetPlacedFireFighters() { return &placedFireFighters; }
 
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
