@@ -56,7 +56,9 @@ public:
 	void SetFireFighterID(int32 inID);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
-
+	// a function for setting fire fighter material
+	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
+	void FireFighterSwitchColor(int32 numID);
 	void KnockDown();
 
 protected:
