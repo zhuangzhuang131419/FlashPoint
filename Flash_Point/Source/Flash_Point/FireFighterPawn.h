@@ -84,7 +84,6 @@ protected:
 	UFUNCTION()
 	void Rep_PawnID();
 
-
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned

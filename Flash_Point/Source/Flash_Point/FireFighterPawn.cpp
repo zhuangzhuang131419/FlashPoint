@@ -109,7 +109,10 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 void AFireFighterPawn::InitializeFireFighter()
 {
 	// find the owner of the firefighter
-	AFPPlayerController* owningPlayer = Cast<AFPPlayerController>(GetOwner());
+	if (GetController()) {
+		UE_LOG(LogTemp, Warning, TEXT("Possessed"));
+	}
+	AFPPlayerController* owningPlayer = Cast<AFPPlayerController>(GetController());
 	if (ensure(owningPlayer)) {
 		UE_LOG(LogTemp, Warning, TEXT("Got Player controller"));
 		myOwner = owningPlayer;
@@ -134,7 +137,7 @@ void AFireFighterPawn::InitializeFireFighter()
 void AFireFighterPawn::BeginPlay()
 {
 	Super::BeginPlay();
-
+	InitializeFireFighter();
 }
 
 // Called every frame
