@@ -111,8 +111,8 @@ public:
 	void AdvanceExplosion(EDirection direction);
 	void AdvanceExplosion();
 
-	void Flashover(EDirection direction);
-	void Flashover();
+	bool Flashover(EDirection direction);
+	bool Flashover();
 
 
 protected:

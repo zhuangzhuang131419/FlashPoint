@@ -534,7 +534,10 @@ void ATile::AdvanceExplosion()
 	AdvanceExplosion(EDirection::Up);
 }
 
-void ATile::Flashover(EDirection direction)
+/*
+return: true if the fire status not change
+*/
+bool ATile::Flashover(EDirection direction)
 {
 	AEdgeUnit* adjacentWall = nullptr;
 	switch (direction)
@@ -565,21 +568,28 @@ void ATile::Flashover(EDirection direction)
 					this->SetFireStatus(EFireStatus::Fire);
 					this->FireEffect->Activate();
 					this->SmokeEffect->Deactivate();
+					return false;
 				}
 			}
 		}
 	}
+	return true;
 }
 
-void ATile::Flashover()
+bool ATile::Flashover()
 {
+	bool result1 = true;
+	bool result2 = true;
+	bool result3 = true;
+	bool result4 = true;
 	if (GetFireStatus() == EFireStatus::Smoke) 
 	{
-		Flashover(EDirection::Down);
-		Flashover(EDirection::Up);
-		Flashover(EDirection::Left);
-		Flashover(EDirection::Right);
+		result1 = Flashover(EDirection::Down);
+		result2 = Flashover(EDirection::Up);
+		result3 = Flashover(EDirection::Left);
+		result4 = Flashover(EDirection::Right);
 	}
+	return result1 && result2 && result3 && result4;
 }
 
 // Here is the function to bind all input bindings
