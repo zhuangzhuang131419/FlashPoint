@@ -103,7 +103,7 @@ void AGameBoard::AdvanceFire()
 
 void AGameBoard::AdvancePOIOnBoard()
 {
-	if (currentPOI < maxPOI)
+	while (currentPOI < maxPOI)
 	{
 		int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 		while (boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty
@@ -114,10 +114,7 @@ void AGameBoard::AdvancePOIOnBoard()
 		}
 
 		boardTiles[randomPosition]->AdvancePOI();
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("No advance POI."));
+		UE_LOG(LogTemp, Warning, TEXT("advance POI."));
 	}
 }
 
@@ -704,6 +701,7 @@ void AGameBoard::setPOIalarm(APOI* inPOI)
 				UE_LOG(LogTemp, Warning, TEXT("isfalseAlarm"));
 				inPOI->isAlarm = false;
 				falseAlarmNum--;
+				UE_LOG(LogTemp, Warning, TEXT("%d"), falseAlarmNum);
 				placedSuccess = true;
 			}
 		}
@@ -713,6 +711,7 @@ void AGameBoard::setPOIalarm(APOI* inPOI)
 			{
 				inPOI->isAlarm = true;
 				totalVictimNum--;
+				UE_LOG(LogTemp, Warning, TEXT("%d"), totalVictimNum);
 				placedSuccess = true;
 			}
 		}
