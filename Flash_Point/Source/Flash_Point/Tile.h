@@ -92,6 +92,7 @@ public:
 
 	// Getter for Victims
 	TArray<AVictim*>* GetVictims();
+	void removeVictims() { victims = TArray<AVictim*>(); }
 
 	// Getter for gameboard
 	AGameBoard* GetGameBoard();

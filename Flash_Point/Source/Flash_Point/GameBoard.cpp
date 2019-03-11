@@ -174,6 +174,8 @@ void AGameBoard::FlashOverOnBoard()
 			if (tile->GetFireStatus() == EFireStatus::Fire)
 			{
 				tile->GetPOIOnTile()->Destroy();
+				tile->SetPOIStatus(EPOIStatus::Empty);
+				tile->SetPOIOnTile(nullptr);
 				tile->GetGameBoard()->SetCurrentPOI(tile->GetGameBoard()->currentPOI - 1);
 			}
 		}
@@ -188,6 +190,7 @@ void AGameBoard::FlashOverOnBoard()
 					tile->GetGameBoard()->SetCurrentPOI(tile->GetGameBoard()->currentPOI - 1);
 					tile->GetGameBoard()->SetVictimLostNum(tile->GetGameBoard()->victimLostNum + 1);
 				}
+				tile->removeVictims();
 			}
 		}
 
