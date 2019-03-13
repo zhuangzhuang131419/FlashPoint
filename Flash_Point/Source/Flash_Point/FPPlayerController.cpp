@@ -81,6 +81,12 @@ void AFPPlayerController::EndPlayerTurn()
 	}
 }
 
+UFireFighterStatus* AFPPlayerController::GetFireFighterStatusBar(int32 id)
+{
+	if (!ensure(inGameUI)) return nullptr;
+	return inGameUI->GetPlayerStatusUIOf(id);
+}
+
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	if (ensure(wall)) {

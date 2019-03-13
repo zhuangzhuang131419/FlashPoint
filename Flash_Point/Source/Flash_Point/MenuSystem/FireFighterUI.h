@@ -22,6 +22,9 @@ class FLASH_POINT_API UFireFighterUI : public UUserWidget
 	GENERATED_BODY()
 
 public:
+	// Constructor for the widget
+	UFireFighterUI(const FObjectInitializer& ObjectInitializer);
+
 	// FUNCTIONS
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyTurnBegin();
@@ -34,6 +37,7 @@ public:
 	void SetRelatedPawn(AFireFighterPawn* inPawn);
 	AFPPlayerController* GetRelatedPlayer();
 	void SetRelatedPlayer(AFPPlayerController* inPlayer);
+	UFireFighterStatus* GetPlayerStatusUIOf(int32 playerID);
 
 protected:
 	// BINDED WIDGETS
@@ -44,6 +48,19 @@ protected:
 	UWidget* YourTurnPrompt = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* AbilityBar = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UFireFighterStatus* P0Status = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UFireFighterStatus* P1Status = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UFireFighterStatus* P2Status = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UFireFighterStatus* P3Status = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UFireFighterStatus* P4Status = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UFireFighterStatus* P5Status = nullptr;
+	// Player status showing
 
 	// FIELDS
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
@@ -52,5 +69,4 @@ protected:
 	AFireFighterPawn* localPawn = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* localPlayer = nullptr;
-
 };

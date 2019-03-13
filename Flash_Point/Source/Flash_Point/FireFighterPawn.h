@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "Engine.h"
+#include "GeneralTypes.h"
 #include "UnrealNetwork.h"
 #include "FireFighterPawn.generated.h"
 
@@ -101,13 +102,20 @@ protected:
 	int32 extinguishConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
+	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	ERoleType fireFighterRole = ERoleType::Basic;
 	AGameBoard* playingBoard = nullptr;
+	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;
-
+	// UI for visualizing the teammate's firefighter's status
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
+	class UFireFighterStatus* statusBar = nullptr;
 
 	// REPLICATION FUNCTIONS
 	UFUNCTION()
 	void Rep_PawnID();
+	UFUNCTION()
+	void Rep_RoleType();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

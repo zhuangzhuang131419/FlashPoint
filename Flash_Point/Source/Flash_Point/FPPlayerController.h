@@ -63,6 +63,8 @@ public:
 	void NotifyPlayerTurn();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void EndPlayerTurn();
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	UFireFighterStatus* GetFireFighterStatusBar(int32 id);
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server

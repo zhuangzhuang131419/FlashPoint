@@ -142,6 +142,17 @@ void AFireFighterPawn::Rep_PawnID()
 	if (ensure(myOwner)) {
 		myOwner->SetTurnNum(fireFighterID);
 	}
+	// get the firefighter status in order to visualize the synchronized status
+	AFPPlayerController* localController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (ensure(localController)) {
+		UE_LOG(LogTemp, Warning, TEXT("Found local player controller on firefighter #%d"), fireFighterID);
+		statusBar = localController->GetFireFighterStatusBar(fireFighterID);
+	}
+}
+
+void AFireFighterPawn::Rep_RoleType()
+{
+	// TODO modify this function when implementing experienced mode
 }
 
 void AFireFighterPawn::KnockDown()
@@ -216,6 +227,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
 	DOREPLIFETIME(AFireFighterPawn, victim);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterID);
+	DOREPLIFETIME(AFireFighterPawn, fireFighterRole);
 }
 
 void AFireFighterPawn::InitializeFireFighter()
