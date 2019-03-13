@@ -35,6 +35,12 @@ int32 AFireFighterPawn::GetCurrentAP()
 void AFireFighterPawn::SetCurrentAP(int32 current)
 {
 	currentAP = current;
+	if (HasAuthority()) {
+		// only when clients using this to adjust Ap this should be used
+		if (ensure(statusBar)) {
+			statusBar->AdjustAPBar(currentAP, maxAP);
+		}
+	}
 }
 
 int32 AFireFighterPawn::GetMaxAP()
@@ -55,6 +61,10 @@ void AFireFighterPawn::AdjustFireFighterAP(int32 adjustAP)
 	if (!myOwner->ConsumptionOn() && adjustAP <= 0) return;
 	if (HasAuthority()) {
 		currentAP += adjustAP;
+		// adjust display of ap on statusbar
+		if (ensure(statusBar)) {
+			statusBar->AdjustAPBar(currentAP, maxAP);
+		}
 	}
 	else {
 		myOwner->ServerAdjustAP(this, adjustAP);
@@ -132,6 +142,10 @@ void AFireFighterPawn::SetFireFighterID(int32 inID)
 		FireFighterSwitchColor(inID);
 	}
 	fireFighterID = inID;
+	if (HasAuthority()) {
+		// since we are the server here, relate the newly set firefighter to the UI
+		RelateAllFireFighterStatus();
+	}
 }
 
 void AFireFighterPawn::Rep_PawnID()
@@ -142,17 +156,56 @@ void AFireFighterPawn::Rep_PawnID()
 	if (ensure(myOwner)) {
 		myOwner->SetTurnNum(fireFighterID);
 	}
+	RelateAllFireFighterStatus();
+}
+
+void AFireFighterPawn::RelateAllFireFighterStatus()
+{
+	// find all fire fighter pawn and bind all their widgets
+	// ensure there is a world
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		TArray<AActor*> allFireFighters;
+		UGameplayStatics::GetAllActorsOfClass(world, AFireFighterPawn::StaticClass(), allFireFighters);
+		// only assign correct game board if there is one found
+		if (allFireFighters.Num() > 0) {
+			// bind all the firefighters to their widgets
+			for (auto tempPawn : allFireFighters) {
+				AFireFighterPawn* tempFireFighter = Cast<AFireFighterPawn>(tempPawn);
+				if (ensure(tempFireFighter)) {
+					tempFireFighter->BindStatusWidget();
+				}
+			}
+		}
+	}
+}
+
+void AFireFighterPawn::BindStatusWidget()
+{
 	// get the firefighter status in order to visualize the synchronized status
 	AFPPlayerController* localController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (ensure(localController)) {
 		UE_LOG(LogTemp, Warning, TEXT("Found local player controller on firefighter #%d"), fireFighterID);
 		statusBar = localController->GetFireFighterStatusBar(fireFighterID);
+		if (ensure(statusBar)) {
+			// Initialize all the fire fighter's initial information to the UI
+			statusBar->ChangeRolePic(fireFighterRole);
+			statusBar->AdjustAPBar(currentAP, maxAP);
+		}
 	}
 }
 
 void AFireFighterPawn::Rep_RoleType()
 {
 	// TODO modify this function when implementing experienced mode
+}
+
+void AFireFighterPawn::Rep_APChanges()
+{
+	// adjust display of ap on statusbar
+	if (ensure(statusBar)) {
+		statusBar->AdjustAPBar(currentAP, maxAP);
+	}
 }
 
 void AFireFighterPawn::KnockDown()

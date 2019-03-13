@@ -27,6 +27,10 @@ public:
 	// A blueprint event to relocate the camera
 	UFUNCTION(BlueprintImplementableEvent, Category = "Camera Management")
 	void RelocateCamera(FVector location);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void BindStatusWidget();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void RelateAllFireFighterStatus();
 	// Getter and setter for the firefighter's current location
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	ATile* GetPlacedOn();
@@ -86,9 +90,9 @@ protected:
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ATile* placedOn = nullptr;
 	// The firefighter's current ap value and max ap value
-	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 currentAP = 4;	// initial AP for all firefighters are 4
-	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;	// Firefighter max ap
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 restoreAP = 4;	// AP for restoration for firefighters are initialized to 4
@@ -116,6 +120,8 @@ protected:
 	void Rep_PawnID();
 	UFUNCTION()
 	void Rep_RoleType();
+	UFUNCTION()
+	void Rep_APChanges();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
