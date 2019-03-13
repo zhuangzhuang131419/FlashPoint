@@ -181,6 +181,8 @@ void AFPPlayerController::ServerDrop_Implementation(AFireFighterPawn * fireFight
 	ATile* currentTile = fireFighterPawn->GetPlacedOn();
 	if (ensure(currentTile))
 	{
+		// if the tile is on fire, just return
+		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
 		AVictim* tempVictim = fireFighterPawn->GetVictim();
 		if (!tempVictim) return;
 		if (currentTile->IsOutside())
@@ -345,6 +347,17 @@ void AFPPlayerController::DropVictim()
 			tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
 		}
 		ServerDrop(fireFighterPawn);
+		// only for authority, update the firefighter's carrying UI
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				if (fireFighterPawn->GetVictim()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+			}
+		}
 	}
 }
 
@@ -356,7 +369,19 @@ void AFPPlayerController::CarryVictim()
 	if (ensure(fireFighterPawn))
 	{
 		ServerCarryVictim(fireFighterPawn);
+		// only for server, update the UI actively
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				if (fireFighterPawn->GetVictim()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+			}
+		}
 	}
+	
 }
 
 void AFPPlayerController::FindGameBoard()
@@ -452,6 +477,13 @@ void AFPPlayerController::SetChopWall()
 void AFPPlayerController::SetCarry()
 {
 	CurrentOperation = EGameOperations::Carry;
+}
+
+void AFPPlayerController::NotifyCarryVictim(bool isCarrying)
+{
+	if (ensure(inGameUI)) {
+		inGameUI->ShowCarrying(isCarrying);
+	}
 }
 
 EGameOperations AFPPlayerController::GetCurrentOperation()

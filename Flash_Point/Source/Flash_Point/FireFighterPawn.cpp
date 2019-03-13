@@ -115,7 +115,7 @@ bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
 {
 	int32 actualCost = baseCost * extinguishConsumption;
 	// TODO for later fire fighter with row, do extra checks
-	if (actualCost < currentAP)	return true;
+	if (actualCost <= currentAP)	return true;
 	return false;
 }
 
@@ -208,6 +208,27 @@ void AFireFighterPawn::Rep_APChanges()
 	}
 }
 
+void AFireFighterPawn::Rep_CarryingVictim()
+{
+	// if the firefighter pawn is not owned by local player, return
+	if (myOwner) {
+		if (victim) {
+			myOwner->NotifyCarryVictim(true);
+		}
+		else {
+			myOwner->NotifyCarryVictim(false);
+		}
+	}
+}
+
+void AFireFighterPawn::Rep_FireFighterknockDownRelocate()
+{
+	if (ensure(placedOn)) {
+		// relocate the firefighter to the tile
+		SetActorLocation(placedOn->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+	}
+}
+
 void AFireFighterPawn::KnockDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
@@ -221,12 +242,17 @@ void AFireFighterPawn::KnockDown()
 		if (tile->GetLocation(x, y))
 		{
 			UE_LOG(LogTemp, Warning, TEXT("%d, %d"), x, y);
-			// gameboard
-			if (playingBoard)
+			// get gameboard from local player controller
+			AGameBoard* tempBoard = nullptr;
+			AFPPlayerController* tempPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+			if (ensure(tempPlayer)) {
+				tempBoard = tempPlayer->GetGameBoard();
+			}
+			if (tempBoard)
 			{
 				int32 shortestPath = 80;
 				ATile* targetTile = nullptr;
-				for (ATile* ambulanceTile : playingBoard->GetAmbulanceTiles())
+				for (ATile* ambulanceTile : tempBoard->GetAmbulanceTiles())
 				{
 					if (ambulanceTile)
 					{
@@ -248,14 +274,15 @@ void AFireFighterPawn::KnockDown()
 					SetActorLocation(targetTile->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
 					placedOn = targetTile;
 					placedOn->GetPlacedFireFighters()->Add(this);
+					relocationFlag = !relocationFlag;
 				}
 
 				if (victim)
 				{
-					playingBoard->SetVictimLostNum(playingBoard->victimLostNum + 1);
+					tempBoard->SetVictimLostNum(tempBoard->victimLostNum + 1);
 					victim->Destroy();
 					victim = nullptr;
-					playingBoard->SetCurrentPOI(playingBoard->currentPOI - 1);
+					tempBoard->SetCurrentPOI(tempBoard->currentPOI - 1);
 				}
 			}
 		}
@@ -281,6 +308,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, victim);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterID);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterRole);
+	DOREPLIFETIME(AFireFighterPawn, relocationFlag);
 }
 
 void AFireFighterPawn::InitializeFireFighter()

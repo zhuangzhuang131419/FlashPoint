@@ -27,6 +27,8 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 	GENERATED_BODY()
 	
 public:
+	AFPPlayerController();
+
 	// Below functions are for changing operations
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	EGameOperations GetCurrentOperation();
@@ -46,9 +48,12 @@ public:
 	void SetExtinguishFire();
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetCarry();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void NotifyCarryVictim(bool isCarrying);
+
+	// Cheating related
 	UFUNCTION(BlueprintCallable, Category = "Cheating")
 	bool ConsumptionOn();
-	AFPPlayerController();
 
 	// Getter and setters for attributes
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")

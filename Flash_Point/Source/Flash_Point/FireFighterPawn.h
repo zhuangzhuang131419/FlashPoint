@@ -108,6 +108,8 @@ protected:
 	int32 fireFighterID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ERoleType fireFighterRole = ERoleType::Basic;
+	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	bool relocationFlag = true;
 	AGameBoard* playingBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;
@@ -122,6 +124,10 @@ protected:
 	void Rep_RoleType();
 	UFUNCTION()
 	void Rep_APChanges();
+	UFUNCTION()
+	void Rep_CarryingVictim();
+	UFUNCTION()
+	void Rep_FireFighterknockDownRelocate();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
@@ -136,6 +142,6 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 protected:
-	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_CarryingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AVictim* victim = nullptr;
 };

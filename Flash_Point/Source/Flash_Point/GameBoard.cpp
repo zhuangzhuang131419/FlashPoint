@@ -173,6 +173,9 @@ void AGameBoard::FlashOverOnBoard()
 		{
 			if (tile->GetFireStatus() == EFireStatus::Fire)
 			{
+				if (tile->GetPOIOnTile()->isAlarm) {
+					tile->GetGameBoard()->SetVictimLostNum(tile->GetGameBoard()->victimLostNum + 1);
+				}
 				tile->GetPOIOnTile()->Destroy();
 				tile->SetPOIStatus(EPOIStatus::Empty);
 				tile->SetPOIOnTile(nullptr);

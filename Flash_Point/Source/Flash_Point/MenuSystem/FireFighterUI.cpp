@@ -63,3 +63,14 @@ UFireFighterStatus * UFireFighterUI::GetPlayerStatusUIOf(int32 playerID)
 
 	return nullptr;
 }
+
+void UFireFighterUI::ShowCarrying(bool isCarrying)
+{
+	// TODO if have time do this setting with regard to the carried victim's actual looking
+	if (isCarrying) {
+		VictimIcon->SetVisibility(ESlateVisibility::Visible);
+	}
+	else {
+		VictimIcon->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}

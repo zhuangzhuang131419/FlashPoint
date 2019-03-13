@@ -38,6 +38,9 @@ public:
 	AFPPlayerController* GetRelatedPlayer();
 	void SetRelatedPlayer(AFPPlayerController* inPlayer);
 	UFireFighterStatus* GetPlayerStatusUIOf(int32 playerID);
+	// Set enable or disable carrying victim or hazmat victim
+	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
+	void ShowCarrying(bool isCarrying);
 
 protected:
 	// BINDED WIDGETS
@@ -48,6 +51,7 @@ protected:
 	UWidget* YourTurnPrompt = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* AbilityBar = nullptr;
+	// teammate status
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UFireFighterStatus* P0Status = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
@@ -60,6 +64,11 @@ protected:
 	UFireFighterStatus* P4Status = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UFireFighterStatus* P5Status = nullptr;
+	// carrying victim or hazmat
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UImage* VictimIcon = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UImage* HazmatIcon = nullptr;
 	// Player status showing
 
 	// FIELDS
