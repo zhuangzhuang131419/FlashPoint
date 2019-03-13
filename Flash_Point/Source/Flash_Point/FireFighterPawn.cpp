@@ -330,6 +330,7 @@ void AFireFighterPawn::InitializeFireFighter()
 		if (HasAuthority()) {
 			fireFighterID = playingBoard->JoinBoard();
 			owningPlayer->SetTurnNum(fireFighterID);
+			RelateAllFireFighterStatus();
 		}
 		else {
 			if (ensure(owningPlayer)) {
