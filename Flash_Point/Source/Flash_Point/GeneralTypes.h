@@ -12,6 +12,21 @@ class ATile;
  */
 // An enum for different operations
 UENUM(BlueprintType)
+enum class ERoleType : uint8
+{
+	Basic,
+	Paramedic,
+	FireCaptain,
+	ImagingTechnician,
+	CAFSFirefighter,
+	HazmatTechnician,
+	Generalist,
+	RescueSpecialist,
+	Driver
+};
+
+// An enum for different operations
+UENUM(BlueprintType)
 enum class EGameOperations : uint8
 {
 	PlaceFireFighter,

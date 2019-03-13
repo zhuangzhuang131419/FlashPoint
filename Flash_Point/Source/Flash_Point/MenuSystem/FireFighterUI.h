@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "Components/MultiLineEditableTextBox.h"
 #include "Components/WidgetComponent.h"
+#include "MenuSystem/FireFighterStatus.h"
 #include "FireFighterUI.generated.h"
 
 class AGameBoard;
