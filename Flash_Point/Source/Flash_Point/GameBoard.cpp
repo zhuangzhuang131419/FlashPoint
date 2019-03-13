@@ -701,7 +701,7 @@ void AGameBoard::BeginPlay()
 		AViewPortCamera* camera = GetWorld()->SpawnActor<AViewPortCamera>(
 			CameraClass,
 			FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight),
-			FRotator(270, 0, 0)
+			FRotator(0, 0, 0)
 			);
 		camera->RelocateAndSetToViewPort(FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
 	}
