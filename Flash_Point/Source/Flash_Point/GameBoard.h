@@ -69,7 +69,7 @@ public:
 	int32 MAX_HEALTH = 24;
 
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
 
 	void SetVictimLostNum(int32 num) { victimLostNum = num; }
@@ -77,7 +77,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
 	int32 maxLostVictim = 4;
 
-	UPROPERTY(VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimSavedNum = 0;
 
 	void SetVictimSavedNum(int32 num) { victimSavedNum = num; }
@@ -93,10 +93,10 @@ public:
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 maxPOI = 3;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 falseAlarmNum = 5;
 
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 totalVictimNum = 10;
 
 protected:

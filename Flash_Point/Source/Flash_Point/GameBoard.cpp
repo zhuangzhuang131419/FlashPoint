@@ -614,6 +614,10 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, currentTurn);
 	DOREPLIFETIME(AGameBoard, maxPOI);
 	DOREPLIFETIME(AGameBoard, currentPOI);
+	DOREPLIFETIME(AGameBoard, totalVictimNum);
+	DOREPLIFETIME(AGameBoard, victimSavedNum);
+	DOREPLIFETIME(AGameBoard, victimLostNum);
+	DOREPLIFETIME(AGameBoard, falseAlarmNum);
 }
 
 // Called when the game starts or when spawned
