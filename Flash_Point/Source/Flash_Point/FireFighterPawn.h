@@ -46,6 +46,11 @@ public:
 	int32 GetRestoreAP();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void AdjustFireFighterAP(int32 adjustAP);
+	// Getter and setter for the firefighter's name
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	FString GetFireFighterName();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterName(FString inName);
 	// getter and setter for all consumptions
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetMoveConsumption();
@@ -116,6 +121,9 @@ protected:
 	// UI for visualizing the teammate's firefighter's status
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	class UFireFighterStatus* statusBar = nullptr;
+	// Name of the firefighter's owner
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
+	FString fireFighterName = "";
 
 	// REPLICATION FUNCTIONS
 	UFUNCTION()

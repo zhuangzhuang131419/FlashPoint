@@ -71,6 +71,16 @@ void AFireFighterPawn::AdjustFireFighterAP(int32 adjustAP)
 	}
 }
 
+FString AFireFighterPawn::GetFireFighterName()
+{
+	return fireFighterName;
+}
+
+void AFireFighterPawn::SetFireFighterName(FString inName)
+{
+	fireFighterName = inName;
+}
+
 int32 AFireFighterPawn::GetMoveConsumption()
 {
 	return moveConsumption;
@@ -191,6 +201,7 @@ void AFireFighterPawn::BindStatusWidget()
 			// Initialize all the fire fighter's initial information to the UI
 			statusBar->ChangeRolePic(fireFighterRole);
 			statusBar->AdjustAPBar(currentAP, maxAP);
+			statusBar->ShowPlayerName(fireFighterName);
 		}
 	}
 }
@@ -309,6 +320,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, fireFighterID);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterRole);
 	DOREPLIFETIME(AFireFighterPawn, relocationFlag);
+	DOREPLIFETIME(AFireFighterPawn, fireFighterName);
 }
 
 void AFireFighterPawn::InitializeFireFighter()
@@ -322,6 +334,8 @@ void AFireFighterPawn::InitializeFireFighter()
 		UE_LOG(LogTemp, Warning, TEXT("Got Player controller"));
 		myOwner = owningPlayer;
 		playingBoard = myOwner->GetGameBoard();
+		// Get the name of this pawn and set it
+		owningPlayer->ServerSetFireFighterName(this, owningPlayer->GetPlayerName());
 	}
 
 	// get the firefighter ID of the firefighter

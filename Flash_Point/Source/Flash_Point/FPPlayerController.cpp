@@ -355,6 +355,18 @@ bool AFPPlayerController::ServerSendGlobalText_Validate(AChatManager * chatMan, 
 	return true;
 }
 
+void AFPPlayerController::ServerSetFireFighterName_Implementation(AFireFighterPawn * fireFighterPawn, const FString & inName)
+{
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->SetFireFighterName(inName);
+	}
+}
+
+bool AFPPlayerController::ServerSetFireFighterName_Validate(AFireFighterPawn * fireFighterPawn, const FString & inName)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
