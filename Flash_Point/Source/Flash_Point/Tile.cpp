@@ -751,6 +751,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (!AdjacentToPawn()) return;
 			if (!ensure(localPawn)) return;
 			if (localPawn->GetCurrentAP() < localPawn->GetExtinguishConsumption()) return;
+			if (fireStatus == EFireStatus::Clear) return;
 			localPawn->AdjustFireFighterAP(-localPawn->GetExtinguishConsumption());
 			if (HasAuthority()) {
 				ExitinguishFireOnTile();

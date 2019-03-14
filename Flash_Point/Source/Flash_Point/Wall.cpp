@@ -77,6 +77,7 @@ void AWall::Rep_WallMesh()
 void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
 	UE_LOG(LogTemp, Warning, TEXT("Wall Clicked"));
+	if (!isBlocked) return;
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (playerController)
 	{
