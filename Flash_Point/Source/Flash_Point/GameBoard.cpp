@@ -103,7 +103,7 @@ void AGameBoard::AdvanceFire()
 
 void AGameBoard::AdvancePOIOnBoard()
 {
-	while (currentPOI < maxPOI)
+	while (currentPOI < maxPOI && (totalVictimNum > 0 || falseAlarmNum > 0))
 	{
 		int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 		while (boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty
