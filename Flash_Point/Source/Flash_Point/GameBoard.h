@@ -77,7 +77,7 @@ public:
 	UPROPERTY(BlueprintReadOnly, Category = "Setup")
 	int32 maxLostVictim = 4;
 
-	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(ReplicatedUsing = Rep_RescuedNotify, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimSavedNum = 0;
 
 	void SetVictimSavedNum(int32 num) { victimSavedNum = num; }
@@ -149,7 +149,7 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFPPlayerController*> players;
 	// The current gameboard health
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_HealthChangeNotify, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
 	// TURN RELATED FIELDS
 	// A to indicate how many player are currently in the game
@@ -173,6 +173,10 @@ protected:
 	// REPLICATION FUNCTIONS
 	UFUNCTION()
 	void Rep_TurnNotify();
+	UFUNCTION()
+	void Rep_RescuedNotify();
+	UFUNCTION()
+	void Rep_HealthChangeNotify();
 
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

@@ -70,6 +70,8 @@ public:
 	void EndPlayerTurn();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	UFireFighterStatus* GetFireFighterStatusBar(int32 id);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void NotifyGameOver(bool isWin);
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server

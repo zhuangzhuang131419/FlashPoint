@@ -87,6 +87,13 @@ UFireFighterStatus* AFPPlayerController::GetFireFighterStatusBar(int32 id)
 	return inGameUI->GetPlayerStatusUIOf(id);
 }
 
+void AFPPlayerController::NotifyGameOver(bool isWin)
+{
+	if (ensure(inGameUI)) {
+		inGameUI->NotifyGameEnd(isWin);
+	}
+}
+
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	if (ensure(wall)) {
@@ -233,6 +240,19 @@ void AFPPlayerController::ServerDrop_Implementation(AFireFighterPawn * fireFight
 		}
 		fireFighterPawn->SetVictim(nullptr);
 		tempVictim->SetIsCarried(false);
+
+		// only for server, actively check if the game is won
+		if (HasAuthority()) {
+			AGameBoard* tempBoard = currentTile->GetGameBoard();
+			if (ensure(tempBoard)) {
+				if (tempBoard->victimSavedNum >= tempBoard->maxSavedVictim) {
+					AFPPlayerController* tempPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+					if (ensure(tempPlayer)) {
+						tempPlayer->NotifyGameOver(true);
+					}
+				}
+			}
+		}
 	}
 }
 

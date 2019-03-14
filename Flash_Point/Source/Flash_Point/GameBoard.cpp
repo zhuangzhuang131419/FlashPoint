@@ -47,6 +47,12 @@ int32 AGameBoard::GetCurrentGameHealth()
 void AGameBoard::SetCurrentGameHealth(int32 currentHealth)
 {
 	health = currentHealth;
+	// if we are the server, actively check the health
+	if (HasAuthority() && health <= 0) {
+		if (ensure(localPlayer)) {
+			localPlayer->NotifyGameOver(false);
+		}
+	}
 }
 
 void AGameBoard::ClearAllTile()
@@ -204,6 +210,12 @@ void AGameBoard::FlashOverOnBoard()
 			tile->GetFireEffect()->Deactivate();
 			tile->GetSmokeEffect()->Deactivate();
 		}
+	}
+
+	// actively check if the lost victims is too much
+	if (HasAuthority() && victimLostNum >= maxLostVictim) {
+		if (!ensure(localPlayer)) return;
+		localPlayer->NotifyGameOver(false);
 	}
 }
 
@@ -596,6 +608,24 @@ void AGameBoard::Rep_TurnNotify()
 	if (!ensure(localPlayer)) return;
 	if (currentTurn == localPlayer->GetTurnNum()) {
 		localPlayer->NotifyPlayerTurn();
+	}
+}
+
+void AGameBoard::Rep_RescuedNotify()
+{
+	if (victimSavedNum >= maxSavedVictim) {
+		if (ensure(localPlayer)) {
+			localPlayer->NotifyGameOver(true);
+		}
+	}
+}
+
+void AGameBoard::Rep_HealthChangeNotify()
+{
+	if (health <= 0) {
+		if (ensure(localPlayer)) {
+			localPlayer->NotifyGameOver(false);
+		}
 	}
 }
 

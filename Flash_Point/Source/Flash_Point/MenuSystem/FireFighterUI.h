@@ -30,6 +30,8 @@ public:
 	void NotifyTurnBegin();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyTurnEnd();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
+	void NotifyGameEnd(bool isWin);
 	// Getter and setter for related fields
 	AGameBoard* GetGameBoard();
 	void SetGameBoard(AGameBoard* inGameBoard);
