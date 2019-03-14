@@ -74,3 +74,17 @@ void UFireFighterUI::ShowCarrying(bool isCarrying)
 		VictimIcon->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
+
+void UFireFighterUI::BindChatManagerWithUI(AChatManager * inMan)
+{
+	if (ensure(ChatBox)) {
+		ChatBox->BindChatManager(inMan);
+	}
+}
+
+void UFireFighterUI::RelateChatUIWithPlayer(AFPPlayerController * inPlayer)
+{
+	if (ensure(ChatBox)) {
+		ChatBox->SetRelatedPlayer(inPlayer);
+	}
+}

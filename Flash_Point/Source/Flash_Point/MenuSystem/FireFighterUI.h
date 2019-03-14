@@ -7,6 +7,7 @@
 #include "Components/MultiLineEditableTextBox.h"
 #include "Components/WidgetComponent.h"
 #include "MenuSystem/FireFighterStatus.h"
+#include "MenuSystem/ChatWidget.h"
 #include "FireFighterUI.generated.h"
 
 class AGameBoard;
@@ -43,12 +44,14 @@ public:
 	// Set enable or disable carrying victim or hazmat victim
 	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
 	void ShowCarrying(bool isCarrying);
+	void BindChatManagerWithUI(AChatManager* inMan);
+	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 
 protected:
 	// BINDED WIDGETS
 	// A text box to add text on during chat
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
-	UMultiLineEditableTextBox* LobbyChatText = nullptr;
+	UChatWidget* ChatBox = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* YourTurnPrompt = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)

@@ -6,6 +6,7 @@
 #include "Wall.h"
 #include "Door.h"
 #include "GameBoard.h"
+#include "ChatManager.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -92,6 +93,16 @@ void AFPPlayerController::NotifyGameOver(bool isWin)
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyGameEnd(isWin);
 	}
+}
+
+void AFPPlayerController::SetPlayerName(FString inName)
+{
+	playerName = inName;
+}
+
+FString AFPPlayerController::GetPlayerName()
+{
+	return playerName;
 }
 
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
@@ -332,6 +343,18 @@ bool AFPPlayerController::ServerAdjustAP_Validate(AFireFighterPawn* fireFighterP
 	return true;
 }
 
+void AFPPlayerController::ServerSendGlobalText_Implementation(AChatManager * chatMan, const FString& message)
+{
+	if (ensure(chatMan)) {
+		chatMan->SendGlobalText(message);
+	}
+}
+
+bool AFPPlayerController::ServerSendGlobalText_Validate(AChatManager * chatMan, const FString& message)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -450,6 +473,25 @@ void AFPPlayerController::EnableAPConsumption(int32 flag)
 	}
 }
 
+void AFPPlayerController::FindChatUI()
+{
+	// when UI is created, try finding a chat manager
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		TArray<AActor*> allChatMan;
+		UGameplayStatics::GetAllActorsOfClass(world, AChatManager::StaticClass(), allChatMan);
+		// only assign correct game board if there is one found
+		if (allChatMan.Num() > 0) {
+			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			AChatManager* tempChatManager = Cast<AChatManager>(allChatMan[0]);
+			if (ensure(inGameUI)) {
+				inGameUI->BindChatManagerWithUI(tempChatManager);
+				inGameUI->RelateChatUIWithPlayer(this);
+			}
+		}
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -457,6 +499,7 @@ void AFPPlayerController::BeginPlay()
 	FindGameBoard();
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();
+	FindChatUI();
 }
 
 void AFPPlayerController::SetOpenDoor()

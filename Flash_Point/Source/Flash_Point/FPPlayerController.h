@@ -17,6 +17,7 @@ class ATile;
 class ADoor;
 class AEdgeUnit;
 class AGameBoard;
+class AChatManager;
 
 /**
  * 
@@ -72,6 +73,10 @@ public:
 	UFireFighterStatus* GetFireFighterStatusBar(int32 id);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void NotifyGameOver(bool isWin);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void SetPlayerName(FString inName);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	FString GetPlayerName();
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server
@@ -108,6 +113,8 @@ public:
 	void ServerEndTurn(AGameBoard* inGameBoard);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdjustAP(AFireFighterPawn* fireFighterPawn, int32 adjustAP);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSendGlobalText(AChatManager* chatMan, const FString& message);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
@@ -132,6 +139,8 @@ protected:
 	AGameBoard* gameBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	int32 myTurnNum = -1;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
+	FString playerName = "";
 
 	// Cheating flags
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Cheating")
@@ -142,6 +151,8 @@ protected:
 	UFireFighterUI* inGameUI = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UFireFighterUI> BasicFireFighterClass = nullptr;
+
+	void FindChatUI();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
