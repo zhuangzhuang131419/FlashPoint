@@ -699,9 +699,9 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		EGameOperations ops = localPlayer->GetCurrentOperation();
 		switch (ops)
 		{
-		case EGameOperations::PlaceFireFighter:
-			localPlayer->SetNone();
+		case EGameOperations::PlaceFireFighter:			
 			if (outside) {
+				localPlayer->SetNone();
 				// Place firefighter to current tile
 				localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
 				if (ensure(localPawn))
