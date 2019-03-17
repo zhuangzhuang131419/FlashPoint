@@ -372,6 +372,30 @@ UParticleSystemComponent * ATile::GetBlastEffect()
 	return BlastEffect;
 }
 
+void ATile::SetFireEffect(bool isActivate)
+{
+	if (isActivate)
+	{
+		FireEffect->Activate();
+	}
+	else
+	{
+		FireEffect->Deactivate();
+	}
+}
+
+void ATile::SetSmokeEffect(bool isActivate)
+{
+	if (isActivate)
+	{
+		SmokeEffect->Activate();
+	}
+	else
+	{
+		SmokeEffect->Deactivate();
+	}
+}
+
 APOI* ATile::GetPOIOnTile()
 {
 	return POIOnTile;
@@ -763,6 +787,8 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::Carry:
 			break;
 		case EGameOperations::OpenDoor:
+			break;
+		case EGameOperations::FireDeckGun:
 			break;
 		case EGameOperations::None:
 			break;

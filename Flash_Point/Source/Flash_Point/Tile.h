@@ -83,6 +83,9 @@ public:
 	UParticleSystemComponent* GetSmokeEffect();
 	UParticleSystemComponent* GetBlastEffect();
 
+	void SetFireEffect(bool isActivate);
+	void SetSmokeEffect(bool isActivate);
+
 	// Getter and Setter for POI
 	APOI* GetPOIOnTile();
 	void SetPOIOnTile(APOI* inPOI);

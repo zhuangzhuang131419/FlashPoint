@@ -99,6 +99,8 @@ public:
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 totalVictimNum = 10;
 
+	TArray<ATile*> GetboardTiles() { return boardTiles; }
+
 protected:
 	// FIELDS
 	// The tile class for spawning

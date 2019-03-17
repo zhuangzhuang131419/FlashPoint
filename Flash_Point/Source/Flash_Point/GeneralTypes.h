@@ -36,6 +36,7 @@ enum class EGameOperations : uint8
 	ExtinguishFire,
 	Carry,
 	OpenDoor,
+	FireDeckGun,
 	None
 };
 
