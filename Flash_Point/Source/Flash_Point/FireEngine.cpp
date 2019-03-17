@@ -16,7 +16,7 @@ void AFireEngine::FireDeckGun()
 	int32 startx;
 	int32 starty;
 	int32 randomTargetPosition;
-	if (parkingSpot.xLoc <= 4)
+	if (parkingSpot1.xLoc <= 4)
 	{
 		startx = 1;
 	}
@@ -24,7 +24,7 @@ void AFireEngine::FireDeckGun()
 	{
 		startx = 5;
 	}
-	if (parkingSpot.yLoc <= 3)
+	if (parkingSpot1.yLoc <= 3)
 	{
 		starty = 1;
 	}

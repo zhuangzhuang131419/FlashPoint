@@ -18,7 +18,8 @@ public:
 	AAmbulance();
 
 	// The parking location of the ambulance
-	FLocation parkingSpot;
+	FLocation parkingSpot1;
+	FLocation parkingSpot2;
 
 	AGameBoard* board;
 

@@ -21,7 +21,8 @@ public:
 	void FireDeckGun();
 
 	// The parking location of the fire engine
-	FLocation parkingSpot;
+	FLocation parkingSpot1;
+	FLocation parkingSpot2;
 
 	AGameBoard* board;
 
