@@ -29,6 +29,13 @@ public:
 	int32 GetCurrentGameHealth();
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SetCurrentGameHealth(int32 currentHealth);
+	// getter and setter for selected roles on board
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	TArray<ERoleType> GetSelectedRoles();
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	void AddToSelectedRoles(ERoleType inRole);
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	void SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole);
 
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }
@@ -68,7 +75,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
-
+	// Operation realted fields and functions
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
 
@@ -150,6 +157,9 @@ protected:
 	// All players in current map
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFPPlayerController*> players;
+	// Already selected roles in the game
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	TArray<ERoleType> selectedRoles;
 	// The current gameboard health
 	UPROPERTY(ReplicatedUsing = Rep_HealthChangeNotify, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
