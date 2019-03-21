@@ -610,6 +610,8 @@ void AFPPlayerController::NotifyCarryVictim(bool isCarrying)
 
 void AFPPlayerController::SwitchRole(ERoleType inRole)
 {
+	// get the localplayer's firefighter
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	// just switch fire fighter role if the player is server
 	if (HasAuthority()) {
 		

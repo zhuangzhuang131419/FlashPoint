@@ -55,6 +55,22 @@ void AGameBoard::SetCurrentGameHealth(int32 currentHealth)
 	}
 }
 
+TArray<ERoleType> AGameBoard::GetSelectedRoles()
+{
+	return selectedRoles;
+}
+
+void AGameBoard::AddToSelectedRoles(ERoleType inRole)
+{
+	selectedRoles.Add(inRole);
+}
+
+void AGameBoard::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
+{
+	selectedRoles.Remove(fromRole);
+	selectedRoles.Add(toRole);
+}
+
 void AGameBoard::ClearAllTile()
 {
 	for (ATile* t : boardTiles) {
@@ -645,6 +661,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, currentTurn);
 	DOREPLIFETIME(AGameBoard, maxPOI);
 	DOREPLIFETIME(AGameBoard, currentPOI);
+	DOREPLIFETIME(AGameBoard, selectedRoles);
 	DOREPLIFETIME(AGameBoard, totalVictimNum);
 	DOREPLIFETIME(AGameBoard, victimSavedNum);
 	DOREPLIFETIME(AGameBoard, victimLostNum);

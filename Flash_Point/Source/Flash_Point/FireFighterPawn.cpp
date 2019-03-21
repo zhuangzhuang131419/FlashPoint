@@ -81,6 +81,16 @@ void AFireFighterPawn::SetFireFighterName(FString inName)
 	fireFighterName = inName;
 }
 
+ERoleType AFireFighterPawn::GetFireFighterRole()
+{
+	return fireFighterRole;
+}
+
+void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
+{
+	fireFighterRole = inRole;
+}
+
 int32 AFireFighterPawn::GetMoveConsumption()
 {
 	return moveConsumption;

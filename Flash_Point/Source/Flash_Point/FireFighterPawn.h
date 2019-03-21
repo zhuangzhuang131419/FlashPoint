@@ -52,6 +52,11 @@ public:
 	FString GetFireFighterName();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterName(FString inName);
+	// Getter and setter for the firefighter's role
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	ERoleType GetFireFighterRole();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterRole(ERoleType inRole);
 	// getter and setter for all consumptions
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetMoveConsumption();
