@@ -571,6 +571,14 @@ void AFPPlayerController::NotifyCarryVictim(bool isCarrying)
 	}
 }
 
+void AFPPlayerController::SwitchRole(ERoleType inRole)
+{
+	// just switch fire fighter role if the player is server
+	if (HasAuthority()) {
+		
+	}
+}
+
 EGameOperations AFPPlayerController::GetCurrentOperation()
 {
 	return CurrentOperation;
