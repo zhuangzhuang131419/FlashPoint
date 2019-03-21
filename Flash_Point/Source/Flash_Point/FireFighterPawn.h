@@ -12,6 +12,7 @@
 class ATile;
 class AEdgeUnit;
 class AVictim;
+class AHazmat;
 class AGameBoard;
 class AFPPlayerController;
 
@@ -77,11 +78,16 @@ public:
 	int32 GetFireFighterID();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterID(int32 inID);
-
+	// getter and setter for victim
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AVictim* GetVictim();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetVictim(AVictim* victim);
+	// getter and setter for hazmat
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	AHazmat* GetHazmat();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetHazmat(AHazmat* hazmat);
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
@@ -152,4 +158,6 @@ public:
 protected:
 	UPROPERTY(ReplicatedUsing = Rep_CarryingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AVictim* victim = nullptr;
+	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
+	AHazmat* hazmat = nullptr;
 };

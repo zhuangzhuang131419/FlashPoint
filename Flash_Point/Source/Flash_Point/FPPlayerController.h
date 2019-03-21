@@ -12,6 +12,7 @@
 
 class AFireFighterPawn;
 class AVictim;
+class AHazmat;
 class AWall;
 class ATile;
 class ADoor;
@@ -122,6 +123,11 @@ public:
 	void DropVictim();
 	UFUNCTION(BlueprintCallable)
 	void CarryVictim();
+
+	UFUNCTION(BlueprintCallable)
+	void DropHazmat();
+	UFUNCTION(BlueprintCallable)
+	void CarryHazmat();
 
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")

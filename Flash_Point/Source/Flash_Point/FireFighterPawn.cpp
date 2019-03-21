@@ -383,4 +383,14 @@ void AFireFighterPawn::SetVictim(AVictim * victim)
 	this->victim = victim;
 }
 
+AHazmat * AFireFighterPawn::GetHazmat()
+{
+	return hazmat;
+}
+
+void AFireFighterPawn::SetHazmat(AHazmat * hazmat)
+{
+	this->hazmat = hazmat;
+}
+
 

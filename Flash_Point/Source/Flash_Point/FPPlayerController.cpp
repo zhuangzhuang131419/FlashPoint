@@ -439,6 +439,16 @@ void AFPPlayerController::CarryVictim()
 	
 }
 
+void AFPPlayerController::DropHazmat()
+{
+	// TODO drop hazmat from pawn to tile when called
+}
+
+void AFPPlayerController::CarryHazmat()
+{
+	// TODO carry hazmat on tile when called
+}
+
 void AFPPlayerController::FindGameBoard()
 {
 	// ensure there is a world
