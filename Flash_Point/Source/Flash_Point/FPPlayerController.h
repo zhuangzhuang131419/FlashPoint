@@ -105,7 +105,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerFlashOver(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerDrop(AFireFighterPawn * fireFighterPawn);
+	void ServerDropVictim(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerCarryVictim(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)

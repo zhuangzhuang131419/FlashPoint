@@ -194,7 +194,7 @@ bool AFPPlayerController::ServerAdvancePOI_Validate(AGameBoard * board)
 	return true;
 }
 
-void AFPPlayerController::ServerDrop_Implementation(AFireFighterPawn * fireFighterPawn)
+void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fireFighterPawn)
 {
 	ATile* currentTile = fireFighterPawn->GetPlacedOn();
 	if (ensure(currentTile))
@@ -267,7 +267,7 @@ void AFPPlayerController::ServerDrop_Implementation(AFireFighterPawn * fireFight
 	}
 }
 
-bool AFPPlayerController::ServerDrop_Validate(AFireFighterPawn * fireFighterPawn)
+bool AFPPlayerController::ServerDropVictim_Validate(AFireFighterPawn * fireFighterPawn)
 {
 	return true;
 }
@@ -401,7 +401,7 @@ void AFPPlayerController::DropVictim()
 			if (!ensure(tempVictim)) return;
 			tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
 		}
-		ServerDrop(fireFighterPawn);
+		ServerDropVictim(fireFighterPawn);
 		// only for authority, update the firefighter's carrying UI
 		if (HasAuthority()) {
 			if (ensure(inGameUI)) {
@@ -442,11 +442,13 @@ void AFPPlayerController::CarryVictim()
 void AFPPlayerController::DropHazmat()
 {
 	// TODO drop hazmat from pawn to tile when called
+	UE_LOG(LogTemp, Warning, TEXT("Drop hazmat."));
 }
 
 void AFPPlayerController::CarryHazmat()
 {
 	// TODO carry hazmat on tile when called
+	UE_LOG(LogTemp, Warning, TEXT("Carry hazmat."));
 }
 
 void AFPPlayerController::FindGameBoard()
