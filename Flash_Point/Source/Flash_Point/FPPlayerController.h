@@ -110,6 +110,10 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerCarryVictim(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerDropHazmat(AFireFighterPawn * fireFighterPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerCarryHazmat(AFireFighterPawn * fireFighterPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetFireFighterID(AFireFighterPawn * fireFighterPawn, AGameBoard* inGameBoard);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerEndTurn(AGameBoard* inGameBoard);

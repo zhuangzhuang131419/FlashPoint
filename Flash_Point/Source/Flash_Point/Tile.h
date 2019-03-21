@@ -97,6 +97,9 @@ public:
 	TArray<AVictim*>* GetVictims();
 	void removeVictims() { victims = TArray<AVictim*>(); }
 
+	// Getter for Hazmat
+	AHazmat* GetHazmat() { return hazmat; }
+
 	// Getter for gameboard
 	AGameBoard* GetGameBoard();
 
@@ -208,6 +211,9 @@ protected:
 	TSubclassOf<AVictim> victimClass = nullptr;
 	UPROPERTY(replicated, VisibleAnyWhere)
 	TArray<AVictim*> victims;
+
+	UPROPERTY(replicated, VisibleAnyWhere)
+	AHazmat* hazmat;
 
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	int32 quadrant = 0;	// default quarant of the tile

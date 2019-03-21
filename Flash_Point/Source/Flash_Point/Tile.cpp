@@ -3,6 +3,7 @@
 #include "Tile.h"
 #include "GameBoard.h"
 #include "Victim.h"
+#include "Hazmat.h"
 #include "Wall.h"
 #include "POI.h"
 #include "Door.h"
