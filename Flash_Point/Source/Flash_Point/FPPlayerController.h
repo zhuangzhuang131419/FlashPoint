@@ -52,7 +52,8 @@ public:
 	void SetCarry();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryVictim(bool isCarrying);
-
+	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
+	void SwitchRole(ERoleType inRole);
 	// Cheating related
 	UFUNCTION(BlueprintCallable, Category = "Cheating")
 	bool ConsumptionOn();

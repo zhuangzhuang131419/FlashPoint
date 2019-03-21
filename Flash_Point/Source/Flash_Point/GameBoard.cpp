@@ -248,6 +248,7 @@ void AGameBoard::TurnSwitch()
 			if (localPlayer->GetTurnNum() == currentTurn) {
 				// special notify for player on server
 				localPlayer->NotifyPlayerTurn();
+				// TODO check if the pawn's location is same as fire engine
 			}
 		}
 	}
