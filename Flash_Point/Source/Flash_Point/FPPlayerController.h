@@ -119,6 +119,8 @@ public:
 	void ServerSendGlobalText(AChatManager* chatMan, const FString& message);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSwitchRole(AGameBoard* board, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

@@ -367,6 +367,19 @@ bool AFPPlayerController::ServerSetFireFighterName_Validate(AFireFighterPawn * f
 	return true;
 }
 
+void AFPPlayerController::ServerSwitchRole_Implementation(AGameBoard * board, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
+{
+	if (ensure(board) && ensure(fireFighterPawn)) {
+		board->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
+		fireFighterPawn->SetFireFighterRole(inRole);
+	}
+}
+
+bool AFPPlayerController::ServerSwitchRole_Validate(AGameBoard * board, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -577,10 +590,16 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 {
 	// get the localplayer's firefighter
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (!ensure(fireFighterPawn))	return;
 	// just switch fire fighter role if the player is server
 	if (HasAuthority()) {
-		
+		if (ensure(gameBoard)) {
+			gameBoard->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
+			fireFighterPawn->SetFireFighterRole(inRole);
+		}
 	}
+	// Otherwise call server to switch role
+	ServerSwitchRole(gameBoard, fireFighterPawn, inRole);
 }
 
 EGameOperations AFPPlayerController::GetCurrentOperation()
