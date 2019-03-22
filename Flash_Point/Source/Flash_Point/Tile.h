@@ -89,6 +89,7 @@ public:
 	// Getter and Setter for POI
 	APOI* GetPOIOnTile();
 	void SetPOIOnTile(APOI* inPOI);
+	void SetHazmatOnTile(AHazmat* inHazmat);
 
 	// Getter for TileMesh
 	UStaticMeshComponent* GetTileMesh();
@@ -113,6 +114,7 @@ public:
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
 	void AdvanceFire();
 	void AdvancePOI();
+	void AdvanceHazmat();
 	void SetSmokeOnTile();
 	void SetClearOnTile();
 	void ExitinguishFireOnTile();
@@ -172,6 +174,8 @@ protected:
 	TSubclassOf<AEdgeUnit> DoorClass = nullptr;	// for door edge class
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> POIClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AActor> HazmatClass = nullptr;
 
 	// Neighbour edge refences
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")
@@ -207,6 +211,8 @@ protected:
 	APOI* POIOnTile = nullptr; // the default POI type of the tile
 	UPROPERTY(ReplicatedUsing = Rep_BlastEffect, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	bool blastOccured = false;	// used fore synchronization of the blast effect
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
+	AHazmat* HazmatOnTile = nullptr; // the default POI type of the tile
 
 	// A victim actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")

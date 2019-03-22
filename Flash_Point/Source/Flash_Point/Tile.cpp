@@ -407,6 +407,11 @@ void ATile::SetPOIOnTile(APOI* inPOI)
 	POIOnTile = inPOI;
 }
 
+void ATile::SetHazmatOnTile(AHazmat* inHazmat)
+{
+	HazmatOnTile = inHazmat;
+}
+
 
 UStaticMeshComponent * ATile::GetTileMesh()
 {
@@ -463,6 +468,27 @@ void ATile::AdvancePOI()
 					}
 					
 				}
+			}
+		}
+	}
+}
+
+void ATile::AdvanceHazmat()
+{
+	if (ensure(fireStatus != EFireStatus::Fire))
+	{
+		if (ensure(!HazmatOnTile))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Advance Hazmat"));
+
+			AHazmat* inHazmat = GetWorld()->SpawnActor<AHazmat>(
+				HazmatClass,
+				TileMesh->GetSocketLocation(FName("VisualEffects")),
+				FRotator(0, 0, 0)
+			);
+			if (board)
+			{
+				SetHazmatOnTile(inHazmat);
 			}
 		}
 	}

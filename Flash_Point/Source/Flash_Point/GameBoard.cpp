@@ -741,6 +741,12 @@ void AGameBoard::BeginPlay()
 			{
 				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvancePOI();
 			}
+
+			// Initialize the Hazmat
+			for (FLocation loc : HazmatInitializeLocation)
+			{
+				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceHazmat();
+			}
 		}
 		currentPOI = maxPOI;
 	}

@@ -145,6 +145,9 @@ protected:
 	UPROPERTY(EditAnyWhere, Category = "Setup")
 	TArray<FLocation> POIInitializeLocation;
 
+	UPROPERTY(EditAnyWhere, Category = "Setup")
+	TArray<FLocation> HazmatInitializeLocation;
+
 	// the entire board are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
