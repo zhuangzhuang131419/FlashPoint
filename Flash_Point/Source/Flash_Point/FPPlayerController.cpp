@@ -2,6 +2,7 @@
 
 #include "FPPlayerController.h"
 #include "Victim.h"
+#include "Hazmat.h"
 #include "Tile.h"
 #include "Wall.h"
 #include "Door.h"
@@ -302,6 +303,40 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 }
 
 bool AFPPlayerController::ServerCarryVictim_Validate(AFireFighterPawn * fireFighterPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerCarryHazmat_Implementation(AFireFighterPawn * fireFighterPawn)
+{
+	ATile* currentTile = fireFighterPawn->GetPlacedOn();
+	if (ensure(currentTile))
+	{
+		AHazmat* carriedHazmat = currentTile->GetHazmat();
+		if (carriedHazmat)
+		{
+			carriedHazmat->isCarried = true;
+			fireFighterPawn->SetHazmat(carriedHazmat);
+			carriedHazmat->hazmatMesh->SetVisibility(false);
+		}
+		else 
+		{
+			UE_LOG(LogTemp, Warning, TEXT("No hazmat."));
+		}
+	}
+}
+
+bool AFPPlayerController::ServerCarryHazmat_Validate(AFireFighterPawn * fireFighterPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerDropHazmat_Implementation(AFireFighterPawn * fireFighterPawn)
+{
+
+}
+
+bool AFPPlayerController::ServerDropHazmat_Validate(AFireFighterPawn * fireFighterPawn)
 {
 	return true;
 }
