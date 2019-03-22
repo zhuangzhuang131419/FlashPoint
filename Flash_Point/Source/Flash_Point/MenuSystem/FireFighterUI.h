@@ -28,6 +28,10 @@ public:
 
 	// FUNCTIONS
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
+	void EnableOperationWidgets();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
+	void NotifyPlaceFirefighter();
+	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyTurnBegin();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyTurnEnd();
