@@ -806,6 +806,11 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::FireDeckGun:
 			break;
+		case EGameOperations::FlipPOI:
+			if (!ensure(localPawn)) return;
+			if (!ensure(localPlayer)) return;
+			localPlayer->RevealPOI(this);
+			break;
 		case EGameOperations::None:
 			break;
 		default:
