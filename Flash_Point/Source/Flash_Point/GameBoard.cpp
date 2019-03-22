@@ -39,11 +39,6 @@ void AGameBoard::SetCurrentPlayer(AFPPlayerController * current)
 	currentPlayer = current;
 }
 
-int32 AGameBoard::GetCurrentGameHealth()
-{
-	return health;
-}
-
 void AGameBoard::SetCurrentGameHealth(int32 currentHealth)
 {
 	health = currentHealth;

@@ -26,7 +26,7 @@ public:
 	void SetCurrentPlayer(AFPPlayerController* current);
 	// getter and settter for current game board health
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
-	int32 GetCurrentGameHealth();
+	int32 GetCurrentGameHealth() { return health; }
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SetCurrentGameHealth(int32 currentHealth);
 	// getter and setter for selected roles on board
