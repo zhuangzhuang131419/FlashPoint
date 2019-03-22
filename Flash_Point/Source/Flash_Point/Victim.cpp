@@ -14,11 +14,6 @@ AVictim::AVictim()
 	victimMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("victimMesh"));
 }
 
-void AVictim::SetIsCarried(bool carried)
-{
-	isCarried = carried;
-}
-
 void AVictim::SetVictimLoc(FVector loc)
 {
 	victimLoc = loc;
@@ -55,7 +50,6 @@ void AVictim::BeginPlay()
 	if (HasAuthority()) {
 		SetReplicates(true);
 	}
-
 }
 
 // Called every frame

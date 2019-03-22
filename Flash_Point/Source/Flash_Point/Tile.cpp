@@ -762,7 +762,15 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 				}
 				// do ap adjustment
-				localPawn->AdjustFireFighterAP(-costToHere);
+				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)
+				{
+					localPawn->AdjustFireFighterAP(-costToHere);
+				}
+				else
+				{
+					localPawn->AdjustSpecialistMoveAP(-costToHere);
+				}
+				
 				canMoveTo = false;
 				isReady = false;
 				costToHere = 0;
@@ -775,9 +783,16 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			// check if the fire is adjacent
 			if (!AdjacentToPawn()) return;
 			if (!ensure(localPawn)) return;
-			if (localPawn->GetCurrentAP() < localPawn->GetExtinguishConsumption()) return;
+			if (localPawn->GetCurrentAP() + localPawn->GetExtinguishAP() < localPawn->GetExtinguishConsumption()) return;
 			if (fireStatus == EFireStatus::Clear) return;
-			localPawn->AdjustFireFighterAP(-localPawn->GetExtinguishConsumption());
+			if (localPawn->GetFireFighterRole() != ERoleType::CAFSFirefighter) 
+			{
+				localPawn->AdjustFireFighterAP(-localPawn->GetExtinguishConsumption());
+			}
+			else
+			{
+				localPawn->AdjustCAFSFireFighterExtinguishAP(-localPawn->GetExtinguishConsumption());
+			}
 			if (HasAuthority()) {
 				ExitinguishFireOnTile();
 			}
@@ -847,7 +862,7 @@ void ATile::FindPathToCurrent()
 			}
 		}
 		// here the goal is successfully found and could be moved to
-		else if (cost <= localPawn->GetCurrentAP()) {
+		else if (cost <= localPawn->GetCurrentAP() + localPawn->GetMovementAP()) {
 			canMoveTo = true;
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(ableMat);

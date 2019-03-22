@@ -490,13 +490,95 @@ void AFPPlayerController::CarryVictim()
 void AFPPlayerController::DropHazmat()
 {
 	// TODO drop hazmat from pawn to tile when called
-	UE_LOG(LogTemp, Warning, TEXT("Drop hazmat."));
+	
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		if (ensure(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) 
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Drop hazmat."));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Not Hazmat Technician."));
+		}
+	}
 }
 
 void AFPPlayerController::CarryHazmat()
 {
 	// TODO carry hazmat on tile when called
 	UE_LOG(LogTemp, Warning, TEXT("Carry hazmat."));
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		if (!(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) { return; }
+	}
+}
+
+void AFPPlayerController::RevealPOI(ATile* targetTile)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Reveal POI."));
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		if (ensure(fireFighterPawn->GetFireFighterRole() == ERoleType::ImagingTechnician))
+		{
+			if (ensure(targetTile))
+			{
+				if (targetTile->GetPOIStatus() == EPOIStatus::Hided)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("A POI has been revealed."));
+					if (!ensure(targetTile->GetPOIOnTile())) return;
+					if (targetTile->GetPOIOnTile()->isAlarm)
+					{
+						FVector VictimSocketLocation;
+						switch (targetTile->GetVictims()->Num())
+						{
+						case 0:
+							VictimSocketLocation = targetTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+							break;
+						case 1:
+							VictimSocketLocation = targetTile->GetTileMesh()->GetSocketLocation(FName("Victim1"));
+							break;
+						case 2:
+							VictimSocketLocation = targetTile->GetTileMesh()->GetSocketLocation(FName("Victim3"));
+							break;
+						case 3:
+							VictimSocketLocation = targetTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
+							break;
+						default:
+							UE_LOG(LogTemp, Warning, TEXT("No more position"))
+								VictimSocketLocation = targetTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+							break;
+						}
+						AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
+							targetTile->GetVictimClass(),
+							VictimSocketLocation,
+							FRotator(0, 0, 0)
+							);
+						if (ensure(newVictim))
+						{
+							targetTile->GetVictims()->Add(newVictim);
+						}
+						targetTile->SetPOIStatus(EPOIStatus::Revealed);
+					}
+					else
+					{
+						targetTile->SetPOIStatus(EPOIStatus::Empty);
+						targetTile->GetGameBoard()->SetCurrentPOI(GetGameBoard()->currentPOI - 1);
+					}
+					targetTile->GetPOIOnTile()->Destroy();
+					targetTile->SetPOIOnTile(nullptr);
+
+				}
+				else
+				{
+					UE_LOG(LogTemp, Warning, TEXT("No POI to reveal"));
+				}
+			}
+		}
+	}
 }
 
 void AFPPlayerController::FindGameBoard()

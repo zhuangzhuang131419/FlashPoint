@@ -40,6 +40,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetCurrentAP();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetMovementAP() { return movementAP; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetCommandAP() { return commandAP; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetExtinguishAP() { return extinguishAP; }
+
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCurrentAP(int32 current);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetMaxAP();
@@ -47,6 +54,11 @@ public:
 	int32 GetRestoreAP();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void AdjustFireFighterAP(int32 adjustAP);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void AdjustCAFSFireFighterExtinguishAP(int32 adjustAP);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void AdjustSpecialistMoveAP(int32 adjustAP);
+
 	// Getter and setter for the firefighter's name
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	FString GetFireFighterName();
@@ -109,7 +121,10 @@ protected:
 	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 currentAP = 4;	// initial AP for all firefighters are 4
 	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
-	int32 maxAP = 8;	// Firefighter max ap
+	int32 maxAP = 8;		// Firefighter max ap
+	int32 extinguishAP = 0; // Extinguish AP 
+	int32 movementAP = 0;	// Movingment AP
+	int32 commandAP = 0;	// Command AP
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 restoreAP = 4;	// AP for restoration for firefighters are initialized to 4
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
@@ -117,7 +132,7 @@ protected:
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 openConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
-	int32 chopConsumption = 1;
+	int32 chopConsumption = 2;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 extinguishConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")

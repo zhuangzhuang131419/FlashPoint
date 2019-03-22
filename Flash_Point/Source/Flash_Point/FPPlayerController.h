@@ -138,6 +138,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CarryHazmat();
 
+	UFUNCTION(BlueprintCallable)
+	void RevealPOI(ATile* targetTile);
+
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")
 	void FindGameBoard();

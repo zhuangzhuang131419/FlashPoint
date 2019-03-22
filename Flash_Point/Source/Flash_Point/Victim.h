@@ -20,7 +20,10 @@ public:
 	AVictim();
 
 	// setter for is carried
-	void SetIsCarried(bool carried);
+	void SetIsCarried(bool carried) { isCarried = carried; }
+	// Getter and setter for is healed
+	bool IsHealed() { return isHealed; }
+	void SetIsHealed(bool healed) { isHealed = healed; }
 	// setter for the actor's new world location
 	void SetVictimLoc(FVector loc);
 
@@ -28,6 +31,8 @@ protected:
 	// REPLICATED FIELDS
 	UPROPERTY(ReplicatedUsing = Rep_OnCarry, VisibleAnyWhere)
 	bool isCarried = false;
+	UPROPERTY(ReplicatedUsing = Rep_OnCarry, VisibleAnyWhere)
+	bool isHealed = false;
 	UPROPERTY(ReplicatedUsing = Rep_OnVictimLocationChanged, VisibleAnyWhere)
 	FVector victimLoc;
 
