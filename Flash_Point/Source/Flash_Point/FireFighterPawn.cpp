@@ -142,6 +142,12 @@ ERoleType AFireFighterPawn::GetFireFighterRole()
 void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
 {
 	fireFighterRole = inRole;
+	// synchronize the view of status bar only on the server side
+	if (HasAuthority()) {
+		if (ensure(statusBar)) {
+			statusBar->ChangeRolePic(inRole);
+		}
+	}
 }
 
 int32 AFireFighterPawn::GetMoveConsumption()
@@ -271,7 +277,10 @@ void AFireFighterPawn::BindStatusWidget()
 
 void AFireFighterPawn::Rep_RoleType()
 {
-	// TODO modify this function when implementing experienced mode
+	// change the firefighter's role pic on status bar
+	if (ensure(statusBar)) {
+		statusBar->ChangeRolePic(fireFighterRole);
+	}
 }
 
 void AFireFighterPawn::Rep_APChanges()
