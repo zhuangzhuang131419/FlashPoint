@@ -37,6 +37,7 @@ enum class EGameOperations : uint8
 	Carry,
 	OpenDoor,
 	FireDeckGun,
+	FlipPOI,
 	None
 };
 

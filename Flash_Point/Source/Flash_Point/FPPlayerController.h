@@ -51,6 +51,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetCarry();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetFireDeckGun() { CurrentOperation = EGameOperations::FireDeckGun; }
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetFlip() { CurrentOperation = EGameOperations::FlipPOI; }
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryVictim(bool isCarrying);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
