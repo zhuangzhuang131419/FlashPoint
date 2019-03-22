@@ -4,26 +4,10 @@
 
 UFlashPointSaveGame::UFlashPointSaveGame()
 {
-	SaveSlotName = TEXT("TestSaveSlot");
+	// set default value
+	PlayerName = FString(TEXT("PlayerName"));
+	SaveSlotName = FString(TEXT("SaveSlot"));
 	UserIndex = 0;
-}
-
-void UFlashPointSaveGame::SaveHealth()
-{
-	UFlashPointSaveGame* SaveGameInstance = Cast<UFlashPointSaveGame>(UGameplayStatics::CreateSaveGameObject(UFlashPointSaveGame::StaticClass()));
-	SaveGameInstance->health = 20;
-	UGameplayStatics::SaveGameToSlot(SaveGameInstance, SaveGameInstance->SaveSlotName, SaveGameInstance->UserIndex);
-}
-
-void UFlashPointSaveGame::LoadHealth()
-{
-	UFlashPointSaveGame* LoadGameInstance = Cast<UFlashPointSaveGame>(UGameplayStatics::CreateSaveGameObject(UFlashPointSaveGame::StaticClass()));
-	LoadGameInstance = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(LoadGameInstance->SaveSlotName, LoadGameInstance->UserIndex));
-	FString PlayerNameToDisplay = LoadGameInstance->PlayerName;
-	/*if (GEngine)
-	{
-		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, PlayerNameToDisplay);
-	}*/
 }
 
 
