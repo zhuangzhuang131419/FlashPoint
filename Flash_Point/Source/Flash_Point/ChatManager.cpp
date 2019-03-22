@@ -15,6 +15,9 @@ AChatManager::AChatManager()
 void AChatManager::SetChatWidget(UChatWidget * inChatUI)
 {
 	chatUI = inChatUI;
+	if (ensure(chatUI)) {
+		chatUI->DisplayMessages(chatMessages);
+	}
 }
 
 void AChatManager::SendGlobalText(FString inMessage)

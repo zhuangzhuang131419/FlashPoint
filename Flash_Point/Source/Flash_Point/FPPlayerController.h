@@ -54,6 +54,8 @@ public:
 	void NotifyCarryVictim(bool isCarrying);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SwitchRoleWidget(ERoleType inRole);
 	// Cheating related
 	UFUNCTION(BlueprintCallable, Category = "Cheating")
 	bool ConsumptionOn();
@@ -140,6 +142,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Join Game")
 	void FindGameBoard();
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
+	void RelateInGameUI(AFireFighterPawn * fireFighterPawn);
+	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void MakeBasicFireFighterUI();
 
 	// cheating functions
@@ -166,6 +170,22 @@ protected:
 	UFireFighterUI* inGameUI = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UFireFighterUI> BasicFireFighterClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> CAFSFireFighterClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> DriverClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> CaptainClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> GeneralistClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> HazTecClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> ImageTecClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> ParamedicClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> RescueSpecClass = nullptr;
 
 	void FindChatUI();
 

@@ -514,6 +514,15 @@ void AFPPlayerController::FindGameBoard()
 	}
 }
 
+void AFPPlayerController::RelateInGameUI(AFireFighterPawn * fireFighterPawn)
+{
+	if (ensure(inGameUI)) {
+		inGameUI->SetGameBoard(gameBoard);
+		inGameUI->SetRelatedPlayer(this);
+		inGameUI->SetRelatedPawn(fireFighterPawn);
+	}
+}
+
 void AFPPlayerController::MakeBasicFireFighterUI()
 {
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
@@ -521,10 +530,8 @@ void AFPPlayerController::MakeBasicFireFighterUI()
 	{
 		if (ensure(BasicFireFighterClass)) {
 			inGameUI = CreateWidget<UFireFighterUI>(this, BasicFireFighterClass);
+			RelateInGameUI(fireFighterPawn);
 			if (ensure(inGameUI)) {
-				inGameUI->SetGameBoard(gameBoard);
-				inGameUI->SetRelatedPlayer(this);
-				inGameUI->SetRelatedPawn(fireFighterPawn);
 				inGameUI->AddToViewport();
 			}
 		}
@@ -572,6 +579,9 @@ void AFPPlayerController::BeginPlay()
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();
 	FindChatUI();
+	if (ensure(inGameUI)) {
+		inGameUI->NotifyPlaceFirefighter();
+	}
 }
 
 void AFPPlayerController::SetOpenDoor()
@@ -626,6 +636,17 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	// get the localplayer's firefighter
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (!ensure(fireFighterPawn))	return;
+	// Switch role widget first
+	SwitchRoleWidget(inRole);
+	// if it is our ture, enable the widgets
+	if (ensure(gameBoard)) {
+		if (myTurnNum == gameBoard->GetCurrentTurn()) {
+			if (ensure(inGameUI)) {
+				// if this is not start of the game, do not show the place firefighter UI
+				inGameUI->EnableOperationWidgets();
+			}
+		}
+	}
 	// just switch fire fighter role if the player is server
 	if (HasAuthority()) {
 		if (ensure(gameBoard)) {
@@ -635,6 +656,71 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	}
 	// Otherwise call server to switch role
 	ServerSwitchRole(gameBoard, fireFighterPawn, inRole);
+}
+
+void AFPPlayerController::SwitchRoleWidget(ERoleType inRole)
+{
+	// remove the old widget from view port, and add a new one
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (!ensure(fireFighterPawn))	return;
+	if (!ensure(inGameUI)) return;
+	if (inRole == ERoleType::Basic) return;
+	inGameUI->RemoveFromViewport();
+	switch (inRole)
+	{
+	case ERoleType::Basic:
+		// Impossible to be here, do nothing...
+		break;
+	case ERoleType::Paramedic:
+		if (ensure(ParamedicClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, ParamedicClass);
+		}
+		break;
+	case ERoleType::FireCaptain:
+		if (ensure(CaptainClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, CaptainClass);
+		}
+		break;
+	case ERoleType::ImagingTechnician:
+		if (ensure(ImageTecClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, ImageTecClass);
+		}
+		break;
+	case ERoleType::CAFSFirefighter:
+		if (ensure(CAFSFireFighterClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, CAFSFireFighterClass);
+		}
+		break;
+	case ERoleType::HazmatTechnician:
+		if (ensure(HazTecClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, HazTecClass);
+		}
+		break;
+	case ERoleType::Generalist:
+		if (ensure(GeneralistClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, GeneralistClass);
+		}
+		break;
+	case ERoleType::RescueSpecialist:
+		if (ensure(RescueSpecClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, RescueSpecClass);
+		}
+		break;
+	case ERoleType::Driver:
+		if (ensure(DriverClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, DriverClass);
+		}
+		break;
+	default:
+		// impossible
+		break;
+	}
+	RelateInGameUI(fireFighterPawn);
+	fireFighterPawn->RelateAllFireFighterStatus();
+	FindChatUI();
+	if (ensure(inGameUI)) {
+		inGameUI->AddToViewport();
+	}
 }
 
 EGameOperations AFPPlayerController::GetCurrentOperation()

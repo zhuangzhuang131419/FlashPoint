@@ -71,6 +71,11 @@ void AGameBoard::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
 	selectedRoles.Add(toRole);
 }
 
+int32 AGameBoard::GetCurrentTurn()
+{
+	return currentTurn;
+}
+
 void AGameBoard::ClearAllTile()
 {
 	for (ATile* t : boardTiles) {

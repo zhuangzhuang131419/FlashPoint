@@ -36,6 +36,9 @@ public:
 	void AddToSelectedRoles(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole);
+	// Get current turn number
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	int32 GetCurrentTurn();
 
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }
