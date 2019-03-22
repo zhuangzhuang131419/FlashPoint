@@ -105,6 +105,8 @@ public:
 
 	TArray<AFireFighterPawn*>* GetPlacedFireFighters() { return &placedFireFighters; }
 
+	TSubclassOf<AVictim> GetVictimClass() { return victimClass; }
+
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);

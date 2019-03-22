@@ -71,6 +71,59 @@ void AFireFighterPawn::AdjustFireFighterAP(int32 adjustAP)
 	}
 }
 
+void AFireFighterPawn::AdjustCAFSFireFighterExtinguishAP(int32 adjustAP)
+{
+	if (!ensure(myOwner)) return;
+	if (currentAP + adjustAP + extinguishAP < 0) return;	// negative ap is impossible
+	// This is cheating for test purpose
+	if (!myOwner->ConsumptionOn() && adjustAP <= 0) return;
+	if (HasAuthority()) {
+		if (extinguishAP < -adjustAP)
+		{
+			extinguishAP = 0;
+			currentAP += (adjustAP + extinguishAP);
+		}
+		else 
+		{
+			extinguishAP += adjustAP;
+		}
+		// adjust display of ap on statusbar
+		if (ensure(statusBar)) {
+			statusBar->AdjustAPBar(currentAP, maxAP);
+		}
+	}
+	else {
+		myOwner->ServerAdjustAP(this, adjustAP);
+	}
+}
+
+void AFireFighterPawn::AdjustSpecialistMoveAP(int32 adjustAP)
+{
+	if (!ensure(myOwner)) return;
+	if (currentAP + adjustAP < 0) return;	// negative ap is impossible
+	// This is cheating for test purpose
+	if (!myOwner->ConsumptionOn() && adjustAP <= 0) return;
+	if (HasAuthority()) {
+		if (movementAP < -adjustAP)
+		{
+			movementAP = 0;
+			currentAP += (adjustAP + movementAP);
+		}
+		else
+		{
+			movementAP += adjustAP;
+		}
+		currentAP += adjustAP;
+		// adjust display of ap on statusbar
+		if (ensure(statusBar)) {
+			statusBar->AdjustAPBar(currentAP, maxAP);
+		}
+	}
+	else {
+		myOwner->ServerAdjustAP(this, adjustAP);
+	}
+}
+
 FString AFireFighterPawn::GetFireFighterName()
 {
 	return fireFighterName;
