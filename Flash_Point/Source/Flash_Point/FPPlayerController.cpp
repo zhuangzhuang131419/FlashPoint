@@ -495,25 +495,36 @@ void AFPPlayerController::DropHazmat()
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
-		if (ensure(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) 
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Drop hazmat."));
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Not Hazmat Technician."));
-		}
+		// if (ensure(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) 
+		// {
+		// 	UE_LOG(LogTemp, Warning, TEXT("Drop hazmat."));
+		// }
+		// else
+		// {
+		// 	UE_LOG(LogTemp, Warning, TEXT("Not Hazmat Technician."));
+		// }
 	}
 }
 
 void AFPPlayerController::CarryHazmat()
 {
 	// TODO carry hazmat on tile when called
-	UE_LOG(LogTemp, Warning, TEXT("Carry hazmat."));
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
-		if (!(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) { return; }
+		ServerCarryHazmat(fireFighterPawn);
+		// only for server, update the UI actively
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				if (fireFighterPawn->GetHazmat()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+			}
+		}
+		// if (!(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) { return; }
 	}
 }
 

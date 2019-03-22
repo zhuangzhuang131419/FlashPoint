@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "GeneralTypes.h"
+#include "UnrealNetwork.h"
 #include "Hazmat.generated.h"
 
 UCLASS()
