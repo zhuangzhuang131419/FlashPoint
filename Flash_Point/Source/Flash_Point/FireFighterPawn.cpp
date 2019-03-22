@@ -150,6 +150,58 @@ void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
 	}
 }
 
+void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
+{
+	ResetProperties();
+	// adjust properties with respect to firefighter role type
+	switch (inRole)
+	{
+	case ERoleType::Basic:
+		break;
+	case ERoleType::Paramedic:
+		extinguishConsumption = 2;
+		break;
+	case ERoleType::FireCaptain:
+		commandAP = 2;
+		break;
+	case ERoleType::ImagingTechnician:
+		break;
+	case ERoleType::CAFSFirefighter:
+		extinguishAP = 3;
+		break;
+	case ERoleType::HazmatTechnician:
+		break;
+	case ERoleType::Generalist:
+		restoreAP = 5;
+		break;
+	case ERoleType::RescueSpecialist:
+		chopConsumption = 1;
+		movementAP = 3;
+		extinguishConsumption = 2;
+		break;
+	case ERoleType::Driver:
+		deckGunConsumption = 2;
+		break;
+	default:
+		break;
+	}
+}
+
+void AFireFighterPawn::ResetProperties()
+{
+	// reset the firefighter's properties to basic
+	maxAP = 8;
+	extinguishAP = 0;
+	movementAP = 0;
+	commandAP = 0;
+	restoreAP = 4;
+	moveConsumption = 1;
+	openConsumption = 1;
+	chopConsumption = 2;
+	extinguishConsumption = 1;
+	deckGunConsumption = 4;
+}
+
 int32 AFireFighterPawn::GetMoveConsumption()
 {
 	return moveConsumption;
@@ -188,6 +240,11 @@ int32 AFireFighterPawn::GetExtinguishConsumption()
 void AFireFighterPawn::SetExtinguishConsumption(int32 current)
 {
 	extinguishConsumption = current;
+}
+
+int32 AFireFighterPawn::GetCrewChangeConsumption()
+{
+	return crewChangeConsumption;
 }
 
 bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
@@ -393,6 +450,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, fireFighterRole);
 	DOREPLIFETIME(AFireFighterPawn, relocationFlag);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterName);
+	DOREPLIFETIME(AFireFighterPawn, deckGunConsumption);
+	DOREPLIFETIME(AFireFighterPawn, crewChangeConsumption);
 }
 
 void AFireFighterPawn::InitializeFireFighter()

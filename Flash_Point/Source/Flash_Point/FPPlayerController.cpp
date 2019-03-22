@@ -407,6 +407,8 @@ void AFPPlayerController::ServerSwitchRole_Implementation(AGameBoard * board, AF
 	if (ensure(board) && ensure(fireFighterPawn)) {
 		board->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 		fireFighterPawn->SetFireFighterRole(inRole);
+		fireFighterPawn->AdjustRoleProperties(inRole);
+		fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetCrewChangeConsumption());
 	}
 }
 
@@ -734,10 +736,14 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 		if (ensure(gameBoard)) {
 			gameBoard->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 			fireFighterPawn->SetFireFighterRole(inRole);
+			fireFighterPawn->AdjustRoleProperties(inRole);
+			fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetCrewChangeConsumption());
 		}
 	}
-	// Otherwise call server to switch role
-	ServerSwitchRole(gameBoard, fireFighterPawn, inRole);
+	else {
+		// Otherwise call server to switch role
+		ServerSwitchRole(gameBoard, fireFighterPawn, inRole);
+	}
 }
 
 void AFPPlayerController::SwitchRoleWidget(ERoleType inRole)

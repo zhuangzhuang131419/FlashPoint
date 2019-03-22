@@ -69,6 +69,10 @@ public:
 	ERoleType GetFireFighterRole();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterRole(ERoleType inRole);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void AdjustRoleProperties(ERoleType inRole);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void ResetProperties();
 	// getter and setter for all consumptions
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetMoveConsumption();
@@ -86,6 +90,8 @@ public:
 	int32 GetExtinguishConsumption();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetExtinguishConsumption(int32 current);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetCrewChangeConsumption();
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 	bool IsAdjacentToWall(AEdgeUnit* inEdge);
@@ -135,6 +141,10 @@ protected:
 	int32 chopConsumption = 2;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 extinguishConsumption = 1;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 deckGunConsumption = 4;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 crewChangeConsumption = 2;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
