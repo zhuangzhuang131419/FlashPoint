@@ -408,7 +408,6 @@ void AFPPlayerController::ServerSwitchRole_Implementation(AGameBoard * board, AF
 		board->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 		fireFighterPawn->SetFireFighterRole(inRole);
 		fireFighterPawn->AdjustRoleProperties(inRole);
-		fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetCrewChangeConsumption());
 	}
 }
 
@@ -518,7 +517,7 @@ void AFPPlayerController::CarryHazmat()
 	}
 }
 
-void AFPPlayerController::RevealPOI(ATile* targetTile)
+void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Reveal POI."));
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
@@ -581,6 +580,10 @@ void AFPPlayerController::RevealPOI(ATile* targetTile)
 			}
 		}
 	}
+}
+
+bool AFPPlayerController::ServerRevealPOI_Validate(ATile* targetTile) {
+	return true;
 }
 
 void AFPPlayerController::FindGameBoard()
@@ -743,6 +746,7 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	else {
 		// Otherwise call server to switch role
 		ServerSwitchRole(gameBoard, fireFighterPawn, inRole);
+		fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetCrewChangeConsumption());
 	}
 }
 

@@ -142,8 +142,8 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CarryHazmat();
 
-	UFUNCTION(BlueprintCallable)
-	void RevealPOI(ATile* targetTile);
+	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
+	void ServerRevealPOI(ATile* targetTile);
 
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")

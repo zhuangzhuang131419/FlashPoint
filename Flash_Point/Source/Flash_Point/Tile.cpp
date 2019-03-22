@@ -809,7 +809,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::FlipPOI:
 			if (!ensure(localPawn)) return;
 			if (!ensure(localPlayer)) return;
-			localPlayer->RevealPOI(this);
+			localPlayer->ServerRevealPOI(this);
 			break;
 		case EGameOperations::None:
 			break;
