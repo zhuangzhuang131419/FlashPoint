@@ -25,3 +25,8 @@ void AHazmat::Tick(float DeltaTime)
 
 }
 
+void AHazmat::SetHazmatLoc(FLocation loc)
+{
+	hazmatLoc = loc;
+}
+
