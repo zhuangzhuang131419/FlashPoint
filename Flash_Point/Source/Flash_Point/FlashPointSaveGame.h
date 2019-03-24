@@ -38,8 +38,9 @@ public:
 	TArray<ATile*> tiles;
 
 	UPROPERTY(VisibleAnywhere, Category = GameBoard)
-	AGameBoard* gameboard;
+	AGameBoard* gameboard = nullptr;
 
 	UPROPERTY()
 	FDateTime PlayerSaveSlotDate;
+
 };

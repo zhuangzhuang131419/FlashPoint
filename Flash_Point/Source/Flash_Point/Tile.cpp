@@ -717,8 +717,24 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			break;
 		case EGameOperations::OpenDoor:
 			break;
+		case EGameOperations::FlipPOI:
+			// UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
+			if (!ensure(localPawn)) return;
+			if (localPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
+			{
+				if (POIStatus == EPOIStatus::Hided){ PlaneColorSwitch(ableMat); }
+				else { PlaneColorSwitch(unableMat); }
+			}
+			else if (localPawn->GetFireFighterRole() == ERoleType::RescueDog)
+			{
+				if (AdjacentToPawn()){ PlaneColorSwitch(ableMat); }
+				else { PlaneColorSwitch(unableMat); }
+			}
+			else { PlaneColorSwitch(unableMat); }
+			break;
 		case EGameOperations::None:
 			break;
+
 		default:
 			break;
 		}

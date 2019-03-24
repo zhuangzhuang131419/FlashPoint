@@ -9,7 +9,3 @@ UFlashPointSaveGame::UFlashPointSaveGame()
 	SaveSlotName = FString(TEXT("SaveSlot"));
 	UserIndex = 0;
 }
-
-
-
-

@@ -125,6 +125,9 @@ public:
 	bool Flashover(EDirection direction);
 	bool Flashover();
 
+	// A method to check if the tile is neighbouring tile of the pawn
+	bool AdjacentToPawn();
+
 
 protected:
 	// FIELDS
@@ -256,8 +259,7 @@ protected:
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile
 	void FindPathToCurrent();
-	// A method to check if the tile is neighbouring tile of the pawn
-	bool AdjacentToPawn();
+
 
 	// Replication functions
 	UFUNCTION()

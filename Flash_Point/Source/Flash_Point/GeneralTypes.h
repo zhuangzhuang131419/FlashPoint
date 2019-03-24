@@ -22,7 +22,9 @@ enum class ERoleType : uint8
 	HazmatTechnician,
 	Generalist,
 	RescueSpecialist,
-	Driver
+	Driver,
+	Veteran,
+	RescueDog,
 };
 
 // An enum for different operations

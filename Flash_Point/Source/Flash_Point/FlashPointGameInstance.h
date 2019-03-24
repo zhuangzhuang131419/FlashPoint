@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "FlashPointSaveGame.h"
 #include "FlashPointGameInstance.generated.h"
 
 /**
@@ -14,7 +15,12 @@ class FLASH_POINT_API UFlashPointGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
-	
-	
-	
+public:
+	// UPROPERTY(Category = "GameSaving/Loading")	
+	// void saveGame();
+	// UPROPERTY(Category = "GameSaving/Loading")
+	// void loadGame();
+
+
+	// TSubclassOf<USaveGame> saveGameClass;
 };
