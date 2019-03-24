@@ -20,6 +20,9 @@ public:
 	bool isCarried;
 	FLocation hazmatLoc;
 
+	// setter for the actor's new world location
+	void SetHazmatLoc(FLocation loc);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

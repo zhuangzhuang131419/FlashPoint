@@ -333,7 +333,31 @@ bool AFPPlayerController::ServerCarryHazmat_Validate(AFireFighterPawn * fireFigh
 
 void AFPPlayerController::ServerDropHazmat_Implementation(AFireFighterPawn * fireFighterPawn)
 {
+	ATile* currentTile = fireFighterPawn->GetPlacedOn();
+	if (ensure(currentTile))
+	{
+		if (currentTile->GetFireStatus() == EFireStatus::Fire) return;
+		AHazmat* tempHazmat = fireFighterPawn->GetHazmat();
+		if (!tempHazmat) return;
+		if (currentTile->IsOutside())
+		{
+			tempHazmat->Destroy();
+			UE_LOG(LogTemp, Warning, TEXT("Hazmat Dropped Outside"));
+		}
+		else
+		{
+			tempHazmat->hazmatMesh->SetVisibility(true);
+			FVector HazmatSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("VisualEffects"));
+			tempHazmat->hazmatMesh->SetRelativeLocation(HazmatSocketLocation);
+			int32 xLoc, yLoc;
+			currentTile->GetLocation(xLoc, yLoc);
+			tempHazmat->SetHazmatLoc(FLocation(xLoc, yLoc));
 
+			currentTile->SetHazmatOnTile(tempHazmat);
+		}
+		fireFighterPawn->SetHazmat(nullptr);
+		tempHazmat->isCarried = false;
+	}
 }
 
 bool AFPPlayerController::ServerDropHazmat_Validate(AFireFighterPawn * fireFighterPawn)
@@ -495,14 +519,30 @@ void AFPPlayerController::DropHazmat()
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
-		// if (ensure(fireFighterPawn->GetFireFighterRole() != ERoleType::HazmatTechnician)) 
-		// {
-		// 	UE_LOG(LogTemp, Warning, TEXT("Drop hazmat."));
-		// }
-		// else
-		// {
-		// 	UE_LOG(LogTemp, Warning, TEXT("Not Hazmat Technician."));
-		// }
+		if (!HasAuthority())
+		{
+			ATile* currentTile = fireFighterPawn->GetPlacedOn();
+			if (!ensure(currentTile)) return;
+			FVector HazmatSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("VisualEffects"));
+			AHazmat* tempHazmat = fireFighterPawn->GetHazmat();
+			if (!ensure(tempHazmat)) return;
+			tempHazmat->hazmatMesh->SetRelativeLocation(HazmatSocketLocation);
+		}
+		ServerDropHazmat(fireFighterPawn);
+		if (HasAuthority())
+		{
+			if (ensure(inGameUI))
+			{
+				if (fireFighterPawn->GetHazmat())
+				{
+					inGameUI->ShowCarrying(true);
+				}
+				else
+				{
+					inGameUI->ShowCarrying(false);
+				}
+			}
+		}
 	}
 }
 
