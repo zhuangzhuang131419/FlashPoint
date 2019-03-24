@@ -84,19 +84,22 @@ void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
 		if (playerController->GetCurrentOperation() == EGameOperations::ChopWall) {	
 			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
 			if (ensure(fireFighterPawn)) {
-				if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetChopConsumption()) {
-					UE_LOG(LogTemp, Warning, TEXT("AP not enough to chop wall"));
-					return;
+				if (ensure(fireFighterPawn->GetFireFighterRole() != ERoleType::RescueDog))
+				{
+					if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetChopConsumption()) {
+						UE_LOG(LogTemp, Warning, TEXT("AP not enough to chop wall"));
+						return;
+					}
+					if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+					fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetChopConsumption());
+					if (HasAuthority()) {
+						ChopWall();
+						//playerController->ClientWallMeshUpdate(this, !isBlocked);
+					}
+					else {
+						playerController->ServerChopWall(this);
+					}
 				}
-				if (!fireFighterPawn->IsAdjacentToWall(this)) return;
-				fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetChopConsumption());
-			}
-			if (HasAuthority()) {
-				ChopWall();
-				//playerController->ClientWallMeshUpdate(this, !isBlocked);
-			}
-			else {
-				playerController->ServerChopWall(this);
 			}
 		}
 	}

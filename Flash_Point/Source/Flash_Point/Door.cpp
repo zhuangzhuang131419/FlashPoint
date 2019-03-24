@@ -100,24 +100,32 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (playerController)
 	{
-		if (playerController->GetCurrentOperation() == EGameOperations::OpenDoor) {
-			// check if the player's firefighter has enough AP
-			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
-			if (ensure(fireFighterPawn)) {
-				if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetOpenConsumption()) {
-					UE_LOG(LogTemp, Warning, TEXT("AP not enough to open/close door"));
-					return;
+		AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
+		if (ensure(localPawn))
+		{
+			if (ensure(localPawn->GetFireFighterRole() != ERoleType::RescueDog))
+			{
+				if (playerController->GetCurrentOperation() == EGameOperations::OpenDoor) {
+					// check if the player's firefighter has enough AP
+					AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
+					if (ensure(fireFighterPawn)) {
+						if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetOpenConsumption()) {
+							UE_LOG(LogTemp, Warning, TEXT("AP not enough to open/close door"));
+							return;
+						}
+						if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+						fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetOpenConsumption());
+					}
+					if (HasAuthority()) {
+						ChangeDoorStatus();
+					}
+					else {
+						playerController->ServerOpenDoor(this);
+					}
 				}
-				if (!fireFighterPawn->IsAdjacentToWall(this)) return;
-				fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetOpenConsumption());
-			}
-			if (HasAuthority()) {
-				ChangeDoorStatus();
-			}
-			else {
-				playerController->ServerOpenDoor(this);
 			}
 		}
+		
 	}
 }
 
