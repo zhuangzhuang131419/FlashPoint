@@ -109,6 +109,9 @@ public:
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 totalVictimNum = 10;
 
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	int32 removedHazmat = 0;
+
 	TArray<ATile*> GetboardTiles() { return boardTiles; }
 
 protected:

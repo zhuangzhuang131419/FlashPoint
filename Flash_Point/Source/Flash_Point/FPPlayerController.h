@@ -142,6 +142,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void CarryHazmat();
 
+	UFUNCTION(BlueprintCallable)
+	void RemoveHazmat();
+
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRevealPOI(ATile* targetTile);
 

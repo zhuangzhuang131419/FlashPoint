@@ -111,6 +111,8 @@ public:
 	AHazmat* GetHazmat();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetHazmat(AHazmat* hazmat);
+	// Getter and setter for gameboard
+	AGameBoard* GetPlayingBoard() { return playingBoard; }
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
