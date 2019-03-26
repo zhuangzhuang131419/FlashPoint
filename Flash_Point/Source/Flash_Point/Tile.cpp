@@ -486,6 +486,10 @@ void ATile::AdvanceHazmat()
 				TileMesh->GetSocketLocation(FName("VisualEffects")),
 				FRotator(0, 0, 0)
 			);
+			if (ensure(inHazmat))
+			{
+				inHazmat->SetHazmatLoc(inHazmat->GetActorLocation());
+			}
 			if (board)
 			{
 				SetHazmatOnTile(inHazmat);
