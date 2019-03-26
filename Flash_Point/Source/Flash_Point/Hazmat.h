@@ -17,13 +17,24 @@ public:
 	// Sets default values for this actor's properties
 	AHazmat();
 
+	UPROPERTY(ReplicatedUsing = Rep_OnCarryHaz, VisibleAnyWhere)
 	bool isCarried;
-	FLocation hazmatLoc;
+	UPROPERTY(ReplicatedUsing = Rep_OnHazmatLocChanged, VisibleAnyWhere)
+	FVector hazmatLoc;
 
 	// setter for the actor's new world location
-	void SetHazmatLoc(FLocation loc);
+	void SetHazmatLoc(FVector loc);
 
 protected:
+	// Replication functions
+	UFUNCTION()
+	void Rep_OnCarryHaz();
+	UFUNCTION()
+	void Rep_OnHazmatLocChanged();
+
+	// rep props
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 

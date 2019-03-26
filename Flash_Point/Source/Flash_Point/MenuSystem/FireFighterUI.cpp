@@ -75,6 +75,16 @@ void UFireFighterUI::ShowCarrying(bool isCarrying)
 	}
 }
 
+void UFireFighterUI::ShowCarryHazmat(bool isCarrying)
+{
+	if (isCarrying) {
+		HazmatIcon->SetVisibility(ESlateVisibility::Visible);
+	}
+	else {
+		HazmatIcon->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
 void UFireFighterUI::BindChatManagerWithUI(AChatManager * inMan)
 {
 	if (ensure(ChatBox)) {

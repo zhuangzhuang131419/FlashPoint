@@ -48,6 +48,8 @@ public:
 	// Set enable or disable carrying victim or hazmat victim
 	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
 	void ShowCarrying(bool isCarrying);
+	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
+	void ShowCarryHazmat(bool isCarrying);
 	void BindChatManagerWithUI(AChatManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 
@@ -76,6 +78,8 @@ protected:
 	// carrying victim or hazmat
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UImage* VictimIcon = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UImage* LeadingIcon = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UImage* HazmatIcon = nullptr;
 	// Player status showing

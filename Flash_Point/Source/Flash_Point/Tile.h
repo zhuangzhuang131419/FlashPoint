@@ -214,7 +214,7 @@ protected:
 	APOI* POIOnTile = nullptr; // the default POI type of the tile
 	UPROPERTY(ReplicatedUsing = Rep_BlastEffect, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	bool blastOccured = false;	// used fore synchronization of the blast effect
-	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
+	UPROPERTY(replicated, EditAnyWhere, Category = "Tile Attributes")
 	AHazmat* HazmatOnTile = nullptr; // the default POI type of the tile
 
 	// A victim actor to spawn on tiles

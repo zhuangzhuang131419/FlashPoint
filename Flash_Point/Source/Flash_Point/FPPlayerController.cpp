@@ -309,6 +309,7 @@ bool AFPPlayerController::ServerCarryVictim_Validate(AFireFighterPawn * fireFigh
 
 void AFPPlayerController::ServerCarryHazmat_Implementation(AFireFighterPawn * fireFighterPawn)
 {
+	if (!ensure(fireFighterPawn))	return;
 	ATile* currentTile = fireFighterPawn->GetPlacedOn();
 	if (ensure(currentTile))
 	{
@@ -317,7 +318,10 @@ void AFPPlayerController::ServerCarryHazmat_Implementation(AFireFighterPawn * fi
 		{
 			carriedHazmat->isCarried = true;
 			fireFighterPawn->SetHazmat(carriedHazmat);
-			carriedHazmat->hazmatMesh->SetVisibility(false);
+			if (ensure(carriedHazmat->hazmatMesh)) {
+				carriedHazmat->hazmatMesh->SetVisibility(false);
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Carried hazmat."));
 		}
 		else 
 		{
@@ -351,7 +355,7 @@ void AFPPlayerController::ServerDropHazmat_Implementation(AFireFighterPawn * fir
 			tempHazmat->hazmatMesh->SetRelativeLocation(HazmatSocketLocation);
 			int32 xLoc, yLoc;
 			currentTile->GetLocation(xLoc, yLoc);
-			tempHazmat->SetHazmatLoc(FLocation(xLoc, yLoc));
+			tempHazmat->SetHazmatLoc(tempHazmat->GetActorLocation());
 
 			currentTile->SetHazmatOnTile(tempHazmat);
 		}
@@ -535,11 +539,11 @@ void AFPPlayerController::DropHazmat()
 			{
 				if (fireFighterPawn->GetHazmat())
 				{
-					inGameUI->ShowCarrying(true);
+					inGameUI->ShowCarryHazmat(true);
 				}
 				else
 				{
-					inGameUI->ShowCarrying(false);
+					inGameUI->ShowCarryHazmat(false);
 				}
 			}
 		}
@@ -557,10 +561,10 @@ void AFPPlayerController::CarryHazmat()
 		if (HasAuthority()) {
 			if (ensure(inGameUI)) {
 				if (fireFighterPawn->GetHazmat()) {
-					inGameUI->ShowCarrying(true);
+					inGameUI->ShowCarryHazmat(true);
 				}
 				else {
-					inGameUI->ShowCarrying(false);
+					inGameUI->ShowCarryHazmat(false);
 				}
 			}
 		}
