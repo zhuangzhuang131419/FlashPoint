@@ -145,6 +145,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void RemoveHazmat();
 
+	void Dodge();
+	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
+	bool canDodge = false;
+
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRevealPOI(ATile* targetTile);
 

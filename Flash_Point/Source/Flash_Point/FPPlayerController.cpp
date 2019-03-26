@@ -594,6 +594,17 @@ void AFPPlayerController::RemoveHazmat()
 	}
 }
 
+void AFPPlayerController::Dodge()
+{
+	if (canDodge) {
+		UE_LOG(LogTemp, Warning, TEXT("Can dodge."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can not dodge."));
+	}
+}
+
 void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Reveal POI."));
