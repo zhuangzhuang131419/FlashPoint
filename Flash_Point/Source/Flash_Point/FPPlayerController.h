@@ -193,6 +193,10 @@ protected:
 	TSubclassOf<UFireFighterUI> ParamedicClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UFireFighterUI> RescueSpecClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> RescueDogClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireFighterUI> VeteranClass = nullptr;
 
 	void FindChatUI();
 

@@ -689,7 +689,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::ExtinguishFire:
 			if (!ensure(localPawn)) return;
 			// check if the player can extinguish fire on this tile
-			if (AdjacentToPawn()) {
+			if (AdjacentToPawn(localPawn)) {
 				// switch on fire status to set the tile color
 				switch (fireStatus)
 				{
@@ -727,7 +727,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			}
 			else if (localPawn->GetFireFighterRole() == ERoleType::RescueDog)
 			{
-				if (AdjacentToPawn()){ PlaneColorSwitch(ableMat); }
+				if (AdjacentToPawn(localPawn)){ PlaneColorSwitch(ableMat); }
 				else { PlaneColorSwitch(unableMat); }
 			}
 			else { PlaneColorSwitch(unableMat); }
@@ -823,7 +823,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::ExtinguishFire:
 			// check if the fire is adjacent
-			if (!AdjacentToPawn()) return;
+			if (!AdjacentToPawn(localPawn)) return;
 			if (!ensure(localPawn)) return;
 			if (localPawn->GetCurrentAP() + localPawn->GetExtinguishAP() < localPawn->GetExtinguishConsumption()) return;
 			if (fireStatus == EFireStatus::Clear) return;
@@ -933,11 +933,11 @@ void ATile::FindPathToCurrent()
 	UE_LOG(LogTemp, Warning, TEXT("After search"));
 }
 
-bool ATile::AdjacentToPawn()
+bool ATile::AdjacentToPawn(AFireFighterPawn * inPawn)
 {
-	if (ensure(localPawn)) {
+	if (ensure(inPawn)) {
 		// check if the pawn is on the tile
-		if (localPawn->GetPlacedOn() == this) {
+		if (inPawn->GetPlacedOn() == this) {
 			return true;
 		}
 		// check if the pawn is around the tile
@@ -946,7 +946,7 @@ bool ATile::AdjacentToPawn()
 		if (frontWall && !frontWall->IsBlocked()) {			
 			tempTile = frontWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
-				if (tempTile->placedFireFighters.Contains(localPawn)) {
+				if (tempTile->placedFireFighters.Contains(inPawn)) {
 					return true;
 				}
 			}
@@ -955,7 +955,7 @@ bool ATile::AdjacentToPawn()
 		if (backWall && !backWall->IsBlocked()) {
 			tempTile = backWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
-				if (tempTile->placedFireFighters.Contains(localPawn)) {
+				if (tempTile->placedFireFighters.Contains(inPawn)) {
 					return true;
 				}
 			}
@@ -964,7 +964,7 @@ bool ATile::AdjacentToPawn()
 		if (leftWall && !leftWall->IsBlocked()) {
 			tempTile = leftWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
-				if (tempTile->placedFireFighters.Contains(localPawn)) {
+				if (tempTile->placedFireFighters.Contains(inPawn)) {
 					return true;
 				}
 			}
@@ -973,7 +973,7 @@ bool ATile::AdjacentToPawn()
 		if (rightWall && !rightWall->IsBlocked()) {
 			tempTile = rightWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
-				if (tempTile->placedFireFighters.Contains(localPawn)) {
+				if (tempTile->placedFireFighters.Contains(inPawn)) {
 					return true;
 				}
 			}

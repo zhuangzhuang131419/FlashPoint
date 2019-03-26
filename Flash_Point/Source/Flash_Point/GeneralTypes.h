@@ -89,6 +89,15 @@ enum class EDirection : uint8
 	Right
 };
 
+// An enum for game mode types
+UENUM(BlueprintType)
+enum class EGameType : uint8
+{
+	Family,
+	Experienced,
+	Betryal
+};
+
 // A struct indicate the location
 USTRUCT(BlueprintType)
 struct FLocation

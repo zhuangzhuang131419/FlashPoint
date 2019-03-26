@@ -583,7 +583,7 @@ void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 		{
 			if (ensure(targetTile))
 			{
-				if (ensure(fireFighterPawn->GetFireFighterRole() == ERoleType::ImagingTechnician || targetTile->AdjacentToPawn()))
+				if (ensure(fireFighterPawn->GetFireFighterRole() == ERoleType::ImagingTechnician || targetTile->AdjacentToPawn(fireFighterPawn)))
 				{
 					if (targetTile->GetPOIStatus() == EPOIStatus::Hided)
 					{
@@ -863,6 +863,16 @@ void AFPPlayerController::SwitchRoleWidget(ERoleType inRole)
 	case ERoleType::Driver:
 		if (ensure(DriverClass)) {
 			inGameUI = CreateWidget<UFireFighterUI>(this, DriverClass);
+		}
+		break;
+	case ERoleType::Veteran:
+		if (ensure(DriverClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, VeteranClass);
+		}
+		break;
+	case ERoleType::RescueDog:
+		if (ensure(DriverClass)) {
+			inGameUI = CreateWidget<UFireFighterUI>(this, RescueDogClass);
 		}
 		break;
 	default:

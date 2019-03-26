@@ -182,6 +182,12 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 	case ERoleType::Driver:
 		deckGunConsumption = 2;
 		break;
+	case ERoleType::Veteran:
+		break;
+	case ERoleType::RescueDog:
+		restoreAP = 12;
+		maxAP = 18;
+		break;
 	default:
 		break;
 	}

@@ -126,7 +126,7 @@ public:
 	bool Flashover();
 
 	// A method to check if the tile is neighbouring tile of the pawn
-	bool AdjacentToPawn();
+	bool AdjacentToPawn(AFireFighterPawn * inPawn);
 
 
 protected:
