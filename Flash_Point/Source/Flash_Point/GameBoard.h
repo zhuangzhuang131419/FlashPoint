@@ -125,6 +125,9 @@ protected:
 	// A POI actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> POIClass = nullptr;
+	// A Hazmat actor to spawn on tiles
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AActor> HazmatClass = nullptr;
 	// A local player to call server functions on
 	AFPPlayerController* localPlayer = nullptr;
 	
@@ -211,6 +214,7 @@ private:
 	const int32 TILE_SIZE = 400;
 	const int32 FireInitializeNum = 10;
 	const int32 POIInitializeNum = 3;
+	const int32 HazmatInitializeNum = 3;
 
 	
 	

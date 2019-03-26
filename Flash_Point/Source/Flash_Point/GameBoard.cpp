@@ -726,6 +726,8 @@ void AGameBoard::BeginPlay()
 				}
 				boardTiles[randomPosition]->AdvancePOI();
 			}
+
+
 		}
 		else
 		{
@@ -745,8 +747,22 @@ void AGameBoard::BeginPlay()
 			// Initialize the Hazmat
 			for (FLocation loc : HazmatInitializeLocation)
 			{
-				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceHazmat();
+				// boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceHazmat();
 			}
+		}
+		// Initialize the Hazmat
+		// TODO check the game mode
+		for (size_t i = 0; i < HazmatInitializeNum; i++)
+		{
+			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			while (boardTiles[randomPosition]->IsOutside() ||
+				boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+				boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty ||
+				boardTiles[randomPosition]->GetHazmat() != nullptr)
+			{
+				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			}
+			boardTiles[randomPosition]->AdvanceHazmat();
 		}
 		currentPOI = maxPOI;
 	}
