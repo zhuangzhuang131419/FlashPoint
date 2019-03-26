@@ -117,6 +117,8 @@ public:
 	// a function for setting fire fighter material
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void FireFighterSwitchColor(int32 numID);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
+	void ShowControllable(bool isLocalControl, bool isControlled);
 	void KnockDown();
 
 protected:

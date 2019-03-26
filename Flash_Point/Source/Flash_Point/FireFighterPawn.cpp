@@ -469,6 +469,14 @@ void AFireFighterPawn::InitializeFireFighter()
 		owningPlayer->ServerSetFireFighterName(this, owningPlayer->GetPlayerName());
 	}
 
+	// if the owning player is the local player controller, display the decal to show controllability
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		if (owningPlayer == world->GetFirstPlayerController()) {
+			ShowControllable(true, true);
+		}
+	}
+
 	// get the firefighter ID of the firefighter
 	if (ensure(playingBoard)) {
 		UE_LOG(LogTemp, Warning, TEXT("Got board"));
