@@ -669,6 +669,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, victimLostNum);
 	DOREPLIFETIME(AGameBoard, falseAlarmNum);
 	DOREPLIFETIME(AGameBoard, storedIndicator);
+	DOREPLIFETIME(AGameBoard, removedHazmat);
 }
 
 // Called when the game starts or when spawned

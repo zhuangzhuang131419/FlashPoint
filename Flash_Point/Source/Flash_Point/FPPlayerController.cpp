@@ -572,6 +572,39 @@ void AFPPlayerController::CarryHazmat()
 	}
 }
 
+void AFPPlayerController::RemoveHazmat()
+{
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		if (ensure(fireFighterPawn->GetFireFighterRole() == ERoleType::HazmatTechnician))
+		{
+			ATile* currentTile = fireFighterPawn->GetPlacedOn();
+			if (ensure(currentTile))
+			{
+				if (currentTile->GetHazmat() != nullptr)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Reveal Hazmat."));
+					fireFighterPawn->GetPlayingBoard()->removedHazmat++;
+					currentTile->GetHazmat()->Destroy();
+					currentTile->SetHazmatOnTile(nullptr);
+				}
+			}
+		}
+	}
+}
+
+void AFPPlayerController::Dodge()
+{
+	if (canDodge) {
+		UE_LOG(LogTemp, Warning, TEXT("Can dodge."));
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Can not dodge."));
+	}
+}
+
 void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Reveal POI."));

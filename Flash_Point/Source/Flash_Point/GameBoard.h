@@ -112,6 +112,9 @@ public:
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
 	FSpawnIndicator storedIndicator;
 
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
+	int32 removedHazmat = 0;
+
 	TArray<ATile*> GetboardTiles() { return boardTiles; }
 
 protected:
