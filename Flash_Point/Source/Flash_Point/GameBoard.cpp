@@ -3,6 +3,7 @@
 #include "GameBoard.h"
 #include "POI.h"
 #include "Victim.h"
+#include "FlashPointGameInstance.h"
 
 
 // Sets default values
@@ -617,6 +618,17 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	}
 }
 
+void AGameBoard::GenerateRandom()
+{
+	// get and generate a random map from instance data set
+	if (HasAuthority()) {
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		if (ensure(gameInst)) {
+			GenerateSpecified(gameInst->GetRandomMap());
+		}
+	}
+}
+
 void AGameBoard::RefreshBoard_Implementation()
 {
 	ClearAllTile();
@@ -670,6 +682,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, falseAlarmNum);
 	DOREPLIFETIME(AGameBoard, storedIndicator);
 	DOREPLIFETIME(AGameBoard, removedHazmat);
+	DOREPLIFETIME(AGameBoard, gameModeType);
 }
 
 // Called when the game starts or when spawned
@@ -704,6 +717,12 @@ void AGameBoard::BeginPlay()
 
 	
 	if (HasAuthority()) {
+		// figure out the game mode first
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		if (ensure(gameInst)) {
+			gameModeType = gameInst->GetGameType();
+		}
+
 		int32 randomPosition;
 
 		if (isRandom)
@@ -756,17 +775,19 @@ void AGameBoard::BeginPlay()
 		}
 		// Initialize the Hazmat
 		// TODO check the game mode
-		for (size_t i = 0; i < HazmatInitializeNum; i++)
-		{
-			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-			while (boardTiles[randomPosition]->IsOutside() ||
-				boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
-				boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty ||
-				boardTiles[randomPosition]->GetHazmat() != nullptr)
+		if (gameModeType != EGameType::Family) {
+			for (size_t i = 0; i < HazmatInitializeNum; i++)
 			{
 				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				while (boardTiles[randomPosition]->IsOutside() ||
+					boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+					boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty ||
+					boardTiles[randomPosition]->GetHazmat() != nullptr)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				boardTiles[randomPosition]->AdvanceHazmat();
 			}
-			boardTiles[randomPosition]->AdvanceHazmat();
 		}
 		currentPOI = maxPOI;
 	}

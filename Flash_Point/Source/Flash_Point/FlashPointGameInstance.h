@@ -30,10 +30,18 @@ public:
 	FSpawnIndicator GetRandomMap();
 	UFUNCTION(BlueprintCallable, Category = "Map Generation")
 	FSpawnIndicator GetSpecificMap(int32 index);
+	// getter and setter for game type
+	UFUNCTION(BlueprintCallable, Category = "Map Generation")
+	EGameType GetGameType();
+	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
+	void SetGameType(EGameType inGameType);
 
 protected:
 	// FIELDS
 	// randomly select a map indicator from preset
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Game Data Presets")
 	TArray<FSpawnIndicator> randomIndicators;
+	// a field to store the game mode the player started
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Map Generation")
+	EGameType gameType = EGameType::Family;
 };

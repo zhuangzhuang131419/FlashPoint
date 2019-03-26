@@ -42,3 +42,13 @@ FSpawnIndicator UFlashPointGameInstance::GetSpecificMap(int32 index)
 		return randomIndicators[index];
 	}
 }
+
+EGameType UFlashPointGameInstance::GetGameType()
+{
+	return gameType;
+}
+
+void UFlashPointGameInstance::SetGameType(EGameType inGameType)
+{
+	gameType = inGameType;
+}

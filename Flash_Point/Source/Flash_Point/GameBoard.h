@@ -145,8 +145,11 @@ protected:
 	int32 camHeight = 2900;
 
 	// whether initialize fire and POI randomly or not
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	UPROPERTY(EditAnyWhere, Category = "Setup")
 	bool isRandom = false;
+
+	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
+	EGameType gameModeType = EGameType::Family;
 
 	UPROPERTY(EditAnyWhere, Category = "Setup")
 	TArray<FLocation> fireInitializeLocation;
@@ -193,6 +196,9 @@ protected:
 	// For blueprint to call on in order to generate a map as specified with indicator
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void GenerateSpecified(FSpawnIndicator indicator);
+	// For blueprint to call on in order to generate a map that's random
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void GenerateRandom();
 	// A function to refresh synchronized board
 	UFUNCTION(Client, Reliable)
 	void RefreshBoard();
