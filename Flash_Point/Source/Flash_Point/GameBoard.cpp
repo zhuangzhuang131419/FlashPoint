@@ -393,6 +393,8 @@ void AGameBoard::InitializeDefaultBoard()
 void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 {
 	if (!HasAuthority()) return;
+	// store the indicator for save and load
+	storedIndicator = indicator;
 	ATile* tempTile = nullptr;
 	ATile* tempNeighbour = nullptr;
 	AEdgeUnit* tempEdge = nullptr;
@@ -666,6 +668,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, victimSavedNum);
 	DOREPLIFETIME(AGameBoard, victimLostNum);
 	DOREPLIFETIME(AGameBoard, falseAlarmNum);
+	DOREPLIFETIME(AGameBoard, storedIndicator);
 }
 
 // Called when the game starts or when spawned

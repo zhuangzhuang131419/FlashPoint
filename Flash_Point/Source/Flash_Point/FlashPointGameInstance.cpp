@@ -21,3 +21,24 @@
 //
 //	}
 //}
+
+FSpawnIndicator UFlashPointGameInstance::GetRandomMap() {
+	// randomize a integer to return as random map's index
+	if (randomIndicators.Num() > 0) {
+		int32 randNum = FMath::RandRange(0, randomIndicators.Num() - 1);
+		return randomIndicators[randNum];
+	}
+	else {
+		return FSpawnIndicator();
+	}
+}
+
+FSpawnIndicator UFlashPointGameInstance::GetSpecificMap(int32 index)
+{
+	if (index < 0 || index >= randomIndicators.Num()) {
+		return FSpawnIndicator();
+	}
+	else {
+		return randomIndicators[index];
+	}
+}

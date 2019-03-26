@@ -109,6 +109,9 @@ public:
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 totalVictimNum = 10;
 
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Setup")
+	FSpawnIndicator storedIndicator;
+
 	TArray<ATile*> GetboardTiles() { return boardTiles; }
 
 protected:
