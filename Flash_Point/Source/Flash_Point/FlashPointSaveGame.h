@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "GeneralTypes.h"
 #include "GameBoard.h"
 #include "Kismet/GameplayStatics.h"
 #include "FlashPointSaveGame.generated.h"
@@ -22,14 +21,14 @@ public:
 
 public:
 	// Basic
-	UPROPERTY(VisibleAnywhere, Category = "Basic")
-	FString PlayerName;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Basic")
+	FString PlayerName = "";
 
-	UPROPERTY(VisibleAnywhere, Category = "Basic")
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Basic")
 	FString SaveSlotName;
 
-	UPROPERTY(VisibleAnywhere, Category = "Basic")
-	uint32 UserIndex;
+	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Basic")
+	int32 UserIndex;
 
 	UPROPERTY(VisibleAnywhere, Category = GameBoard)
 	uint32 health = 0;

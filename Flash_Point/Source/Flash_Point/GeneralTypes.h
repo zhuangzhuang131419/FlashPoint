@@ -189,6 +189,50 @@ struct FSearchNode
 	FSearchNode(int32 heur, int32 nodeCost, ATile* tile) : heuristic(heur), cost(nodeCost), nodeTile(tile) {}
 };
 
+// A struct to store board save info only
+USTRUCT(BlueprintType)
+struct FBoardSaveInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 currentHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 maxHealth;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 victimLostNum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 maxLostVictim;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 victimSavedNum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 maxSavedVictim;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 maxPOI;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 falseAlarmNum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 totalVictimNum;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		int32 removedHazmat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+		FSpawnIndicator indicator;
+
+};
+
+// A struct to store all informations about a saved game
+USTRUCT(BlueprintType)
+struct FMapSaveInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+	// Infomation of the board
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	FBoardSaveInfo boardInfo;
+	
+	
+};
+
 class FLASH_POINT_API GeneralTypes
 {
 public:

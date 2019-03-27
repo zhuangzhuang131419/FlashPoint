@@ -206,6 +206,40 @@ void ATile::BindRightEdge(AEdgeUnit * edge)
 	}
 }
 
+void ATile::PlaceVictim()
+{
+	FVector VictimSocketLocation;
+	switch (GetVictims()->Num())
+	{
+	case 0:
+		VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim"));
+		break;
+	case 1:
+		VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim1"));
+		break;
+	case 2:
+		VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim3"));
+		break;
+	case 3:
+		VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim4"));
+		break;
+	default:
+		UE_LOG(LogTemp, Warning, TEXT("No more position"))
+			VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim"));
+		break;
+	}
+	AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
+		victimClass,
+		VictimSocketLocation,
+		FRotator(0, 0, 0)
+		);
+	if (ensure(newVictim))
+	{
+		victims.Add(newVictim);
+	}
+	POIStatus = EPOIStatus::Revealed;
+}
+
 void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace)
 {
 	if (ensure(movingPawn)) {
@@ -221,36 +255,7 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 			if (!ensure(POIOnTile)) return;
 			if (POIOnTile->isAlarm)
 			{
-				FVector VictimSocketLocation;
-				switch (GetVictims()->Num())
-				{
-				case 0:
-					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim"));
-					break;
-				case 1:
-					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim1"));
-					break;
-				case 2:
-					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim3"));
-					break;
-				case 3:
-					VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim4"));
-					break;
-				default:
-					UE_LOG(LogTemp, Warning, TEXT("No more position"))
-						VictimSocketLocation = GetTileMesh()->GetSocketLocation(FName("Victim"));
-					break;
-				}
-				AVictim* newVictim = GetWorld()->SpawnActor<AVictim>(
-					victimClass,
-					VictimSocketLocation,
-					FRotator(0, 0, 0)
-					);
-				if (ensure(newVictim))
-				{
-					victims.Add(newVictim);
-				}
-				POIStatus = EPOIStatus::Revealed;
+				PlaceVictim();
 			}
 			else
 			{

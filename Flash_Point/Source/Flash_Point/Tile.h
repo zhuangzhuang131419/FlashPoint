@@ -110,6 +110,7 @@ public:
 
 	// methods for operations to be done
 	// A method to move a pawn to this specific location
+	void PlaceVictim();
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
 	void AdvanceFire();
