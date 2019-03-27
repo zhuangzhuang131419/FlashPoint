@@ -182,11 +182,7 @@ void AGameBoard::FlashOverOnBoard()
 
 				if (fireFighterPawn)
 				{
-					UE_LOG(LogTemp, Warning, TEXT("right"));
 					fireFighterPawn->KnockDown();
-				}
-				else {
-					UE_LOG(LogTemp, Warning, TEXT("wrong"));
 				}
 			}
 		}
