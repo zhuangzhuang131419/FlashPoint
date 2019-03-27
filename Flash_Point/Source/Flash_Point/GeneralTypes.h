@@ -41,6 +41,7 @@ enum class EGameOperations : uint8
 	FireDeckGun,
 	FlipPOI,
 	Dodge,
+	Squeeze,
 	None
 };
 

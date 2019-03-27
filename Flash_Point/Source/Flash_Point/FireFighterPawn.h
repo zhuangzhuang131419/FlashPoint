@@ -96,6 +96,11 @@ public:
 	void SetDodgeConsumption(int32 current) { dodgeConsumption = current; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetDodgeConsumption() { return dodgeConsumption; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetSequeezeConsumption() { return sequeezeConsumption; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetSequeezeConsumption(int32 current) { sequeezeConsumption = current; }
+
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 	bool IsAdjacentToWall(AEdgeUnit* inEdge);
@@ -162,6 +167,8 @@ protected:
 	int32 crewChangeConsumption = 2;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 dodgeConsumption = 2;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 sequeezeConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
