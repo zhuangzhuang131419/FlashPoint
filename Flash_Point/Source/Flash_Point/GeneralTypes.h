@@ -100,6 +100,14 @@ enum class EGameType : uint8
 	Betryal
 };
 
+// A struct indicate the option prompt
+UENUM(BlueprintType)
+enum class EOptionPromptType : uint8
+{
+	Dodge,
+	Command,
+};
+
 // A struct indicate the location
 USTRUCT(BlueprintType)
 struct FLocation

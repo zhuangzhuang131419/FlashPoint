@@ -4,7 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "GeneralTypes.h"
 #include "OptionPrompt.generated.h"
+
+class UTextBlock;
+class AFireFighterPawn;
+class AFPPlayerController;
 
 /**
  * 
@@ -17,10 +22,15 @@ class FLASH_POINT_API UOptionPrompt : public UUserWidget
 public:
 	void AssociatePlayer(class AFPPlayerController* inPlayer);
 
+	// Getter and setter
+	UTextBlock* GetPromptText() { return PromptText; }
+
+	EOptionPromptType optionType;
+
 protected:
 	// BINDED WIDGETS
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
-	class UTextBlock* PromptText = nullptr;
+	UTextBlock* PromptText = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	class UButton* AcceptButton = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
@@ -29,6 +39,19 @@ protected:
 	// FIELDS
 	UPROPERTY(BlueprintReadWrite)
 	AFPPlayerController* myOwner = nullptr;
-	
-	
+
+	UPROPERTY(BlueprintReadWrite)
+	AFireFighterPawn* fireFighterPawn = nullptr;
+
+	bool Initialize();
+
+	UFUNCTION()
+	void Accept();
+	void DodgeAccept();
+	void CommandAccept();
+
+	UFUNCTION()
+	void Refuse();
+	void DodgeRefuse();
+	void CommandRefuse();
 };

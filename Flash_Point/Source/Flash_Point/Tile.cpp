@@ -544,7 +544,7 @@ void ATile::AdvanceExplosion(EDirection direction)
 	{
 		if (adjacentWall->IsBlocked())
 		{			
-			if (ensure(adjacentWall->GetEdgeType() == EEdgeType::Wall))
+			if (adjacentWall->GetEdgeType() == EEdgeType::Wall)
 			{
 				if (Cast<AWall>(adjacentWall)->isChoped)
 				{
