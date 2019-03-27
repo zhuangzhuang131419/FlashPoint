@@ -184,13 +184,20 @@ void AGameBoard::FlashOverOnBoard()
 				{
 					if (fireFighterPawn->GetCanDodge())
 					{
-						localController->NotifyPlayerDodge();
+						// Server
+						if (GetWorld()->GetFirstPlayerController() == localController)
+						{
+							localController->NotifyPlayerDodge();
+						}
+						else
+						{
+							fireFighterPawn->FlipServerDodgeFlag();
+						}
 					}
 					else
 					{
 						fireFighterPawn->KnockDown();
 					}
-					
 				}
 			}
 		}

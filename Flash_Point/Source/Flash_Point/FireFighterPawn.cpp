@@ -376,6 +376,15 @@ void AFireFighterPawn::Rep_FireFighterknockDownRelocate()
 	}
 }
 
+void AFireFighterPawn::Rep_FireFighterDodge()
+{
+	AFPPlayerController* fireFighterController = Cast<AFPPlayerController>(GetController());
+	if (ensure(fireFighterController))
+	{
+		fireFighterController->NotifyPlayerDodge();
+	}
+}
+
 void AFireFighterPawn::KnockDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
@@ -460,6 +469,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, deckGunConsumption);
 	DOREPLIFETIME(AFireFighterPawn, crewChangeConsumption);
 	DOREPLIFETIME(AFireFighterPawn, dodgeConsumption);
+	DOREPLIFETIME(AFireFighterPawn, serverDodgeFlag);
 }
 
 bool AFireFighterPawn::GetCanDodge()
