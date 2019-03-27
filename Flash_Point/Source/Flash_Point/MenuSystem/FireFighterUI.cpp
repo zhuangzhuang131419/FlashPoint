@@ -14,6 +14,12 @@ void UFireFighterUI::NotifyDodge()
 	YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
 }
 
+void UFireFighterUI::NotifyCommand()
+{
+	PromptText->SetText(FText::FromString("Accept the Command!\n(Right Click To Reject)"));
+	YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
+}
+
 AGameBoard * UFireFighterUI::GetGameBoard()
 {
 	return gameBoard;

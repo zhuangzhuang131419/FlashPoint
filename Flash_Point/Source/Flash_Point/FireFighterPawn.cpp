@@ -183,6 +183,7 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 		deckGunConsumption = 2;
 		break;
 	case ERoleType::Veteran:
+		dodgeConsumption = 1;
 		break;
 	case ERoleType::RescueDog:
 		restoreAP = 12;

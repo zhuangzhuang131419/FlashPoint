@@ -695,7 +695,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			break;
 		case EGameOperations::ChopWall:
 			break;
-		case EGameOperations::Squeeze:
+		case EGameOperations::ExtinguishFire:
 			if (!ensure(localPawn)) return;
 			// check if the player can extinguish fire on this tile
 			if (AdjacentToPawn(localPawn)) {
@@ -729,15 +729,17 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::FlipPOI:
 			// UE_LOG(LogTemp, Warning, TEXT("Mouse Over"));
 			if (!ensure(localPawn)) return;
-			if (localPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
+			if (POIStatus == EPOIStatus::Hided)
 			{
-				if (POIStatus == EPOIStatus::Hided){ PlaneColorSwitch(ableMat); }
-				else { PlaneColorSwitch(unableMat); }
-			}
-			else if (localPawn->GetFireFighterRole() == ERoleType::RescueDog)
-			{
-				if (AdjacentToPawn(localPawn)){ PlaneColorSwitch(ableMat); }
-				else { PlaneColorSwitch(unableMat); }
+				if (localPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
+				{
+					PlaneColorSwitch(ableMat);
+				}
+				else if (localPawn->GetFireFighterRole() == ERoleType::RescueDog)
+				{
+					if (AdjacentToPawn(localPawn)) { PlaneColorSwitch(ableMat); }
+					else { PlaneColorSwitch(unableMat); }
+				}
 			}
 			else { PlaneColorSwitch(unableMat); }
 			break;
@@ -747,23 +749,26 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			if (AdjacentToPawn(localPawn)) { PlaneColorSwitch(ableMat); }
 			else { PlaneColorSwitch(unableMat); }
 			break;
-		case EGameOperations::ExtinguishFire:
+		case EGameOperations::Squeeze:
 			if (!ensure(localPawn)) return;
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Over."));
-			if (ensure(localPawn->GetPlacedOn()))
+			if (localPawn->GetVictim() == nullptr)
 			{
-				AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
-				if (adjacentEdge != nullptr)
+				if (ensure(localPawn->GetPlacedOn()))
 				{
-					AWall* adjacentWall = Cast<AWall>(adjacentEdge);
-					if (adjacentWall)
+					AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
+					if (adjacentEdge != nullptr)
 					{
-						if (adjacentWall->isChoped)
+						AWall* adjacentWall = Cast<AWall>(adjacentEdge);
+						if (adjacentWall)
 						{
-							if (localPawn->GetCurrentAP() >= localPawn->GetSequeezeConsumption())
+							if (adjacentWall->isChoped)
 							{
-								PlaneColorSwitch(ableMat);
-								break;
+								if (localPawn->GetCurrentAP() >= localPawn->GetSequeezeConsumption())
+								{
+									PlaneColorSwitch(ableMat);
+									break;
+								}
 							}
 						}
 					}
@@ -859,7 +864,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::ChopWall:
 			break;
-		case EGameOperations::Squeeze:
+		case EGameOperations::ExtinguishFire:
 			// check if the fire is adjacent
 			if (!AdjacentToPawn(localPawn)) return;
 			if (!localPawn->GetCanDodge()) return;
@@ -908,10 +913,10 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				localPawn->AdjustFireFighterAP(-localPawn->GetDodgeConsumption());
 			}
 
-			
 			break;
-		case EGameOperations::ExtinguishFire:
+		case EGameOperations::Squeeze:
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Clicked."));
+			if (localPawn->GetVictim()) { return; }
 			if (ensure(localPawn->GetPlacedOn()))
 			{
 				AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
@@ -985,6 +990,11 @@ void ATile::FindPathToCurrent()
 		if (localPawn->GetVictim()) {
 			// if carrying any victim, double the cost
 			cost = cost * 2;
+			// if the role is rescue dog, double the cost again
+			if (localPawn->GetFireFighterRole() == ERoleType::RescueDog)
+			{
+				cost = cost * 2;
+			}
 		}
 		// here is the case if the firefighter is carring some victim but the trace has fire
 		if (hasFire && localPawn->GetVictim()) {

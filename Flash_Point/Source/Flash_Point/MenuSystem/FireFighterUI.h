@@ -39,6 +39,8 @@ public:
 	void NotifyGameEnd(bool isWin);
 	UFUNCTION(BlueprintCallable, Category = "Prompt For Operations")
 	void NotifyDodge();
+	UFUNCTION(BlueprintCallable, Category = "Prompt For Operations")
+	void NotifyCommand();
 	// Getter and setter for related fields
 	AGameBoard* GetGameBoard();
 	void SetGameBoard(AGameBoard* inGameBoard);

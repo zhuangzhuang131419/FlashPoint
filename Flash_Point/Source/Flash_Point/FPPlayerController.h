@@ -55,6 +55,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetFlip() { CurrentOperation = EGameOperations::FlipPOI; }
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetDodge() { CurrentOperation = EGameOperations::Dodge; }
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetSqueeze() { CurrentOperation = EGameOperations::Squeeze; }
+
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryVictim(bool isCarrying);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);

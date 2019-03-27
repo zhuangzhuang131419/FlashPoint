@@ -907,12 +907,12 @@ void AFPPlayerController::SwitchRoleWidget(ERoleType inRole)
 		}
 		break;
 	case ERoleType::Veteran:
-		if (ensure(DriverClass)) {
+		if (ensure(VeteranClass)) {
 			inGameUI = CreateWidget<UFireFighterUI>(this, VeteranClass);
 		}
 		break;
 	case ERoleType::RescueDog:
-		if (ensure(DriverClass)) {
+		if (ensure(RescueDogClass)) {
 			inGameUI = CreateWidget<UFireFighterUI>(this, RescueDogClass);
 		}
 		break;
