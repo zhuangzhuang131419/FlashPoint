@@ -755,8 +755,11 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 					{
 						if (adjacentWall->isChoped)
 						{
-							PlaneColorSwitch(ableMat);
-							break;
+							if (localPawn->GetCurrentAP() >= localPawn->GetSequeezeConsumption())
+							{
+								PlaneColorSwitch(ableMat);
+								break;
+							}
 						}
 					}
 				}
@@ -914,13 +917,16 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					{
 						if (adjacentWall->isChoped)
 						{
-							pathToHere.Empty();
-							pathToHere.Add(this);
-							localPlayer->ServerMovePawn(this, localPawn, pathToHere);
-							// to make the placing visible to operation client
-							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-							// do ap adjustment
-							localPawn->AdjustFireFighterAP(-localPawn->GetSequeezeConsumption());
+							if (localPawn->GetCurrentAP() >= localPawn->GetSequeezeConsumption())
+							{
+								pathToHere.Empty();
+								pathToHere.Add(this);
+								localPlayer->ServerMovePawn(this, localPawn, pathToHere);
+								// to make the placing visible to operation client
+								localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+								// do ap adjustment
+								localPawn->AdjustFireFighterAP(-localPawn->GetSequeezeConsumption());
+							}
 						}
 					}
 				}
