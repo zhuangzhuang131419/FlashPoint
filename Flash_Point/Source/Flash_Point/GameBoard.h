@@ -117,6 +117,12 @@ public:
 
 	TArray<ATile*> GetboardTiles() { return boardTiles; }
 
+	// Save related functions
+	UFUNCTION(BlueprintCallable, Category = "Save Game")
+	FMapSaveInfo SaveCurrentMap();
+	UFUNCTION(BlueprintCallable, Category = "Save Game")
+	FBoardSaveInfo SaveCurrentBoard();
+
 protected:
 	// FIELDS
 	// The tile class for spawning
@@ -199,6 +205,9 @@ protected:
 	// For blueprint to call on in order to generate a map that's random
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void GenerateRandom();
+	// For blueprint to call on in order to generate a map that's random
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void GenerateSaved();
 	// A function to refresh synchronized board
 	UFUNCTION(Client, Reliable)
 	void RefreshBoard();

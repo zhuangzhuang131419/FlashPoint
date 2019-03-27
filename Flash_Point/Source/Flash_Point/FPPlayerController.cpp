@@ -8,6 +8,7 @@
 #include "Door.h"
 #include "GameBoard.h"
 #include "ChatManager.h"
+#include "FlashPointSaveGame.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -739,6 +740,28 @@ void AFPPlayerController::EnableAPConsumption(int32 flag)
 		apConsumptionOn = false;
 		if (!ensure(GEngine)) return;
 		GEngine->AddOnScreenDebugMessage(0, 2, FColor::Green, TEXT("AP Consumption Disabled"));
+	}
+}
+
+void AFPPlayerController::SaveCurrentGame()
+{
+	if (ensure(gameBoard)) {
+		UFlashPointSaveGame* savedGames;
+		if (UGameplayStatics::DoesSaveGameExist(FString(TEXT("SaveSlot")), 0)) {
+			UE_LOG(LogTemp, Warning, TEXT("Found the saved game"));
+			savedGames = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString(TEXT("SaveSlot")), 0));
+			if (ensure(savedGames)) {
+				if (savedGames->savedGames.Num() >= 10) {
+					savedGames->savedGames.RemoveAt(0);
+					savedGames->savedGames.Add(gameBoard->SaveCurrentMap());
+				}
+				else {
+					savedGames->savedGames.Add(gameBoard->SaveCurrentMap());
+				}
+				// save the game back to save slot
+				UGameplayStatics::SaveGameToSlot(savedGames, FString(TEXT("SaveSlot")), 0);
+			}
+		}
 	}
 }
 

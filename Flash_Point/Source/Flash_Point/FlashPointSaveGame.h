@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/SaveGame.h"
-#include "GameBoard.h"
+#include "GeneralTypes.h"
 #include "Kismet/GameplayStatics.h"
 #include "FlashPointSaveGame.generated.h"
 
@@ -20,26 +20,15 @@ public:
 	UFlashPointSaveGame();
 
 public:
-	// Basic
+	// Basic info for saving
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Basic")
 	FString PlayerName = "";
-
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Basic")
 	FString SaveSlotName;
-
 	UPROPERTY(BlueprintReadWrite, VisibleAnywhere, Category = "Basic")
 	int32 UserIndex;
 
-	UPROPERTY(VisibleAnywhere, Category = GameBoard)
-	uint32 health = 0;
-
-	UPROPERTY(VisibleAnywhere, Category = GameBoard)
-	TArray<ATile*> tiles;
-
-	UPROPERTY(VisibleAnywhere, Category = GameBoard)
-	AGameBoard* gameboard = nullptr;
-
-	UPROPERTY()
-	FDateTime PlayerSaveSlotDate;
-
+	// An tarray of saved game structure
+	UPROPERTY(BlueprintReadWrite, VisibleAnyWhere, Category = "Save info")
+	TArray<FMapSaveInfo> savedGames;
 };

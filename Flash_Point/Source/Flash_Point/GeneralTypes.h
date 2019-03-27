@@ -196,28 +196,31 @@ struct FBoardSaveInfo
 {
 	GENERATED_USTRUCT_BODY()
 
-		UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 currentHealth;
+public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 maxHealth;
+	int32 currentHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 victimLostNum;
+	int32 maxHealth;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 maxLostVictim;
+	int32 victimLostNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 victimSavedNum;
+	int32 maxLostVictim;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 maxSavedVictim;
+	int32 victimSavedNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 maxPOI;
+	int32 maxSavedVictim;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 falseAlarmNum;
+	int32 maxPOI;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 totalVictimNum;
+	int32 falseAlarmNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		int32 removedHazmat;
+	int32 totalVictimNum;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
-		FSpawnIndicator indicator;
+	int32 removedHazmat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	FSpawnIndicator indicator;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	EGameType gameModeType;
 
 };
 
@@ -226,6 +229,11 @@ USTRUCT(BlueprintType)
 struct FMapSaveInfo
 {
 	GENERATED_USTRUCT_BODY()
+
+public:
+	// if the saved game is valid (default is false)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool isValidSave = false;
 
 	// Infomation of the board
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
