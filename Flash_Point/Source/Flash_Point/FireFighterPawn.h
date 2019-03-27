@@ -124,8 +124,9 @@ public:
 	AGameBoard* GetPlayingBoard() { return playingBoard; }
 
 	// Getter and setter for can dodge
-	bool GetCanDodge() { return canDodge; }
-	void SetCanDodge(bool SetcanDodge) { canDodge = SetcanDodge; }
+	bool GetCanDodge();
+	bool canDodgeAcross(AEdgeUnit * targetEdge);
+	void SetDodgeAbility(bool current) { hasDodgeOperation = current; }
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
@@ -175,8 +176,10 @@ protected:
 	ERoleType fireFighterRole = ERoleType::Basic;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool relocationFlag = true;
+
+	// TODO serverDodge
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
-	bool canDodge = true;
+	bool hasDodgeOperation = true;
 	AGameBoard* playingBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;

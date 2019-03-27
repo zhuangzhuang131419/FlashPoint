@@ -462,6 +462,77 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, dodgeConsumption);
 }
 
+bool AFireFighterPawn::GetCanDodge()
+{
+	if (hasDodgeOperation)
+	{
+		if (currentAP >= dodgeConsumption)
+		{
+			ATile* currentTile = placedOn;
+			if (ensure(currentTile))
+			{
+				AEdgeUnit* tempEdge;
+				tempEdge = currentTile->GetLeft();
+
+				if (tempEdge)
+				{
+					if (canDodgeAcross(tempEdge))
+					{
+						return true;
+					}
+				}
+
+				tempEdge = currentTile->GetRight();
+				if (tempEdge)
+				{
+					if (canDodgeAcross(tempEdge))
+					{
+						return true;
+					}
+				}
+
+				tempEdge = currentTile->GetFront();
+				if (tempEdge)
+				{
+					if (canDodgeAcross(tempEdge))
+					{
+						return true;
+					}
+				}
+
+				tempEdge = currentTile->GetBack();
+				if (tempEdge)
+				{
+					if (canDodgeAcross(tempEdge))
+					{
+						return true;
+					}
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool AFireFighterPawn::canDodgeAcross(AEdgeUnit* targetEdge)
+{
+	if (ensure(targetEdge))
+	{
+		if (!targetEdge->IsBlocked())
+		{
+			ATile* targetTile = targetEdge->GetOtherNeighbour(placedOn);
+			if (ensure(targetTile))
+			{
+				if (targetTile->GetFireStatus() != EFireStatus::Fire)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
 void AFireFighterPawn::InitializeFireFighter()
 {
 	// find the owner of the firefighter

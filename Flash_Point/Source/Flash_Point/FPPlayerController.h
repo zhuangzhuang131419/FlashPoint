@@ -155,6 +155,8 @@ public:
 
 	void Dodge();
 
+	bool hasDodgeSpace();
+
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRevealPOI(ATile* targetTile);
 

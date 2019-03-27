@@ -746,8 +746,18 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::Dodge:
 			if (!ensure(localPawn)) return;
 			if (!localPawn->GetCanDodge()) return;
-			if (AdjacentToPawn(localPawn)) { PlaneColorSwitch(ableMat); }
-			else { PlaneColorSwitch(unableMat); }
+			if (fireStatus != EFireStatus::Fire) 
+			{
+				if (AdjacentToPawn(localPawn))
+				{
+					if (localPawn->GetCurrentAP() >= localPawn->GetDodgeConsumption())
+					{
+						PlaneColorSwitch(ableMat);
+						return;
+					}
+				}
+			}
+			PlaneColorSwitch(unableMat);
 			break;
 		case EGameOperations::Squeeze:
 			if (!ensure(localPawn)) return;
@@ -902,17 +912,23 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (!localPawn->GetCanDodge()) return;
 			UE_LOG(LogTemp, Warning, TEXT("Dodge Clicked"));
 			UE_LOG(LogTemp, Warning, TEXT("AdjacentToPawn(localPawn)::%d "), AdjacentToPawn(localPawn));
+			if (fireStatus == EFireStatus::Fire) { return; }
 			if (AdjacentToPawn(localPawn)) 
 			{  
-				pathToHere.Empty();
-				pathToHere.Add(this);
-				localPlayer->ServerMovePawn(this, localPawn, pathToHere);
-				// to make the placing visible to operation client
-				localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-				// do ap adjustment
-				localPawn->AdjustFireFighterAP(-localPawn->GetDodgeConsumption());
-			}
+				if (localPawn->GetCurrentAP() >= localPawn->GetDodgeConsumption())
+				{
+					pathToHere.Empty();
+					pathToHere.Add(this);
+					localPlayer->ServerMovePawn(this, localPawn, pathToHere);
+					// to make the placing visible to operation client
+					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+					// do ap adjustment
+					localPawn->AdjustFireFighterAP(-localPawn->GetDodgeConsumption());
 
+					localPlayer->SetNone();
+				}
+			}
+			
 			break;
 		case EGameOperations::Squeeze:
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Clicked."));
