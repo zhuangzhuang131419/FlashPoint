@@ -128,6 +128,8 @@ public:
 	// A method to check if the tile is neighbouring tile of the pawn
 	bool AdjacentToPawn(AFireFighterPawn * inPawn);
 
+	AEdgeUnit* isAdjacent(ATile* targetTile);
+
 
 protected:
 	// FIELDS

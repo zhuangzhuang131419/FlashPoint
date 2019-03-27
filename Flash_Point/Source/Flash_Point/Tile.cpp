@@ -690,7 +690,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			break;
 		case EGameOperations::ChopWall:
 			break;
-		case EGameOperations::Dodge:
+		case EGameOperations::Squeeze:
 			if (!ensure(localPawn)) return;
 			// check if the player can extinguish fire on this tile
 			if (AdjacentToPawn(localPawn)) {
@@ -736,15 +736,35 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			}
 			else { PlaneColorSwitch(unableMat); }
 			break;
-		case EGameOperations::ExtinguishFire:
+		case EGameOperations::Dodge:
 			if (!ensure(localPawn)) return;
 			if (!localPawn->GetCanDodge()) return;
 			if (AdjacentToPawn(localPawn)) { PlaneColorSwitch(ableMat); }
 			else { PlaneColorSwitch(unableMat); }
 			break;
+		case EGameOperations::ExtinguishFire:
+			if (!ensure(localPawn)) return;
+			UE_LOG(LogTemp, Warning, TEXT("Squeeze Over."));
+			if (ensure(localPawn->GetPlacedOn()))
+			{
+				AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
+				if (adjacentEdge != nullptr)
+				{
+					AWall* adjacentWall = Cast<AWall>(adjacentEdge);
+					if (adjacentWall)
+					{
+						if (adjacentWall->isChoped)
+						{
+							PlaneColorSwitch(ableMat);
+							break;
+						}
+					}
+				}
+			}
+			PlaneColorSwitch(unableMat);
+			break;
 		case EGameOperations::None:
 			break;
-
 		default:
 			break;
 		}
@@ -831,7 +851,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::ChopWall:
 			break;
-		case EGameOperations::Dodge:
+		case EGameOperations::Squeeze:
 			// check if the fire is adjacent
 			if (!AdjacentToPawn(localPawn)) return;
 			if (!localPawn->GetCanDodge()) return;
@@ -864,7 +884,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (!ensure(localPlayer)) return;
 			localPlayer->ServerRevealPOI(this);
 			break;
-		case EGameOperations::ExtinguishFire:
+		case EGameOperations::Dodge:
 			if (!ensure(localPawn)) return;
 			if (!localPawn->GetCanDodge()) return;
 			UE_LOG(LogTemp, Warning, TEXT("Dodge Clicked"));
@@ -876,10 +896,35 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				localPlayer->ServerMovePawn(this, localPawn, pathToHere);
 				// to make the placing visible to operation client
 				localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+				// do ap adjustment
+				localPawn->AdjustFireFighterAP(-localPawn->GetDodgeConsumption());
 			}
 
-			// do ap adjustment
-			localPawn->AdjustFireFighterAP(-localPawn->GetDodgeConsumption());
+			
+			break;
+		case EGameOperations::ExtinguishFire:
+			UE_LOG(LogTemp, Warning, TEXT("Squeeze Clicked."));
+			if (ensure(localPawn->GetPlacedOn()))
+			{
+				AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
+				if (adjacentEdge != nullptr)
+				{
+					AWall* adjacentWall = Cast<AWall>(adjacentEdge);
+					if (adjacentWall)
+					{
+						if (adjacentWall->isChoped)
+						{
+							pathToHere.Empty();
+							pathToHere.Add(this);
+							localPlayer->ServerMovePawn(this, localPawn, pathToHere);
+							// to make the placing visible to operation client
+							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+							// do ap adjustment
+							localPawn->AdjustFireFighterAP(-localPawn->GetSequeezeConsumption());
+						}
+					}
+				}
+			}
 			break;
 		case EGameOperations::None:
 			break;
@@ -1008,6 +1053,30 @@ bool ATile::AdjacentToPawn(AFireFighterPawn * inPawn)
 		}
 	}
 	return false;
+}
+
+AEdgeUnit* ATile::isAdjacent(ATile * targetTile)
+{
+	if (ensure(targetTile))
+	{
+		if (frontWall)
+		{
+			if (frontWall->GetOtherNeighbour(this) == targetTile) { return frontWall; }
+		}
+		if (rightWall)
+		{
+			if (rightWall->GetOtherNeighbour(this) == targetTile) { return rightWall; }
+		}
+		if (leftWall)
+		{
+			if (leftWall->GetOtherNeighbour(this) == targetTile) { return leftWall; }
+		}
+		if (backWall)
+		{
+			if (backWall->GetOtherNeighbour(this) == targetTile) { return backWall; }
+		}
+	}
+	return nullptr;
 }
 
 void ATile::Rep_BaseMat()
