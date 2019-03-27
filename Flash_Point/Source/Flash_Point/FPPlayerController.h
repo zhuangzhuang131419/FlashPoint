@@ -75,6 +75,8 @@ public:
 	void SetTurnNum(int32 turnNum);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void NotifyPlayerTurn();
+	UFUNCTION(Exec, BlueprintCallable, Category = "Take Turn")
+	void NotifyPlayerDodge();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void EndPlayerTurn();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")

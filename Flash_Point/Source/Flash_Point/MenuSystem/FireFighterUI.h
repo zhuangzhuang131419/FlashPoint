@@ -37,6 +37,8 @@ public:
 	void NotifyTurnEnd();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyGameEnd(bool isWin);
+	UFUNCTION(BlueprintCallable, Category = "Prompt For Operations")
+	void NotifyDodge();
 	// Getter and setter for related fields
 	AGameBoard* GetGameBoard();
 	void SetGameBoard(AGameBoard* inGameBoard);
@@ -60,6 +62,8 @@ protected:
 	UChatWidget* ChatBox = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* YourTurnPrompt = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UTextBlock* PromptText = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* AbilityBar = nullptr;
 	// teammate status
