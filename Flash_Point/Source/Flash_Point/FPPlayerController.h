@@ -165,9 +165,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void MakeBasicFireFighterUI();
 
-	// cheating functions
+	// cheating/testing functions
 	UFUNCTION(Exec, Category = "Cheating")
 	void EnableAPConsumption(int32 flag);
+	UFUNCTION(Exec, Category = "Save Load Related")
+	void SaveCurrentGame();
 	
 
 

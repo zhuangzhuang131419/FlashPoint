@@ -35,6 +35,16 @@ public:
 	EGameType GetGameType();
 	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
 	void SetGameType(EGameType inGameType);
+	// Setting the game to be loaded
+	UFUNCTION(BlueprintCallable, Category = "Map Generation")
+	int32 GetLoadGameIndex();
+	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
+	void SetLoadGameIndex(int32 index);
+	// load a certain map
+	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
+	void LoadMapOfIndex(int32 index);
+	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
+	FMapSaveInfo GetLoadedGame();
 
 protected:
 	// FIELDS
@@ -44,4 +54,10 @@ protected:
 	// a field to store the game mode the player started
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Map Generation")
 	EGameType gameType = EGameType::Family;
+	// a field to store the game mode the player started
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Map Generation")
+	int32 loadGameIndex = -1;
+	// store the loaded map
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Save Load Related")
+	FMapSaveInfo loadedMap;
 };

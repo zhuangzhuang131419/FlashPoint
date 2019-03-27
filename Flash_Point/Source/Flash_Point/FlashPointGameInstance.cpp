@@ -52,3 +52,34 @@ void UFlashPointGameInstance::SetGameType(EGameType inGameType)
 {
 	gameType = inGameType;
 }
+
+int32 UFlashPointGameInstance::GetLoadGameIndex()
+{
+	return loadGameIndex;
+}
+
+void UFlashPointGameInstance::SetLoadGameIndex(int32 index)
+{
+	loadGameIndex = index;
+}
+
+void UFlashPointGameInstance::LoadMapOfIndex(int32 index)
+{
+	if (UGameplayStatics::DoesSaveGameExist(FString(TEXT("SaveSlot")), 0)) {
+		UFlashPointSaveGame* savedGames = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString(TEXT("SaveSlot")), 0));
+		if (ensure(savedGames)) {
+			// Get the saved games
+			if (savedGames->savedGames.Num() > index) {
+				loadedMap = savedGames->savedGames[index];	
+				gameType = loadedMap.boardInfo.gameModeType;
+				UE_LOG(LogTemp, Warning, TEXT("Loaded map"));
+			}
+		}
+	}
+}
+
+FMapSaveInfo UFlashPointGameInstance::GetLoadedGame()
+{
+	return loadedMap;
+}
+

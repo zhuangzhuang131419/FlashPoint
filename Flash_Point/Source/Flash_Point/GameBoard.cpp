@@ -629,6 +629,19 @@ void AGameBoard::GenerateRandom()
 	}
 }
 
+void AGameBoard::GenerateSaved()
+{
+	// Check which saved game is in game instance
+	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+	if (ensure(gameInst)) {
+		// load the game from loaded game
+		FMapSaveInfo loadedMap = gameInst->GetLoadedGame();
+		if (loadedMap.isValidSave) {
+			GenerateSpecified(loadedMap.boardInfo.indicator);
+		}
+	}
+}
+
 void AGameBoard::RefreshBoard_Implementation()
 {
 	ClearAllTile();
@@ -836,6 +849,51 @@ void AGameBoard::setPOIalarm(APOI* inPOI)
 			}
 		}
 	}
+}
+
+FMapSaveInfo AGameBoard::SaveCurrentMap()
+{
+	FMapSaveInfo savedMap;
+	// Save the board for board regeneration
+	savedMap.boardInfo = SaveCurrentBoard();
+	savedMap.isValidSave = true;
+	return savedMap;
+}
+
+FBoardSaveInfo AGameBoard::SaveCurrentBoard()
+{
+	// create such a struct for saving
+	FBoardSaveInfo savedBoard;
+
+	// Assign to the board save info the corresponding values
+	savedBoard.currentHealth = health;
+	savedBoard.maxHealth = MAX_HEALTH;
+	savedBoard.victimLostNum = victimLostNum;
+	savedBoard.maxLostVictim = maxLostVictim;
+	savedBoard.victimSavedNum = victimSavedNum;
+	savedBoard.maxSavedVictim = maxSavedVictim;
+	savedBoard.maxPOI = maxPOI;
+	// Save the false alarm num and total victim num including those are placed and not revealed
+	savedBoard.falseAlarmNum = falseAlarmNum;
+	savedBoard.totalVictimNum = totalVictimNum;
+	for (ATile* tempTile : boardTiles) {
+		if (tempTile->GetPOIStatus() == EPOIStatus::Hided) {
+			APOI* tempPOI = tempTile->GetPOIOnTile();
+			if (ensure(tempPOI)) {
+				if (tempPOI->isAlarm) {
+					savedBoard.totalVictimNum = savedBoard.totalVictimNum + 1;
+				}
+				else {
+					savedBoard.falseAlarmNum = savedBoard.falseAlarmNum + 1;
+				}
+			}
+		}
+	}
+	savedBoard.removedHazmat = removedHazmat;
+	savedBoard.indicator = storedIndicator;
+	savedBoard.gameModeType = gameModeType;
+
+	return savedBoard;
 }
 
 // Called every frame
