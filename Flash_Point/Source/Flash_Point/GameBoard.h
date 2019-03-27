@@ -169,6 +169,9 @@ protected:
 	// the entire board are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
+	// the entire board are stored here
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	TArray<AEdgeUnit*> specialEdges;
 	// the ambulance parking tiles are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> ambulanceTiles;
@@ -208,6 +211,9 @@ protected:
 	// For blueprint to call on in order to generate a map that's random
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void GenerateSaved();
+	// For blueprint to call on in order to initialize properties on board
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void InitializeBoardAttributes();
 	// A function to refresh synchronized board
 	UFUNCTION(Client, Reliable)
 	void RefreshBoard();

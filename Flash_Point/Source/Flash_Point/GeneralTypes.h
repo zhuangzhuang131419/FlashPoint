@@ -224,6 +224,29 @@ public:
 
 };
 
+// A struct to store all informations on a specific edge
+USTRUCT(BlueprintType)
+struct FEdgeSaveInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	// if the saved game is valid (default is false)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	EEdgeType type;
+	// if the edge is blocked
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool isBlocked = true;
+	// if the wall is choped or the door is opened
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool chopedOrOpened = false;
+	// for door only, if the door is destroyed
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool isDestroyed = false;
+
+
+};
+
 // A struct to store all informations about a saved game
 USTRUCT(BlueprintType)
 struct FMapSaveInfo
@@ -238,6 +261,9 @@ public:
 	// Infomation of the board
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	FBoardSaveInfo boardInfo;
+	// Information on edges within the board
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	TArray<FEdgeSaveInfo> edgesInfo;
 	
 	
 };

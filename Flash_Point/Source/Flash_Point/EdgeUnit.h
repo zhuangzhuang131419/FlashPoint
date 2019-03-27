@@ -32,13 +32,11 @@ public:
 	ATile* GetOtherNeighbour(ATile* current);
 
 	virtual void Damage();
-
+	virtual FEdgeSaveInfo SaveEdge();
 
 	// Getter and setter
 	bool IsBlocked();
 	void SetIsBlocked(bool blocked);
-
-	// virtual void Damage();
 
 	// Getter and setter
 	EEdgeType GetEdgeType();

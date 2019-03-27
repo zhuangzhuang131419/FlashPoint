@@ -39,7 +39,7 @@ public:
 	void ChangeDoorStatus();
 
 	virtual void Damage() override;
-
+	virtual FEdgeSaveInfo SaveEdge() override;
 	
 
 protected:

@@ -58,6 +58,11 @@ void AEdgeUnit::Damage()
 	isBlocked = false;
 }
 
+FEdgeSaveInfo AEdgeUnit::SaveEdge()
+{
+	return FEdgeSaveInfo();
+}
+
 bool AEdgeUnit::IsBlocked()
 {
 	return isBlocked;

@@ -91,6 +91,17 @@ void ADoor::Damage()
 	DoorFrame->SetVisibility(false);
 }
 
+FEdgeSaveInfo ADoor::SaveEdge()
+{
+	FEdgeSaveInfo edgeInfo;
+	// store all informations into the edgeInfo struct
+	edgeInfo.type = EEdgeType::Door;
+	edgeInfo.isBlocked = isBlocked;
+	edgeInfo.chopedOrOpened = opened;
+	edgeInfo.isDestroyed = isDestroyed;
+	return edgeInfo;
+}
+
 void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;

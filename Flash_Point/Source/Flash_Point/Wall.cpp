@@ -50,6 +50,17 @@ void AWall::Damage()
 	gameBoard->SetCurrentGameHealth(currentHealth);
 }
 
+FEdgeSaveInfo AWall::SaveEdge()
+{
+	FEdgeSaveInfo edgeInfo;
+	// Save all values with the wall into the struct
+	edgeInfo.type = EEdgeType::Wall;
+	edgeInfo.isBlocked = isBlocked;
+	edgeInfo.chopedOrOpened = isChoped;
+	edgeInfo.isDestroyed = false;
+	return edgeInfo;
+}
+
 
 void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

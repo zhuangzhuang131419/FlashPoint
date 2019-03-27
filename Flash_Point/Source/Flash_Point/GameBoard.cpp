@@ -418,6 +418,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindBackEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -437,6 +439,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindBackEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -456,6 +460,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindLeftEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -475,6 +481,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindLeftEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -543,6 +551,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindLeftEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -566,6 +576,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindBackEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -589,6 +601,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindLeftEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -612,6 +626,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindBackEdge(tempEdge);
 					}
+					// record the edge for saving purpose
+					specialEdges.Add(tempEdge);
 				}
 			}
 		}
@@ -631,6 +647,7 @@ void AGameBoard::GenerateRandom()
 
 void AGameBoard::GenerateSaved()
 {
+	if (!HasAuthority()) return;
 	// Check which saved game is in game instance
 	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
 	if (ensure(gameInst)) {
@@ -638,6 +655,19 @@ void AGameBoard::GenerateSaved()
 		FMapSaveInfo loadedMap = gameInst->GetLoadedGame();
 		if (loadedMap.isValidSave) {
 			GenerateSpecified(loadedMap.boardInfo.indicator);
+			// Assign to attributes the save values
+			health = loadedMap.boardInfo.currentHealth;
+			MAX_HEALTH = loadedMap.boardInfo.maxHealth;
+			victimLostNum = loadedMap.boardInfo.victimLostNum;
+			maxSavedVictim = loadedMap.boardInfo.maxSavedVictim;
+			victimSavedNum = loadedMap.boardInfo.victimSavedNum;
+			maxLostVictim = loadedMap.boardInfo.maxLostVictim;
+			maxPOI = loadedMap.boardInfo.maxPOI;
+			falseAlarmNum = loadedMap.boardInfo.falseAlarmNum;
+			totalVictimNum = loadedMap.boardInfo.totalVictimNum;
+			removedHazmat = loadedMap.boardInfo.removedHazmat;
+			storedIndicator = loadedMap.boardInfo.indicator;
+			gameModeType = loadedMap.boardInfo.gameModeType;
 		}
 	}
 }
@@ -698,37 +728,8 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, gameModeType);
 }
 
-// Called when the game starts or when spawned
-void AGameBoard::BeginPlay()
+void AGameBoard::InitializeBoardAttributes()
 {
-	// Set replicate for server and client synchronization
-	if (HasAuthority()) {
-		SetReplicates(true);
-
-		// Initialize starting game map
-		InitializeDefaultBoard();
-
-		// Initialize game board health
-		health = MAX_HEALTH;
-	}
-	// Initialize all players in the game
-	AFPPlayerController* tempPlayer = nullptr;
-	for (FConstPlayerControllerIterator iterator = GetWorld()->GetPlayerControllerIterator(); iterator; ++iterator) {
-		// Get each player controller
-		tempPlayer = Cast<AFPPlayerController>(iterator->Get());
-		if (ensure(tempPlayer)) {
-			tempPlayer->SetInputMode(FInputModeGameAndUI());
-			players.Add(tempPlayer);
-			// Set the player's action mode to place initial fire fighter
-			tempPlayer->SetPlaceFireFighter();
-			UE_LOG(LogTemp, Warning, TEXT("relocating camera on player %s"), *tempPlayer->GetName());
-			// Detach and relocate the player controller's camera
-			//Cast<AFireFighterPawn>(tempPlayer->GetPawn())->RelocateCamera(GetActorLocation() + FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
-		}
-	}
-	Super::BeginPlay();
-
-	
 	if (HasAuthority()) {
 		// figure out the game mode first
 		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
@@ -754,7 +755,7 @@ void AGameBoard::BeginPlay()
 			// Initialize the POI
 			for (size_t i = 0; i < POIInitializeNum; i++)
 			{
-				while (boardTiles[randomPosition]->IsOutside() || 
+				while (boardTiles[randomPosition]->IsOutside() ||
 					boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
 					boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
 				{
@@ -804,8 +805,37 @@ void AGameBoard::BeginPlay()
 		}
 		currentPOI = maxPOI;
 	}
-	
+}
 
+// Called when the game starts or when spawned
+void AGameBoard::BeginPlay()
+{
+	// Set replicate for server and client synchronization
+	if (HasAuthority()) {
+		SetReplicates(true);
+
+		// Initialize starting game map
+		InitializeDefaultBoard();
+
+		// Initialize game board health
+		health = MAX_HEALTH;
+	}
+	// Initialize all players in the game
+	AFPPlayerController* tempPlayer = nullptr;
+	for (FConstPlayerControllerIterator iterator = GetWorld()->GetPlayerControllerIterator(); iterator; ++iterator) {
+		// Get each player controller
+		tempPlayer = Cast<AFPPlayerController>(iterator->Get());
+		if (ensure(tempPlayer)) {
+			tempPlayer->SetInputMode(FInputModeGameAndUI());
+			players.Add(tempPlayer);
+			// Set the player's action mode to place initial fire fighter
+			tempPlayer->SetPlaceFireFighter();
+			UE_LOG(LogTemp, Warning, TEXT("relocating camera on player %s"), *tempPlayer->GetName());
+			// Detach and relocate the player controller's camera
+			//Cast<AFireFighterPawn>(tempPlayer->GetPawn())->RelocateCamera(GetActorLocation() + FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
+		}
+	}
+	Super::BeginPlay();
 
 	//RefreshBoard();
 	// relocate each player's camera
@@ -856,6 +886,12 @@ FMapSaveInfo AGameBoard::SaveCurrentMap()
 	FMapSaveInfo savedMap;
 	// Save the board for board regeneration
 	savedMap.boardInfo = SaveCurrentBoard();
+	// Save all the edge informations
+	for (AEdgeUnit* tempEdge : specialEdges) {
+		if (ensure(tempEdge)) {
+			savedMap.edgesInfo.Add(tempEdge->SaveEdge());
+		}
+	}
 	savedMap.isValidSave = true;
 	return savedMap;
 }

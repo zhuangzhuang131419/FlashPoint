@@ -27,6 +27,7 @@ public:
 	void UpdateWallMesh(bool chopedDown);
 
 	virtual void Damage() override;
+	virtual FEdgeSaveInfo SaveEdge() override;
 
 protected:
 	
