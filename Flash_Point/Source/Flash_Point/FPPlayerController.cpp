@@ -50,6 +50,13 @@ void AFPPlayerController::NotifyPlayerTurn()
 	}
 }
 
+void AFPPlayerController::NotifyPlayerDodge()
+{
+	if (ensure(inGameUI)) {
+		inGameUI->NotifyDodge();
+	}
+}
+
 void AFPPlayerController::EndPlayerTurn()
 {
 	// restore AP
