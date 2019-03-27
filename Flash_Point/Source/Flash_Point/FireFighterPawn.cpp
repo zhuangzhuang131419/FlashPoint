@@ -458,6 +458,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, fireFighterName);
 	DOREPLIFETIME(AFireFighterPawn, deckGunConsumption);
 	DOREPLIFETIME(AFireFighterPawn, crewChangeConsumption);
+	DOREPLIFETIME(AFireFighterPawn, dodgeConsumption);
 }
 
 void AFireFighterPawn::InitializeFireFighter()

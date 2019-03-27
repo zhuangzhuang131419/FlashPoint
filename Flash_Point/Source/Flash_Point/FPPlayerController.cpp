@@ -596,7 +596,8 @@ void AFPPlayerController::RemoveHazmat()
 
 void AFPPlayerController::Dodge()
 {
-	if (canDodge) {
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (fireFighterPawn->GetCanDodge()) {
 		UE_LOG(LogTemp, Warning, TEXT("Can dodge."));
 	}
 	else

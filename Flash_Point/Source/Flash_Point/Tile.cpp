@@ -690,7 +690,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			break;
 		case EGameOperations::ChopWall:
 			break;
-		case EGameOperations::ExtinguishFire:
+		case EGameOperations::Dodge:
 			if (!ensure(localPawn)) return;
 			// check if the player can extinguish fire on this tile
 			if (AdjacentToPawn(localPawn)) {
@@ -734,6 +734,12 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 				if (AdjacentToPawn(localPawn)){ PlaneColorSwitch(ableMat); }
 				else { PlaneColorSwitch(unableMat); }
 			}
+			else { PlaneColorSwitch(unableMat); }
+			break;
+		case EGameOperations::ExtinguishFire:
+			if (!ensure(localPawn)) return;
+			if (!localPawn->GetCanDodge()) return;
+			if (AdjacentToPawn(localPawn)) { PlaneColorSwitch(ableMat); }
 			else { PlaneColorSwitch(unableMat); }
 			break;
 		case EGameOperations::None:
@@ -825,9 +831,10 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::ChopWall:
 			break;
-		case EGameOperations::ExtinguishFire:
+		case EGameOperations::Dodge:
 			// check if the fire is adjacent
 			if (!AdjacentToPawn(localPawn)) return;
+			if (!localPawn->GetCanDodge()) return;
 			if (!ensure(localPawn)) return;
 			if (localPawn->GetCurrentAP() + localPawn->GetExtinguishAP() < localPawn->GetExtinguishConsumption()) return;
 			if (fireStatus == EFireStatus::Clear) return;
@@ -856,6 +863,23 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (!ensure(localPawn)) return;
 			if (!ensure(localPlayer)) return;
 			localPlayer->ServerRevealPOI(this);
+			break;
+		case EGameOperations::ExtinguishFire:
+			if (!ensure(localPawn)) return;
+			if (!localPawn->GetCanDodge()) return;
+			UE_LOG(LogTemp, Warning, TEXT("Dodge Clicked"));
+			UE_LOG(LogTemp, Warning, TEXT("AdjacentToPawn(localPawn)::%d "), AdjacentToPawn(localPawn));
+			if (AdjacentToPawn(localPawn)) 
+			{  
+				pathToHere.Empty();
+				pathToHere.Add(this);
+				localPlayer->ServerMovePawn(this, localPawn, pathToHere);
+				// to make the placing visible to operation client
+				localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+			}
+
+			// do ap adjustment
+			localPawn->AdjustFireFighterAP(-localPawn->GetDodgeConsumption());
 			break;
 		case EGameOperations::None:
 			break;

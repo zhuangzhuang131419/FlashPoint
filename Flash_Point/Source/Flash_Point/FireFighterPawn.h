@@ -92,6 +92,10 @@ public:
 	void SetExtinguishConsumption(int32 current);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetCrewChangeConsumption();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetDodgeConsumption(int32 current) { dodgeConsumption = current; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetDodgeConsumption() { return dodgeConsumption; }
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 	bool IsAdjacentToWall(AEdgeUnit* inEdge);
@@ -114,6 +118,10 @@ public:
 	// Getter and setter for gameboard
 	AGameBoard* GetPlayingBoard() { return playingBoard; }
 
+	// Getter and setter for can dodge
+	bool GetCanDodge() { return canDodge; }
+	void SetCanDodge(bool SetcanDodge) { canDodge = SetcanDodge; }
+
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
 	// a function for setting fire fighter material
@@ -122,6 +130,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowControllable(bool isLocalControl, bool isControlled);
 	void KnockDown();
+
+	// Field
+	
 
 protected:
 	// current firefighter position
@@ -149,12 +160,16 @@ protected:
 	int32 deckGunConsumption = 4;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 crewChangeConsumption = 2;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 dodgeConsumption = 2;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ERoleType fireFighterRole = ERoleType::Basic;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool relocationFlag = true;
+	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
+	bool canDodge = true;
 	AGameBoard* playingBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;

@@ -40,6 +40,7 @@ enum class EGameOperations : uint8
 	OpenDoor,
 	FireDeckGun,
 	FlipPOI,
+	Dodge,
 	None
 };
 
