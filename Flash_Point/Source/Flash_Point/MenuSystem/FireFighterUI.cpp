@@ -8,18 +8,6 @@ UFireFighterUI::UFireFighterUI(const FObjectInitializer& ObjectInitializer) : Su
 
 }
 
-void UFireFighterUI::NotifyDodge()
-{
-	PromptText->SetText(FText::FromString("Dodge The Fire!\n(Right Click To Cancel)"));
-	YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
-}
-
-void UFireFighterUI::NotifyCommand()
-{
-	PromptText->SetText(FText::FromString("Accept the Command!\n(Right Click To Reject)"));
-	YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
-}
-
 AGameBoard * UFireFighterUI::GetGameBoard()
 {
 	return gameBoard;

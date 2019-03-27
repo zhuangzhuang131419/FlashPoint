@@ -19,6 +19,7 @@ class ADoor;
 class AEdgeUnit;
 class AGameBoard;
 class AChatManager;
+class UOptionPrompt;
 
 /**
  * 
@@ -164,6 +165,8 @@ public:
 	void RelateInGameUI(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void MakeBasicFireFighterUI();
+	UFUNCTION(BlueprintCallable, Category = "Option Prompt")
+	void MakeOptionPromptUI();
 
 	// cheating/testing functions
 	UFUNCTION(Exec, Category = "Cheating")
@@ -190,6 +193,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	UFireFighterUI* inGameUI = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	UOptionPrompt* OptionPromptUI = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UFireFighterUI> BasicFireFighterClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UFireFighterUI> CAFSFireFighterClass = nullptr;
@@ -211,6 +216,8 @@ protected:
 	TSubclassOf<UFireFighterUI> RescueDogClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UFireFighterUI> VeteranClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UOptionPrompt> OptionClass = nullptr;
 
 	void FindChatUI();
 

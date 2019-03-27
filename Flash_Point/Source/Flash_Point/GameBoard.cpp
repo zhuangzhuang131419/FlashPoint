@@ -179,14 +179,10 @@ void AGameBoard::FlashOverOnBoard()
 
 			for (AFireFighterPawn* fireFighterPawn : *(tile->GetPlacedFireFighters()))
 			{
-
-				if (fireFighterPawn)
+				AFPPlayerController* localController = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+				if (ensure(localController))
 				{
-					UE_LOG(LogTemp, Warning, TEXT("right"));
-					fireFighterPawn->KnockDown();
-				}
-				else {
-					UE_LOG(LogTemp, Warning, TEXT("wrong"));
+					localController->NotifyPlayerDodge();
 				}
 			}
 		}

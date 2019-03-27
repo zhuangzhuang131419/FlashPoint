@@ -8,6 +8,8 @@
 #include "Door.h"
 #include "GameBoard.h"
 #include "ChatManager.h"
+#include "MenuSystem/OptionPrompt.h"
+#include "GeneralTypes.h"
 #include "FlashPointSaveGame.h"
 
 bool AFPPlayerController::ConsumptionOn()
@@ -53,8 +55,12 @@ void AFPPlayerController::NotifyPlayerTurn()
 
 void AFPPlayerController::NotifyPlayerDodge()
 {
-	if (ensure(inGameUI)) {
-		inGameUI->NotifyDodge();
+	if (ensure(OptionPromptUI))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NotifyPlayerDodge"));
+		OptionPromptUI->optionType = EOptionPromptType::Dodge;
+		OptionPromptUI->GetPromptText()->SetText(FText::FromString("You have been knocked down\n please dodge."));
+		OptionPromptUI->SetVisibility(ESlateVisibility::Visible);
 	}
 }
 
@@ -729,6 +735,23 @@ void AFPPlayerController::MakeBasicFireFighterUI()
 	}
 }
 
+void AFPPlayerController::MakeOptionPromptUI()
+{
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn) && ensure(gameBoard))
+	{
+		if (ensure(OptionClass)) {
+			OptionPromptUI = CreateWidget<UOptionPrompt>(this, OptionClass);
+			RelateInGameUI(fireFighterPawn);
+			if (ensure(OptionPromptUI)) {
+				OptionPromptUI->AddToViewport();
+			}
+			OptionPromptUI->AssociatePlayer(this);
+			OptionPromptUI->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+}
+
 void AFPPlayerController::EnableAPConsumption(int32 flag)
 {
 	if (flag) {
@@ -791,6 +814,7 @@ void AFPPlayerController::BeginPlay()
 	FindGameBoard();
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();
+	MakeOptionPromptUI();
 	FindChatUI();
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyPlaceFirefighter();
