@@ -8,6 +8,7 @@
 #include "Door.h"
 #include "GameBoard.h"
 #include "ChatManager.h"
+#include "CrewManager.h"
 #include "MenuSystem/OptionPrompt.h"
 #include "GeneralTypes.h"
 #include "FlashPointSaveGame.h"
@@ -444,16 +445,16 @@ bool AFPPlayerController::ServerSetFireFighterName_Validate(AFireFighterPawn * f
 	return true;
 }
 
-void AFPPlayerController::ServerSwitchRole_Implementation(AGameBoard * board, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
+void AFPPlayerController::ServerSwitchRole_Implementation(ACrewManager * inCrewMan, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
 {
-	if (ensure(board) && ensure(fireFighterPawn)) {
-		board->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
+	if (ensure(inCrewMan) && ensure(fireFighterPawn)) {
+		inCrewMan->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 		fireFighterPawn->SetFireFighterRole(inRole);
 		fireFighterPawn->AdjustRoleProperties(inRole);
 	}
 }
 
-bool AFPPlayerController::ServerSwitchRole_Validate(AGameBoard * board, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
+bool AFPPlayerController::ServerSwitchRole_Validate(ACrewManager * inCrewMan, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
 {
 	return true;
 }
@@ -737,17 +738,15 @@ void AFPPlayerController::MakeBasicFireFighterUI()
 
 void AFPPlayerController::MakeOptionPromptUI()
 {
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn) && ensure(gameBoard))
+	if (ensure(gameBoard))
 	{
 		if (ensure(OptionClass)) {
 			OptionPromptUI = CreateWidget<UOptionPrompt>(this, OptionClass);
-			RelateInGameUI(fireFighterPawn);
 			if (ensure(OptionPromptUI)) {
 				OptionPromptUI->AddToViewport();
+				OptionPromptUI->AssociatePlayer(this);
+				OptionPromptUI->SetVisibility(ESlateVisibility::Collapsed);
 			}
-			OptionPromptUI->AssociatePlayer(this);
-			OptionPromptUI->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }
@@ -807,6 +806,25 @@ void AFPPlayerController::FindChatUI()
 	}
 }
 
+void AFPPlayerController::FindCrewManager()
+{
+	// when the game starts, try to find a crew manager
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		TArray<AActor*> allCrewMan;
+		UGameplayStatics::GetAllActorsOfClass(world, ACrewManager::StaticClass(), allCrewMan);
+		// only assign correct game board if there is one found
+		if (allCrewMan.Num() > 0) {
+			UE_LOG(LogTemp, Warning, TEXT("Player found crew manger"));
+			ACrewManager* tempCrewManager = Cast<ACrewManager>(allCrewMan[0]);
+			if (ensure(tempCrewManager)) {
+				crewMan = tempCrewManager;
+				crewMan->AssociatePlayer(this);
+			}
+		}
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -816,6 +834,7 @@ void AFPPlayerController::BeginPlay()
 	MakeBasicFireFighterUI();
 	MakeOptionPromptUI();
 	FindChatUI();
+	FindCrewManager();
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyPlaceFirefighter();
 	}
@@ -886,8 +905,8 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	}
 	// just switch fire fighter role if the player is server
 	if (HasAuthority()) {
-		if (ensure(gameBoard)) {
-			gameBoard->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
+		if (ensure(crewMan)) {
+			crewMan->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 			fireFighterPawn->SetFireFighterRole(inRole);
 			fireFighterPawn->AdjustRoleProperties(inRole);
 			fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetCrewChangeConsumption());
@@ -895,7 +914,7 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	}
 	else {
 		// Otherwise call server to switch role
-		ServerSwitchRole(gameBoard, fireFighterPawn, inRole);
+		ServerSwitchRole(crewMan, fireFighterPawn, inRole);
 		fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetCrewChangeConsumption());
 	}
 }

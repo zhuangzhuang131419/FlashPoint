@@ -19,6 +19,7 @@ class ADoor;
 class AEdgeUnit;
 class AGameBoard;
 class AChatManager;
+class ACrewManager;
 class UOptionPrompt;
 
 /**
@@ -138,7 +139,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerSwitchRole(AGameBoard* board, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
+	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
@@ -183,6 +184,8 @@ protected:
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	AGameBoard* gameBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
+	ACrewManager* crewMan = nullptr;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	int32 myTurnNum = -1;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	FString playerName = "";
@@ -222,6 +225,7 @@ protected:
 	TSubclassOf<UOptionPrompt> OptionClass = nullptr;
 
 	void FindChatUI();
+	void FindCrewManager();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

@@ -10,7 +10,7 @@
 AGameBoard::AGameBoard()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	// family rule default set up
 	/*POIInitializeLocation.Add(FLocation(5, 2));
@@ -49,22 +49,6 @@ void AGameBoard::SetCurrentGameHealth(int32 currentHealth)
 			localPlayer->NotifyGameOver(false);
 		}
 	}
-}
-
-TArray<ERoleType> AGameBoard::GetSelectedRoles()
-{
-	return selectedRoles;
-}
-
-void AGameBoard::AddToSelectedRoles(ERoleType inRole)
-{
-	selectedRoles.Add(inRole);
-}
-
-void AGameBoard::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
-{
-	selectedRoles.Remove(fromRole);
-	selectedRoles.Add(toRole);
 }
 
 int32 AGameBoard::GetCurrentTurn()
@@ -778,7 +762,6 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, currentTurn);
 	DOREPLIFETIME(AGameBoard, maxPOI);
 	DOREPLIFETIME(AGameBoard, currentPOI);
-	DOREPLIFETIME(AGameBoard, selectedRoles);
 	DOREPLIFETIME(AGameBoard, totalVictimNum);
 	DOREPLIFETIME(AGameBoard, victimSavedNum);
 	DOREPLIFETIME(AGameBoard, victimLostNum);

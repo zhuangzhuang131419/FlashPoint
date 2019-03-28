@@ -7,8 +7,6 @@
 #include "Engine/World.h"
 #include "Tile.h"
 #include "ViewPortCamera.h"
-#include "FPPlayerController.h"
-#include "FireFighterPawn.h"
 #include "GameBoard.generated.h"
 
 UCLASS()
@@ -29,13 +27,6 @@ public:
 	int32 GetCurrentGameHealth() { return health; }
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	void SetCurrentGameHealth(int32 currentHealth);
-	// getter and setter for selected roles on board
-	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
-	TArray<ERoleType> GetSelectedRoles();
-	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
-	void AddToSelectedRoles(ERoleType inRole);
-	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
-	void SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole);
 	// Get current turn number
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	int32 GetCurrentTurn();
@@ -187,9 +178,6 @@ protected:
 	// All players in current map
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFPPlayerController*> players;
-	// Already selected roles in the game
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	TArray<ERoleType> selectedRoles;
 	// The current gameboard health
 	UPROPERTY(ReplicatedUsing = Rep_HealthChangeNotify, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
