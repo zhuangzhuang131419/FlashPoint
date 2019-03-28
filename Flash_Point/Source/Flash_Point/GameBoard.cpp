@@ -180,9 +180,24 @@ void AGameBoard::FlashOverOnBoard()
 			for (AFireFighterPawn* fireFighterPawn : *(tile->GetPlacedFireFighters()))
 			{
 				AFPPlayerController* localController = Cast<AFPPlayerController>(fireFighterPawn->GetController());
-				if (ensure(localController))
+				if (ensure(localController) && ensure(fireFighterPawn))
 				{
-					localController->NotifyPlayerDodge();
+					if (fireFighterPawn->GetCanDodge())
+					{
+						// Server
+						if (GetWorld()->GetFirstPlayerController() == localController)
+						{
+							localController->NotifyPlayerDodge();
+						}
+						else
+						{
+							fireFighterPawn->FlipServerDodgeFlag();
+						}
+					}
+					else
+					{
+						fireFighterPawn->KnockDown();
+					}
 				}
 			}
 		}

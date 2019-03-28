@@ -129,8 +129,9 @@ public:
 	AGameBoard* GetPlayingBoard() { return playingBoard; }
 
 	// Getter and setter for can dodge
-	bool GetCanDodge() { return canDodge; }
-	void SetCanDodge(bool SetcanDodge) { canDodge = SetcanDodge; }
+	bool GetCanDodge();
+	bool canDodgeAcross(AEdgeUnit * targetEdge);
+	void SetDodgeAbility(bool current) { hasDodgeOperation = current; }
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
@@ -140,6 +141,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowControllable(bool isLocalControl, bool isControlled);
 	void KnockDown();
+
+	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
 
 	// Field
 	
@@ -180,8 +183,10 @@ protected:
 	ERoleType fireFighterRole = ERoleType::Basic;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool relocationFlag = true;
+	UPROPERTY(ReplicatedUsing = Rep_FireFighterDodge, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	bool serverDodgeFlag = true;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
-	bool canDodge = true;
+	bool hasDodgeOperation = true;
 	AGameBoard* playingBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;
@@ -205,6 +210,8 @@ protected:
 	void Rep_LeadingVictim();
 	UFUNCTION()
 	void Rep_FireFighterknockDownRelocate();
+	UFUNCTION()
+	void Rep_FireFighterDodge();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
