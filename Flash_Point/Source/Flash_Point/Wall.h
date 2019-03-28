@@ -28,6 +28,7 @@ public:
 
 	virtual void Damage() override;
 	virtual FEdgeSaveInfo SaveEdge() override;
+	virtual void LoadEdge(FEdgeSaveInfo edgeInfo) override;
 
 protected:
 	

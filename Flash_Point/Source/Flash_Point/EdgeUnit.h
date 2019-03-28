@@ -33,6 +33,7 @@ public:
 
 	virtual void Damage();
 	virtual FEdgeSaveInfo SaveEdge();
+	virtual void LoadEdge(FEdgeSaveInfo edgeInfo);
 
 	// Getter and setter
 	bool IsBlocked();

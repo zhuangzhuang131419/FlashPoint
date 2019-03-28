@@ -61,6 +61,19 @@ FEdgeSaveInfo AWall::SaveEdge()
 	return edgeInfo;
 }
 
+void AWall::LoadEdge(FEdgeSaveInfo edgeInfo)
+{
+	if (edgeInfo.chopedOrOpened) {
+		ChopWall();
+	}
+	if (!edgeInfo.isBlocked) {
+		isBlocked = false;
+		if (ensure(WallMesh)) {
+			WallMesh->SetVisibility(false);
+		}
+	}
+}
+
 
 void AWall::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {

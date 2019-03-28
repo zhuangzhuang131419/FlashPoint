@@ -102,6 +102,21 @@ FEdgeSaveInfo ADoor::SaveEdge()
 	return edgeInfo;
 }
 
+void ADoor::LoadEdge(FEdgeSaveInfo edgeInfo)
+{
+	if (edgeInfo.chopedOrOpened) {
+		OnOpenDoor();
+	}
+	if (edgeInfo.isDestroyed) {
+		isDestroyed = true;
+		isBlocked = false;
+		if (ensure(DoorFrame) && ensure(Door)) {
+			DoorFrame->SetVisibility(false);
+			Door->SetVisibility(false);
+		}
+	}
+}
+
 void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;

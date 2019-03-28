@@ -115,6 +115,11 @@ public:
 	AVictim* GetVictim();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetVictim(AVictim* victim);
+	// getter and setter for leading victim
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	AVictim* GetLeading();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetLeading(AVictim* victim);
 	// getter and setter for hazmat
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AHazmat* GetHazmat();
@@ -197,6 +202,8 @@ protected:
 	UFUNCTION()
 	void Rep_CarryingVictim();
 	UFUNCTION()
+	void Rep_LeadingVictim();
+	UFUNCTION()
 	void Rep_FireFighterknockDownRelocate();
 
 	// Overriding setting all lifetime replicates function
@@ -214,6 +221,8 @@ public:
 protected:
 	UPROPERTY(ReplicatedUsing = Rep_CarryingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AVictim* victim = nullptr;
+	UPROPERTY(ReplicatedUsing = Rep_LeadingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
+	AVictim* leadVictim = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AHazmat* hazmat = nullptr;
 };

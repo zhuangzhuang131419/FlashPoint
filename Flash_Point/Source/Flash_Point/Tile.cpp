@@ -1100,6 +1100,65 @@ AEdgeUnit* ATile::isAdjacent(ATile * targetTile)
 	return nullptr;
 }
 
+FTileSaveInfo ATile::SaveTile()
+{
+	FTileSaveInfo tileInfo;
+	tileInfo.fireStatus = fireStatus;
+	if (HazmatOnTile) {
+		tileInfo.hasHazmat = true;
+	}
+	if (POIOnTile) {
+		tileInfo.hasPOI = true;
+	}
+	tileInfo.victimsOnTile = victims.Num();
+	if (placedFireFighters.Num() > 0) {
+		for (AFireFighterPawn* firefighter : placedFireFighters) {
+			if (firefighter->GetVictim()) {
+				tileInfo.victimsOnTile = tileInfo.victimsOnTile + 1;
+			}
+			if (firefighter->GetLeading()) {
+				tileInfo.victimsOnTile = tileInfo.victimsOnTile + 1;
+			}
+			if (firefighter->GetHazmat()) {
+				tileInfo.hasHazmat = true;
+			}
+		}
+	}
+	return tileInfo;
+}
+
+void ATile::LoadTile(FTileSaveInfo tileInfo)
+{
+	// load fire status
+	fireStatus = tileInfo.fireStatus;
+	if (!ensure(FireEffect) || !ensure(SmokeEffect) || !ensure(BlastEffect))	return;
+	switch (tileInfo.fireStatus) {
+	case EFireStatus::Clear:
+		SetClearOnTile();
+		break;
+	case EFireStatus::Smoke:
+		SetSmokeOnTile();
+		break;
+	case EFireStatus::Fire:
+		FireEffect->Activate();
+		SmokeEffect->Deactivate();
+		break;
+	default:
+		break;
+	}
+	// load POI
+	if (tileInfo.hasPOI) {
+		AdvancePOI();
+	}
+	// load victims
+	if (tileInfo.victimsOnTile > 0) {
+		for (int32 i = 0; i < tileInfo.victimsOnTile; i++) {
+			PlaceVictim();
+			board->currentPOI = board->currentPOI + 1;
+		}
+	}
+}
+
 void ATile::Rep_BaseMat()
 {
 	if (ensure(baseMat)) {

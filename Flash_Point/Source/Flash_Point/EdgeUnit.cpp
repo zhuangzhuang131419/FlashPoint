@@ -63,6 +63,10 @@ FEdgeSaveInfo AEdgeUnit::SaveEdge()
 	return FEdgeSaveInfo();
 }
 
+void AEdgeUnit::LoadEdge(FEdgeSaveInfo edgeInfo)
+{
+}
+
 bool AEdgeUnit::IsBlocked()
 {
 	return isBlocked;

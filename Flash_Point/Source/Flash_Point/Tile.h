@@ -131,6 +131,9 @@ public:
 
 	AEdgeUnit* isAdjacent(ATile* targetTile);
 
+	// for saving and loading the tile
+	FTileSaveInfo SaveTile();
+	void LoadTile(FTileSaveInfo tileInfo);
 
 protected:
 	// FIELDS

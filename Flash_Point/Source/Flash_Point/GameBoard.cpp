@@ -338,6 +338,7 @@ void AGameBoard::InitializeDefaultBoard()
 					if ((j == 0 || j == boardLength - 2) && (i > 0 && i < boardWidth - 1)) {
 						// for boundary edges, generate walls
 						tempEdge = tempTile->BuildEdgeFront(1);
+						surroundingEdges.Add(tempEdge);
 					}
 					else {
 						// otherwise build a default empty edge
@@ -367,6 +368,7 @@ void AGameBoard::InitializeDefaultBoard()
 					if ((i == 0 || i == boardWidth - 2) && (j > 0 && j < boardLength - 1)) {
 						// for boundary edges, generate walls
 						tempEdge = tempTile->BuildEdgeRight(1);
+						surroundingEdges.Add(tempEdge);
 					}
 					else {
 						// otherwise build a default empty edge
@@ -628,6 +630,18 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 		}
 	}
+
+	// Now delete all invalide items from the surrounding edegs array
+	for (AEdgeUnit* tempEdge : surroundingEdges) {
+		if (!tempEdge) {
+			surroundingEdges.Remove(tempEdge);
+		}
+		else {
+			if (tempEdge->IsPendingKillOrUnreachable()) {
+				surroundingEdges.Remove(tempEdge);
+			}
+		}
+	}
 }
 
 void AGameBoard::GenerateRandom()
@@ -652,7 +666,6 @@ void AGameBoard::GenerateSaved()
 		if (loadedMap.isValidSave) {
 			GenerateSpecified(loadedMap.boardInfo.indicator);
 			// Assign to attributes the save values
-			health = loadedMap.boardInfo.currentHealth;
 			MAX_HEALTH = loadedMap.boardInfo.maxHealth;
 			victimLostNum = loadedMap.boardInfo.victimLostNum;
 			maxSavedVictim = loadedMap.boardInfo.maxSavedVictim;
@@ -664,6 +677,42 @@ void AGameBoard::GenerateSaved()
 			removedHazmat = loadedMap.boardInfo.removedHazmat;
 			storedIndicator = loadedMap.boardInfo.indicator;
 			gameModeType = loadedMap.boardInfo.gameModeType;
+
+			// Assign to all edges their corresponding attributes
+			for (int32 i = 0; i < specialEdges.Num(); i++) {
+				if (i >= loadedMap.edgesInfo.Num()) {
+					break;
+				}
+				AEdgeUnit* tempEdge = specialEdges[i];
+				if (ensure(tempEdge)) {
+					tempEdge->LoadEdge(loadedMap.edgesInfo[i]);
+				}
+			}
+
+			// Assign to all borders their corresponding attributes
+			for (int32 i = 0; i < surroundingEdges.Num(); i++) {
+				if (i >= loadedMap.bordersInfo.Num()) {
+					break;
+				}
+				AEdgeUnit* tempEdge = surroundingEdges[i];
+				if (ensure(tempEdge)) {
+					tempEdge->LoadEdge(loadedMap.bordersInfo[i]);
+				}
+			}
+
+			// Assign to all tiles their corresponding attributes
+			for (int32 i = 0; i < boardTiles.Num(); i++) {
+				if (i >= loadedMap.tilesInfo.Num()) {
+					break;
+				}
+				ATile* tempTile = boardTiles[i];
+				if (ensure(tempTile)) {
+					tempTile->LoadTile(loadedMap.tilesInfo[i]);
+				}
+			}
+
+			// When damages done to walls are done, adjust board health
+			health = loadedMap.boardInfo.currentHealth;
 		}
 	}
 }
@@ -722,6 +771,8 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, storedIndicator);
 	DOREPLIFETIME(AGameBoard, removedHazmat);
 	DOREPLIFETIME(AGameBoard, gameModeType);
+	DOREPLIFETIME(AGameBoard, specialEdges);
+	DOREPLIFETIME(AGameBoard, surroundingEdges);
 }
 
 void AGameBoard::InitializeBoardAttributes()
@@ -886,6 +937,18 @@ FMapSaveInfo AGameBoard::SaveCurrentMap()
 	for (AEdgeUnit* tempEdge : specialEdges) {
 		if (ensure(tempEdge)) {
 			savedMap.edgesInfo.Add(tempEdge->SaveEdge());
+		}
+	}
+	// Save all border edges
+	for (AEdgeUnit* tempEdge : surroundingEdges) {
+		if (ensure(tempEdge)) {
+			savedMap.bordersInfo.Add(tempEdge->SaveEdge());
+		}
+	}
+	// Save all tiles with their informations
+	for (ATile* tempTile : boardTiles) {
+		if (ensure(tempTile)) {
+			savedMap.tilesInfo.Add(tempTile->SaveTile());
 		}
 	}
 	savedMap.isValidSave = true;

@@ -169,9 +169,12 @@ protected:
 	// the entire board are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> boardTiles;
-	// the entire board are stored here
+	// the later added edges are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AEdgeUnit*> specialEdges;
+	// the surrounding edges are stored here
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	TArray<AEdgeUnit*> surroundingEdges;
 	// the ambulance parking tiles are stored here
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<ATile*> ambulanceTiles;

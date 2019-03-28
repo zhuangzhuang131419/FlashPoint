@@ -368,6 +368,10 @@ void AFireFighterPawn::Rep_CarryingVictim()
 	}
 }
 
+void AFireFighterPawn::Rep_LeadingVictim()
+{
+}
+
 void AFireFighterPawn::Rep_FireFighterknockDownRelocate()
 {
 	if (ensure(placedOn)) {
@@ -528,6 +532,16 @@ AVictim* AFireFighterPawn::GetVictim()
 void AFireFighterPawn::SetVictim(AVictim * victim)
 {
 	this->victim = victim;
+}
+
+AVictim * AFireFighterPawn::GetLeading()
+{
+	return leadVictim;
+}
+
+void AFireFighterPawn::SetLeading(AVictim * victim)
+{
+	leadVictim = victim;
 }
 
 AHazmat * AFireFighterPawn::GetHazmat()

@@ -255,6 +255,29 @@ public:
 
 };
 
+// A struct to store all informations on a specific tile
+USTRUCT(BlueprintType)
+struct FTileSaveInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	// if the tile has POI that's not revealed on it
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool hasPOI = false;
+	// if the tile is on fire or smoke
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	EFireStatus fireStatus = EFireStatus::Clear;
+	// how many victims are on that specific tile
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	int32 victimsOnTile = 0;
+	// if there is a hazmat on the tile
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool hasHazmat = false;
+
+
+};
+
 // A struct to store all informations about a saved game
 USTRUCT(BlueprintType)
 struct FMapSaveInfo
@@ -272,6 +295,12 @@ public:
 	// Information on edges within the board
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	TArray<FEdgeSaveInfo> edgesInfo;
+	// Information on border edges within the board
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	TArray<FEdgeSaveInfo> bordersInfo;
+	// Information on tiles within the board
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	TArray<FTileSaveInfo> tilesInfo;
 	
 	
 };
