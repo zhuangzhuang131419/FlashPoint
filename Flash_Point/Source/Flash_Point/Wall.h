@@ -44,6 +44,12 @@ protected:
 	// Cursor clicked method
 	UFUNCTION()
 	void OnWallClicked(AActor * Target, FKey ButtonPressed);
+	// when cursor is over the actor
+	UFUNCTION()
+	void OnWallOver(UPrimitiveComponent* Component);
+	// when cursor left the actor
+	UFUNCTION()
+	void OnWallLeft(UPrimitiveComponent* Component);
 
 	virtual void BeginPlay() override;
 	

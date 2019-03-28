@@ -62,6 +62,12 @@ protected:
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	UFUNCTION()
 	void OnDoorClicked(AActor * Target, FKey ButtonPressed);
+	// when cursor is over the actor
+	UFUNCTION()
+	void OnDoorOver(UPrimitiveComponent* Component);
+	// when cursor left the actor
+	UFUNCTION()
+	void OnDoorLeft(UPrimitiveComponent* Component);
 
 
 private:

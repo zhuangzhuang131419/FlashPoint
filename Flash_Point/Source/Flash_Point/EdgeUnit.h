@@ -60,6 +60,18 @@ protected:
 	AGameBoard* gameBoard = nullptr;
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* WallMesh = nullptr;
+	// materials for indicating valid or invalid operations
+	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UMaterialInterface* baseMat = nullptr;
+	// Here is the do able color
+	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UMaterialInterface* ableMat = nullptr;
+	// Here stands for semi-doable
+	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UMaterialInterface* semiAbleMat = nullptr;
+	// Here is the unable color
+	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UMaterialInterface* unableMat = nullptr;
 
 	// FUNCTIONS
 	// Function to update block related mesh view 

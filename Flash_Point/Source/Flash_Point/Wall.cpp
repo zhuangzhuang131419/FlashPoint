@@ -129,6 +129,40 @@ void AWall::OnWallClicked(AActor* Target, FKey ButtonPressed) {
 	}
 }
 
+void AWall::OnWallOver(UPrimitiveComponent * Component)
+{
+	// if the wall is destroyed, just return
+	if (!isBlocked)	return;
+	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!ensure(playerController))	return;
+	// this will only change color if the operation is chop wall for local player
+	// TODO for fire captain it is a little different
+	if (playerController->GetCurrentOperation() == EGameOperations::ChopWall) {
+		AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
+		if (!ensure(fireFighterPawn))	return;
+		// if firefighter is not adjacent to this wall, just return
+		if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+		// if the firefighter's Ap is not enough, switch color to disable
+		if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetChopConsumption()) {
+			if (ensure(WallMesh)) {
+				WallMesh->SetMaterial(0, unableMat);
+			}
+		}
+		else {
+			if (ensure(WallMesh)) {
+				WallMesh->SetMaterial(0, ableMat);
+			}
+		}
+	}
+}
+
+void AWall::OnWallLeft(UPrimitiveComponent * Component)
+{
+	if (ensure(WallMesh)) {
+		WallMesh->SetMaterial(0, baseMat);
+	}
+}
+
 void AWall::BeginPlay()
 {
 	if (HasAuthority()) {
@@ -139,4 +173,12 @@ void AWall::BeginPlay()
 	FScriptDelegate onMouseClickedDel;
 	onMouseClickedDel.BindUFunction(this, "OnWallClicked");
 	OnClicked.Add(onMouseClickedDel);
+	// Create binding to on cursor over
+	FScriptDelegate onMouseOverDel;
+	onMouseOverDel.BindUFunction(this, "OnWallOver");
+	OnBeginCursorOver.Add(onMouseOverDel);
+	// Create bidning for on cursor left
+	FScriptDelegate onMouseLeftDel;
+	onMouseLeftDel.BindUFunction(this, "OnWallLeft");
+	OnEndCursorOver.Add(onMouseLeftDel);
 }

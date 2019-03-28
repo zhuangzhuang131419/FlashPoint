@@ -35,6 +35,14 @@ void ADoor::BeginPlay()
 	FScriptDelegate onMouseClickedDel;
 	onMouseClickedDel.BindUFunction(this, "OnDoorClicked");
 	OnClicked.Add(onMouseClickedDel);
+	// Create binding to on cursor over
+	FScriptDelegate onMouseOverDel;
+	onMouseOverDel.BindUFunction(this, "OnDoorOver");
+	OnBeginCursorOver.Add(onMouseOverDel);
+	// Create bidning for on cursor left
+	FScriptDelegate onMouseLeftDel;
+	onMouseLeftDel.BindUFunction(this, "OnDoorLeft");
+	OnEndCursorOver.Add(onMouseLeftDel);
 }
 
 void ADoor::Rep_OpenStatus()
@@ -152,6 +160,44 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 			}
 		}
 		
+	}
+}
+
+void ADoor::OnDoorOver(UPrimitiveComponent * Component)
+{
+	// when over, check if the operation is feasible
+	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (!ensure(playerController))	return;
+	// this will only change color if the operation is open door for local player
+	// TODO for fire captain it is a little different
+	if (playerController->GetCurrentOperation() == EGameOperations::OpenDoor) {
+		AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
+		if (!ensure(fireFighterPawn))	return;
+		// if firefighter is not adjacent to this wall, just return
+		if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+		// if the firefighter's Ap is not enough, switch color to disable
+		if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetOpenConsumption()) {
+			if (ensure(WallMesh)) {
+				WallMesh->SetMaterial(0, unableMat);
+			}
+		}
+		else {
+			if (ensure(WallMesh)) {
+				if (isDestroyed) {
+					WallMesh->SetMaterial(0, unableMat);
+				}
+				else {
+					WallMesh->SetMaterial(0, ableMat);
+				}
+			}
+		}
+	}
+}
+
+void ADoor::OnDoorLeft(UPrimitiveComponent * Component)
+{
+	if (ensure(WallMesh)) {
+		WallMesh->SetMaterial(0, baseMat);
 	}
 }
 
