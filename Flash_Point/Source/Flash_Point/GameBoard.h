@@ -65,6 +65,8 @@ public:
 	void ResolveKnockDownOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void resolveKnockDown();
+	UFUNCTION(BlueprintCallable)
+	void endTurnRelatedOperations();
 
 	// Functions of turn related operaetions
 	UFUNCTION(BlueprintCallable, Category = "Take turn")

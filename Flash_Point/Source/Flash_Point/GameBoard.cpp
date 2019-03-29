@@ -282,6 +282,16 @@ void AGameBoard::resolveKnockDown()
 	}
 }
 
+// return true if end the game, otherwise return false
+void AGameBoard::endTurnRelatedOperations()
+{
+	// assume family mode
+	AdvanceFire();
+	flashover();
+	resolveKnockDown();
+	AdvancePOI();
+}
+
 int32 AGameBoard::JoinBoard()
 {
 	if (HasAuthority()) {
