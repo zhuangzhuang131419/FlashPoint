@@ -8,7 +8,6 @@
 #include "POI.h"
 #include "Door.h"
 
-
 // Sets default values
 ATile::ATile()
 {
@@ -476,6 +475,34 @@ void ATile::AdvancePOI()
 			}
 		}
 	}
+}
+
+void ATile::SpawnAmbulance(int pos)
+{
+	
+	if (pos % 8 == 7)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("AmbulanceSpawned %d"), pos);
+		FVector AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		AAmbulance* amb = GetWorld()->SpawnActor<AAmbulance>(
+						AAmbulance::StaticClass(),
+						AmbulanceSocketLocation,
+						FRotator(0, 90, 0)
+						);
+	}
+	
+}
+
+void ATile::SpawnFireEngine(int pos)
+{
+	UE_LOG(LogTemp, Warning, TEXT("FireEngineSpawned %d"), pos);
+	FVector FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+	AFireEngine* fe = GetWorld()->SpawnActor<AFireEngine>(
+					FireEngineClass,
+					FireEngineSocketLocation,
+					FRotator(0, 0, 0)
+					);
+						
 }
 
 void ATile::AdvanceHazmat()
