@@ -426,6 +426,7 @@ void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)
 		if (!ensure(localPlayer)) return;
 		// a player cannot comman own pawn
 		if (localPlayer->GetPawn() == this) return;
+		UE_LOG(LogTemp, Warning, TEXT("Firefighter Over"));
 		if (!(localPlayer->GetCurrentOperation() == EGameOperations::Command)) return;
 		ShowControllable(false, true);
 	}
@@ -441,6 +442,8 @@ void AFireFighterPawn::OnClickedFirefighter(AActor * TouchedActor, FKey ButtonPr
 		if (localPlayer->GetPawn() == this) return;
 		if (!(localPlayer->GetCurrentOperation() == EGameOperations::Command)) return;
 		// When the firefighetr is clicekd by a player with command operation, set the firefighter to commanded
+		localPlayer->EnableOperations(false);
+		localPlayer->SetCommanded(this);
 		isCommanded = true;
 		ShowIsCommanded(true);
 	}

@@ -148,6 +148,7 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowIsCommanded(bool isCommanded);
 	void KnockDown();
+	void SetIsCommanded(bool isCommanded) { this->isCommanded = isCommanded; }
 
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
 

@@ -727,6 +727,7 @@ AFireFighterPawn * AFPPlayerController::GetCommanded()
 void AFPPlayerController::SetCommanded(AFireFighterPawn * inFireFighter)
 {
 	commandedPawn = inFireFighter;
+	// when commandeding a firefighter, abilities and skip turn panel should be disabled until command done or canceled
 }
 
 void AFPPlayerController::FindGameBoard()
@@ -913,6 +914,19 @@ void AFPPlayerController::SetChopWall()
 void AFPPlayerController::SetCarry()
 {
 	CurrentOperation = EGameOperations::Carry;
+}
+
+void AFPPlayerController::CancelCommand()
+{
+	if (ensure(commandedPawn)) {
+		// uncommand the pawn
+		commandedPawn->SetIsCommanded(false);
+		commandedPawn->ShowIsCommanded(false);
+		commandedPawn = nullptr;
+		// enable the widgets
+		EnableOperations(true);
+		SetNone();
+	}
 }
 
 void AFPPlayerController::NotifyCarryVictim(bool isCarrying)

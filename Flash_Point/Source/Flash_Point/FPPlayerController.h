@@ -62,6 +62,8 @@ public:
 	void SetSqueeze() { CurrentOperation = EGameOperations::Squeeze; }
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetCommand() { CurrentOperation = EGameOperations::Command; }
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void CancelCommand();
 
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryVictim(bool isCarrying);
