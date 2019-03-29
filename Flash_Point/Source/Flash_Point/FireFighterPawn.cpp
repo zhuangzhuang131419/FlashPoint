@@ -529,6 +529,11 @@ void AFireFighterPawn::KnockDown()
 	
 }
 
+//Set visibility
+void AFireFighterPawn::SetVisibility(bool status){
+	FireFighter->SetVisibility(status);
+}
+
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

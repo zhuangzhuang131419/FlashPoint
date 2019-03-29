@@ -631,6 +631,25 @@ void AFPPlayerController::RemoveHazmat()
 	}
 }
 
+//Todo Refactor
+void AFPPlayerController::GetInCar(){
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if(ensure(fireFighterPawn)){
+		if(fireFighterPawn->IsWithAmbulance() || fireFighterPawn->IsWithEngine()){
+			fireFighterPawn->SetVisibility(false);
+		}
+	}
+}
+void AFPPlayerController::GetOutCar(){
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if(ensure(fireFighterPawn)){
+		if(fireFighterPawn->IsWithAmbulance() || fireFighterPawn->IsWithEngine()){
+			fireFighterPawn->SetVisibility(true);
+		}
+	}
+}
+
+
 void AFPPlayerController::Dodge()
 {
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());

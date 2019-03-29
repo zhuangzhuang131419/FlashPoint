@@ -152,6 +152,7 @@ public:
 
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
 
+	void SetVisibility(bool status);
 	// Field
 	
 
