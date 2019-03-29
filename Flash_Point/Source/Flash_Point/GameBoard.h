@@ -30,6 +30,12 @@ public:
 	// Get current turn number
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	int32 GetCurrentTurn();
+	// Function for checking if an tile is where engine is placed at
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	bool IsEngineTile(ATile* inTile);
+	// Function for checking if an tile is where ambulance is placed at
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	bool IsAmbulanceTile(ATile* inTile);
 
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }
@@ -181,6 +187,16 @@ protected:
 	// The current gameboard health
 	UPROPERTY(ReplicatedUsing = Rep_HealthChangeNotify, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
+	// locations of the fire engine
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* engineLocA = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* engineLocB = nullptr;
+	// locations of the fire engine
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* ambulanceLocA = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* ambulanceLocB = nullptr;
 	// TURN RELATED FIELDS
 	// A to indicate how many player are currently in the game
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")

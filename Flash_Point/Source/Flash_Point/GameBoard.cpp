@@ -56,6 +56,26 @@ int32 AGameBoard::GetCurrentTurn()
 	return currentTurn;
 }
 
+bool AGameBoard::IsEngineTile(ATile * inTile)
+{
+	if (inTile == engineLocA || inTile == engineLocB) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+bool AGameBoard::IsAmbulanceTile(ATile * inTile)
+{
+	if (inTile == ambulanceLocA || inTile == ambulanceLocB) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 void AGameBoard::ClearAllTile()
 {
 	for (ATile* t : boardTiles) {
@@ -771,6 +791,10 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, gameModeType);
 	DOREPLIFETIME(AGameBoard, specialEdges);
 	DOREPLIFETIME(AGameBoard, surroundingEdges);
+	DOREPLIFETIME(AGameBoard, engineLocA);
+	DOREPLIFETIME(AGameBoard, engineLocB);
+	DOREPLIFETIME(AGameBoard, ambulanceLocA);
+	DOREPLIFETIME(AGameBoard, ambulanceLocB);
 }
 
 void AGameBoard::InitializeBoardAttributes()

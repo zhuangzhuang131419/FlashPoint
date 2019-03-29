@@ -13,6 +13,7 @@
 class AGameBoard;
 class AFireFighterPawn;
 class AFPPlayerController;
+class UButton;
 
 /**
  * 
@@ -50,6 +51,8 @@ public:
 	void ShowCarrying(bool isCarrying);
 	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
 	void ShowCarryHazmat(bool isCarrying);
+	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
+	void EnableOperationPanels(bool enable);
 	void BindChatManagerWithUI(AChatManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 
@@ -64,6 +67,10 @@ protected:
 	UTextBlock* PromptText = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UWidget* AbilityBar = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UWidget* InventoryAndSkip = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* ConfirmTurnButton = nullptr;
 	// teammate status
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UFireFighterStatus* P0Status = nullptr;

@@ -45,6 +45,11 @@ public:
 	int32 GetCommandAP() { return commandAP; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetExtinguishAP() { return extinguishAP; }
+	// Function for checking if the firefighter is with engine or ambulance
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	bool IsWithEngine();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	bool IsWithAmbulance();
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCurrentAP(int32 current);

@@ -32,6 +32,26 @@ int32 AFireFighterPawn::GetCurrentAP()
 	return currentAP;
 }
 
+bool AFireFighterPawn::IsWithEngine()
+{
+	if (ensure(placedOn)) {
+		if (ensure(placedOn->GetGameBoard())) {
+			return placedOn->GetGameBoard()->IsEngineTile(placedOn);
+		}
+	}
+	return false;
+}
+
+bool AFireFighterPawn::IsWithAmbulance()
+{
+	if (ensure(placedOn)) {
+		if (ensure(placedOn->GetGameBoard())) {
+			return placedOn->GetGameBoard()->IsAmbulanceTile(placedOn);
+		}
+	}
+	return false;
+}
+
 void AFireFighterPawn::SetCurrentAP(int32 current)
 {
 	currentAP = current;

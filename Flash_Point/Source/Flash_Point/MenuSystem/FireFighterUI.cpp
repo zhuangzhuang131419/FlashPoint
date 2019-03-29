@@ -2,6 +2,7 @@
 
 #include "FireFighterUI.h"
 #include "UObject/ConstructorHelpers.h"
+#include "Components/Button.h"
 #include "GameBoard.h"
 
 UFireFighterUI::UFireFighterUI(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
@@ -83,6 +84,13 @@ void UFireFighterUI::ShowCarryHazmat(bool isCarrying)
 	else {
 		HazmatIcon->SetVisibility(ESlateVisibility::Collapsed);
 	}
+}
+
+void UFireFighterUI::EnableOperationPanels(bool enable)
+{
+	if (!ensure(AbilityBar) || !ensure(InventoryAndSkip)) return;
+	AbilityBar->SetIsEnabled(enable);
+	InventoryAndSkip->SetIsEnabled(enable);
 }
 
 void UFireFighterUI::BindChatManagerWithUI(AChatManager * inMan)
