@@ -30,13 +30,18 @@ void ACrewManager::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
 	selectedRoles.Add(toRole);
 }
 
-void ACrewManager::AssociatePlayer(AFPPlayerController * inPlayer)
+void ACrewManager::AssociatePlayer()
 {
-	localPlayer = inPlayer;
+	UWorld* world = GetWorld();
+	if (!ensure(world)) return;
+	AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+	// if the UI is already created, do not create it again
+	if (!ensure(localPlayer)) return;
 	if (ensure(localPlayer && ensure(SwitchRoleWidget))) {
 		crewChangeUI = CreateWidget<USwitchRoleUI>(localPlayer, SwitchRoleWidget);
 		if (ensure(crewChangeUI)) {
 			crewChangeUI->AddToViewport();
+			crewChangeUI->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }

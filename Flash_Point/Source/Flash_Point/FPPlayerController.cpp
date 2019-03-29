@@ -738,6 +738,7 @@ void AFPPlayerController::MakeBasicFireFighterUI()
 
 void AFPPlayerController::MakeOptionPromptUI()
 {
+	if (!IsLocalController()) return;
 	if (ensure(gameBoard))
 	{
 		if (ensure(OptionClass)) {
@@ -819,7 +820,9 @@ void AFPPlayerController::FindCrewManager()
 			ACrewManager* tempCrewManager = Cast<ACrewManager>(allCrewMan[0]);
 			if (ensure(tempCrewManager)) {
 				crewMan = tempCrewManager;
-				crewMan->AssociatePlayer(this);
+				if (IsLocalPlayerController()) {
+					crewMan->AssociatePlayer();
+				}
 			}
 		}
 	}

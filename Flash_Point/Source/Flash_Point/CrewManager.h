@@ -28,7 +28,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole);
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
-	void AssociatePlayer(AFPPlayerController* inPlayer);
+	void AssociatePlayer();
 
 protected:
 	// REPLICATED FIELDS
