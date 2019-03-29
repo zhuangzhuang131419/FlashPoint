@@ -34,6 +34,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UStaticMeshComponent* fireEngineMesh = nullptr;
+
 private:
 	void splashOver(ATile* targetTile, EDirection direction);
 };
