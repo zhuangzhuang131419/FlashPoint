@@ -719,6 +719,16 @@ bool AFPPlayerController::ServerRevealPOI_Validate(ATile* targetTile) {
 	return true;
 }
 
+AFireFighterPawn * AFPPlayerController::GetCommanded()
+{
+	return commandedPawn;
+}
+
+void AFPPlayerController::SetCommanded(AFireFighterPawn * inFireFighter)
+{
+	commandedPawn = inFireFighter;
+}
+
 void AFPPlayerController::FindGameBoard()
 {
 	// ensure there is a world

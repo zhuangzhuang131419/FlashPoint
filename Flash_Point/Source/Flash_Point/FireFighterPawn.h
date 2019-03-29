@@ -145,6 +145,8 @@ public:
 	void FireFighterSwitchColor(int32 numID);
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowControllable(bool isLocalControl, bool isControlled);
+	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
+	void ShowIsCommanded(bool isCommanded);
 	void KnockDown();
 
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
@@ -201,6 +203,8 @@ protected:
 	// Name of the firefighter's owner
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	FString fireFighterName = "";
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Commanding Related")
+	bool isCommanded = false;
 
 	// REPLICATION FUNCTIONS
 	UFUNCTION()
@@ -217,6 +221,14 @@ protected:
 	void Rep_FireFighterknockDownRelocate();
 	UFUNCTION()
 	void Rep_FireFighterDodge();
+
+	// CURSOR BINDING FUNCTIONS
+	UFUNCTION(BlueprintCallable, Category = "Command Related")
+	void OnOverFirefighter(AActor* TouchedActor);
+	UFUNCTION(BlueprintCallable, Category = "Command Related")
+	void OnClickedFirefighter(AActor* TouchedActor, FKey ButtonPressed);
+	UFUNCTION(BlueprintCallable, Category = "Command Related")
+	void OnLeftFirefighter(AActor* TouchedActor);
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
@@ -237,4 +249,6 @@ protected:
 	AVictim* leadVictim = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AHazmat* hazmat = nullptr;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
+	USkeletalMeshComponent* FireFighter = nullptr;
 };

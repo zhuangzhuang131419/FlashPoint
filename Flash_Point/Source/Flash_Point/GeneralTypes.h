@@ -42,6 +42,7 @@ enum class EGameOperations : uint8
 	FlipPOI,
 	Dodge,
 	Squeeze,
+	Command,
 	None
 };
 

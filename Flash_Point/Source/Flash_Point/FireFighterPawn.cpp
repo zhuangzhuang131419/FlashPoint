@@ -10,6 +10,8 @@
 // Sets default values
 AFireFighterPawn::AFireFighterPawn()
 {
+	// Create the skeletal mesh as default component
+	FireFighter = CreateDefaultSubobject<USkeletalMeshComponent>(FName("Fire Fighter"));
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	bReplicates = true;
@@ -412,6 +414,53 @@ void AFireFighterPawn::Rep_FireFighterDodge()
 	}
 }
 
+void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Firefighter Over"));
+	// if the current firefighter is commanded by the captain, do not change color
+	if (isCommanded) return;
+	// only do action if the local player's operation is command
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		// a player cannot comman own pawn
+		if (localPlayer->GetPawn() == this) return;
+		if (!(localPlayer->GetCurrentOperation() == EGameOperations::Command)) return;
+		ShowControllable(false, true);
+	}
+}
+
+void AFireFighterPawn::OnClickedFirefighter(AActor * TouchedActor, FKey ButtonPressed)
+{
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		// a player cannot comman own pawn
+		if (localPlayer->GetPawn() == this) return;
+		if (!(localPlayer->GetCurrentOperation() == EGameOperations::Command)) return;
+		// When the firefighetr is clicekd by a player with command operation, set the firefighter to commanded
+		isCommanded = true;
+		ShowIsCommanded(true);
+	}
+}
+
+void AFireFighterPawn::OnLeftFirefighter(AActor * TouchedActor)
+{
+	// if the current firefighter is commanded by the captain, do not change color
+	if (isCommanded) return;
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		// a player cannot comman own pawn
+		if (localPlayer->GetPawn() == this) return;
+		// disable the showing
+		ShowControllable(true, false);
+	}
+}
+
 void AFireFighterPawn::KnockDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Knock Down"));
@@ -614,6 +663,10 @@ void AFireFighterPawn::BeginPlay()
 {
 	Super::BeginPlay();
 	InitializeFireFighter();
+	// bind mouse over click left functions
+	OnBeginCursorOver.AddDynamic(this, &AFireFighterPawn::OnOverFirefighter);
+	OnClicked.AddDynamic(this, &AFireFighterPawn::OnClickedFirefighter);
+	OnEndCursorOver.AddDynamic(this, &AFireFighterPawn::OnLeftFirefighter);
 }
 
 // Called every frame

@@ -60,6 +60,8 @@ public:
 	void SetDodge() { CurrentOperation = EGameOperations::Dodge; }
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetSqueeze() { CurrentOperation = EGameOperations::Squeeze; }
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetCommand() { CurrentOperation = EGameOperations::Command; }
 
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryVictim(bool isCarrying);
@@ -165,6 +167,10 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRevealPOI(ATile* targetTile);
 
+	// Getter and setter for player commanded firefighter
+	AFireFighterPawn* GetCommanded();
+	void SetCommanded(AFireFighterPawn* inFireFighter);
+
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")
 	void FindGameBoard();
@@ -193,6 +199,8 @@ protected:
 	int32 myTurnNum = -1;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	FString playerName = "";
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Command Related")
+	AFireFighterPawn* commandedPawn = nullptr;
 
 	// Cheating flags
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Cheating")
