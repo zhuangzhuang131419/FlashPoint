@@ -53,6 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetCarry();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetDrive(){ CurrentOperation = EGameOperations::Drive;}
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetFireDeckGun() { CurrentOperation = EGameOperations::FireDeckGun; }
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetFlip() { CurrentOperation = EGameOperations::FlipPOI; }
@@ -158,6 +160,11 @@ public:
 	void DropHazmat();
 	UFUNCTION(BlueprintCallable)
 	void CarryHazmat();
+
+	UFUNCTION(BlueprintCallable)
+	void GetInCar();
+	UFUNCTION(BlueprintCallable)
+	void GetOutCar();
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveHazmat();
