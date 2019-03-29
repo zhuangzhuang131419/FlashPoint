@@ -62,6 +62,9 @@ public:
 	void FlashOverOnBoard();
 	UFUNCTION(BlueprintCallable)
 	void flashover();
+	void ResolveKnockDownOnBoard();
+	UFUNCTION(BlueprintCallable)
+	void resolveKnockDown();
 
 	// Functions of turn related operaetions
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
