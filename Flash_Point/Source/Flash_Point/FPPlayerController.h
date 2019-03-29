@@ -94,6 +94,10 @@ public:
 	void SetPlayerName(FString inName);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	FString GetPlayerName();
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void EnableOperations(bool enable);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void PromtCrewChange();
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server

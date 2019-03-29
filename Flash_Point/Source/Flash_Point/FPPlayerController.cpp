@@ -121,6 +121,28 @@ FString AFPPlayerController::GetPlayerName()
 	return playerName;
 }
 
+void AFPPlayerController::EnableOperations(bool enable)
+{
+	if (ensure(inGameUI)) {
+		inGameUI->EnableOperationPanels(enable);
+	}
+}
+
+void AFPPlayerController::PromtCrewChange()
+{
+	// only do things if the game mode is not family when in game
+	if (gameBoard) {
+		if (gameBoard->GetGameType() != EGameType::Family) {
+			// check if the player's firefighter is at correct locations
+			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+			if (!ensure(fireFighterPawn)) return;
+			if (!ensure(crewMan)) return;
+			//if (!fireFighterPawn->IsWithEngine()) return;
+			crewMan->ShowCrewChangeUI();
+		}
+	}
+}
+
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	if (ensure(wall)) {

@@ -57,6 +57,11 @@ public:
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 
 protected:
+	// BIDNING FUNCTIONS
+	bool Initialize() override;
+	UFUNCTION()
+	void NotifyCrewChange();
+
 	// BINDED WIDGETS
 	// A text box to add text on during chat
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)

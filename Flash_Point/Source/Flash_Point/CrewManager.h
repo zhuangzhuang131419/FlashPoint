@@ -28,7 +28,14 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole);
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
+	void ShowCrewChangeUI();
+	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void AssociatePlayer();
+	// below functions are for interecting with the crew change UI
+	UFUNCTION(BlueprintCallable, Category = "Switch Role")
+	void SelectRole(ERoleType inRole);
+	UFUNCTION(BlueprintCallable, Category = "Switch Role")
+	void CloseCrewChangePanel();
 
 protected:
 	// REPLICATED FIELDS

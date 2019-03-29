@@ -218,6 +218,9 @@ void AFireFighterPawn::ResetProperties()
 {
 	// reset the firefighter's properties to basic
 	maxAP = 8;
+	if (currentAP > maxAP) {
+		currentAP = maxAP;
+	}
 	extinguishAP = 0;
 	movementAP = 0;
 	commandAP = 0;

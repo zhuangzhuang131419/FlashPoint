@@ -30,18 +30,66 @@ void ACrewManager::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
 	selectedRoles.Add(toRole);
 }
 
+void ACrewManager::ShowCrewChangeUI()
+{
+	if (ensure(crewChangeUI)) {
+		// update the UI corresponding to selected roles first
+		crewChangeUI->UpdateAvailableRoles(selectedRoles);
+		crewChangeUI->SetVisibility(ESlateVisibility::Visible);
+	}
+	// if this is an ingame crew manager, disable player operations for crew changing
+	if (isInGame) {
+		if (ensure(localPlayer)) {
+			localPlayer->EnableOperations(false);
+		}
+	}
+}
+
 void ACrewManager::AssociatePlayer()
 {
 	UWorld* world = GetWorld();
 	if (!ensure(world)) return;
-	AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+	localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
 	// if the UI is already created, do not create it again
 	if (!ensure(localPlayer)) return;
 	if (ensure(localPlayer && ensure(SwitchRoleWidget))) {
 		crewChangeUI = CreateWidget<USwitchRoleUI>(localPlayer, SwitchRoleWidget);
 		if (ensure(crewChangeUI)) {
+			crewChangeUI->BindCrewManger(this);
 			crewChangeUI->AddToViewport();
 			crewChangeUI->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+}
+
+void ACrewManager::SelectRole(ERoleType inRole)
+{
+	// do operations only if the role is not seleted yet
+	if (!selectedRoles.Contains(inRole)) {
+		// if the crew manager is in game, do role switch
+		if (isInGame) {
+			if (ensure(localPlayer)) {
+				localPlayer->SwitchRole(inRole);
+			}
+		}
+	}
+
+	// close the role selection widget after done role switching
+	if (ensure(crewChangeUI)) {
+		crewChangeUI->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void ACrewManager::CloseCrewChangePanel()
+{
+	// Collapse the UI
+	if (ensure(crewChangeUI)) {
+		crewChangeUI->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	// if the crew manager is a ingame crew manager, also enable player operations
+	if (isInGame) {
+		if (ensure(localPlayer)) {
+			localPlayer->EnableOperations(true);
 		}
 	}
 }

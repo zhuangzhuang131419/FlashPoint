@@ -106,3 +106,21 @@ void UFireFighterUI::RelateChatUIWithPlayer(AFPPlayerController * inPlayer)
 		ChatBox->SetRelatedPlayer(inPlayer);
 	}
 }
+
+bool UFireFighterUI::Initialize()
+{
+	bool success = Super::Initialize();
+	if (success) {
+		if (!ensure(ConfirmTurnButton)) return false;
+		ConfirmTurnButton->OnClicked.AddDynamic(this, &UFireFighterUI::NotifyCrewChange);
+	}
+	return success;
+}
+
+void UFireFighterUI::NotifyCrewChange()
+{
+	if (ensure(localPlayer)) {
+		UE_LOG(LogTemp, Warning, TEXT("Notified Crew Change"));
+		localPlayer->PromtCrewChange();
+	}
+}

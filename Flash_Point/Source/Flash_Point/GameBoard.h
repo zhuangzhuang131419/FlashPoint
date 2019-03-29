@@ -36,6 +36,9 @@ public:
 	// Function for checking if an tile is where ambulance is placed at
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	bool IsAmbulanceTile(ATile* inTile);
+	// Function for checking if an tile is where ambulance is placed at
+	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
+	EGameType GetGameType() { return gameModeType; }
 
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }
