@@ -1071,3 +1071,13 @@ bool AFPPlayerController::ServerFlashOver_Validate(AGameBoard * board)
 {
 	return true;
 }
+
+void AFPPlayerController::ServerSolveKnockDown_Implementation(AGameBoard * board)
+{
+	board->ResolveKnockDownOnBoard();
+}
+
+bool AFPPlayerController::ServerSolveKnockDown_Validate(AGameBoard * board)
+{
+	return true;
+}

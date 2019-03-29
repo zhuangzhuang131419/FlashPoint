@@ -173,7 +173,23 @@ void AGameBoard::FlashOverOnBoard()
 			}
 		}
 	} while (!isDone);
+}
 
+void AGameBoard::flashover()
+{	
+	if (HasAuthority()) {
+		FlashOverOnBoard();
+	}
+	else {
+		if (ensure(localPlayer)) {
+			localPlayer->ServerFlashOver(this);
+		}
+	}
+}
+
+void AGameBoard::ResolveKnockDownOnBoard()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Handling knockdown"));
 	for (ATile* tile : boardTiles)
 	{
 		// Any firefighters in a space with fire are knocked down
@@ -242,23 +258,26 @@ void AGameBoard::FlashOverOnBoard()
 			tile->GetFireEffect()->Deactivate();
 			tile->GetSmokeEffect()->Deactivate();
 		}
-	}
 
-	// actively check if the lost victims is too much
-	if (HasAuthority() && victimLostNum >= maxLostVictim) {
-		if (!ensure(localPlayer)) return;
-		localPlayer->NotifyGameOver(false);
+		// actively check if the lost victims is too much
+		if (HasAuthority() && victimLostNum >= maxLostVictim) {
+			if (!ensure(localPlayer)) return;
+			localPlayer->NotifyGameOver(false);
+		}
 	}
 }
 
-void AGameBoard::flashover()
-{	
-	if (HasAuthority()) {
-		FlashOverOnBoard();
+void AGameBoard::resolveKnockDown()
+{
+	if (HasAuthority())
+	{
+		ResolveKnockDownOnBoard();
 	}
-	else {
-		if (ensure(localPlayer)) {
-			localPlayer->ServerFlashOver(this);
+	else
+	{
+		if (ensure(localPlayer))
+		{
+			localPlayer->ServerSolveKnockDown(this);
 		}
 	}
 }

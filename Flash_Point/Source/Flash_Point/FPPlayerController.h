@@ -150,6 +150,8 @@ public:
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSolveKnockDown(AGameBoard* board);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
