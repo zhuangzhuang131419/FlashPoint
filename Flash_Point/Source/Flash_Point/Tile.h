@@ -12,11 +12,11 @@
 #include "POI.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Engine/World.h"
-#include "Ambulance.h"
-#include "FireEngine.h"
 #include "Tile.generated.h"
 
 class AGameBoard;
+class AAmbulance;
+class AFireEngine;
 
 UCLASS()
 class FLASH_POINT_API ATile : public AActor

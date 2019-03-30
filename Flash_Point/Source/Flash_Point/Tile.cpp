@@ -4,6 +4,8 @@
 #include "GameBoard.h"
 #include "Victim.h"
 #include "Hazmat.h"
+#include "Ambulance.h"
+#include "FireEngine.h"
 #include "Wall.h"
 #include "POI.h"
 #include "Door.h"

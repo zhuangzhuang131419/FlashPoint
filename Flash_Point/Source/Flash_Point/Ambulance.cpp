@@ -1,6 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Ambulance.h"
+#include "GameBoard.h"
 
 
 // Sets default values
