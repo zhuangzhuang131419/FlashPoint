@@ -523,6 +523,10 @@ void ATile::SpawnAmbulance(int pos)
 						FRotator(0, Rotate, 0)
 						);
 	ambulanceTiles = board->GetAmbulanceTiles();
+	for (int i = 0; i < ambulanceTiles.Num(); i++)
+	{
+		ambulanceTiles[i]->TheAmbulance = this->TheAmbulance;
+	}
 }
 
 void ATile::SpawnFireEngine(int pos)
@@ -556,6 +560,10 @@ void ATile::SpawnFireEngine(int pos)
 					FRotator(0, Rotate, 0)
 					);
 	fireEngineTiles = board->GetEngineTiles();
+	for (int i = 0; i < fireEngineTiles.Num(); i++)
+	{
+		fireEngineTiles[i]->TheFireEngine = this->TheFireEngine;
+	}
 }
 
 void ATile::AdvanceHazmat()
