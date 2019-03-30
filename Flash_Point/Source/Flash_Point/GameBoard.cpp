@@ -558,12 +558,12 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				tempTile = boardTiles[indicator.engineParkLoc[i] + 1];
 			}
 			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::FireEnginePark);
 				if (engineSpawned == 0)
 				{
 					engineSpawned = 1;
 					SetFireEngineLocB(tempTile);
 				}
-				tempTile->SetTileType(ETileType::FireEnginePark);
 				engineTiles.Add(tempTile);
 			}
 		}
@@ -591,12 +591,12 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
 			}
 			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::AmbulancePark);
 				if (ambulanceSpawned == 0)
 				{
 					ambulanceSpawned = 1;
 					SetAmbulanceLocB(tempTile);
 				}
-				tempTile->SetTileType(ETileType::AmbulancePark);
 				ambulanceTiles.Add(tempTile);
 			}
 		}
@@ -1072,24 +1072,43 @@ void AGameBoard::Tick(float DeltaTime)
 
 }
 
-void AGameBoard::SetAmbulanceLocA(ATile* a)
+int32 AGameBoard::SetAmbulanceLocA(ATile* a)
 {
+	if (a->type != ETileType::AmbulancePark)
+	{
+		return 0;
+	}
 	ambulanceLocA = a;
-	UE_LOG(LogTemp, Warning, TEXT("loc set"));
+	return 1;
 }
 
-void AGameBoard::SetAmbulanceLocB(ATile* b)
+int32 AGameBoard::SetAmbulanceLocB(ATile* b)
 {
+	if (b->type != ETileType::AmbulancePark)
+	{
+		return 0;
+	}
 	ambulanceLocB = b;
+	return 1;
 }
 
-void AGameBoard::SetFireEngineLocA(ATile* a)
+int32 AGameBoard::SetFireEngineLocA(ATile* a)
 {
+	if (a->type != ETileType::FireEnginePark)
+	{
+		return 0;
+	}
 	engineLocA = a;
+	return 1;
 }
 
-void AGameBoard::SetFireEngineLocB(ATile* b)
+int32 AGameBoard::SetFireEngineLocB(ATile* b)
 {
+	if (b->type != ETileType::FireEnginePark)
+	{
+		return 0;
+	}
 	engineLocB = b;
+	return 1;
 }
 
