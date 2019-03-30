@@ -517,11 +517,12 @@ void ATile::SpawnAmbulance(int pos)
 		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
 		Rotate = 0;
 	}
-	AAmbulance* amb = GetWorld()->SpawnActor<AAmbulance>(
+	TheAmbulance = GetWorld()->SpawnActor<AAmbulance>(
 						AmbulanceClass,
 						AmbulanceSocketLocation,
 						FRotator(0, Rotate, 0)
 						);
+	ambulanceTiles = board->GetAmbulanceTiles();
 }
 
 void ATile::SpawnFireEngine(int pos)
@@ -549,11 +550,12 @@ void ATile::SpawnFireEngine(int pos)
 		Rotate = 270;
 	}
 
-	AFireEngine* fe = GetWorld()->SpawnActor<AFireEngine>(
+	TheFireEngine = GetWorld()->SpawnActor<AFireEngine>(
 					FireEngineClass,
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);
+	fireEngineTiles = board->GetEngineTiles();
 }
 
 void ATile::AdvanceHazmat()
@@ -1339,6 +1341,11 @@ void ATile::Rep_FireStatus()
 	default:
 		break;
 	}
+}
+
+int32 ATile::GetID()
+{
+	return xLoc*8 + yLoc;
 }
 
 void ATile::Rep_BlastEffect()

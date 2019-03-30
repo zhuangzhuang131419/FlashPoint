@@ -29,8 +29,6 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 	ETileType type = ETileType::Default;	// the default type of the tile
-	static AAmbulance* TheAmbulance;
-	static AFireEngine* TheFireEngine;
 	// This method will change the tile's type together with its supposed base color
 	void SetTileType(ETileType tileType);
 	// This method will set the related gameboard of the tile
@@ -48,6 +46,7 @@ public:
 	void BindBackEdge(AEdgeUnit* edge);
 	void BindLeftEdge(AEdgeUnit* edge);
 	void BindRightEdge(AEdgeUnit* edge);
+	int32 GetID();
 	// getters for the 4 neighbouring edges
 	AEdgeUnit* GetFront();
 	AEdgeUnit* GetBack();
@@ -260,6 +259,11 @@ protected:
 	bool isReady = false;
 	int32 costToHere = 0;
 	bool expanded = false;
+	TArray<ATile*> ambulanceTiles;
+	TArray<ATile*> fireEngineTiles;
+
+	AAmbulance* TheAmbulance = nullptr;
+	AFireEngine* TheFireEngine = nullptr;
 
 	// is command target
 	bool isCommandTarget = false;
