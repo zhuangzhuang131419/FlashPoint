@@ -8,16 +8,6 @@ AFireEngine::AFireEngine()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
-	fireEngineMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ambulanceMesh"));
-	fireEngineMesh->SetupAttachment(RootComponent);
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> fireEngineMeshAsset(TEXT("StaticMesh'/Game/_PersonalFolder/Cheng/Fire'"));
-
-	if (fireEngineMeshAsset.Object)
-	{
-		fireEngineMesh->SetStaticMesh(fireEngineMeshAsset.Object);
-		fireEngineMesh->SetWorldScale3D(FVector(1, 1, 1));
-	}
 }
 
 void AFireEngine::FireDeckGun()
