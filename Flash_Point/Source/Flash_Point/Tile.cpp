@@ -512,12 +512,33 @@ void ATile::SpawnAmbulance(int pos)
 
 void ATile::SpawnFireEngine(int pos)
 {
-	UE_LOG(LogTemp, Warning, TEXT("FireEngineSpawned %d"), pos);
-	FVector FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+	FVector FireEngineSocketLocation = FVector(0.0f, 0.0f, 0.0f);
+	int Rotate = 0;
+	if (pos % 8 == 7)
+	{
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		Rotate = 0;
+	}
+	else if (pos % 8 == 0 && pos != 0 && pos != 72)
+	{
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		Rotate = 0;
+	}
+	else if (pos < 7)
+	{
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		Rotate = 270;
+	}
+	else if (pos >= 72)
+	{
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		Rotate = 270;
+	}
+
 	AFireEngine* fe = GetWorld()->SpawnActor<AFireEngine>(
-					FireEngineClass,
+					AFireEngine::StaticClass(),
 					FireEngineSocketLocation,
-					FRotator(0, 0, 0)
+					FRotator(0, Rotate, 0)
 					);
 						
 }

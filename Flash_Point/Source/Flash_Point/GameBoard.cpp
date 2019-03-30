@@ -538,7 +538,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	tempTile = nullptr;
 	int engineSpawned = 0, ambulanceSpawned = 0;
 	for (int32 i = 0; i < indicator.engineParkLoc.Num(); i++) {
-		if (indicator.engineParkLoc[i] > -1) {
+		if (indicator.engineParkLoc[i] > -1 && indicator.engineParkLoc[i] < 80) {
 			// set up for the first tile on the specified location
 			tempTile = boardTiles[indicator.engineParkLoc[i]];
 			if (ensure(tempTile)) {
@@ -552,9 +552,9 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 			// set up for the second tile on the specified location
 			if ((indicator.engineParkLoc[i] % 8 == 0 || indicator.engineParkLoc[i] % 8 == 7) && indicator.engineParkLoc[i] != 72) {
-				tempTile = boardTiles[indicator.engineParkLoc[i] + boardLength];
+				tempTile = boardTiles[indicator.engineParkLoc[i] + 8];
 			}
-			else{
+			else {
 				tempTile = boardTiles[indicator.engineParkLoc[i] + 1];
 			}
 			if (ensure(tempTile)) {
@@ -583,11 +583,11 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 			// set up for the second tile on the specified location
 
-	
+
 			if ((indicator.ambulanceParkLoc[i] % 8 == 0 || indicator.ambulanceParkLoc[i] % 8 == 7) && indicator.ambulanceParkLoc[i] < 72) {
 				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 8];
 			}
-			else{
+			else {
 				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
 			}
 			if (ensure(tempTile)) {
