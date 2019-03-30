@@ -40,6 +40,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	EGameType GetGameType() { return gameModeType; }
 
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void SetAmbulanceLocA(ATile* a);
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void SetAmbulanceLocB(ATile* b);
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void SetFireEngineLocA(ATile* a);
+	UFUNCTION(BlueprintCallable, Category = "Vehicle")
+	void SetFireEngineLocB(ATile* b);
+
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }
 
@@ -205,6 +214,9 @@ protected:
 	ATile* ambulanceLocA = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* ambulanceLocB = nullptr;
+
+
+	
 	// TURN RELATED FIELDS
 	// A to indicate how many player are currently in the game
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")

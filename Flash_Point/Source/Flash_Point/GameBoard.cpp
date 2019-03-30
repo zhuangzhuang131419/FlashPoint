@@ -546,18 +546,23 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				engineTiles.Add(tempTile);
 				if (engineSpawned == 0)
 				{
-					engineSpawned = 1;
 					tempTile->SpawnFireEngine(indicator.engineParkLoc[i]);
+					SetFireEngineLocA(tempTile);
 				}
 			}
 			// set up for the second tile on the specified location
-			if (i % 4 == 0 || i % 4 == 1) {
+			if ((indicator.engineParkLoc[i] % 8 == 0 || indicator.engineParkLoc[i] % 8 == 7) && indicator.engineParkLoc[i] != 72) {
 				tempTile = boardTiles[indicator.engineParkLoc[i] + boardLength];
 			}
-			else {
+			else{
 				tempTile = boardTiles[indicator.engineParkLoc[i] + 1];
 			}
 			if (ensure(tempTile)) {
+				if (engineSpawned == 0)
+				{
+					engineSpawned = 1;
+					SetFireEngineLocB(tempTile);
+				}
 				tempTile->SetTileType(ETileType::FireEnginePark);
 				engineTiles.Add(tempTile);
 			}
@@ -565,27 +570,34 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	}
 	tempTile = nullptr;
 	for (int32 i = 0; i < indicator.ambulanceParkLoc.Num(); i++) {
-		if (indicator.ambulanceParkLoc[i] > -1) {
+		if (indicator.ambulanceParkLoc[i] > -1 && indicator.ambulanceParkLoc[i] < 80) {
 			tempTile = boardTiles[indicator.ambulanceParkLoc[i]];
-			if (ensure(tempTile)) {
-				tempTile->SetTileType(ETileType::AmbulancePark);
-				ambulanceTiles.Add(tempTile);
-			}
-			// set up for the second tile on the specified location
-			if (i % 4 == 0 || i % 4 == 1) {
-				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + boardLength];
-			}
-			else {
-				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
-			}
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::AmbulancePark);
 				ambulanceTiles.Add(tempTile);
 				if (ambulanceSpawned == 0)
 				{
-					ambulanceSpawned = 1;
 					tempTile->SpawnAmbulance(indicator.ambulanceParkLoc[i]);
+					SetAmbulanceLocA(tempTile);
 				}
+			}
+			// set up for the second tile on the specified location
+
+	
+			if ((indicator.ambulanceParkLoc[i] % 8 == 0 || indicator.ambulanceParkLoc[i] % 8 == 7) && indicator.ambulanceParkLoc[i] < 72) {
+				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 8];
+			}
+			else{
+				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
+			}
+			if (ensure(tempTile)) {
+				if (ambulanceSpawned == 0)
+				{
+					ambulanceSpawned = 1;
+					SetAmbulanceLocB(tempTile);
+				}
+				tempTile->SetTileType(ETileType::AmbulancePark);
+				ambulanceTiles.Add(tempTile);
 			}
 		}
 	}
@@ -604,7 +616,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					tempEdge->BindBoard(this);
 					// bind the wall
 					tempTile->BindRightEdge(tempEdge);
-					tempNeighbour = boardTiles[indicator.wallRight[i] + boardLength];
+					tempNeighbour = boardTiles[indicator.wallRight[i] + 8];
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindLeftEdge(tempEdge);
 					}
@@ -1058,5 +1070,26 @@ void AGameBoard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AGameBoard::SetAmbulanceLocA(ATile* a)
+{
+	ambulanceLocA = a;
+	UE_LOG(LogTemp, Warning, TEXT("loc set"));
+}
+
+void AGameBoard::SetAmbulanceLocB(ATile* b)
+{
+	ambulanceLocB = b;
+}
+
+void AGameBoard::SetFireEngineLocA(ATile* a)
+{
+	engineLocA = a;
+}
+
+void AGameBoard::SetFireEngineLocB(ATile* b)
+{
+	engineLocB = b;
 }
 
