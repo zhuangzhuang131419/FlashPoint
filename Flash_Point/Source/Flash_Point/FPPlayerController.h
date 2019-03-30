@@ -58,8 +58,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetDriveFireEngine();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetRadio();
-	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetFireDeckGun();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetFlip();
