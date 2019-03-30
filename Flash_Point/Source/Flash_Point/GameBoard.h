@@ -153,7 +153,7 @@ protected:
 	AFPPlayerController* currentPlayer = nullptr;
 	// A resonable height for camera to be above the board
 	UPROPERTY(EditAnyWhere, Category = "Setup")
-	int32 camHeight = 2900;
+	int32 camHeight = 3500;
 
 	// whether initialize fire and POI randomly or not
 	UPROPERTY(EditAnyWhere, Category = "Setup")

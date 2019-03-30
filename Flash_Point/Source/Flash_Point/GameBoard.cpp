@@ -536,6 +536,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 
 	// Now set up specific tiles for fire engine park or ambulance park
 	tempTile = nullptr;
+	int engineSpawned = 0, ambulanceSpawned = 0;
 	for (int32 i = 0; i < indicator.engineParkLoc.Num(); i++) {
 		if (indicator.engineParkLoc[i] > -1) {
 			// set up for the first tile on the specified location
@@ -543,6 +544,11 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::FireEnginePark);
 				engineTiles.Add(tempTile);
+				if (engineSpawned == 0)
+				{
+					engineSpawned = 1;
+					tempTile->SpawnFireEngine(indicator.engineParkLoc[i]);
+				}
 			}
 			// set up for the second tile on the specified location
 			if (i % 4 == 0 || i % 4 == 1) {
@@ -575,6 +581,11 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::AmbulancePark);
 				ambulanceTiles.Add(tempTile);
+				if (ambulanceSpawned == 0)
+				{
+					ambulanceSpawned = 1;
+					tempTile->SpawnAmbulance(indicator.ambulanceParkLoc[i]);
+				}
 			}
 		}
 	}

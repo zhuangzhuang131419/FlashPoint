@@ -15,6 +15,8 @@
 #include "Tile.generated.h"
 
 class AGameBoard;
+class AAmbulance;
+class AFireEngine;
 
 UCLASS()
 class FLASH_POINT_API ATile : public AActor
@@ -111,6 +113,8 @@ public:
 	void PlaceVictim();
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
+	void SpawnAmbulance(int pos);
+	void SpawnFireEngine(int pos);
 	void AdvanceFire();
 	void AdvancePOI();
 	void AdvanceHazmat();
@@ -183,6 +187,10 @@ protected:
 	TSubclassOf<AActor> POIClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AActor> HazmatClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<AActor> AmbulanceClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<class AFireEngine> FireEngineClass = nullptr;
 
 	// Neighbour edge refences
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Associations")

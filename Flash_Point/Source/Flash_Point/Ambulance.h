@@ -4,9 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GeneralTypes.h"
-#include "GameBoard.h"
 #include "GameFramework/Actor.h"
 #include "Ambulance.generated.h"
+
+class AGameBoard;
+class ATile;
 
 UCLASS()
 class FLASH_POINT_API AAmbulance : public AActor
@@ -15,7 +17,7 @@ class FLASH_POINT_API AAmbulance : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	AAmbulance();
+	AAmbulance(const FObjectInitializer& ObjectInitializer);
 
 	// The parking location of the ambulance
 	FLocation parkingSpot1;
@@ -33,6 +35,4 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* ambulanceMesh = nullptr;
-	
-	
 };

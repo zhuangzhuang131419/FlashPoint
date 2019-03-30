@@ -4,10 +4,11 @@
 #include "GameBoard.h"
 #include "Victim.h"
 #include "Hazmat.h"
+#include "Ambulance.h"
+#include "FireEngine.h"
 #include "Wall.h"
 #include "POI.h"
 #include "Door.h"
-
 
 // Sets default values
 ATile::ATile()
@@ -476,6 +477,49 @@ void ATile::AdvancePOI()
 			}
 		}
 	}
+}
+
+void ATile::SpawnAmbulance(int pos)
+{
+	FVector AmbulanceSocketLocation;
+	int Rotate;
+	if (pos % 8 == 7)
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		Rotate = 90;
+	}
+	else if (pos % 8 == 0 && pos != 0)
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		Rotate = 90;
+	}
+	else if (pos < 7)
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		Rotate = 0;
+	}
+	else
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		Rotate = 0;
+	}
+	AAmbulance* amb = GetWorld()->SpawnActor<AAmbulance>(
+						AAmbulance::StaticClass(),
+						AmbulanceSocketLocation,
+						FRotator(0, Rotate, 0)
+						);
+}
+
+void ATile::SpawnFireEngine(int pos)
+{
+	UE_LOG(LogTemp, Warning, TEXT("FireEngineSpawned %d"), pos);
+	FVector FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+	AFireEngine* fe = GetWorld()->SpawnActor<AFireEngine>(
+					FireEngineClass,
+					FireEngineSocketLocation,
+					FRotator(0, 0, 0)
+					);
+						
 }
 
 void ATile::AdvanceHazmat()
