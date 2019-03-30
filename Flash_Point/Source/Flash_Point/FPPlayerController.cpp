@@ -1062,6 +1062,12 @@ void AFPPlayerController::SetFlip()
 	}
 }
 
+void AFPPlayerController::SetDrive()
+{
+	CurrentOperation = EGameOperations::Drive;
+	inGameUI->EnableOperationPanels(false);
+}
+
 void AFPPlayerController::SetDodge()
 {
 	if (CurrentOperation != EGameOperations::Drive)

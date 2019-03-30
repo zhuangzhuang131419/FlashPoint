@@ -54,7 +54,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetCarry();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetDrive(){ CurrentOperation = EGameOperations::Drive;}
+	void SetDrive();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetFireDeckGun();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")

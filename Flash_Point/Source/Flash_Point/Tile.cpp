@@ -554,7 +554,6 @@ void ATile::SpawnFireEngine(int pos)
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);
-						
 }
 
 void ATile::AdvanceHazmat()
