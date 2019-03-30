@@ -10,6 +10,7 @@
 #include "FireFighterPawn.generated.h"
 
 class ATile;
+class ADoor;
 class AEdgeUnit;
 class AVictim;
 class AHazmat;
@@ -149,12 +150,17 @@ public:
 	// a function for setting fire fighter material
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void FireFighterSwitchColor(int32 numID);
+	void KnockDown();
+	
+	// Commanding related functions
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowControllable(bool isLocalControl, bool isControlled);
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowIsCommanded(bool isCommanded);
-	void KnockDown();
 	void SetIsCommanded(bool isCommanded) { this->isCommanded = isCommanded; }
+	bool GetIsCommanded() { return isCommanded; }
+	void CommandDoorOperation(ADoor* target, AFireFighterPawn* commander);
+	void CommandTileOperation(TArray<ATile*> targets, AFireFighterPawn* commander);
 
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
 
@@ -203,6 +209,12 @@ protected:
 	bool relocationFlag = true;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterDodge, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool serverDodgeFlag = true;
+	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedDoor, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	ADoor* orderedDoor = nullptr;
+	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedTiles, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	TArray<ATile*> orderedTiles;
+	// the captain who is commanding the current firefighter
+	AFireFighterPawn* captain = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool hasDodgeOperation = true;
 	AGameBoard* playingBoard = nullptr;
@@ -232,6 +244,10 @@ protected:
 	void Rep_FireFighterknockDownRelocate();
 	UFUNCTION()
 	void Rep_FireFighterDodge();
+	UFUNCTION()
+	void Rep_NotifyCommandedDoor();
+	UFUNCTION()
+	void Rep_NotifyCommandedTiles();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")

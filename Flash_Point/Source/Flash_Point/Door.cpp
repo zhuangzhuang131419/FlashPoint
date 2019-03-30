@@ -72,6 +72,19 @@ void ADoor::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ADoor, isDestroyed);
 }
 
+void ADoor::SetCommandTarget(bool isTarget)
+{
+	isCommandTarget = isTarget;
+	if (ensure(WallMesh)) {
+		if (isTarget) {
+			WallMesh->SetMaterial(0, ableMat);
+		}
+		else {
+			WallMesh->SetMaterial(0, baseMat);
+		}
+	}
+}
+
 void ADoor::ChangeDoorStatus()
 {
 	if (opened)
@@ -159,6 +172,19 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 				}
 
 				// for fire captain, it sends the open door command to commanded firefighter
+				if (playerController->GetCurrentOperation() == EGameOperations::Command) {
+					// check if the player's firefighter has enough command AP
+					AFireFighterPawn* fireFighterPawn = playerController->GetCommanded();
+					AFireFighterPawn* commander = Cast<AFireFighterPawn>(playerController->GetPawn());
+					if (fireFighterPawn && commander) {
+						if (commander->GetCommandAP() < fireFighterPawn->GetOpenConsumption()) {
+							UE_LOG(LogTemp, Warning, TEXT("AP not enough to open/close door"));
+							return;
+						}
+						if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+						playerController->ServerCommandDoorOperation(fireFighterPawn, commander, this);
+					}
+				}
 			}
 		}
 		
@@ -223,6 +249,8 @@ void ADoor::OnDoorOver(UPrimitiveComponent * Component)
 
 void ADoor::OnDoorLeft(UPrimitiveComponent * Component)
 {
+	// if the current door is a command target, just return
+	if (isCommandTarget) return;
 	if (ensure(WallMesh)) {
 		WallMesh->SetMaterial(0, baseMat);
 	}

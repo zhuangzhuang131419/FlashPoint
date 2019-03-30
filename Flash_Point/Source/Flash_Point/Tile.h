@@ -86,6 +86,9 @@ public:
 	void SetFireEffect(bool isActivate);
 	void SetSmokeEffect(bool isActivate);
 
+	// Set command target
+	void SetCommandTarget(bool isTarget);
+
 	// Getter and Setter for POI
 	APOI* GetPOIOnTile();
 	void SetPOIOnTile(APOI* inPOI);
@@ -253,6 +256,9 @@ protected:
 	bool isReady = false;
 	int32 costToHere = 0;
 	bool expanded = false;
+
+	// is command target
+	bool isCommandTarget = false;
 
 	// FUNCTIONS
 	// Here is a function that binds all cursor functions

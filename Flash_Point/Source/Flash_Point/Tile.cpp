@@ -333,7 +333,10 @@ void ATile::SetpathCost(int32 cost)
 
 void ATile::ResetTile()
 {
-	PlaneColorSwitch(baseMat);
+	// do not clear if this is command target
+	if (!isCommandTarget) {
+		PlaneColorSwitch(baseMat);
+	}
 	prev = nullptr;
 	expanded = false;
 	pathCost = -1;
@@ -400,6 +403,17 @@ void ATile::SetSmokeEffect(bool isActivate)
 	else
 	{
 		SmokeEffect->Deactivate();
+	}
+}
+
+void ATile::SetCommandTarget(bool isTarget)
+{
+	isCommandTarget = isTarget;
+	if (isTarget) {
+		PlaneColorSwitch(ableMat);
+	}
+	else {
+		PlaneColorSwitch(baseMat);
 	}
 }
 
@@ -1028,6 +1042,28 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::None:
 			break;
+		case EGameOperations::Command:
+			// check if this tile is ready and can move to
+			if (isReady && canMoveTo) {
+				UE_LOG(LogTemp, Warning, TEXT("Can move to here"));
+				AFireFighterPawn* commanded = localPlayer->GetCommanded();
+				if (commanded && ensure(localPawn)) {
+					// clear all tiles before doing this 
+					if (ensure(board)) {
+						board->ClearAllTile();
+					}
+					// if the player is commanding a firefighter indicate the trace for the commanded firefighter
+					TArray<ATile*> traceTiles;
+					ATile* start = commanded->GetPlacedOn();
+					ATile* goal = this;
+					UE_LOG(LogTemp, Warning, TEXT("Before search"));
+					int32 cost = GeneralTypes::AStarShotest(localPawn->GetCommandAP(), start, goal, traceTiles);
+					UE_LOG(LogTemp, Warning, TEXT("Path to here for commanded pawn is: %d"), traceTiles.Num());
+					// do server notify
+					localPlayer->ServerCommandTileOperation(commanded, localPawn, traceTiles);
+				}				
+			}
+			break;
 		default:
 			break;
 		}
@@ -1036,6 +1072,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 
 void ATile::OnTileLeft(UPrimitiveComponent * Component)
 {
+	// if the tile is command target, do not clear
 	board->ClearAllTile();
 	// UE_LOG(LogTemp, Warning, TEXT("Mouse Left"));
 	// Reset move related attributes
@@ -1084,6 +1121,22 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 		if (hasFire && inPawn->GetVictim()) {
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(unableMat);
+			}
+		}
+		else if (inPawn->GetIsCommanded()) {
+			// here we are chekcing if the captain has enough command ap to command the operation
+			if (ensure(localPawn)) {
+				if (localPawn->GetCommandAP() >= cost) {
+					canMoveTo = true;
+					for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+						traceTiles[i]->PlaneColorSwitch(ableMat);
+					}
+				}
+				else {
+					for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+						traceTiles[i]->PlaneColorSwitch(unableMat);
+					}
+				}
 			}
 		}
 		// here the goal is successfully found and could be moved to

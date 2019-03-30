@@ -36,6 +36,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetIsOpend(bool openStatus);
 
+	// Set the door as a command target
+	void SetCommandTarget(bool isTarget);
+
 	void ChangeDoorStatus();
 
 	virtual void Damage() override;
@@ -51,6 +54,9 @@ protected:
 	bool opened = false;
 	UPROPERTY(ReplicatedUsing = Rep_DoorExistence, VisibleAnyWhere, BlueprintReadWrite)
 	bool isDestroyed = false;
+
+	// properties associated with commanding
+	bool isCommandTarget = false;
 
 	// functions to replicate specified fields
 	// replicate openning of the door

@@ -525,6 +525,30 @@ bool AFPPlayerController::ServerSpecialistTurnAdjust_Validate(AFireFighterPawn *
 	return true;
 }
 
+void AFPPlayerController::ServerCommandDoorOperation_Implementation(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, ADoor * target)
+{
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->CommandDoorOperation(target, captain);
+	}
+}
+
+bool AFPPlayerController::ServerCommandDoorOperation_Validate(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, ADoor * target)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerCommandTileOperation_Implementation(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, const TArray<ATile*>& targets)
+{
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->CommandTileOperation(targets, captain);
+	}
+}
+
+bool AFPPlayerController::ServerCommandTileOperation_Validate(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, const TArray<ATile*>& targets)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
