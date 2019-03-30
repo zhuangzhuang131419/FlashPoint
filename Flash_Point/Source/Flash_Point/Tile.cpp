@@ -518,7 +518,7 @@ void ATile::SpawnAmbulance(int pos)
 		Rotate = 0;
 	}
 	AAmbulance* amb = GetWorld()->SpawnActor<AAmbulance>(
-						AAmbulance::StaticClass(),
+						AmbulanceClass,
 						AmbulanceSocketLocation,
 						FRotator(0, Rotate, 0)
 						);
@@ -550,7 +550,7 @@ void ATile::SpawnFireEngine(int pos)
 	}
 
 	AFireEngine* fe = GetWorld()->SpawnActor<AFireEngine>(
-					AFireEngine::StaticClass(),
+					FireEngineClass,
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);

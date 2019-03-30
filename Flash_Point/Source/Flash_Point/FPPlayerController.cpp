@@ -700,18 +700,39 @@ void AFPPlayerController::RemoveHazmat()
 }
 
 //Todo Refactor
-void AFPPlayerController::GetInCar(){
+bool AFPPlayerController::GetInAmbulance(){
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if(ensure(fireFighterPawn)){
-		if(fireFighterPawn->IsWithAmbulance() || fireFighterPawn->IsWithEngine()){
+		if(fireFighterPawn->IsWithAmbulance()){
 			fireFighterPawn->SetVisibility(false);
+			return true;
+		}
+	}
+	return false;
+}
+void AFPPlayerController::GetOutAmbulance(){
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if(ensure(fireFighterPawn)){
+		if(fireFighterPawn->IsWithAmbulance()){
+			fireFighterPawn->SetVisibility(true);
 		}
 	}
 }
-void AFPPlayerController::GetOutCar(){
+
+bool AFPPlayerController::GetInFireEngine(){
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if(ensure(fireFighterPawn)){
-		if(fireFighterPawn->IsWithAmbulance() || fireFighterPawn->IsWithEngine()){
+		if(fireFighterPawn->IsWithEngine()){
+			fireFighterPawn->SetVisibility(false);
+			return true;
+		}
+	}
+	return false;
+}
+void AFPPlayerController::GetOutFireEngine(){
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if(ensure(fireFighterPawn)){
+		if(fireFighterPawn->IsWithEngine()){
 			fireFighterPawn->SetVisibility(true);
 		}
 	}

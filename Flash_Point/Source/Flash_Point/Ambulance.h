@@ -17,7 +17,7 @@ class FLASH_POINT_API AAmbulance : public AActor
 	
 public:	
 	// Sets default values for this actor's properties
-	AAmbulance(const FObjectInitializer& ObjectInitializer);
+	AAmbulance();
 
 	// The parking location of the ambulance
 	FLocation parkingSpot1;
