@@ -1041,6 +1041,11 @@ void AFPPlayerController::SetDriveAmbulance()
 	inGameUI->EnableOperationPanels(false);
 }
 
+void AFPPlayerController::SetRadio()
+{
+	CurrentOperation = EGameOperations::DriveAmbulance;
+}
+
 void AFPPlayerController::SetDriveFireEngine()
 {
 	CurrentOperation = EGameOperations::DriveFireEngine;
