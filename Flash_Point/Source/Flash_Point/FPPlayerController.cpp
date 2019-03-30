@@ -986,7 +986,10 @@ void AFPPlayerController::BeginPlay()
 
 void AFPPlayerController::SetOpenDoor()
 {
-	CurrentOperation = EGameOperations::OpenDoor;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::OpenDoor;
+	}
 }
 
 void AFPPlayerController::SetNone()
@@ -996,33 +999,91 @@ void AFPPlayerController::SetNone()
 
 void AFPPlayerController::SetPlaceFireFighter()
 {
-	CurrentOperation = EGameOperations::PlaceFireFighter;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::PlaceFireFighter;
+	}
 }
 
 void AFPPlayerController::SetRespawnFireFighter()
 {
-	CurrentOperation = EGameOperations::RespawnFireFighter;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::RespawnFireFighter;
+	}
 }
 
 void AFPPlayerController::SetMove()
 {
-	CurrentOperation = EGameOperations::Move;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::Move;
+	}
 }
 
 void AFPPlayerController::SetExtinguishFire()
 {
-	CurrentOperation = EGameOperations::ExtinguishFire;
-	CurrentOperation = EGameOperations::ExtinguishFire;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::ExtinguishFire;
+		CurrentOperation = EGameOperations::ExtinguishFire;
+	}
 }
 
 void AFPPlayerController::SetChopWall()
 {
-	CurrentOperation = EGameOperations::ChopWall;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::ChopWall;
+	}
 }
 
 void AFPPlayerController::SetCarry()
 {
-	CurrentOperation = EGameOperations::Carry;
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::Carry;
+	}
+}
+
+void AFPPlayerController::SetFireDeckGun()
+{
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::FireDeckGun;
+	}
+}
+
+void AFPPlayerController::SetFlip()
+{
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::FlipPOI;
+	}
+}
+
+void AFPPlayerController::SetDodge()
+{
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::Dodge;
+	}
+}
+
+void AFPPlayerController::SetSqueeze()
+{
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::Squeeze;
+	}
+}
+
+void AFPPlayerController::SetCommand()
+{
+	if (CurrentOperation != EGameOperations::Drive)
+	{
+		CurrentOperation = EGameOperations::Command;
+	}
 }
 
 void AFPPlayerController::CancelCommand()

@@ -56,15 +56,15 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetDrive(){ CurrentOperation = EGameOperations::Drive;}
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetFireDeckGun() { CurrentOperation = EGameOperations::FireDeckGun; }
+	void SetFireDeckGun();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetFlip() { CurrentOperation = EGameOperations::FlipPOI; }
+	void SetFlip();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetDodge() { CurrentOperation = EGameOperations::Dodge; }
+	void SetDodge();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetSqueeze() { CurrentOperation = EGameOperations::Squeeze; }
+	void SetSqueeze();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
-	void SetCommand() { CurrentOperation = EGameOperations::Command; }
+	void SetCommand();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void CancelCommand();
 

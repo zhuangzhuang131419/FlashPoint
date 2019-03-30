@@ -10,6 +10,8 @@
 #include "FireFighterPawn.h"
 #include "FPPlayerController.h"
 #include "POI.h"
+#include "Ambulance.h"
+#include "FireEngine.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Engine/World.h"
 #include "Tile.generated.h"
@@ -27,6 +29,8 @@ public:
 	// Sets default values for this actor's properties
 	ATile();
 	ETileType type = ETileType::Default;	// the default type of the tile
+	static AAmbulance* TheAmbulance;
+	static AFireEngine* TheFireEngine;
 	// This method will change the tile's type together with its supposed base color
 	void SetTileType(ETileType tileType);
 	// This method will set the related gameboard of the tile
