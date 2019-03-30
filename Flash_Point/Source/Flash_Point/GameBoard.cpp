@@ -546,46 +546,58 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 				engineTiles.Add(tempTile);
 				if (engineSpawned == 0)
 				{
-					engineSpawned = 1;
 					tempTile->SpawnFireEngine(indicator.engineParkLoc[i]);
+					SetFireEngineLocA(tempTile);
 				}
 			}
 			// set up for the second tile on the specified location
-			if (i % 4 == 0 || i % 4 == 1) {
+			if ((indicator.engineParkLoc[i] % 8 == 0 || indicator.engineParkLoc[i] % 8 == 7) && indicator.engineParkLoc[i] != 72) {
 				tempTile = boardTiles[indicator.engineParkLoc[i] + boardLength];
 			}
-			else {
+			else{
 				tempTile = boardTiles[indicator.engineParkLoc[i] + 1];
 			}
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::FireEnginePark);
+				if (engineSpawned == 0)
+				{
+					engineSpawned = 1;
+					SetFireEngineLocB(tempTile);
+				}
 				engineTiles.Add(tempTile);
 			}
 		}
 	}
 	tempTile = nullptr;
 	for (int32 i = 0; i < indicator.ambulanceParkLoc.Num(); i++) {
-		if (indicator.ambulanceParkLoc[i] > -1) {
+		if (indicator.ambulanceParkLoc[i] > -1 && indicator.ambulanceParkLoc[i] < 80) {
 			tempTile = boardTiles[indicator.ambulanceParkLoc[i]];
-			if (ensure(tempTile)) {
-				tempTile->SetTileType(ETileType::AmbulancePark);
-				ambulanceTiles.Add(tempTile);
-			}
-			// set up for the second tile on the specified location
-			if (i % 4 == 0 || i % 4 == 1) {
-				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + boardLength];
-			}
-			else {
-				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
-			}
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::AmbulancePark);
 				ambulanceTiles.Add(tempTile);
 				if (ambulanceSpawned == 0)
 				{
-					ambulanceSpawned = 1;
 					tempTile->SpawnAmbulance(indicator.ambulanceParkLoc[i]);
+					SetAmbulanceLocA(tempTile);
 				}
+			}
+			// set up for the second tile on the specified location
+
+	
+			if ((indicator.ambulanceParkLoc[i] % 8 == 0 || indicator.ambulanceParkLoc[i] % 8 == 7) && indicator.ambulanceParkLoc[i] < 72) {
+				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 8];
+			}
+			else{
+				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
+			}
+			if (ensure(tempTile)) {
+				tempTile->SetTileType(ETileType::AmbulancePark);
+				if (ambulanceSpawned == 0)
+				{
+					ambulanceSpawned = 1;
+					SetAmbulanceLocB(tempTile);
+				}
+				ambulanceTiles.Add(tempTile);
 			}
 		}
 	}
@@ -604,7 +616,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					tempEdge->BindBoard(this);
 					// bind the wall
 					tempTile->BindRightEdge(tempEdge);
-					tempNeighbour = boardTiles[indicator.wallRight[i] + boardLength];
+					tempNeighbour = boardTiles[indicator.wallRight[i] + 8];
 					if (ensure(tempNeighbour)) {
 						tempNeighbour->BindLeftEdge(tempEdge);
 					}
@@ -1058,5 +1070,45 @@ void AGameBoard::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+int32 AGameBoard::SetAmbulanceLocA(ATile* a)
+{
+	if (a->type != ETileType::AmbulancePark)
+	{
+		return 0;
+	}
+	ambulanceLocA = a;
+	return 1;
+}
+
+int32 AGameBoard::SetAmbulanceLocB(ATile* b)
+{
+	if (b->type != ETileType::AmbulancePark)
+	{
+		return 0;
+	}
+	ambulanceLocB = b;
+	return 1;
+}
+
+int32 AGameBoard::SetFireEngineLocA(ATile* a)
+{
+	if (a->type != ETileType::FireEnginePark)
+	{
+		return 0;
+	}
+	engineLocA = a;
+	return 1;
+}
+
+int32 AGameBoard::SetFireEngineLocB(ATile* b)
+{
+	if (b->type != ETileType::FireEnginePark)
+	{
+		return 0;
+	}
+	engineLocB = b;
+	return 1;
 }
 

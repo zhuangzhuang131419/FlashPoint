@@ -481,14 +481,14 @@ void ATile::AdvancePOI()
 
 void ATile::SpawnAmbulance(int pos)
 {
-	FVector AmbulanceSocketLocation;
-	int Rotate;
+	FVector AmbulanceSocketLocation = FVector(0.0f, 0.0f, 0.0f);
+	int Rotate = 0;
 	if (pos % 8 == 7)
 	{
 		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
 		Rotate = 90;
 	}
-	else if (pos % 8 == 0 && pos != 0)
+	else if (pos % 8 == 0 && pos != 0 && pos != 72)
 	{
 		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
 		Rotate = 90;
@@ -498,7 +498,7 @@ void ATile::SpawnAmbulance(int pos)
 		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
 		Rotate = 0;
 	}
-	else
+	else if (pos >= 72)
 	{
 		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
 		Rotate = 0;
