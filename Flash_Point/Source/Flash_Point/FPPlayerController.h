@@ -173,9 +173,13 @@ public:
 	void CarryHazmat();
 
 	UFUNCTION(BlueprintCallable)
-	void GetInCar();
+	bool GetInAmbulance();
 	UFUNCTION(BlueprintCallable)
-	void GetOutCar();
+	void GetOutAmbulance();
+	UFUNCTION(BlueprintCallable)
+	bool GetInFireEngine();
+	UFUNCTION(BlueprintCallable)
+	void GetOutFireEngine();
 
 	UFUNCTION(BlueprintCallable)
 	void RemoveHazmat();
