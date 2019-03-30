@@ -154,6 +154,8 @@ public:
 	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSolveKnockDown(AGameBoard* board);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSpecialistTurnAdjust(AFireFighterPawn* fireFighterPawn);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

@@ -925,7 +925,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::ExtinguishFire:
 			// check if the fire is adjacent
 			if (!AdjacentToPawn(localPawn)) return;
-			if (!localPawn->GetCanDodge()) return;
 			if (!ensure(localPawn)) return;
 			if (localPawn->GetCurrentAP() + localPawn->GetExtinguishAP() < localPawn->GetExtinguishConsumption()) return;
 			if (fireStatus == EFireStatus::Clear) return;

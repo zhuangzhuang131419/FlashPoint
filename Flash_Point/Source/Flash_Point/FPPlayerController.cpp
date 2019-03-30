@@ -64,11 +64,7 @@ void AFPPlayerController::NotifyPlayerTurn()
 		if (apToRestore > 0) {
 			fireFighterPawn->AdjustFireFighterAP(apToRestore);
 		}
-		// for special roles, also restore special AP
-		if (fireFighterPawn->GetFireFighterRole() == ERoleType::FireCaptain) {
-			// The command AP of the firefighter is fixed to be 2 and cannot be saved thus this is 2
-			fireFighterPawn->SetCommandAP(2);
-		}
+		ServerSpecialistTurnAdjust(fireFighterPawn);
 	}
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyTurnBegin();
@@ -502,6 +498,29 @@ void AFPPlayerController::ServerSwitchRole_Implementation(ACrewManager * inCrewM
 }
 
 bool AFPPlayerController::ServerSwitchRole_Validate(ACrewManager * inCrewMan, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerSpecialistTurnAdjust_Implementation(AFireFighterPawn * fireFighterPawn)
+{
+	if (!ensure(fireFighterPawn)) return;
+	// for special roles, also restore special AP
+	if (fireFighterPawn->GetFireFighterRole() == ERoleType::FireCaptain) {
+		// The command AP of the firefighter is fixed to be 2 and cannot be saved thus this is 2
+		fireFighterPawn->SetCommandAP(2);
+	}
+	if (fireFighterPawn->GetFireFighterRole() == ERoleType::CAFSFirefighter) {
+		// The extinguish Ap cannot be saved and each round there will be 3
+		fireFighterPawn->SetExtinguishAP(3);
+	}
+	if (fireFighterPawn->GetFireFighterRole() == ERoleType::RescueSpecialist) {
+		// The movement Ap cannot be saved and each round there will be 3
+		fireFighterPawn->SetMovementAP(3);
+	}
+}
+
+bool AFPPlayerController::ServerSpecialistTurnAdjust_Validate(AFireFighterPawn * fireFighterPawn)
 {
 	return true;
 }

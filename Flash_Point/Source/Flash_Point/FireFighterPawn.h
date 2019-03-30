@@ -42,6 +42,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetMovementAP() { return movementAP; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetMovementAP(int32 inAP) { movementAP = inAP; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetCommandAP() { return commandAP; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCommandAP(int32 inAP) { commandAP = inAP; }

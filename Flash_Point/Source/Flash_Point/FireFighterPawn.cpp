@@ -285,7 +285,7 @@ bool AFireFighterPawn::CheckCanExtinguish(int32 baseCost)
 {
 	int32 actualCost = baseCost * extinguishConsumption;
 	// TODO for later fire fighter with row, do extra checks
-	if (actualCost <= currentAP)	return true;
+	if (actualCost <= currentAP + extinguishAP)	return true;
 	return false;
 }
 
