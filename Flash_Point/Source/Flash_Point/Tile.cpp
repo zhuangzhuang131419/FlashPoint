@@ -479,18 +479,33 @@ void ATile::AdvancePOI()
 
 void ATile::SpawnAmbulance(int pos)
 {
-	
+	FVector AmbulanceSocketLocation;
+	int Rotate;
 	if (pos % 8 == 7)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("AmbulanceSpawned %d"), pos);
-		FVector AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
-		AAmbulance* amb = GetWorld()->SpawnActor<AAmbulance>(
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		Rotate = 90;
+	}
+	else if (pos % 8 == 0 && pos != 0)
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		Rotate = 90;
+	}
+	else if (pos < 7)
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		Rotate = 0;
+	}
+	else
+	{
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		Rotate = 0;
+	}
+	AAmbulance* amb = GetWorld()->SpawnActor<AAmbulance>(
 						AAmbulance::StaticClass(),
 						AmbulanceSocketLocation,
-						FRotator(0, 90, 0)
+						FRotator(0, Rotate, 0)
 						);
-	}
-	
 }
 
 void ATile::SpawnFireEngine(int pos)
