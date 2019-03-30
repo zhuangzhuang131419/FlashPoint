@@ -49,6 +49,27 @@ void AFPPlayerController::SetTurnNum(int32 turnNum)
 
 void AFPPlayerController::NotifyPlayerTurn()
 {
+	// restore AP
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn)) {
+		int32 currentAP = fireFighterPawn->GetCurrentAP();
+		int32 apToRestore = 0;
+		if (currentAP + fireFighterPawn->GetRestoreAP() > fireFighterPawn->GetMaxAP()) {
+			apToRestore = fireFighterPawn->GetMaxAP() - currentAP;
+		}
+		else {
+			apToRestore = fireFighterPawn->GetRestoreAP();
+		}
+		// if ap to restore is more than 0 restore AP
+		if (apToRestore > 0) {
+			fireFighterPawn->AdjustFireFighterAP(apToRestore);
+		}
+		// for special roles, also restore special AP
+		if (fireFighterPawn->GetFireFighterRole() == ERoleType::FireCaptain) {
+			// The command AP of the firefighter is fixed to be 2 and cannot be saved thus this is 2
+			fireFighterPawn->SetCommandAP(2);
+		}
+	}
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyTurnBegin();
 	}
@@ -67,22 +88,6 @@ void AFPPlayerController::NotifyPlayerDodge()
 
 void AFPPlayerController::EndPlayerTurn()
 {
-	// restore AP
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn)) {
-		int32 currentAP = fireFighterPawn->GetCurrentAP();
-		int32 apToRestore = 0;
-		if (currentAP + fireFighterPawn->GetRestoreAP() > fireFighterPawn->GetMaxAP()) {
-			apToRestore = fireFighterPawn->GetMaxAP() - currentAP;
-		}
-		else {
-			apToRestore = fireFighterPawn->GetRestoreAP();
-		}
-		// if ap to restore is more than 0 restore AP
-		if (apToRestore > 0) {
-			fireFighterPawn->AdjustFireFighterAP(apToRestore);
-		}
-	}
 	// disable all operations
 	SetNone();
 	if (ensure(inGameUI)) {
@@ -439,6 +444,26 @@ void AFPPlayerController::ServerAdjustAP_Implementation(AFireFighterPawn* fireFi
 }
 
 bool AFPPlayerController::ServerAdjustAP_Validate(AFireFighterPawn* fireFighterPawn, int32 adjustAP)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerAdjustCAFSAP_Implementation(AFireFighterPawn * fireFighterPawn, int32 adjustAP)
+{
+	if (!ensure(fireFighterPawn)) return;
+	if (fireFighterPawn->GetExtinguishAP() < -adjustAP)
+	{
+		adjustAP += fireFighterPawn->GetExtinguishAP();
+		fireFighterPawn->SetExtinguishAP(0);
+		fireFighterPawn->SetCurrentAP(fireFighterPawn->GetCurrentAP() + adjustAP);
+	}
+	else
+	{
+		fireFighterPawn->SetExtinguishAP(fireFighterPawn->GetExtinguishAP() + adjustAP);
+	}
+}
+
+bool AFPPlayerController::ServerAdjustCAFSAP_Validate(AFireFighterPawn * fireFighterPawn, int32 adjustAP)
 {
 	return true;
 }
@@ -1086,3 +1111,4 @@ bool AFPPlayerController::ServerSolveKnockDown_Validate(AGameBoard * board)
 {
 	return true;
 }
+

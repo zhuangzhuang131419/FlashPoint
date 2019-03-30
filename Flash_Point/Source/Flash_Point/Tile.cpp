@@ -735,7 +735,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
-			FindPathToCurrent();
+			FindPathToCurrent(localPawn);
 			break;
 		case EGameOperations::ChopWall:
 			break;
@@ -829,6 +829,10 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 				}
 			}
 			PlaneColorSwitch(unableMat);
+			break;
+		case EGameOperations::Command:
+			if (!localPlayer->GetCommanded()) return;
+			FindPathToCurrent(localPlayer->GetCommanded());
 			break;
 		case EGameOperations::None:
 			break;
@@ -1027,15 +1031,15 @@ void ATile::PlaneColorSwitch(UMaterialInterface * mat)
 	}
 }
 
-void ATile::FindPathToCurrent()
+void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 {
-	if (!ensure(localPawn))	return;
+	if (!ensure(inPawn))	return;
 	// Do an a* search to find the shortest path to this target location
 	TArray<ATile*> traceTiles;
-	ATile* start = localPawn->GetPlacedOn();
+	ATile* start = inPawn->GetPlacedOn();
 	ATile* goal = this;
 	UE_LOG(LogTemp, Warning, TEXT("Before search"));
-	int32 cost = GeneralTypes::AStarShotest(localPawn->GetCurrentAP(), start, goal, traceTiles);
+	int32 cost = GeneralTypes::AStarShotest(inPawn->GetCurrentAP(), start, goal, traceTiles);
 	// check if the player is carrying a victim and the trace has fire
 	bool hasFire = false;
 	for (ATile* traceTile : traceTiles) {
@@ -1046,24 +1050,24 @@ void ATile::FindPathToCurrent()
 	}
 	if (cost != 0) {
 		// if the firefighter is carrying some victim, the cost is doubled
-		cost = cost * localPawn->GetMoveConsumption();
-		if (localPawn->GetVictim()) {
+		cost = cost * inPawn->GetMoveConsumption();
+		if (inPawn->GetVictim()) {
 			// if carrying any victim, double the cost
 			cost = cost * 2;
 			// if the role is rescue dog, double the cost again
-			if (localPawn->GetFireFighterRole() == ERoleType::RescueDog)
+			if (inPawn->GetFireFighterRole() == ERoleType::RescueDog)
 			{
 				cost = cost * 2;
 			}
 		}
 		// here is the case if the firefighter is carring some victim but the trace has fire
-		if (hasFire && localPawn->GetVictim()) {
+		if (hasFire && inPawn->GetVictim()) {
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(unableMat);
 			}
 		}
 		// here the goal is successfully found and could be moved to
-		else if (cost <= localPawn->GetCurrentAP() + localPawn->GetMovementAP()) {
+		else if (cost <= inPawn->GetCurrentAP() + inPawn->GetMovementAP()) {
 			canMoveTo = true;
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(ableMat);

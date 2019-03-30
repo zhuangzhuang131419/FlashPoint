@@ -157,6 +157,8 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 						playerController->ServerOpenDoor(this);
 					}
 				}
+
+				// for fire captain, it sends the open door command to commanded firefighter
 			}
 		}
 		
@@ -177,6 +179,31 @@ void ADoor::OnDoorOver(UPrimitiveComponent * Component)
 		if (!fireFighterPawn->IsAdjacentToWall(this)) return;
 		// if the firefighter's Ap is not enough, switch color to disable
 		if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetOpenConsumption()) {
+			if (ensure(WallMesh)) {
+				WallMesh->SetMaterial(0, unableMat);
+			}
+		}
+		else {
+			if (ensure(WallMesh)) {
+				if (isDestroyed) {
+					WallMesh->SetMaterial(0, unableMat);
+				}
+				else {
+					WallMesh->SetMaterial(0, ableMat);
+				}
+			}
+		}
+	}
+	// for fire captain, if operation is command, this will also work
+	if (playerController->GetCurrentOperation() == EGameOperations::Command) {
+		// Get the commanded firefighter by the player
+		AFireFighterPawn* fireFighterPawn = playerController->GetCommanded();
+		AFireFighterPawn* commander = Cast<AFireFighterPawn>(playerController->GetPawn());
+		if (!fireFighterPawn || !ensure(commander))	return;
+		// if firefighter is not adjacent to this wall, just return
+		if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+		// if the firefighter's Ap is not enough, switch color to disable
+		if (commander->GetCommandAP() < fireFighterPawn->GetOpenConsumption()) {
 			if (ensure(WallMesh)) {
 				WallMesh->SetMaterial(0, unableMat);
 			}

@@ -7,7 +7,7 @@ GeneralTypes::GeneralTypes()
 {
 }
 
-int32 GeneralTypes::AStarShotest(int32 maxDepth, ATile * start, ATile * goal, TArray<ATile*>& trace)
+int32 GeneralTypes::AStarShotest(int32 maxDepth, ATile * start, ATile * goal, TArray<ATile*>& trace, bool countSmoke)
 {
 	if (start == goal) {
 		trace.Add(start);
@@ -45,6 +45,12 @@ int32 GeneralTypes::AStarShotest(int32 maxDepth, ATile * start, ATile * goal, TA
 					// if the tile is on fire, it cost extra ap
 					if (temp->GetFireStatus() == EFireStatus::Fire) {
 						cost++;
+					}
+					// if we also count smoke, add another cost
+					if (countSmoke) {
+						if (temp->GetFireStatus() == EFireStatus::Smoke) {
+							cost++;
+						}
 					}
 					// check if this path is better
 					tempCost = temp->GetPathCost();

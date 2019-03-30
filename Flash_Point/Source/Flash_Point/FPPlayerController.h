@@ -145,6 +145,8 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdjustAP(AFireFighterPawn* fireFighterPawn, int32 adjustAP);
 	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAdjustCAFSAP(AFireFighterPawn* fireFighterPawn, int32 adjustAP);
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSendGlobalText(AChatManager* chatMan, const FString& message);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);

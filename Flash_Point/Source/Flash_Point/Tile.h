@@ -270,7 +270,7 @@ protected:
 	// A method to set material of the plane
 	void PlaneColorSwitch(UMaterialInterface* mat);
 	// A method to find path to current tile from player pawn's tile
-	void FindPathToCurrent();
+	void FindPathToCurrent(AFireFighterPawn* inPawn);
 
 
 	// Replication functions

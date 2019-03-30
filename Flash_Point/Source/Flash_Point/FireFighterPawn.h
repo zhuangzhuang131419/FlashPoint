@@ -44,7 +44,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetCommandAP() { return commandAP; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetCommandAP(int32 inAP) { commandAP = inAP; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetExtinguishAP() { return extinguishAP; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetExtinguishAP(int32 inAP) { extinguishAP = inAP; }
 	// Function for checking if the firefighter is with engine or ambulance
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	bool IsWithEngine();
@@ -162,11 +166,14 @@ protected:
 	ATile* placedOn = nullptr;
 	// The firefighter's current ap value and max ap value
 	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
-	int32 currentAP = 4;	// initial AP for all firefighters are 4
+	int32 currentAP = 0;	// initial AP for all firefighters are 0
 	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 maxAP = 8;		// Firefighter max ap
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 extinguishAP = 0; // Extinguish AP 
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 movementAP = 0;	// Movingment AP
+	UPROPERTY(replicated, BlueprintReadWrite, EditDefaultsOnly, Category = "Firefighter Attributes")
 	int32 commandAP = 0;	// Command AP
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 restoreAP = 4;	// AP for restoration for firefighters are initialized to 4

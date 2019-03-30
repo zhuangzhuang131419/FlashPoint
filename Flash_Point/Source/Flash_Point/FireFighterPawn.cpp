@@ -102,8 +102,9 @@ void AFireFighterPawn::AdjustCAFSFireFighterExtinguishAP(int32 adjustAP)
 	if (HasAuthority()) {
 		if (extinguishAP < -adjustAP)
 		{
+			adjustAP += extinguishAP;
 			extinguishAP = 0;
-			currentAP += (adjustAP + extinguishAP);
+			currentAP += (adjustAP);
 		}
 		else 
 		{
@@ -115,7 +116,7 @@ void AFireFighterPawn::AdjustCAFSFireFighterExtinguishAP(int32 adjustAP)
 		}
 	}
 	else {
-		myOwner->ServerAdjustAP(this, adjustAP);
+		myOwner->ServerAdjustCAFSAP(this, adjustAP);
 	}
 }
 
@@ -190,6 +191,7 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 		break;
 	case ERoleType::CAFSFirefighter:
 		extinguishAP = 3;
+		restoreAP = 3;
 		break;
 	case ERoleType::HazmatTechnician:
 		break;
@@ -554,6 +556,9 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, crewChangeConsumption);
 	DOREPLIFETIME(AFireFighterPawn, dodgeConsumption);
 	DOREPLIFETIME(AFireFighterPawn, serverDodgeFlag);
+	DOREPLIFETIME(AFireFighterPawn, extinguishAP);
+	DOREPLIFETIME(AFireFighterPawn, movementAP);
+	DOREPLIFETIME(AFireFighterPawn, commandAP);
 }
 
 bool AFireFighterPawn::GetCanDodge()
