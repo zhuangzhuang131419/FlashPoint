@@ -938,6 +938,25 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					localPlayer->ServerMovePawn(this, localPawn, pathToHere);
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+
+					// adjust the veteran position in gameboard 
+					if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+					{
+						board->SetVeteranLoc(this);
+						board->AdjustAllFirefightersVicinity();
+						board->AdjustAllFirefightersDodgeAbility();
+						
+						if (localPawn->IsVicinity())
+						{
+							
+							if (!localPawn->HasGainedAPThisTurn())
+							{
+								// GetFreeAP
+								localPawn->SetCurrentAP(localPawn->GetCurrentAP() + 1);
+								localPawn->SetHasGainedAPThisTurn(true);
+							}
+						}
+					}
 				}
 				// do ap adjustment
 				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)

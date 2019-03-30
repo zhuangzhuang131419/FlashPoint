@@ -209,6 +209,10 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 		break;
 	case ERoleType::Veteran:
 		dodgeConsumption = 1;
+		SetDodgeAbility(true);
+		SetIsVicinity(true);
+		playingBoard->AdjustAllFirefightersVicinity();
+		playingBoard->AdjustAllFirefightersDodgeAbility();
 		break;
 	case ERoleType::RescueDog:
 		restoreAP = 12;
@@ -629,7 +633,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 
 bool AFireFighterPawn::GetCanDodge()
 {
-	if (hasDodgeOperation)
+	if (dodgeAbility)
 	{
 		if (currentAP >= dodgeConsumption)
 		{

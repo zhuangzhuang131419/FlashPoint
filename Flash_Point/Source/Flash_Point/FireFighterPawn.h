@@ -143,7 +143,15 @@ public:
 	// Getter and setter for can dodge
 	bool GetCanDodge();
 	bool canDodgeAcross(AEdgeUnit * targetEdge);
-	void SetDodgeAbility(bool current) { hasDodgeOperation = current; }
+	void SetDodgeAbility(bool current) { dodgeAbility = current; }
+
+	// Getter and setter for isVicinity
+	bool IsVicinity() { return isVicinity; }
+	void SetIsVicinity(bool current) { isVicinity = current; }
+
+	// Getter and setter for hasGainedAPThisTurn
+	bool HasGainedAPThisTurn() { return hasGainedAPThisTurn; }
+	void SetHasGainedAPThisTurn(bool current) { hasGainedAPThisTurn = current; }
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
@@ -216,7 +224,11 @@ protected:
 	// the captain who is commanding the current firefighter
 	AFireFighterPawn* captain = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
-	bool hasDodgeOperation = true;
+	bool dodgeAbility = false;
+	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
+	bool isVicinity = false;
+	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
+	bool hasGainedAPThisTurn = false;
 	AGameBoard* playingBoard = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;

@@ -58,6 +58,10 @@ public:
 	// Getter for engineTile
 	TArray<ATile*> GetEngineTiles() { return engineTiles; }
 
+	// Getter and setter for veteran location
+	ATile* GetVeteranLoc() { return veteranLoc; }
+	void SetVeteranLoc(ATile* current) { veteranLoc = current; }
+
 	// to clear all tile status, used in path finding
 	void ClearAllTile();
 	// below functions are used to advance fire and replenish POI
@@ -137,6 +141,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Save Game")
 	FBoardSaveInfo SaveCurrentBoard();
 
+	void AdjustAllFirefightersVicinity();
+	void AdjustAllFirefightersDodgeAbility();
+
 protected:
 	// FIELDS
 	// The tile class for spawning
@@ -197,7 +204,7 @@ protected:
 	TArray<ATile*> engineTiles;
 	// The firefighters placed on the board
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	TArray<AFireFighterPawn*> fireFighters;
+	TArray<AFireFighterPawn*> fireFighterPawns;
 	// All players in current map
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	TArray<AFPPlayerController*> players;
@@ -214,6 +221,8 @@ protected:
 	ATile* ambulanceLocA = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* ambulanceLocB = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* veteranLoc = nullptr;
 
 
 	

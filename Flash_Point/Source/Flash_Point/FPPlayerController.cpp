@@ -991,6 +991,7 @@ void AFPPlayerController::SetMove()
 void AFPPlayerController::SetExtinguishFire()
 {
 	CurrentOperation = EGameOperations::ExtinguishFire;
+	CurrentOperation = EGameOperations::ExtinguishFire;
 }
 
 void AFPPlayerController::SetChopWall()

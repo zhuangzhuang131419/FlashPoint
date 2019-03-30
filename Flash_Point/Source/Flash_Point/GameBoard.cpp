@@ -285,6 +285,7 @@ void AGameBoard::resolveKnockDown()
 // return true if end the game, otherwise return false
 void AGameBoard::endTurnRelatedOperations()
 {
+	
 	// assume family mode
 	AdvanceFire();
 	flashover();
@@ -826,7 +827,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, boardTiles);
 	DOREPLIFETIME(AGameBoard, ambulanceTiles);
 	DOREPLIFETIME(AGameBoard, engineTiles);
-	DOREPLIFETIME(AGameBoard, fireFighters);
+	DOREPLIFETIME(AGameBoard, fireFighterPawns);
 	DOREPLIFETIME(AGameBoard, players);
 	DOREPLIFETIME(AGameBoard, health);
 	DOREPLIFETIME(AGameBoard, joinedPlayerNum);
@@ -1063,6 +1064,26 @@ FBoardSaveInfo AGameBoard::SaveCurrentBoard()
 	savedBoard.gameModeType = gameModeType;
 
 	return savedBoard;
+}
+
+void AGameBoard::AdjustAllFirefightersVicinity()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Adjust all firefighters vicinity"));
+
+	
+
+}
+
+void AGameBoard::AdjustAllFirefightersDodgeAbility()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Adjust all firefighters dodge ability"));
+	for (size_t i = 0; i < fireFighterPawns.Num(); i++)
+	{
+		if (fireFighterPawns[i]->IsVicinity())
+		{
+			fireFighterPawns[i]->SetDodgeAbility(true);
+		}
+	}
 }
 
 // Called every frame
