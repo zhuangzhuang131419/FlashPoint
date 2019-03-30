@@ -21,6 +21,7 @@ class AGameBoard;
 class AChatManager;
 class ACrewManager;
 class UOptionPrompt;
+class ADoor;
 
 /**
  * 
@@ -156,6 +157,10 @@ public:
 	void ServerSolveKnockDown(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpecialistTurnAdjust(AFireFighterPawn* fireFighterPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerCommandDoorOperation(AFireFighterPawn* fireFighterPawn, AFireFighterPawn* captain, ADoor* target);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerCommandTileOperation(AFireFighterPawn* fireFighterPawn, AFireFighterPawn* captain, const TArray<ATile*>& targets);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

@@ -33,8 +33,11 @@ void UOptionPrompt::Accept()
 	UE_LOG(LogTemp, Warning, TEXT("Accept"));
 	switch (optionType)
 	{
-	case EOptionPromptType::Command:
-		CommandAccept();
+	case EOptionPromptType::CommandDoor:
+		CommandDoorAccept();
+		break;
+	case EOptionPromptType::CommandTile:
+		CommandTileAccept();
 		break;
 	case EOptionPromptType::Dodge:
 		DodgeAccept();
@@ -50,8 +53,11 @@ void UOptionPrompt::Refuse()
 	UE_LOG(LogTemp, Warning, TEXT("Refuse"));
 	switch (optionType)
 	{
-	case EOptionPromptType::Command:
-		CommandRefuse();
+	case EOptionPromptType::CommandDoor:
+		CommandDoorRefuse();
+		break;
+	case EOptionPromptType::CommandTile:
+		CommandTileRefuse();
 		break;
 	case EOptionPromptType::Dodge:
 		DodgeRefuse();
@@ -71,7 +77,13 @@ void UOptionPrompt::DodgeAccept()
 	}
 }
 
-void UOptionPrompt::CommandAccept()
+void UOptionPrompt::CommandDoorAccept()
+{
+	// if player accepts to open door, do open the door
+	
+}
+
+void UOptionPrompt::CommandTileAccept()
 {
 }
 
@@ -84,6 +96,10 @@ void UOptionPrompt::DodgeRefuse()
 	}
 }
 
-void UOptionPrompt::CommandRefuse()
+void UOptionPrompt::CommandDoorRefuse()
+{
+}
+
+void UOptionPrompt::CommandTileRefuse()
 {
 }

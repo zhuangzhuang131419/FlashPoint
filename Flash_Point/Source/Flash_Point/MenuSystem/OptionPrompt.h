@@ -48,10 +48,12 @@ protected:
 	UFUNCTION()
 	void Accept();
 	void DodgeAccept();
-	void CommandAccept();
+	void CommandDoorAccept();
+	void CommandTileAccept();
 
 	UFUNCTION()
 	void Refuse();
 	void DodgeRefuse();
-	void CommandRefuse();
+	void CommandDoorRefuse();
+	void CommandTileRefuse();
 };

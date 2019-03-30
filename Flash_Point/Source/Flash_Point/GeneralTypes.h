@@ -107,7 +107,8 @@ UENUM(BlueprintType)
 enum class EOptionPromptType : uint8
 {
 	Dodge,
-	Command,
+	CommandDoor,
+	CommandTile
 };
 
 // A struct indicate the location

@@ -5,6 +5,7 @@
 #include "GameBoard.h"
 #include "FPPlayerController.h"
 #include "Tile.h"
+#include "Door.h"
 
 
 // Sets default values
@@ -416,6 +417,33 @@ void AFireFighterPawn::Rep_FireFighterDodge()
 	}
 }
 
+void AFireFighterPawn::Rep_NotifyCommandedDoor()
+{
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		if (world->GetFirstPlayerController()->GetPawn() == this) {
+			if (ensure(orderedDoor)) {
+				orderedDoor->SetCommandTarget(true);
+			}
+		}
+	}
+}
+
+void AFireFighterPawn::Rep_NotifyCommandedTiles()
+{
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		// only do this on local commanded pawn
+		if (world->GetFirstPlayerController()->GetPawn() == this) {
+			for (ATile* tempTile : orderedTiles) {
+				if (ensure(tempTile)) {
+					tempTile->SetCommandTarget(true);
+				}
+			}
+		}
+	}
+}
+
 void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Firefighter Over"));
@@ -531,6 +559,42 @@ void AFireFighterPawn::KnockDown()
 	
 }
 
+void AFireFighterPawn::CommandDoorOperation(ADoor * target, AFireFighterPawn * commander)
+{
+	orderedDoor = target;
+	captain = commander;
+	// for authority, if this is the local pawn, indicate operations
+	if (HasAuthority()) {
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			if (world->GetFirstPlayerController()->GetPawn() == this) {
+				target->SetCommandTarget(true);
+			}
+		}
+	}
+}
+
+void AFireFighterPawn::CommandTileOperation(TArray<ATile*> targets, AFireFighterPawn * commander)
+{
+	orderedTiles = targets;
+	captain = commander;
+	// for authprity, if this is the local pawn, indicate operations
+	if (HasAuthority()) {
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			// only do this on local commanded pawn
+			if (world->GetFirstPlayerController()->GetPawn() == this) {
+				for (ATile* tempTile : orderedTiles) {
+					if (ensure(tempTile)) {
+						tempTile->SetCommandTarget(true);
+					}
+				}
+			}
+		}
+		// directly notify the player to prompt choice
+	}
+}
+
 //Set visibility
 void AFireFighterPawn::SetVisibility(bool status){
 	FireFighter->SetVisibility(status);
@@ -559,6 +623,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, extinguishAP);
 	DOREPLIFETIME(AFireFighterPawn, movementAP);
 	DOREPLIFETIME(AFireFighterPawn, commandAP);
+	DOREPLIFETIME(AFireFighterPawn, orderedDoor);
+	DOREPLIFETIME(AFireFighterPawn, orderedTiles);
 }
 
 bool AFireFighterPawn::GetCanDodge()
