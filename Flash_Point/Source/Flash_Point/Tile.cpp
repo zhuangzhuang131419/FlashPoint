@@ -536,6 +536,7 @@ void ATile::SpawnAmbulance(int pos, ATile* SpawnTile)
 						FRotator(0, Rotate, 0)
 						);
 	TheAmbulance->SetAmbulancePosition(pos);
+	TheAmbulance->board = board;
 	ambulanceTiles = board->GetAmbulanceTiles();
 	for (int i = 0; i < ambulanceTiles.Num(); i++)
 	{
