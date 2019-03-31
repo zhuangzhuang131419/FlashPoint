@@ -1015,6 +1015,12 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::OpenDoor:
 			break;
 		case EGameOperations::FireDeckGun:
+			if(!ensure(localPawn)){
+				return;
+			}
+			if(localPawn->GetCurrentAP() >= localPawn->GetFireDeckGunConsumption()){
+				localPawn->AdjustFireFighterAP(-localPawn->GetFireDeckGunConsumption());
+			}
 			break;
 		case EGameOperations::FlipPOI:
 			if (!ensure(localPawn)) return;
@@ -1117,6 +1123,12 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					}
 				}
 			}
+			break;
+		case EGameOperations::DriveAmbulance:
+			break;
+		case EGameOperations::GetOutAmbulance:
+			break;
+		case EGameOperations::GetOutFireEngine:
 			break;
 		default:
 			break;

@@ -40,6 +40,8 @@ enum class EGameOperations : uint8
 	OpenDoor,
 	DriveAmbulance,
 	DriveFireEngine,
+	GetOutAmbulance,
+	GetOutFireEngine,
 	FireDeckGun,
 	FlipPOI,
 	Dodge,

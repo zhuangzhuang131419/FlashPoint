@@ -56,6 +56,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetDriveAmbulance();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetGetOutAmbulance(){CurrentOperation = EGameOperations::GetOutAmbulance;}
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetGetOutFireEngine(){CurrentOperation = EGameOperations::GetOutFireEngine;}
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetDriveFireEngine();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetRadio();
