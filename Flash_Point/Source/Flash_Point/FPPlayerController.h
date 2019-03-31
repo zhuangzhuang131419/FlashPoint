@@ -181,6 +181,9 @@ public:
 	void CarryHazmat();
 
 	UFUNCTION(BlueprintCallable)
+	void HealVictim();
+
+	UFUNCTION(BlueprintCallable)
 	bool GetInAmbulance();
 	UFUNCTION(BlueprintCallable)
 	void GetOutAmbulance();

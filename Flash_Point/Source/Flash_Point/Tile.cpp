@@ -234,8 +234,10 @@ void ATile::PlaceVictim()
 		VictimSocketLocation,
 		FRotator(0, 0, 0)
 		);
+	
 	if (ensure(newVictim))
 	{
+		newVictim->SetPlacedOn(this);
 		victims.Add(newVictim);
 	}
 	POIStatus = EPOIStatus::Revealed;
@@ -249,6 +251,17 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		placedFireFighters.Add(movingPawn);
 		movingPawn->GetPlacedOn()->placedFireFighters.Remove(movingPawn);
 		movingPawn->SetPlacedOn(this);
+
+		if (movingPawn->GetLeading() != nullptr)
+		{
+			ATile* tempTile = movingPawn->GetLeading()->GetPlacedOn();
+			if (ensure(tempTile))
+			{
+				tempTile->SetPOIStatus(EPOIStatus::Empty);
+				movingPawn->GetLeading()->SetPlacedOn(this);
+			}
+			movingPawn->GetLeading()->SetActorLocation(movingPawn->GetActorLocation() - FVector(0, 100, 0));
+		}
 
 		if (POIStatus == EPOIStatus::Hided)
 		{

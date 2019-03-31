@@ -3,6 +3,8 @@
 #include "Victim.h"
 #include "Engine/World.h"
 #include "FPPlayerController.h"
+#include "FireFighterPawn.h"
+#include "Tile.h"
 
 
 // Sets default values
@@ -12,11 +14,6 @@ AVictim::AVictim()
 	PrimaryActorTick.bCanEverTick = false;
 
 	victimMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("victimMesh"));
-}
-
-void AVictim::SetVictimLoc(FVector loc)
-{
-	victimLoc = loc;
 }
 
 void AVictim::Rep_OnCarry()
@@ -35,11 +32,28 @@ void AVictim::Rep_OnVictimLocationChanged()
 	SetActorLocation(victimLoc);
 }
 
+void AVictim::OnVictimClicked(AActor * Target, FKey ButtonPressed)
+{
+	if (ButtonPressed != FKey("LeftMouseButton")) return;
+	if (!isHealed) { return; }
+	UE_LOG(LogTemp, Warning, TEXT("Victim has been clicked"));
+	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	AFireFighterPawn* fireFireterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
+	if (ensure(fireFireterPawn))
+	{
+		fireFireterPawn->SetLeading(this);
+		this->SetActorLocation(fireFireterPawn->GetActorLocation() - FVector(0, 100, 0));
+		UE_LOG(LogTemp, Warning, TEXT("Victim has been lead"));
+	}
+}
+
 void AVictim::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AVictim, isCarried);
 	DOREPLIFETIME(AVictim, victimLoc);
+	DOREPLIFETIME(AVictim, isHealed);
+	//DOREPLIFETIME(AVictim, placedOn);
 }
 
 // Called when the game starts or when spawned
@@ -50,6 +64,10 @@ void AVictim::BeginPlay()
 	if (HasAuthority()) {
 		SetReplicates(true);
 	}
+
+	FScriptDelegate onMouseClickedDel;
+	onMouseClickedDel.BindUFunction(this, "OnVictimClicked");
+	OnClicked.Add(onMouseClickedDel);
 }
 
 // Called every frame

@@ -677,6 +677,39 @@ void AFPPlayerController::CarryHazmat()
 	}
 }
 
+void AFPPlayerController::HealVictim()
+{
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		if (fireFighterPawn->GetFireFighterRole() != ERoleType::Paramedic) { return; }
+		ATile* currentTile = fireFighterPawn->GetPlacedOn();
+		if (ensure(currentTile))
+		{
+			if (currentTile->GetVictims()->Num() == 0) { return; }
+			bool healed = false;
+			for (size_t i = 0; i < currentTile->GetVictims()->Num(); i++)
+			{
+				if (!(*currentTile->GetVictims())[i]->IsHealed())
+				{
+					(*currentTile->GetVictims())[i]->SetIsHealed(true);
+					healed = true;
+					break;
+				}
+			}
+			if (healed)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("A victim has been healed"));
+				fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetHealConsumption());
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("All victim has already been healed"));
+			}
+		}
+	}
+}
+
 void AFPPlayerController::RemoveHazmat()
 {
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
