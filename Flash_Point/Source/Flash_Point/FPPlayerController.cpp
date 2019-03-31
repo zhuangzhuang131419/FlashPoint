@@ -268,13 +268,81 @@ bool AFPPlayerController::ServerAdvancePOI_Validate(AGameBoard * board)
 void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fireFighterPawn)
 {
 	ATile* currentTile = fireFighterPawn->GetPlacedOn();
-	if (ensure(currentTile))
+	if (ensure(currentTile) && currentTile->GetGameBoard()->GetGameType() == EGameType::Family)
 	{
 		// if the tile is on fire, just return
 		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
 		AVictim* tempVictim = fireFighterPawn->GetVictim();
 		if (!tempVictim) return;
 		if (currentTile->IsOutside())
+		{
+			tempVictim->Destroy();
+			UE_LOG(LogTemp, Warning, TEXT("Outside"));
+			currentTile->SetPOIStatus(EPOIStatus::Empty);
+			currentTile->GetGameBoard()->SetVictimSavedNum(
+				currentTile->GetGameBoard()->victimSavedNum + 1
+			);
+			UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), currentTile->GetGameBoard()->victimSavedNum);
+			currentTile->GetGameBoard()->SetCurrentPOI(
+				currentTile->GetGameBoard()->currentPOI - 1
+			);
+			UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), currentTile->GetGameBoard()->currentPOI);
+		}
+		else {
+			tempVictim->victimMesh->SetVisibility(true);
+			FVector VictimSocketLocation;
+			switch (currentTile->GetVictims()->Num())
+			{
+			case 0:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+				break;
+			case 1:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim1"));
+				break;
+			case 2:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim3"));
+				break;
+			case 3:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
+				break;
+			default:
+				UE_LOG(LogTemp, Warning, TEXT("No more position"))
+					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+				break;
+			}
+
+			tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
+			tempVictim->SetVictimLoc(tempVictim->GetActorLocation());
+
+			UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+			currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
+			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+			
+			currentTile->SetPOIStatus(EPOIStatus::Revealed);
+		}
+		fireFighterPawn->SetVictim(nullptr);
+		tempVictim->SetIsCarried(false);
+
+		// only for server, actively check if the game is won
+		if (HasAuthority()) {
+			AGameBoard* tempBoard = currentTile->GetGameBoard();
+			if (ensure(tempBoard)) {
+				if (tempBoard->victimSavedNum >= tempBoard->maxSavedVictim) {
+					AFPPlayerController* tempPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+					if (ensure(tempPlayer)) {
+						tempPlayer->NotifyGameOver(true);
+					}
+				}
+			}
+		}
+	}
+	else if (ensure(currentTile) && currentTile->GetGameBoard()->GetGameType() == EGameType::Experienced)
+	{
+		// if the tile is on fire, just return
+		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
+		AVictim* tempVictim = fireFighterPawn->GetVictim();
+		if (!tempVictim) return;
+		if (currentTile == currentTile->GetGameBoard()->ambulanceLocA || currentTile == currentTile->GetGameBoard()->ambulanceLocB)
 		{
 			tempVictim->Destroy();
 			UE_LOG(LogTemp, Warning, TEXT("Outside"));

@@ -35,3 +35,19 @@ int32 AAmbulance::GetAmbulancePosition()
 	return currentPosition;
 }
 
+void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)
+{
+	for (int i = 0; i < victims->Num(); i++)
+	{
+		AVictim* tempVictim = (*victims)[i];
+		if (!tempVictim) continue;
+		tempVictim->Destroy();
+		currentTile->SetPOIStatus(EPOIStatus::Empty);
+		currentTile->GetGameBoard()->SetVictimSavedNum(
+			currentTile->GetGameBoard()->victimSavedNum + 1
+		);
+		currentTile->GetGameBoard()->SetCurrentPOI(
+			currentTile->GetGameBoard()->currentPOI - 1
+		);
+	}
+}

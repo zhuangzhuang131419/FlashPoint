@@ -537,6 +537,7 @@ void ATile::SpawnAmbulance(int pos, ATile* SpawnTile)
 						);
 	TheAmbulance->SetAmbulancePosition(pos);
 	TheAmbulance->board = board;
+	TheAmbulance->RescueVictims(this->GetVictims(), this);
 	ambulanceTiles = board->GetAmbulanceTiles();
 	for (int i = 0; i < ambulanceTiles.Num(); i++)
 	{
@@ -1234,15 +1235,15 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					TheFireEngine->Destroy();
 					if (prevParkTile == nullptr)
 					{
-						SpawnFireEngine(this->GetID(), this);
 						board->SetFireEngineLocA(this);
 						board->SetFireEngineLocB(this->nextParkTile);
+						SpawnFireEngine(this->GetID(), this);
 					}
 					else
 					{
-						SpawnFireEngine(prevParkTile->GetID(), prevParkTile);
 						board->SetFireEngineLocA(this->prevParkTile);
 						board->SetFireEngineLocB(this);
+						SpawnFireEngine(prevParkTile->GetID(), prevParkTile);
 					}
 				}
 			}
@@ -1362,15 +1363,15 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					TheAmbulance->Destroy();
 					if (prevParkTile == nullptr)
 					{
-						SpawnAmbulance(this->GetID(), this);
 						board->SetAmbulanceLocA(this);
 						board->SetAmbulanceLocB(this->nextParkTile);
+						SpawnAmbulance(this->GetID(), this);
 					}
 					else
 					{
-						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
 						board->SetAmbulanceLocA(this->prevParkTile);
 						board->SetAmbulanceLocB(this);
+						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
 					}
 				}
 			}
@@ -1539,15 +1540,15 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					TheAmbulance->Destroy();
 					if (prevParkTile == nullptr)
 					{
-						SpawnAmbulance(this->GetID(), this);
 						board->SetAmbulanceLocA(this);
 						board->SetAmbulanceLocB(this->nextParkTile);
+						SpawnAmbulance(this->GetID(), this);
 					}
 					else
 					{
-						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
 						board->SetAmbulanceLocA(this->prevParkTile);
 						board->SetAmbulanceLocB(this);
+						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
 					}
 				}
 			}

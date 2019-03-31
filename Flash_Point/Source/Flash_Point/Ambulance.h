@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GeneralTypes.h"
 #include "GameFramework/Actor.h"
+#include "Victim.h"
+#include "Tile.h"
 #include "Ambulance.generated.h"
 
 class AGameBoard;
@@ -35,6 +37,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Position")
 	int32 GetAmbulancePosition();
 
+	void RescueVictims(TArray<AVictim*>* victims, ATile* currentTile);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
