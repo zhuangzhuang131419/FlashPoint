@@ -1019,6 +1019,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				return;
 			}
 			if(localPawn->GetCurrentAP() >= localPawn->GetFireDeckGunConsumption()){
+				localPawn->GetPlacedOn()->GetFireEngine()->FireDeckGun();
 				localPawn->AdjustFireFighterAP(-localPawn->GetFireDeckGunConsumption());
 			}
 			break;

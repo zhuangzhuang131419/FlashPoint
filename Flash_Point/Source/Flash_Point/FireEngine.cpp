@@ -12,6 +12,7 @@ AFireEngine::AFireEngine()
 
 void AFireEngine::FireDeckGun()
 {
+	UE_LOG(LogTemp, Warning, TEXT("FIRING DECK GUN!"));
 	// check the quadrant has firefighter or not
 	int32 startx;
 	int32 starty;
@@ -59,6 +60,7 @@ void AFireEngine::FireDeckGun()
 	if (targetTile)
 	{
 		// extinguish fire
+		targetTile->SetFireStatus(EFireStatus::Clear);
 		targetTile->GetSmokeEffect()->Deactivate();
 		targetTile->GetFireEffect()->Deactivate();
 	}
