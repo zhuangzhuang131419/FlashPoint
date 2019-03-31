@@ -537,17 +537,22 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 
 	// Now set up specific tiles for fire engine park or ambulance park
 	tempTile = nullptr;
+	ATile* firstTile = nullptr;
+	ATile* prevTileLog = nullptr;
+	int32 firstIndex = -1;
 	int engineSpawned = 0, ambulanceSpawned = 0;
 	for (int32 i = 0; i < indicator.engineParkLoc.Num(); i++) {
 		if (indicator.engineParkLoc[i] > -1 && indicator.engineParkLoc[i] < 80) {
 			// set up for the first tile on the specified location
 			tempTile = boardTiles[indicator.engineParkLoc[i]];
+			prevTileLog = tempTile;
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::FireEnginePark);
 				engineTiles.Add(tempTile);
 				if (engineSpawned == 0)
 				{
-					tempTile->SpawnFireEngine(indicator.engineParkLoc[i]);
+					firstTile = tempTile;
+					firstIndex = indicator.engineParkLoc[i];
 					SetFireEngineLocA(tempTile);
 				}
 			}
@@ -565,20 +570,28 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					engineSpawned = 1;
 					SetFireEngineLocB(tempTile);
 				}
+				tempTile->prevParkTile = prevTileLog;
 				engineTiles.Add(tempTile);
 			}
 		}
 	}
+	firstTile->SpawnFireEngine(firstIndex, firstTile);
+
+	firstTile = nullptr;
+	prevTileLog = nullptr;
+	firstIndex = -1;
 	tempTile = nullptr;
 	for (int32 i = 0; i < indicator.ambulanceParkLoc.Num(); i++) {
 		if (indicator.ambulanceParkLoc[i] > -1 && indicator.ambulanceParkLoc[i] < 80) {
 			tempTile = boardTiles[indicator.ambulanceParkLoc[i]];
 			if (ensure(tempTile)) {
 				tempTile->SetTileType(ETileType::AmbulancePark);
+				prevTileLog = tempTile;
 				ambulanceTiles.Add(tempTile);
 				if (ambulanceSpawned == 0)
 				{
-					tempTile->SpawnAmbulance(indicator.ambulanceParkLoc[i]);
+					firstTile = tempTile;
+					firstIndex = indicator.ambulanceParkLoc[i];
 					SetAmbulanceLocA(tempTile);
 				}
 			}
@@ -598,10 +611,14 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					ambulanceSpawned = 1;
 					SetAmbulanceLocB(tempTile);
 				}
+				tempTile->prevParkTile = prevTileLog;
 				ambulanceTiles.Add(tempTile);
 			}
 		}
 	}
+	firstTile->SpawnAmbulance(firstIndex, firstTile);
+	firstTile = nullptr;
+	firstIndex = -1;
 
 	// Now setup walls on indicated location's right side
 	tempTile = nullptr;

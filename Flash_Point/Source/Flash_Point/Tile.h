@@ -107,8 +107,6 @@ public:
 	// Getter for Hazmat
 	AHazmat* GetHazmat() { return HazmatOnTile; }
 
-	//Getter for FireEngine
-	AFireEngine* GetFireEngine(){return TheFireEngine;}
 	// Getter for gameboard
 	AGameBoard* GetGameBoard();
 
@@ -121,8 +119,8 @@ public:
 	void PlaceVictim();
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
-	void SpawnAmbulance(int pos);
-	void SpawnFireEngine(int pos);
+	void SpawnAmbulance(int pos, ATile* SpawnTile);
+	void SpawnFireEngine(int pos, ATile* SpawnTile);
 	void AdvanceFire();
 	void AdvancePOI();
 	void AdvanceHazmat();
@@ -144,6 +142,10 @@ public:
 	// for saving and loading the tile
 	FTileSaveInfo SaveTile();
 	void LoadTile(FTileSaveInfo tileInfo);
+
+	ATile* prevParkTile = nullptr;
+	ATile* GetPrevParkTile() { return prevParkTile; }
+	void SetPrevParkTile(ATile* prev) { prevParkTile = prev; }
 
 protected:
 	// FIELDS

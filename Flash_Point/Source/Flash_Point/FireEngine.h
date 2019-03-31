@@ -24,6 +24,15 @@ public:
 	FLocation parkingSpot1;
 	FLocation parkingSpot2;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
+	int32 currentPosition = -1;
+
+	UFUNCTION(BlueprintCallable, Category = "Position")
+	void SetFEPosition(int32 newPos);
+
+	UFUNCTION(BlueprintCallable, Category = "Position")
+	int32 GetFEPosition();
+
 	AGameBoard* board;
 
 protected:

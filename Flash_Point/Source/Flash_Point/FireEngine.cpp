@@ -125,3 +125,12 @@ void AFireEngine::splashOver(ATile * targetTile, EDirection direction)
 	}
 }
 
+void AFireEngine::SetFEPosition(int32 newPos)
+{
+	currentPosition = newPos;
+}
+
+int32 AFireEngine::GetFEPosition()
+{
+	return currentPosition;
+}

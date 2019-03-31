@@ -493,28 +493,28 @@ void ATile::AdvancePOI()
 	}
 }
 
-void ATile::SpawnAmbulance(int pos)
+void ATile::SpawnAmbulance(int pos, ATile* SpawnTile)
 {
 	FVector AmbulanceSocketLocation = FVector(0.0f, 0.0f, 0.0f);
 	int Rotate = 0;
 	if (pos % 8 == 7)
 	{
-		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		AmbulanceSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleTop"));
 		Rotate = 90;
 	}
 	else if (pos % 8 == 0 && pos != 0 && pos != 72)
 	{
-		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		AmbulanceSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleBot"));
 		Rotate = 90;
 	}
 	else if (pos < 7)
 	{
-		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		AmbulanceSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleLeft"));
 		Rotate = 0;
 	}
 	else if (pos >= 72)
 	{
-		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		AmbulanceSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleRight"));
 		Rotate = 0;
 	}
 	TheAmbulance = GetWorld()->SpawnActor<AAmbulance>(
@@ -522,6 +522,7 @@ void ATile::SpawnAmbulance(int pos)
 						AmbulanceSocketLocation,
 						FRotator(0, Rotate, 0)
 						);
+	TheAmbulance->SetAmbulancePosition(pos);
 	ambulanceTiles = board->GetAmbulanceTiles();
 	for (int i = 0; i < ambulanceTiles.Num(); i++)
 	{
@@ -529,28 +530,28 @@ void ATile::SpawnAmbulance(int pos)
 	}
 }
 
-void ATile::SpawnFireEngine(int pos)
+void ATile::SpawnFireEngine(int pos, ATile* SpawnTile)
 {
 	FVector FireEngineSocketLocation = FVector(0.0f, 0.0f, 0.0f);
 	int Rotate = 0;
 	if (pos % 8 == 7)
 	{
-		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		FireEngineSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleTop"));
 		Rotate = 0;
 	}
 	else if (pos % 8 == 0 && pos != 0 && pos != 72)
 	{
-		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		FireEngineSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleBot"));
 		Rotate = 0;
 	}
 	else if (pos < 7)
 	{
-		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		FireEngineSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleLeft"));
 		Rotate = 270;
 	}
 	else if (pos >= 72)
 	{
-		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		FireEngineSocketLocation = SpawnTile->TileMesh->GetSocketLocation(FName("VehicleRight"));
 		Rotate = 270;
 	}
 
@@ -559,10 +560,12 @@ void ATile::SpawnFireEngine(int pos)
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);
+	TheFireEngine->SetFEPosition(pos);
 	fireEngineTiles = board->GetEngineTiles();
 	for (int i = 0; i < fireEngineTiles.Num(); i++)
 	{
-		fireEngineTiles[i]->TheFireEngine = this->TheFireEngine;
+		UE_LOG(LogTemp, Warning, TEXT("SETTING %d"), fireEngineTiles.Num());
+		fireEngineTiles[i]->TheFireEngine = TheFireEngine;
 	}
 }
 
@@ -1011,15 +1014,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::OpenDoor:
 			break;
 		case EGameOperations::FireDeckGun:
-			UE_LOG(LogTemp, Warning, TEXT("Fire Gun Clicked!"));
-			if(!ensure(localPawn)){
-				return;
-			}
-			if(localPawn->GetCurrentAP() >= localPawn->GetFireDeckGunConsumption()){
-				
-				UE_LOG(LogTemp, Warning, TEXT("Fire success!"));
-				localPawn->AdjustFireFighterAP(-localPawn->GetFireDeckGunConsumption());
-			}
 			break;
 		case EGameOperations::FlipPOI:
 			if (!ensure(localPawn)) return;
@@ -1099,6 +1093,24 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					// do server notify
 					localPlayer->ServerCommandTileOperation(commanded, localPawn, traceTiles);
 				}				
+			}
+			break;
+		case EGameOperations::DriveFireEngine:
+			if (type == ETileType::FireEnginePark)
+			{
+				if (TheFireEngine != nullptr)
+				{
+					int32 prevPos = TheFireEngine->GetFEPosition();
+					TheFireEngine->Destroy();
+					if (prevParkTile == nullptr)
+					{
+						SpawnFireEngine(this->GetID(), this);
+					}
+					else
+					{
+						SpawnFireEngine(prevParkTile->GetID(), prevParkTile);
+					}
+				}
 			}
 			break;
 		default:

@@ -25,3 +25,13 @@ void AAmbulance::Tick(float DeltaTime)
 
 }
 
+void AAmbulance::SetAmbulancePosition(int32 newPos)
+{
+	currentPosition = newPos;
+}
+
+int32 AAmbulance::GetAmbulancePosition()
+{
+	return currentPosition;
+}
+

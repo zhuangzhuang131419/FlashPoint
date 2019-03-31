@@ -19,15 +19,26 @@ public:
 	// Sets default values for this actor's properties
 	AAmbulance();
 
+
 	// The parking location of the ambulance
 	FLocation parkingSpot1;
 	FLocation parkingSpot2;
 
 	AGameBoard* board;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
+	int32 currentPosition = -1;
+
+	UFUNCTION(BlueprintCallable, Category = "Position")
+	void SetAmbulancePosition(int32 newPos);
+
+	UFUNCTION(BlueprintCallable, Category = "Position")
+	int32 GetAmbulancePosition();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
 
 public:	
 	// Called every frame
@@ -35,4 +46,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* ambulanceMesh = nullptr;
+
+
 };
