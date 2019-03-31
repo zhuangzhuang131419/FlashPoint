@@ -1126,8 +1126,50 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::DriveAmbulance:
+			if (type == ETileType::AmbulancePark)
+			{
+				if (TheAmbulance != nullptr)
+				{
+					int32 prevPos = TheAmbulance->GetAmbulancePosition();
+					TheAmbulance->Destroy();
+					if (prevParkTile == nullptr)
+					{
+						SpawnAmbulance(this->GetID(), this);
+						board->SetAmbulanceLocA(this);
+						board->SetAmbulanceLocB(this->nextParkTile);
+					}
+					else
+					{
+						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
+						board->SetAmbulanceLocA(this->prevParkTile);
+						board->SetAmbulanceLocB(this);
+					}
+				}
+			}
 			break;
 		case EGameOperations::GetOutAmbulance:
+			if (type == ETileType::AmbulancePark)
+			{
+				if (this == board->ambulanceLocA || this == board->ambulanceLocB)
+				{
+					if (!ensure(localPlayer)) return;
+					if (!ensure(localPawn)) return;
+					if (ensure(localPawn))
+					{
+						if (HasAuthority()) {
+							PlacePawnHere(localPawn);
+							localPawn->SetVisibility(true);
+							localPlayer->inGameUI->EnableOperationPanels(true);
+						}
+						else {
+							localPlayer->ServerPlacePawn(this, localPawn);
+							// to make the placing visible to operation client
+							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+							localPawn->SetVisibility(true);
+						}
+					}
+				}
+			}
 			break;
 		case EGameOperations::GetOutFireEngine:
 			break;

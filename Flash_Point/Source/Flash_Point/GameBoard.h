@@ -81,6 +81,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void endTurnRelatedOperations();
 
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* ambulanceLocA = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* ambulanceLocB = nullptr;
+
 	// Functions of turn related operaetions
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	int32 JoinBoard();
@@ -217,10 +222,6 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* engineLocB = nullptr;
 	// locations of the fire engine
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	ATile* ambulanceLocA = nullptr;
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	ATile* ambulanceLocB = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* veteranLoc = nullptr;
 

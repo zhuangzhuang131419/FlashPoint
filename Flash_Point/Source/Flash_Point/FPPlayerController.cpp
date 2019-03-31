@@ -1046,20 +1046,24 @@ void AFPPlayerController::SetRadio()
 	CurrentOperation = EGameOperations::DriveAmbulance;
 }
 
-void AFPPlayerController::SetGetOutAmbulance()
+bool AFPPlayerController::SetGetOutAmbulance()
 {
 	if (CurrentOperation == EGameOperations::DriveAmbulance)
 	{
 		CurrentOperation = EGameOperations::GetOutAmbulance;
+		return true;
 	}
+	return false;
 }
 
-void AFPPlayerController::SetGetOutFireEngine()
+bool AFPPlayerController::SetGetOutFireEngine()
 {
 	if (CurrentOperation == EGameOperations::DriveFireEngine)
 	{
 		CurrentOperation = EGameOperations::GetOutFireEngine;
+		return true;
 	}
+	return false;
 }
 
 void AFPPlayerController::SetDriveFireEngine()
