@@ -1109,6 +1109,112 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				if (TheFireEngine != nullptr)
 				{
 					int32 prevPos = TheFireEngine->GetFEPosition();
+					int32 currentPos = this->GetID();
+					// prevBot
+					if (prevPos % 8 == 0 && prevPos != 72)
+					{
+						if (currentPos % 8 == 7)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+						
+					}
+					// prevTop
+					else if (prevPos % 8 == 7)
+					{
+						if (currentPos % 8 == 0 && currentPos != 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevLeft
+					else if (prevPos < 7)
+					{
+						if (currentPos >= 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevRight
+					else
+					{
+						if (currentPos < 7 && currentPos != 0)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
 					TheFireEngine->Destroy();
 					if (prevParkTile == nullptr)
 					{
@@ -1131,6 +1237,112 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				if (TheAmbulance != nullptr)
 				{
 					int32 prevPos = TheAmbulance->GetAmbulancePosition();
+					int32 currentPos = this->GetID();
+					// prevBot
+					if (prevPos % 8 == 0 && prevPos != 72)
+					{
+						if (currentPos % 8 == 7)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+						
+					}
+					// prevTop
+					else if (prevPos % 8 == 7)
+					{
+						if (currentPos % 8 == 0 && currentPos != 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevLeft
+					else if (prevPos < 7)
+					{
+						if (currentPos >= 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevRight
+					else
+					{
+						if (currentPos < 7 && currentPos != 0)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
 					TheAmbulance->Destroy();
 					if (prevParkTile == nullptr)
 					{
@@ -1191,6 +1403,135 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 							localPawn->SetVisibility(true);
 						}
+					}
+				}
+			}
+			break;
+		
+		case EGameOperations::Radio:
+			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			{
+				if (TheAmbulance != nullptr)
+				{
+					int32 prevPos = TheAmbulance->GetAmbulancePosition();
+					int32 currentPos = this->GetID();
+					// prevBot
+					if (prevPos % 8 == 0 && prevPos != 72)
+					{
+						if (currentPos % 8 == 7)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+						
+					}
+					// prevTop
+					else if (prevPos % 8 == 7)
+					{
+						if (currentPos % 8 == 0 && currentPos != 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevLeft
+					else if (prevPos < 7)
+					{
+						if (currentPos >= 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevRight
+					else
+					{
+						if (currentPos < 7 && currentPos != 0)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					TheAmbulance->Destroy();
+					if (prevParkTile == nullptr)
+					{
+						SpawnAmbulance(this->GetID(), this);
+						board->SetAmbulanceLocA(this);
+						board->SetAmbulanceLocB(this->nextParkTile);
+					}
+					else
+					{
+						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
+						board->SetAmbulanceLocA(this->prevParkTile);
+						board->SetAmbulanceLocB(this);
 					}
 				}
 			}
