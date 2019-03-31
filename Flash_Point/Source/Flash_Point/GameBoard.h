@@ -85,6 +85,10 @@ public:
 	ATile* ambulanceLocA = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* ambulanceLocB = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* engineLocA = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* engineLocB = nullptr;
 
 	// Functions of turn related operaetions
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
@@ -216,11 +220,6 @@ protected:
 	// The current gameboard health
 	UPROPERTY(ReplicatedUsing = Rep_HealthChangeNotify, EditAnyWhere, Category = "Map Attributes")
 	int32 health = MAX_HEALTH;
-	// locations of the fire engine
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	ATile* engineLocA = nullptr;
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	ATile* engineLocB = nullptr;
 	// locations of the fire engine
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* veteranLoc = nullptr;

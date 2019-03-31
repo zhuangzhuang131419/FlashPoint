@@ -1172,6 +1172,28 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::GetOutFireEngine:
+			if (type == ETileType::FireEnginePark)
+			{
+				if (this == board->engineLocA || this == board->engineLocB)
+				{
+					if (!ensure(localPlayer)) return;
+					if (!ensure(localPawn)) return;
+					if (ensure(localPawn))
+					{
+						if (HasAuthority()) {
+							PlacePawnHere(localPawn);
+							localPawn->SetVisibility(true);
+							localPlayer->inGameUI->EnableOperationPanels(true);
+						}
+						else {
+							localPlayer->ServerPlacePawn(this, localPawn);
+							// to make the placing visible to operation client
+							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+							localPawn->SetVisibility(true);
+						}
+					}
+				}
+			}
 			break;
 		default:
 			break;
