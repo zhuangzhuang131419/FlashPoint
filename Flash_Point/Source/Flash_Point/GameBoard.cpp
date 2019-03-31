@@ -571,6 +571,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					SetFireEngineLocB(tempTile);
 				}
 				tempTile->prevParkTile = prevTileLog;
+				prevTileLog->nextParkTile = tempTile;
 				engineTiles.Add(tempTile);
 			}
 		}
@@ -612,6 +613,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 					SetAmbulanceLocB(tempTile);
 				}
 				tempTile->prevParkTile = prevTileLog;
+				prevTileLog->nextParkTile = tempTile;
 				ambulanceTiles.Add(tempTile);
 			}
 		}

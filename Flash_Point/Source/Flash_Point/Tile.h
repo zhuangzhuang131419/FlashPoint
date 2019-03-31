@@ -147,6 +147,10 @@ public:
 	ATile* GetPrevParkTile() { return prevParkTile; }
 	void SetPrevParkTile(ATile* prev) { prevParkTile = prev; }
 
+	ATile* nextParkTile = nullptr;
+	ATile* GetNextParkTile() { return nextParkTile; }
+	void SetNextParkTile(ATile* next) { nextParkTile = next; }
+
 protected:
 	// FIELDS
 

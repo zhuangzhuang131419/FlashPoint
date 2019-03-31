@@ -560,6 +560,7 @@ void ATile::SpawnFireEngine(int pos, ATile* SpawnTile)
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);
+	TheFireEngine->board = board;
 	TheFireEngine->SetFEPosition(pos);
 	fireEngineTiles = board->GetEngineTiles();
 	for (int i = 0; i < fireEngineTiles.Num(); i++)
@@ -1105,10 +1106,14 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					if (prevParkTile == nullptr)
 					{
 						SpawnFireEngine(this->GetID(), this);
+						board->SetFireEngineLocA(this);
+						board->SetFireEngineLocB(this->nextParkTile);
 					}
 					else
 					{
 						SpawnFireEngine(prevParkTile->GetID(), prevParkTile);
+						board->SetFireEngineLocA(this->prevParkTile);
+						board->SetFireEngineLocB(this);
 					}
 				}
 			}
