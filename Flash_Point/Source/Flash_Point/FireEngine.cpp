@@ -14,10 +14,11 @@ void AFireEngine::FireDeckGun()
 {
 	UE_LOG(LogTemp, Warning, TEXT("FIRING DECK GUN!"));
 	// check the quadrant has firefighter or not
-	int32 startx;
-	int32 starty;
+	int32 startx = currentPosition / 10;
+	int32 starty = currentPosition % 8;
 	int32 randomTargetPosition;
-	if (parkingSpot1.xLoc <= 4)
+	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
+	if (startx <= 4)
 	{
 		startx = 1;
 	}
@@ -25,7 +26,7 @@ void AFireEngine::FireDeckGun()
 	{
 		startx = 5;
 	}
-	if (parkingSpot1.yLoc <= 3)
+	if (starty <= 3)
 	{
 		starty = 1;
 	}
@@ -34,14 +35,15 @@ void AFireEngine::FireDeckGun()
 		starty = 4;
 	}
 
-	for (int32 x = startx; x < startx + (board->GetBoardLength() - 2) / 2; x++)
+	for (int32 x = startx; x < startx + (board->GetBoardLength() - 2) / 2 - 1; x++)
 	{
-		for (int32 y = starty; y < starty + (board->GetBoardWidth() - 2) / 2; y++)
+		for (int32 y = starty; y < starty + (board->GetBoardWidth() - 2) / 2 - 1; y++)
 		{
 			if (board)
 			{
 				if (board->GetboardTiles()[x * board->GetBoardLength() + y]->GetPlacedFireFighters()->Num() > 0)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("Checking tile: %d, %d"), x, y);
 					UE_LOG(LogTemp, Warning, TEXT("Unable to use fire engine. Some one is in the quadrant"));
 					return;
 				}
@@ -53,10 +55,11 @@ void AFireEngine::FireDeckGun()
 		}
 	}
 	// randomly choose a target fire 
-	randomTargetPosition = FMath::RandRange(startx * board->GetBoardLength() + starty
-		, (startx + (board->GetBoardLength() - 2) / 2 - 1) * board->GetBoardLength() + starty + (board->GetBoardWidth() - 2) / 2 - 1);
-	ATile* targetTile = board->GetboardTiles()[randomTargetPosition];
-	UE_LOG(LogTemp, Warning, TEXT("The target tile is %d"), randomTargetPosition);
+	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
+	int32 randx = FMath::RandRange(startx, startx + 3);
+	int32 randy = FMath::RandRange(starty, starty + 2);
+	ATile* targetTile = board->GetboardTiles()[randx* 8 + randy];
+	UE_LOG(LogTemp, Warning, TEXT("The target tile is %d"), randx* 8 + randy);
 	if (targetTile)
 	{
 		// extinguish fire
