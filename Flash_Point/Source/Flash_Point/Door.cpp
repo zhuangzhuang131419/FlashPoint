@@ -183,6 +183,8 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 						}
 						if (!fireFighterPawn->IsAdjacentToWall(this)) return;
 						playerController->ServerCommandDoorOperation(fireFighterPawn, commander, this);
+						playerController->SetNone();
+						playerController->CancelCommand();
 					}
 				}
 			}

@@ -25,6 +25,9 @@ public:
 	// Getter and setter
 	UTextBlock* GetPromptText() { return PromptText; }
 
+	// Prompt the operation to player
+	void PromptOperation(EOptionPromptType operation, FString promptText);
+
 	EOptionPromptType optionType;
 
 protected:

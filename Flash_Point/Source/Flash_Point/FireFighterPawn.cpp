@@ -423,26 +423,58 @@ void AFireFighterPawn::Rep_FireFighterDodge()
 
 void AFireFighterPawn::Rep_NotifyCommandedDoor()
 {
+	if (!orderedDoor) return;
+	if (!captain) return;
 	UWorld* world = GetWorld();
 	if (ensure(world)) {
-		if (world->GetFirstPlayerController()->GetPawn() == this) {
+		// only do this on local commanded pawn
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		if (localPlayer->GetPawn() == this) {
 			if (ensure(orderedDoor)) {
 				orderedDoor->SetCommandTarget(true);
 			}
-		}
+			// prompt the movement operation
+			localPlayer->PromtOptionPanel(EOptionPromptType::CommandDoor, "Captain wants you to open the door.");
+		}	
 	}
 }
 
 void AFireFighterPawn::Rep_NotifyCommandedTiles()
 {
+	if (orderedTiles.Num() == 0) return;
+	if (!captain) return;
 	UWorld* world = GetWorld();
 	if (ensure(world)) {
 		// only do this on local commanded pawn
-		if (world->GetFirstPlayerController()->GetPawn() == this) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		if (localPlayer->GetPawn() == this) {
 			for (ATile* tempTile : orderedTiles) {
 				if (ensure(tempTile)) {
 					tempTile->SetCommandTarget(true);
 				}
+			}
+			// prompt the movement operation
+			localPlayer->PromtOptionPanel(EOptionPromptType::CommandTile, "Captain wants you to move to the indicated location.");
+		}
+	}
+}
+
+void AFireFighterPawn::Rep_CommandStatus()
+{
+	// this function is only acceptable if the firefighter is local pawn
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		if (localPlayer->GetPawn() == this) {
+			if (commandAcceptance == EAcceptanceStatus::Empty) {
+				localPlayer->CancelCommand();
+				localPlayer->SetNone();
+			}
+			else {
+				localPlayer->PromtCommandStatus(commandAcceptance);
 			}
 		}
 	}
@@ -567,12 +599,21 @@ void AFireFighterPawn::CommandDoorOperation(ADoor * target, AFireFighterPawn * c
 {
 	orderedDoor = target;
 	captain = commander;
+	if (!captain) return;
 	// for authority, if this is the local pawn, indicate operations
 	if (HasAuthority()) {
+		if (orderedDoor == nullptr) return;
 		UWorld* world = GetWorld();
 		if (ensure(world)) {
-			if (world->GetFirstPlayerController()->GetPawn() == this) {
-				target->SetCommandTarget(true);
+			// only do this on local commanded pawn
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (!ensure(localPlayer)) return;
+			if (localPlayer->GetPawn() == this) {
+				if (ensure(target)) {
+					target->SetCommandTarget(true);
+				}
+				// prompt the movement operation
+				localPlayer->PromtOptionPanel(EOptionPromptType::CommandDoor, "Captain wants you to open the door.");
 			}
 		}
 	}
@@ -582,21 +623,119 @@ void AFireFighterPawn::CommandTileOperation(TArray<ATile*> targets, AFireFighter
 {
 	orderedTiles = targets;
 	captain = commander;
+	if (!captain) return;
 	// for authprity, if this is the local pawn, indicate operations
 	if (HasAuthority()) {
+		if (orderedTiles.Num() == 0) return;
 		UWorld* world = GetWorld();
 		if (ensure(world)) {
 			// only do this on local commanded pawn
-			if (world->GetFirstPlayerController()->GetPawn() == this) {
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (!ensure(localPlayer)) return;
+			if (localPlayer->GetPawn() == this) {
 				for (ATile* tempTile : orderedTiles) {
 					if (ensure(tempTile)) {
 						tempTile->SetCommandTarget(true);
 					}
 				}
+				// prompt the movement operation
+				localPlayer->PromtOptionPanel(EOptionPromptType::CommandTile, "Captain wants you to move to the indicated location.");
 			}
 		}
 		// directly notify the player to prompt choice
 	}
+}
+
+void AFireFighterPawn::AcceptMoveCommand(bool accepted)
+{
+	if (!ensure(myOwner)) return;
+	// clear indication on tiles
+	for (ATile* tempTile : orderedTiles) {
+		if (ensure(tempTile)) {
+			tempTile->SetCommandTarget(false);
+		}
+	}
+	if (orderedTiles.Num() > 0) {
+		if (ensure(orderedTiles[0])) {
+			AGameBoard* tempBoard = orderedTiles[0]->GetGameBoard();
+			if (ensure(tempBoard)) {
+				tempBoard->ClearAllTile();
+			}
+		}
+	}
+	if (accepted) {
+		// if the operation is accepted, move the firefighter to commanded location
+		if (orderedTiles.Num() > 0) {
+			ATile* target = orderedTiles[0];
+			if (ensure(target)) {
+				if (HasAuthority()) {
+					target->PawnMoveToHere(this, orderedTiles);
+				}
+				else {
+					if (ensure(myOwner)) {
+						myOwner->ServerMovePawn(target, this, orderedTiles);
+						if (ensure(target->GetTileMesh())) {
+							SetActorLocation(target->GetTileMesh()->GetSocketLocation("VisualEffects"));
+						}
+					}
+				}
+			}
+			// Set the captain's acceptance status to accepted
+			if (ensure(captain)) {
+				myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Accepted);
+				int32 apConsume = -GetMoveConsumption() * (orderedTiles.Num() - 1);
+				if (victim || hazmat) {
+					apConsume *= 2;
+				}
+				for (ATile* tempTile : orderedTiles) {
+					if (ensure(tempTile)) {
+						if (tempTile->GetFireStatus() == EFireStatus::Fire) {
+							apConsume *= 2;
+						}
+					}
+				}
+				myOwner->ServerAdjustCommandAP(captain, apConsume);
+			}
+		}
+	}
+	else {
+		// Set the captain's acceptance status to accepted
+		if (ensure(captain)) {
+			myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Rejected);
+		}
+	}
+	// empty the commander and the oredered tiles
+	if (ensure(myOwner)) {
+		TArray<ATile*> emptyTiles;
+		myOwner->ServerCommandTileOperation(this, nullptr, emptyTiles);
+	}
+}
+
+void AFireFighterPawn::AcceptDoorCommand(bool accepted)
+{
+	if (!ensure(orderedDoor)) return;
+	if (!ensure(myOwner)) return;
+	if (accepted) {
+		// if accepted, open the indicated door
+		if (HasAuthority()) {
+			orderedDoor->ChangeDoorStatus();
+		}
+		else {
+			myOwner->ServerOpenDoor(orderedDoor);
+		}
+		// Set the captain's acceptance status to accepted
+		if (ensure(captain)) {
+			myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Accepted);
+			myOwner->ServerAdjustCommandAP(captain, -GetOpenConsumption());
+		}
+	}
+	else {
+		// Set the captain's acceptance status to accepted
+		if (ensure(captain)) {
+			myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Rejected);
+		}
+	}
+	myOwner->ServerCommandDoorOperation(this, nullptr, nullptr);
 }
 
 //Set visibility
@@ -629,6 +768,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, commandAP);
 	DOREPLIFETIME(AFireFighterPawn, orderedDoor);
 	DOREPLIFETIME(AFireFighterPawn, orderedTiles);
+	DOREPLIFETIME(AFireFighterPawn, captain);
+	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 }
 
 bool AFireFighterPawn::GetCanDodge()

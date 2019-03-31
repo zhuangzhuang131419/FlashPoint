@@ -9,6 +9,37 @@ UFireFighterUI::UFireFighterUI(const FObjectInitializer& ObjectInitializer) : Su
 
 }
 
+void UFireFighterUI::PromptCommandStatus(EAcceptanceStatus acceptState)
+{
+	if (!ensure(PromptText) || !ensure(YourTurnPrompt) || !ensure(ConfirmTurnButton)) return;
+	YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
+	switch (acceptState)
+	{
+	case EAcceptanceStatus::Accepted:
+		// if the command is already accepted enable the operations panels
+		ConfirmTurnButton->SetIsEnabled(true);
+		EnableOperationPanels(true);
+		PromptText->SetText(FText::FromString("Command accepted!"));
+		break;
+	case EAcceptanceStatus::Rejected:
+		// if the command is already rejected enable the operations panels
+		ConfirmTurnButton->SetIsEnabled(true);
+		EnableOperationPanels(true);
+		PromptText->SetText(FText::FromString("Command rejected!"));
+		break;
+	case EAcceptanceStatus::Waiting:
+		// if the opereation is just sent, disable the operation panels
+		ConfirmTurnButton->SetIsEnabled(false);
+		EnableOperationPanels(false);
+		PromptText->SetText(FText::FromString("Waiting for response..."));
+		break;
+	case EAcceptanceStatus::Empty:
+		break;
+	default:
+		break;
+	}
+}
+
 AGameBoard * UFireFighterUI::GetGameBoard()
 {
 	return gameBoard;
@@ -107,6 +138,11 @@ void UFireFighterUI::RelateChatUIWithPlayer(AFPPlayerController * inPlayer)
 	}
 }
 
+void UFireFighterUI::SetBeginTurnNotify(bool isBegin)
+{
+	isBeginOfTurn = isBegin;
+}
+
 bool UFireFighterUI::Initialize()
 {
 	bool success = Super::Initialize();
@@ -119,6 +155,13 @@ bool UFireFighterUI::Initialize()
 
 void UFireFighterUI::NotifyCrewChange()
 {
+	if (ensure(localPawn)) {
+		if (localPawn->GetFireFighterRole() == ERoleType::FireCaptain) {
+			localPlayer->ServerSetCommandStatus(localPawn, EAcceptanceStatus::Empty);
+		}
+	}
+	// if not the begining of turn, this is just a prompt to notify events
+	if (!isBeginOfTurn) return;
 	if (ensure(localPlayer)) {
 		UE_LOG(LogTemp, Warning, TEXT("Notified Crew Change"));
 		localPlayer->PromtCrewChange();

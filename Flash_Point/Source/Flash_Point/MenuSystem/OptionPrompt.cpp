@@ -28,6 +28,14 @@ void UOptionPrompt::AssociatePlayer(AFPPlayerController* inPlayer) {
 	}
 }
 
+void UOptionPrompt::PromptOperation(EOptionPromptType operation, FString promptText) {
+	optionType = operation;
+	if (ensure(PromptText)) {
+		PromptText->SetText(FText::FromString(promptText));
+	}
+	SetVisibility(ESlateVisibility::Visible);
+}
+
 void UOptionPrompt::Accept()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Accept"));
@@ -80,11 +88,16 @@ void UOptionPrompt::DodgeAccept()
 void UOptionPrompt::CommandDoorAccept()
 {
 	// if player accepts to open door, do open the door
-	
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->AcceptDoorCommand(true);
+	}
 }
 
 void UOptionPrompt::CommandTileAccept()
 {
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->AcceptMoveCommand(true);
+	}
 }
 
 void UOptionPrompt::DodgeRefuse()
@@ -98,8 +111,14 @@ void UOptionPrompt::DodgeRefuse()
 
 void UOptionPrompt::CommandDoorRefuse()
 {
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->AcceptDoorCommand(false);
+	}
 }
 
 void UOptionPrompt::CommandTileRefuse()
 {
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->AcceptMoveCommand(false);
+	}
 }

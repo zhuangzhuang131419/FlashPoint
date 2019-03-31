@@ -66,6 +66,16 @@ enum class EEdgeType : uint8
 	Door
 };
 
+// An enum for different operations
+UENUM(BlueprintType)
+enum class EAcceptanceStatus : uint8
+{
+	Accepted,
+	Rejected,
+	Waiting,
+	Empty
+};
+
 // An enum for tile status
 UENUM(BlueprintType)
 enum class EFireStatus : uint8

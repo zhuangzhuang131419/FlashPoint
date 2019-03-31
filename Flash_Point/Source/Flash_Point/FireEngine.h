@@ -4,10 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "GeneralTypes.h"
-#include "Tile.h"
-#include "GameBoard.h"
 #include "GameFramework/Actor.h"
 #include "FireEngine.generated.h"
+
+class ATile;
+class AGameBoard;
 
 UCLASS()
 class FLASH_POINT_API AFireEngine : public AActor

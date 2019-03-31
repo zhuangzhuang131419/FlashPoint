@@ -1091,6 +1091,8 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					int32 cost = GeneralTypes::AStarShotest(localPawn->GetCommandAP(), start, goal, traceTiles);
 					UE_LOG(LogTemp, Warning, TEXT("Path to here for commanded pawn is: %d"), traceTiles.Num());
 					// do server notify
+					localPlayer->SetNone();
+					localPlayer->CancelCommand();
 					localPlayer->ServerCommandTileOperation(commanded, localPawn, traceTiles);
 				}				
 			}

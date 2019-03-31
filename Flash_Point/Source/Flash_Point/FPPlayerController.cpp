@@ -67,6 +67,7 @@ void AFPPlayerController::NotifyPlayerTurn()
 		ServerSpecialistTurnAdjust(fireFighterPawn);
 	}
 	if (ensure(inGameUI)) {
+		inGameUI->SetBeginTurnNotify(true);
 		inGameUI->NotifyTurnBegin();
 	}
 }
@@ -76,9 +77,9 @@ void AFPPlayerController::NotifyPlayerDodge()
 	if (ensure(OptionPromptUI))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("NotifyPlayerDodge"));
-		OptionPromptUI->optionType = EOptionPromptType::Dodge;
-		OptionPromptUI->GetPromptText()->SetText(FText::FromString("You have been knocked down\n please dodge."));
-		OptionPromptUI->SetVisibility(ESlateVisibility::Visible);
+		if (ensure(OptionPromptUI)) {
+			OptionPromptUI->PromptOperation(EOptionPromptType::Dodge, "You have been knocked down\n please dodge.");
+		}
 	}
 }
 
@@ -141,6 +142,37 @@ void AFPPlayerController::PromtCrewChange()
 			//if (!fireFighterPawn->IsWithEngine()) return;
 			crewMan->ShowCrewChangeUI();
 		}
+	}
+}
+
+void AFPPlayerController::PromtCommandStatus(EAcceptanceStatus commandStatus)
+{
+	if (!ensure(inGameUI)) return;
+	inGameUI->SetBeginTurnNotify(false);
+	inGameUI->PromptCommandStatus(commandStatus);
+	switch (commandStatus)
+	{
+	case EAcceptanceStatus::Accepted:
+		UE_LOG(LogTemp, Warning, TEXT("Prompt Accepted"))
+		break;
+	case EAcceptanceStatus::Rejected:
+		UE_LOG(LogTemp, Warning, TEXT("Prompt Rejected"))
+		break;
+	case EAcceptanceStatus::Waiting:
+		UE_LOG(LogTemp, Warning, TEXT("Prompt Waiting"))
+		break;
+	case EAcceptanceStatus::Empty:
+		UE_LOG(LogTemp, Warning, TEXT("Prompt Empty"))
+		break;
+	default:
+		break;
+	}
+}
+
+void AFPPlayerController::PromtOptionPanel(EOptionPromptType option, FString optionText)
+{
+	if (ensure(OptionPromptUI)) {
+		OptionPromptUI->PromptOperation(option, optionText);
 	}
 }
 
@@ -527,8 +559,20 @@ bool AFPPlayerController::ServerSpecialistTurnAdjust_Validate(AFireFighterPawn *
 
 void AFPPlayerController::ServerCommandDoorOperation_Implementation(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, ADoor * target)
 {
-	if (ensure(fireFighterPawn)) {
+	if (ensure(fireFighterPawn) && ensure(captain)) {
 		fireFighterPawn->CommandDoorOperation(target, captain);
+		// as the operation is sent to the player, captain should be waiting for the command to be done
+		if (!captain) { return; }
+		captain->SetCommandAcceptance(EAcceptanceStatus::Waiting);
+		// if the captain is local pawn, just notify its own
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			// only do this on local commanded pawn
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (ensure(localPlayer) && localPlayer->GetPawn() == captain) {
+				localPlayer->PromtCommandStatus(EAcceptanceStatus::Waiting);
+			}
+		}
 	}
 }
 
@@ -541,10 +585,53 @@ void AFPPlayerController::ServerCommandTileOperation_Implementation(AFireFighter
 {
 	if (ensure(fireFighterPawn)) {
 		fireFighterPawn->CommandTileOperation(targets, captain);
+		// as the operation is sent to the player, captain should be waiting for the command to be done
+		if (!captain) { return; }
+		captain->SetCommandAcceptance(EAcceptanceStatus::Waiting);
+		// if the captain is local pawn, just notify its own
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			// only do this on local commanded pawn
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (ensure(localPlayer) && localPlayer->GetPawn() == captain) {
+				localPlayer->PromtCommandStatus(EAcceptanceStatus::Waiting);
+			}
+		}
 	}
 }
 
 bool AFPPlayerController::ServerCommandTileOperation_Validate(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, const TArray<ATile*>& targets)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerSetCommandStatus_Implementation(AFireFighterPawn * captain, EAcceptanceStatus inStatus)
+{
+	if (ensure(captain)) {
+		if (!(captain->GetFireFighterRole() == ERoleType::FireCaptain)) return;
+		captain->SetCommandAcceptance(inStatus);
+		// figure out if it is local player pawn
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			// only do this on local commanded pawn
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (ensure(localPlayer) && localPlayer->GetPawn() == captain) {
+
+				// if it is my own firefighter, clear operations
+				if (inStatus == EAcceptanceStatus::Empty) {
+					SetNone();
+					CancelCommand();
+				}
+				else {
+					UE_LOG(LogTemp, Warning, TEXT("server prompt"));
+					localPlayer->PromtCommandStatus(inStatus);
+				}
+			}
+		}
+	}
+}
+
+bool AFPPlayerController::ServerSetCommandStatus_Validate(AFireFighterPawn * captain, EAcceptanceStatus inStatus)
 {
 	return true;
 }
@@ -1219,3 +1306,17 @@ bool AFPPlayerController::ServerSolveKnockDown_Validate(AGameBoard * board)
 	return true;
 }
 
+void AFPPlayerController::ServerAdjustCommandAP_Implementation(AFireFighterPawn * captain, int32 adjustAP)
+{
+	if (ensure(captain)) {
+		if (captain->GetFireFighterRole() == ERoleType::FireCaptain) {
+			UE_LOG(LogTemp, Warning, TEXT("adjustAP is %d"), adjustAP);
+			captain->SetCommandAP(FMath::Max(captain->GetCommandAP() + adjustAP, 0));
+		}
+	}
+}
+
+bool AFPPlayerController::ServerAdjustCommandAP_Validate(AFireFighterPawn * captain, int32 adjustAP)
+{
+	return true;
+}

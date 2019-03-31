@@ -109,6 +109,10 @@ public:
 	void EnableOperations(bool enable);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void PromtCrewChange();
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void PromtCommandStatus(EAcceptanceStatus commandStatus);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void PromtOptionPanel(EOptionPromptType option, FString optionText);
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server
@@ -152,6 +156,8 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdjustCAFSAP(AFireFighterPawn* fireFighterPawn, int32 adjustAP);
 	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAdjustCommandAP(AFireFighterPawn* captain, int32 adjustAP);
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSendGlobalText(AChatManager* chatMan, const FString& message);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);
@@ -165,6 +171,8 @@ public:
 	void ServerCommandDoorOperation(AFireFighterPawn* fireFighterPawn, AFireFighterPawn* captain, ADoor* target);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerCommandTileOperation(AFireFighterPawn* fireFighterPawn, AFireFighterPawn* captain, const TArray<ATile*>& targets);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetCommandStatus(AFireFighterPawn* captain, EAcceptanceStatus inStatus);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

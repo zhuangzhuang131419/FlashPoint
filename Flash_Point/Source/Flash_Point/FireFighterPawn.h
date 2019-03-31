@@ -170,6 +170,11 @@ public:
 	bool GetIsCommanded() { return isCommanded; }
 	void CommandDoorOperation(ADoor* target, AFireFighterPawn* commander);
 	void CommandTileOperation(TArray<ATile*> targets, AFireFighterPawn* commander);
+	void AcceptMoveCommand(bool accepted);
+	void AcceptDoorCommand(bool accepted);
+	// getter and setter for command acceptance
+	EAcceptanceStatus GetCommandAcceptance() { return commandAcceptance; }
+	void SetCommandAcceptance(EAcceptanceStatus inAcc) { commandAcceptance = inAcc; }
 
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
 
@@ -218,12 +223,16 @@ protected:
 	bool relocationFlag = true;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterDodge, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool serverDodgeFlag = true;
-	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedDoor, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedDoor, BlueprintReadWrite, VisibleAnyWhere, Category = "Commanding Related")
 	ADoor* orderedDoor = nullptr;
-	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedTiles, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedTiles, BlueprintReadWrite, VisibleAnyWhere, Category = "Commanding Related")
 	TArray<ATile*> orderedTiles;
 	// the captain who is commanding the current firefighter
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Commanding Related")
 	AFireFighterPawn* captain = nullptr;
+	// A value to indicate the status of the command given out
+	UPROPERTY(ReplicatedUsing = Rep_CommandStatus, VisibleAnyWhere, BlueprintReadWrite, Category = "Commanding Related")
+	EAcceptanceStatus commandAcceptance = EAcceptanceStatus::Empty;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool dodgeAbility = false;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
@@ -261,6 +270,8 @@ protected:
 	void Rep_NotifyCommandedDoor();
 	UFUNCTION()
 	void Rep_NotifyCommandedTiles();
+	UFUNCTION()
+	void Rep_CommandStatus();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")

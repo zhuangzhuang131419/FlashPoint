@@ -38,6 +38,7 @@ public:
 	void NotifyTurnEnd();
 	UFUNCTION(BlueprintImplementableEvent, Category = "Take Turn")
 	void NotifyGameEnd(bool isWin);
+	void PromptCommandStatus(EAcceptanceStatus acceptState);
 	// Getter and setter for related fields
 	AGameBoard* GetGameBoard();
 	void SetGameBoard(AGameBoard* inGameBoard);
@@ -55,6 +56,7 @@ public:
 	void EnableOperationPanels(bool enable);
 	void BindChatManagerWithUI(AChatManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
+	void SetBeginTurnNotify(bool isBegin);
 
 protected:
 	// BIDNING FUNCTIONS
@@ -105,4 +107,5 @@ protected:
 	AFireFighterPawn* localPawn = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* localPlayer = nullptr;
+	bool isBeginOfTurn = false;
 };
