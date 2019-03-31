@@ -6,6 +6,7 @@
 #include "Tile.h"
 #include "Wall.h"
 #include "Door.h"
+#include "POI.h"
 #include "GameBoard.h"
 #include "ChatManager.h"
 #include "CrewManager.h"

@@ -21,7 +21,7 @@ class AGameBoard;
 class AChatManager;
 class ACrewManager;
 class UOptionPrompt;
-class ADoor;
+class APOI;
 
 /**
  * 

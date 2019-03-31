@@ -5,12 +5,11 @@
 #include "CoreMinimal.h"
 #include "GeneralTypes.h"
 #include "GameFramework/Actor.h"
-#include "Victim.h"
-#include "Tile.h"
 #include "Ambulance.generated.h"
 
 class AGameBoard;
 class ATile;
+class AVictim;
 
 UCLASS()
 class FLASH_POINT_API AAmbulance : public AActor

@@ -9,9 +9,6 @@
 #include "EdgeUnit.h"
 #include "FireFighterPawn.h"
 #include "FPPlayerController.h"
-#include "POI.h"
-#include "Ambulance.h"
-#include "FireEngine.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Engine/World.h"
 #include "Tile.generated.h"
@@ -19,6 +16,8 @@
 class AGameBoard;
 class AAmbulance;
 class AFireEngine;
+class APOI;
+class AHazmat;
 
 UCLASS()
 class FLASH_POINT_API ATile : public AActor

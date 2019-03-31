@@ -16,7 +16,7 @@ void AFireEngine::FireDeckGun()
 	// check the quadrant has firefighter or not
 	int32 startx = currentPosition / 10;
 	int32 starty = currentPosition % 8;
-	int32 randomTargetPosition;
+	int32 randomTargetPosition = 0;
 	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
 	if (startx <= 4)
 	{

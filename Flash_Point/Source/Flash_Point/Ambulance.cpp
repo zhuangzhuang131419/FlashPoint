@@ -2,7 +2,7 @@
 
 #include "Ambulance.h"
 #include "GameBoard.h"
-
+#include "Victim.h"
 
 // Sets default values
 AAmbulance::AAmbulance()
