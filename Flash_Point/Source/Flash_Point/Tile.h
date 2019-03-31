@@ -107,6 +107,8 @@ public:
 	// Getter for Hazmat
 	AHazmat* GetHazmat() { return HazmatOnTile; }
 
+	//Getter for FireEngine
+	AFireEngine* GetFireEngine(){return TheFireEngine;}
 	// Getter for gameboard
 	AGameBoard* GetGameBoard();
 

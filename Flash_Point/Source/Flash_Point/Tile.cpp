@@ -1011,6 +1011,15 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::OpenDoor:
 			break;
 		case EGameOperations::FireDeckGun:
+			UE_LOG(LogTemp, Warning, TEXT("Fire Gun Clicked!"));
+			if(!ensure(localPawn)){
+				return;
+			}
+			if(localPawn->GetCurrentAP() >= localPawn->GetFireDeckGunConsumption()){
+				
+				UE_LOG(LogTemp, Warning, TEXT("Fire success!"));
+				localPawn->AdjustFireFighterAP(-localPawn->GetFireDeckGunConsumption());
+			}
 			break;
 		case EGameOperations::FlipPOI:
 			if (!ensure(localPawn)) return;

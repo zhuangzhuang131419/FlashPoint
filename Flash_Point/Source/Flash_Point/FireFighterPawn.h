@@ -112,6 +112,7 @@ public:
 	int32 GetSequeezeConsumption() { return sequeezeConsumption; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetSequeezeConsumption(int32 current) { sequeezeConsumption = current; }
+	int32 GetFireDeckGunConsumption(){return deckGunConsumption;}
 
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
