@@ -1104,7 +1104,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::DriveFireEngine:
-			if (type == ETileType::FireEnginePark)
+			if (type == ETileType::FireEnginePark && this != board->engineLocA && this != board->engineLocB)
 			{
 				if (TheFireEngine != nullptr)
 				{
@@ -1126,7 +1126,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::DriveAmbulance:
-			if (type == ETileType::AmbulancePark)
+			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
 			{
 				if (TheAmbulance != nullptr)
 				{
