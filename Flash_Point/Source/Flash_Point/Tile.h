@@ -134,6 +134,7 @@ public:
 	bool Flashover(EDirection direction);
 	bool Flashover();
 
+	AFireEngine* GetFireEngine(){return TheFireEngine;}
 	// A method to check if the tile is neighbouring tile of the pawn
 	bool AdjacentToPawn(AFireFighterPawn * inPawn);
 
@@ -146,6 +147,10 @@ public:
 	ATile* prevParkTile = nullptr;
 	ATile* GetPrevParkTile() { return prevParkTile; }
 	void SetPrevParkTile(ATile* prev) { prevParkTile = prev; }
+
+	ATile* nextParkTile = nullptr;
+	ATile* GetNextParkTile() { return nextParkTile; }
+	void SetNextParkTile(ATile* next) { nextParkTile = next; }
 
 protected:
 	// FIELDS

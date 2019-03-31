@@ -234,8 +234,10 @@ void ATile::PlaceVictim()
 		VictimSocketLocation,
 		FRotator(0, 0, 0)
 		);
+	
 	if (ensure(newVictim))
 	{
+		newVictim->SetPlacedOn(this);
 		victims.Add(newVictim);
 	}
 	POIStatus = EPOIStatus::Revealed;
@@ -249,6 +251,17 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		placedFireFighters.Add(movingPawn);
 		movingPawn->GetPlacedOn()->placedFireFighters.Remove(movingPawn);
 		movingPawn->SetPlacedOn(this);
+
+		if (movingPawn->GetLeading() != nullptr)
+		{
+			ATile* tempTile = movingPawn->GetLeading()->GetPlacedOn();
+			if (ensure(tempTile))
+			{
+				tempTile->SetPOIStatus(EPOIStatus::Empty);
+				movingPawn->GetLeading()->SetPlacedOn(this);
+			}
+			movingPawn->GetLeading()->SetActorLocation(movingPawn->GetActorLocation() - FVector(0, 100, 0));
+		}
 
 		if (POIStatus == EPOIStatus::Hided)
 		{
@@ -560,6 +573,7 @@ void ATile::SpawnFireEngine(int pos, ATile* SpawnTile)
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);
+	TheFireEngine->board = board;
 	TheFireEngine->SetFEPosition(pos);
 	fireEngineTiles = board->GetEngineTiles();
 	for (int i = 0; i < fireEngineTiles.Num(); i++)
@@ -1014,6 +1028,13 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::OpenDoor:
 			break;
 		case EGameOperations::FireDeckGun:
+			if(!ensure(localPawn)){
+				return;
+			}
+			if(localPawn->GetCurrentAP() >= localPawn->GetFireDeckGunConsumption()){
+				localPawn->GetPlacedOn()->GetFireEngine()->FireDeckGun();
+				localPawn->AdjustFireFighterAP(-localPawn->GetFireDeckGunConsumption());
+			}
 			break;
 		case EGameOperations::FlipPOI:
 			if (!ensure(localPawn)) return;
@@ -1098,19 +1119,434 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::DriveFireEngine:
-			if (type == ETileType::FireEnginePark)
+			if (type == ETileType::FireEnginePark && this != board->engineLocA && this != board->engineLocB)
 			{
 				if (TheFireEngine != nullptr)
 				{
 					int32 prevPos = TheFireEngine->GetFEPosition();
+					int32 currentPos = this->GetID();
+					// prevBot
+					if (prevPos % 8 == 0 && prevPos != 72)
+					{
+						if (currentPos % 8 == 7)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+						
+					}
+					// prevTop
+					else if (prevPos % 8 == 7)
+					{
+						if (currentPos % 8 == 0 && currentPos != 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevLeft
+					else if (prevPos < 7)
+					{
+						if (currentPos >= 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevRight
+					else
+					{
+						if (currentPos < 7 && currentPos != 0)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
 					TheFireEngine->Destroy();
 					if (prevParkTile == nullptr)
 					{
 						SpawnFireEngine(this->GetID(), this);
+						board->SetFireEngineLocA(this);
+						board->SetFireEngineLocB(this->nextParkTile);
 					}
 					else
 					{
 						SpawnFireEngine(prevParkTile->GetID(), prevParkTile);
+						board->SetFireEngineLocA(this->prevParkTile);
+						board->SetFireEngineLocB(this);
+					}
+				}
+			}
+			break;
+		case EGameOperations::DriveAmbulance:
+			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			{
+				if (TheAmbulance != nullptr)
+				{
+					int32 prevPos = TheAmbulance->GetAmbulancePosition();
+					int32 currentPos = this->GetID();
+					// prevBot
+					if (prevPos % 8 == 0 && prevPos != 72)
+					{
+						if (currentPos % 8 == 7)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+						
+					}
+					// prevTop
+					else if (prevPos % 8 == 7)
+					{
+						if (currentPos % 8 == 0 && currentPos != 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevLeft
+					else if (prevPos < 7)
+					{
+						if (currentPos >= 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevRight
+					else
+					{
+						if (currentPos < 7 && currentPos != 0)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					TheAmbulance->Destroy();
+					if (prevParkTile == nullptr)
+					{
+						SpawnAmbulance(this->GetID(), this);
+						board->SetAmbulanceLocA(this);
+						board->SetAmbulanceLocB(this->nextParkTile);
+					}
+					else
+					{
+						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
+						board->SetAmbulanceLocA(this->prevParkTile);
+						board->SetAmbulanceLocB(this);
+					}
+				}
+			}
+			break;
+		case EGameOperations::GetOutAmbulance:
+			if (type == ETileType::AmbulancePark)
+			{
+				if (this == board->ambulanceLocA || this == board->ambulanceLocB)
+				{
+					if (!ensure(localPlayer)) return;
+					if (!ensure(localPawn)) return;
+					if (ensure(localPawn))
+					{
+						if (HasAuthority()) {
+							PlacePawnHere(localPawn);
+							localPawn->SetVisibility(true);
+							localPlayer->inGameUI->EnableOperationPanels(true);
+						}
+						else {
+							localPlayer->ServerPlacePawn(this, localPawn);
+							// to make the placing visible to operation client
+							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+							localPawn->SetVisibility(true);
+						}
+					}
+				}
+			}
+			break;
+		case EGameOperations::GetOutFireEngine:
+			if (type == ETileType::FireEnginePark)
+			{
+				if (this == board->engineLocA || this == board->engineLocB)
+				{
+					if (!ensure(localPlayer)) return;
+					if (!ensure(localPawn)) return;
+					if (ensure(localPawn))
+					{
+						if (HasAuthority()) {
+							PlacePawnHere(localPawn);
+							localPawn->SetVisibility(true);
+							localPlayer->inGameUI->EnableOperationPanels(true);
+						}
+						else {
+							localPlayer->ServerPlacePawn(this, localPawn);
+							// to make the placing visible to operation client
+							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+							localPawn->SetVisibility(true);
+						}
+					}
+				}
+			}
+			break;
+		
+		case EGameOperations::Radio:
+			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			{
+				if (TheAmbulance != nullptr)
+				{
+					int32 prevPos = TheAmbulance->GetAmbulancePosition();
+					int32 currentPos = this->GetID();
+					// prevBot
+					if (prevPos % 8 == 0 && prevPos != 72)
+					{
+						if (currentPos % 8 == 7)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+						
+					}
+					// prevTop
+					else if (prevPos % 8 == 7)
+					{
+						if (currentPos % 8 == 0 && currentPos != 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevLeft
+					else if (prevPos < 7)
+					{
+						if (currentPos >= 72)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					// prevRight
+					else
+					{
+						if (currentPos < 7 && currentPos != 0)
+						{
+							if (localPawn->GetCurrentAP() >= 4)
+							{
+								localPawn->AdjustFireFighterAP(-4);
+							}
+							else
+							{
+								return;
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= 2)
+							{
+								localPawn->AdjustFireFighterAP(-2);
+							}
+							else
+							{
+								return;
+							}
+						}
+					}
+					TheAmbulance->Destroy();
+					if (prevParkTile == nullptr)
+					{
+						SpawnAmbulance(this->GetID(), this);
+						board->SetAmbulanceLocA(this);
+						board->SetAmbulanceLocB(this->nextParkTile);
+					}
+					else
+					{
+						SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
+						board->SetAmbulanceLocA(this->prevParkTile);
+						board->SetAmbulanceLocB(this);
 					}
 				}
 			}

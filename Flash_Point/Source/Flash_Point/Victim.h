@@ -9,6 +9,7 @@
 #include "Victim.generated.h"
 
 class AFPPlayerController;
+class ATile;
 
 UCLASS()
 class FLASH_POINT_API AVictim : public AActor
@@ -25,7 +26,11 @@ public:
 	bool IsHealed() { return isHealed; }
 	void SetIsHealed(bool healed) { isHealed = healed; }
 	// setter for the actor's new world location
-	void SetVictimLoc(FVector loc);
+	void SetVictimLoc(FVector loc) { victimLoc = loc; }
+
+	// Getter and setter for placedOn
+	ATile* GetPlacedOn() { return placedOn; }
+	void SetPlacedOn(ATile* current) { placedOn = current; }
 
 protected:
 	// REPLICATED FIELDS
@@ -36,11 +41,17 @@ protected:
 	UPROPERTY(ReplicatedUsing = Rep_OnVictimLocationChanged, VisibleAnyWhere)
 	FVector victimLoc;
 
+	ATile* placedOn = nullptr;
+
 	// Replication functions
 	UFUNCTION()
 	void Rep_OnCarry();
 	UFUNCTION()
 	void Rep_OnVictimLocationChanged();
+
+	// Cursor clicked method
+	UFUNCTION()
+	void OnVictimClicked(AActor* Target, FKey ButtonPressed);
 
 	// rep props
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

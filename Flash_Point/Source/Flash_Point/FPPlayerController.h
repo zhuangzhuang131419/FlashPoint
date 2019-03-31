@@ -56,6 +56,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetDriveAmbulance();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	bool SetGetOutAmbulance();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	bool SetGetOutFireEngine();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetDriveFireEngine();
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SetRadio();
@@ -185,6 +189,9 @@ public:
 	void CarryHazmat();
 
 	UFUNCTION(BlueprintCallable)
+	void HealVictim();
+
+	UFUNCTION(BlueprintCallable)
 	bool GetInAmbulance();
 	UFUNCTION(BlueprintCallable)
 	void GetOutAmbulance();
@@ -223,6 +230,8 @@ public:
 	UFUNCTION(Exec, Category = "Save Load Related")
 	void SaveCurrentGame();
 	
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	UFireFighterUI* inGameUI = nullptr;
 
 
 protected:
@@ -243,8 +252,6 @@ protected:
 	bool apConsumptionOn = true;
 
 	// UI related fields
-	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
-	UFireFighterUI* inGameUI = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	UOptionPrompt* OptionPromptUI = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")

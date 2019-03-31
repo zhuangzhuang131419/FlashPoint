@@ -109,6 +109,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetDodgeConsumption() { return dodgeConsumption; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetHealConsumption() { return healConsumption; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetSequeezeConsumption() { return sequeezeConsumption; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetSequeezeConsumption(int32 current) { sequeezeConsumption = current; }
@@ -213,6 +215,8 @@ protected:
 	int32 crewChangeConsumption = 2;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 dodgeConsumption = 2;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 healConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 sequeezeConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
