@@ -1043,7 +1043,7 @@ void AFPPlayerController::SetDriveAmbulance()
 
 void AFPPlayerController::SetRadio()
 {
-	CurrentOperation = EGameOperations::DriveAmbulance;
+	CurrentOperation = EGameOperations::Radio;
 }
 
 bool AFPPlayerController::SetGetOutAmbulance()
