@@ -19,9 +19,11 @@ AVictim::AVictim()
 void AVictim::Rep_OnCarry()
 {
 	if (isCarried) {
+		UE_LOG(LogTemp, Warning, TEXT("Set to invisible"));
 		victimMesh->SetVisibility(false);
 	}
 	else {
+		UE_LOG(LogTemp, Warning, TEXT("Set to visible"));
 		victimMesh->SetVisibility(true);
 	}
 }
@@ -35,8 +37,8 @@ void AVictim::Rep_OnVictimLocationChanged()
 void AVictim::OnVictimClicked(AActor * Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
-	if (!isHealed) { return; }
 	UE_LOG(LogTemp, Warning, TEXT("Victim has been clicked"));
+	/*
 	AFPPlayerController* playerController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
 	AFireFighterPawn* fireFireterPawn = Cast<AFireFighterPawn>(playerController->GetPawn());
 	if (ensure(fireFireterPawn))
@@ -45,6 +47,7 @@ void AVictim::OnVictimClicked(AActor * Target, FKey ButtonPressed)
 		this->SetActorLocation(fireFireterPawn->GetActorLocation() - FVector(0, 100, 0));
 		UE_LOG(LogTemp, Warning, TEXT("Victim has been lead"));
 	}
+	*/
 }
 
 void AVictim::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

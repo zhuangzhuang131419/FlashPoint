@@ -252,6 +252,25 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		movingPawn->GetPlacedOn()->placedFireFighters.Remove(movingPawn);
 		movingPawn->SetPlacedOn(this);
 
+		// adjust the veteran position in gameboard 
+		if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+		{
+			board->SetVeteranLoc(this);
+			board->AdjustAllFirefightersVicinity();
+			board->AdjustAllFirefightersDodgeAbility();
+
+			if (localPawn->IsVicinity())
+			{
+
+				if (!localPawn->HasGainedAPThisTurn())
+				{
+					// GetFreeAP
+					localPawn->SetCurrentAP(localPawn->GetCurrentAP() + 1);
+					localPawn->SetHasGainedAPThisTurn(true);
+				}
+			}
+		}
+
 		if (movingPawn->GetLeading() != nullptr)
 		{
 			ATile* tempTile = movingPawn->GetLeading()->GetPlacedOn();
@@ -261,6 +280,7 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 				movingPawn->GetLeading()->SetPlacedOn(this);
 			}
 			movingPawn->GetLeading()->SetActorLocation(movingPawn->GetActorLocation() - FVector(0, 100, 0));
+			movingPawn->GetLeading()->SetVictimLoc(movingPawn->GetActorLocation() - FVector(0, 100, 0));
 		}
 
 		if (POIStatus == EPOIStatus::Hided)
@@ -967,24 +987,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 
-					// adjust the veteran position in gameboard 
-					if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
-					{
-						board->SetVeteranLoc(this);
-						board->AdjustAllFirefightersVicinity();
-						board->AdjustAllFirefightersDodgeAbility();
-						
-						if (localPawn->IsVicinity())
-						{
-							
-							if (!localPawn->HasGainedAPThisTurn())
-							{
-								// GetFreeAP
-								localPawn->SetCurrentAP(localPawn->GetCurrentAP() + 1);
-								localPawn->SetHasGainedAPThisTurn(true);
-							}
-						}
-					}
+					
 				}
 				// do ap adjustment
 				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)

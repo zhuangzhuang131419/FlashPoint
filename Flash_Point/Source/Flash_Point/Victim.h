@@ -36,7 +36,7 @@ protected:
 	// REPLICATED FIELDS
 	UPROPERTY(ReplicatedUsing = Rep_OnCarry, VisibleAnyWhere)
 	bool isCarried = false;
-	UPROPERTY(ReplicatedUsing = Rep_OnCarry, VisibleAnyWhere)
+	UPROPERTY(replicated, VisibleAnyWhere)
 	bool isHealed = false;
 	UPROPERTY(ReplicatedUsing = Rep_OnVictimLocationChanged, VisibleAnyWhere)
 	FVector victimLoc;

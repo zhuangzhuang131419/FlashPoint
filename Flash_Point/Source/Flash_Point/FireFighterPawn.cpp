@@ -771,6 +771,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, orderedTiles);
 	DOREPLIFETIME(AFireFighterPawn, captain);
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
+	DOREPLIFETIME(AFireFighterPawn, leadVictim);
 }
 
 bool AFireFighterPawn::GetCanDodge()
@@ -908,7 +909,8 @@ void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 AVictim* AFireFighterPawn::GetVictim()
 {
-	return victim;
+	if (victim) { return victim; }
+	else { return leadVictim; }
 }
 
 void AFireFighterPawn::SetVictim(AVictim * victim)
