@@ -3,24 +3,26 @@
 #include "FlashPointGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
-//void UFlashPointGameInstance::saveGame()
-//{
-//	UFlashPointSaveGame* flashPointSaveGame = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString("SaveSlot"), 0));
-//	if (flashPointSaveGame == nullptr)
-//	{
-//		flashPointSaveGame = Cast<UFlashPointSaveGame>(UGameplayStatics::CreateSaveGameObject(saveGameClass));
-//	}
-//	UGameplayStatics::SaveGameToSlot(flashPointSaveGame, FString("SaveSlot"), 0);
-//}
-//
-//void UFlashPointGameInstance::loadGame()
-//{
-//	UFlashPointSaveGame* flashPointSaveGame = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString("SaveSlot"), 0));
-//	if (flashPointSaveGame)
-//	{
-//
-//	}
-//}
+void UFlashPointGameInstance::Init() {
+	IOnlineSubsystem* OLSS = IOnlineSubsystem::Get();
+	FString OLSSName = OLSS->GetSubsystemName().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("Found OLSS: %s"), *OLSSName);
+	if (OLSSName == "NULL") {
+		// if the OnlineSubsystem is a NULL subsystem, set using default OLSS
+		isDefaultOLSS = true;
+		UE_LOG(LogTemp, Warning, TEXT("Using default OLSS"));
+	}
+	SessionInterface = OLSS->GetSessionInterface();
+	// bind online subsystem delicate functions
+	if (OLSS) {
+		if (SessionInterface.IsValid()) {
+			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnCreateSessionComplete);
+			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnDestroySessionComplete);
+			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnFindSessionComplete);
+			SessionInterface->OnJoinSessionCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnJoinSessionComplete);
+		}
+	}
+}
 
 FSpawnIndicator UFlashPointGameInstance::GetRandomMap() {
 	// randomize a integer to return as random map's index
@@ -87,5 +89,26 @@ void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
 {
 	// first set the lobby info to the game instance
 	lobbyInfo = inLobbyInfo;
+}
+
+void UFlashPointGameInstance::AssociateMenuUI(UMainMenu * inUI)
+{
+	mainMenuUI = inUI;
+}
+
+void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
+{
+}
+
+void UFlashPointGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
+{
+}
+
+void UFlashPointGameInstance::OnFindSessionComplete(bool Success)
+{
+}
+
+void UFlashPointGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type type)
+{
 }
 
