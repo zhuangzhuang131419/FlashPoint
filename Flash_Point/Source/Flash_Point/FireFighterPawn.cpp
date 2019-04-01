@@ -772,6 +772,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, captain);
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 	DOREPLIFETIME(AFireFighterPawn, leadVictim);
+	DOREPLIFETIME(AFireFighterPawn, flipConsumption);
 }
 
 bool AFireFighterPawn::GetCanDodge()

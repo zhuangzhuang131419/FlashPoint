@@ -271,7 +271,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 {
 	ATile* currentTile = fireFighterPawn->GetPlacedOn();
 	UE_LOG(LogTemp, Warning, TEXT("SreverDrop"));
-	if (ensure(currentTile) && currentTile->GetGameBoard()->GetGameType() == EGameType::Experienced)
+	if (ensure(currentTile) && currentTile->GetGameBoard()->GetGameType() == EGameType::Family)
 	{
 		// if the tile is on fire, just return
 		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
@@ -339,7 +339,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 			}
 		}
 	}
-	else if (ensure(currentTile) && currentTile->GetGameBoard()->GetGameType() == EGameType::Family)
+	else if (ensure(currentTile) && currentTile->GetGameBoard()->GetGameType() == EGameType::Experienced)
 	{
 		// if the tile is on fire, just return
 		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
@@ -1043,6 +1043,10 @@ void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 						}
 						targetTile->GetPOIOnTile()->Destroy();
 						targetTile->SetPOIOnTile(nullptr);
+						if (fireFighterPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
+						{
+							fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetFlipConsumption());
+						}
 					}
 					else
 					{
