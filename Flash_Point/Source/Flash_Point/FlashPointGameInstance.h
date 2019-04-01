@@ -38,6 +38,11 @@ public:
 	EGameType GetGameType();
 	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
 	void SetGameType(EGameType inGameType);
+	// getter and setter for selected role
+	UFUNCTION(BlueprintCallable, Category = "Map Generation")
+	ERoleType GetSelectedRole();
+	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
+	void SetSelectedRole(ERoleType inRoleType);
 	// Setting the game to be loaded
 	UFUNCTION(BlueprintCallable, Category = "Map Generation")
 	int32 GetLoadGameIndex();
@@ -64,6 +69,9 @@ protected:
 	// a field to store the game mode the player started
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Map Generation")
 	EGameType gameType = EGameType::Family;
+	// The selected role by the player at lobby
+	UPROPERTY(BlueprintReadWrite, Category = "Lobby Creation")
+	ERoleType selectedRole = ERoleType::Basic;
 	// a field to store the game mode the player started
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Map Generation")
 	int32 loadGameIndex = -1;
