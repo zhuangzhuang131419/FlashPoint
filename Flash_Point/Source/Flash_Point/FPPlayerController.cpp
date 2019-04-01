@@ -13,6 +13,7 @@
 #include "MenuSystem/OptionPrompt.h"
 #include "GeneralTypes.h"
 #include "FlashPointSaveGame.h"
+#include "FlashPointGameInstance.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -1174,6 +1175,18 @@ void AFPPlayerController::BeginPlay()
 	FindCrewManager();
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyPlaceFirefighter();
+	}
+	// if found a game board, switch role with regard to currently selected role
+	if (gameBoard) {
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		if (ensure(gameInst)) {
+			ERoleType tempRole = gameInst->GetSelectedRole();
+			if (tempRole != ERoleType::Basic) {
+				EnableAPConsumption(false);
+				SwitchRole(tempRole);
+				EnableAPConsumption(true);
+			}
+		}
 	}
 }
 

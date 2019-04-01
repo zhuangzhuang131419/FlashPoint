@@ -55,6 +55,16 @@ void UFlashPointGameInstance::SetGameType(EGameType inGameType)
 	gameType = inGameType;
 }
 
+ERoleType UFlashPointGameInstance::GetSelectedRole()
+{
+	return selectedRole;
+}
+
+void UFlashPointGameInstance::SetSelectedRole(ERoleType inRoleType)
+{
+	selectedRole = inRoleType;
+}
+
 int32 UFlashPointGameInstance::GetLoadGameIndex()
 {
 	return loadGameIndex;
