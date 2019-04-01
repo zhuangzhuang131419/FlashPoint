@@ -188,7 +188,7 @@ protected:
 	bool isRandom = false;
 
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
-	EGameType gameModeType = EGameType::Family;
+	EGameType gameModeType = EGameType::Experienced;
 
 	UPROPERTY(EditAnyWhere, Category = "Setup")
 	TArray<FLocation> fireInitializeLocation;
