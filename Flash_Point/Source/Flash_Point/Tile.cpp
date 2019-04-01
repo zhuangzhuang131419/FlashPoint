@@ -1233,6 +1233,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 						}
 					}
 					TheFireEngine->Destroy();
+					board->moved = true;
 					if (prevParkTile == nullptr)
 					{
 						board->SetFireEngineLocA(this);
@@ -1361,6 +1362,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 						}
 					}
 					TheAmbulance->Destroy();
+					board->moved = true;
 					if (prevParkTile == nullptr)
 					{
 						board->SetAmbulanceLocA(this);
@@ -1377,7 +1379,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::GetOutAmbulance:
-			if (type == ETileType::AmbulancePark)
+			if (type == ETileType::AmbulancePark && board->moved)
 			{
 				if (this == board->ambulanceLocA || this == board->ambulanceLocB)
 				{
@@ -1401,7 +1403,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::GetOutFireEngine:
-			if (type == ETileType::FireEnginePark)
+			if (type == ETileType::FireEnginePark && board->moved)
 			{
 				if (this == board->engineLocA || this == board->engineLocB)
 				{

@@ -894,6 +894,7 @@ bool AFPPlayerController::GetInAmbulance(){
 	if(ensure(fireFighterPawn)){
 		if(fireFighterPawn->IsWithAmbulance()){
 			fireFighterPawn->SetVisibility(false);
+			gameBoard->moved = false;
 			return true;
 		}
 	}
@@ -904,6 +905,7 @@ void AFPPlayerController::GetOutAmbulance(){
 	if(ensure(fireFighterPawn)){
 		if(fireFighterPawn->IsWithAmbulance()){
 			fireFighterPawn->SetVisibility(true);
+			gameBoard->moved = true;
 		}
 	}
 }
@@ -913,6 +915,7 @@ bool AFPPlayerController::GetInFireEngine(){
 	if(ensure(fireFighterPawn)){
 		if(fireFighterPawn->IsWithEngine()){
 			fireFighterPawn->SetVisibility(false);
+			gameBoard->moved = false;
 			return true;
 		}
 	}
@@ -923,6 +926,7 @@ void AFPPlayerController::GetOutFireEngine(){
 	if(ensure(fireFighterPawn)){
 		if(fireFighterPawn->IsWithEngine()){
 			fireFighterPawn->SetVisibility(true);
+			gameBoard->moved = true;
 		}
 	}
 }

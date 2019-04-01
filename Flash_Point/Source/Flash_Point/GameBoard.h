@@ -105,6 +105,9 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
+	UPROPERTY(BlueprintReadWrite, Category = "Vehicle")
+	bool moved = true;
+
 	// Operation realted fields and functions
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
