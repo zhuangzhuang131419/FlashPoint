@@ -1042,6 +1042,10 @@ void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 						}
 						targetTile->GetPOIOnTile()->Destroy();
 						targetTile->SetPOIOnTile(nullptr);
+						if (fireFighterPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
+						{
+							fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetFlipConsumption());
+						}
 					}
 					else
 					{
