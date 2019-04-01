@@ -7,6 +7,8 @@
 #include "Components/Button.h"
 #include "MainMenu.generated.h"
 
+class UMapOverviewPanel;
+
 /**
  * 
  */
@@ -35,20 +37,21 @@ protected:
 	UPROPERTY(BluePrintReadWrite, Category = "Setup")
 	TSubclassOf<UUserWidget> OptionMenu = nullptr;
 
+	// BINDED WIDGETS
 	UPROPERTY(meta = (BindWidget))
 	UButton* New_Game = nullptr;
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* Join_Game = nullptr;
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* Load_Game = nullptr;
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* Option_Button = nullptr;
-
 	UPROPERTY(meta = (BindWidget))
 	UButton* Exit_Game = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	UMapOverviewPanel* JoinMapOverview = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	UMapOverviewPanel* LoadMapOverview = nullptr;
 
 	// Button functions
 	// New Game button
