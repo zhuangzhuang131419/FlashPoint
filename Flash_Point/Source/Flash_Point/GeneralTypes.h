@@ -125,6 +125,15 @@ enum class EOptionPromptType : uint8
 	CommandTile
 };
 
+// An Enum indicating which game map is the game in
+UENUM(BlueprintType)
+enum class EGameMap : uint8
+{
+	FamilyDefault,
+	RandomSelect,
+	RandomGenerate
+};
+
 // A struct indicate the location
 USTRUCT(BlueprintType)
 struct FLocation
@@ -320,6 +329,41 @@ public:
 	TArray<FTileSaveInfo> tilesInfo;
 	
 	
+};
+
+// A struct to store all informations about a saved game
+USTRUCT(BlueprintType)
+struct FGameLobbyInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	// if this is a saved game
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	bool isSaved = false;
+	// What mode is the game
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	EGameType mode = EGameType::Family;
+	// Number of initial hazmats
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	int32 initialHazmatNum;
+	// Number of initial explosions
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	int32 initialExplosions;
+	// Number of lost victims
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	int32 lostVictimNum;
+	// Remaining health of the game board in the game
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	int32 boardHealth;
+	// Which map is this game being played in
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	EGameMap map = EGameMap::FamilyDefault;
+	// Name of the lobby
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	FString lobbyName;
+
+
 };
 
 class FLASH_POINT_API GeneralTypes

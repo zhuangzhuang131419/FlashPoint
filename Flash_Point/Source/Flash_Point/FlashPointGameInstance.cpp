@@ -83,3 +83,9 @@ FMapSaveInfo UFlashPointGameInstance::GetLoadedGame()
 	return loadedMap;
 }
 
+void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
+{
+	// first set the lobby info to the game instance
+	lobbyInfo = inLobbyInfo;
+}
+

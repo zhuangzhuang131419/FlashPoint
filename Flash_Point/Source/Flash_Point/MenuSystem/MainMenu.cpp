@@ -28,38 +28,22 @@ bool UMainMenu::Initialize() {
 
 void UMainMenu::OnNewGameClicked()
 {
-	APlayerController* local = GetOwningPlayer();
-	if (ensure(local)) {
-		CreateWidget<UUserWidget>(local, CreateNewGameMenu);
-		RemoveFromViewport();
-	}
+	
 }
 
 void UMainMenu::OnJoinGameClicked()
 {
-	APlayerController* local = GetOwningPlayer();
-	if (ensure(local)) {
-		CreateWidget<UUserWidget>(local, JoinGameMenu);
-		RemoveFromViewport();
-	}
+	// TODO refresh the server list in order to display to the player
 }
 
 void UMainMenu::OnLoadGameClicked()
 {
-	APlayerController* local = GetOwningPlayer();
-	if (ensure(local)) {
-		CreateWidget<UUserWidget>(local, LoadGameMenu);
-		RemoveFromViewport();
-	}
+	// TODO refresh the saved games in order for player to select
 }
 
 void UMainMenu::OnOptionClicked()
 {
-	APlayerController* local = GetOwningPlayer();
-	if (ensure(local)) {
-		CreateWidget<UUserWidget>(local, OptionMenu);
-		RemoveFromViewport();
-	}
+	
 }
 
 void UMainMenu::OnExitClicked()

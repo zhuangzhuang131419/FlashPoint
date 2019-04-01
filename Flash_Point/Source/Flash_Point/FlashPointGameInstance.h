@@ -45,6 +45,10 @@ public:
 	void LoadMapOfIndex(int32 index);
 	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
 	FMapSaveInfo GetLoadedGame();
+	// creating a lobby with this function
+	// Setting the game to be loaded
+	UFUNCTION(BlueprintCallable, Category = "Map Generation")
+	void CreateGameLobby(FGameLobbyInfo inLobbyInfo);
 
 protected:
 	// FIELDS
@@ -60,4 +64,7 @@ protected:
 	// store the loaded map
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Save Load Related")
 	FMapSaveInfo loadedMap;
+	// The game instance needs a lobby info to create the game
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Lobby Creation")
+	FGameLobbyInfo lobbyInfo;
 };
