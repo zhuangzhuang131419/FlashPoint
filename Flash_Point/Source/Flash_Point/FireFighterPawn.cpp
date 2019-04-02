@@ -177,6 +177,7 @@ void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
 void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 {
 	ResetProperties();
+	AGameBoard* tempBoard = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController())->GetGameBoard();
 	// adjust properties with respect to firefighter role type
 	switch (inRole)
 	{
@@ -210,8 +211,12 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 	case ERoleType::Veteran:
 		dodgeConsumption = 1;
 		dodgeAbility = true;
-		playingBoard->SetVeteranLoc(placedOn);
-		
+	
+		if (ensure(tempBoard) && ensure(placedOn))
+		{
+			tempBoard->SetVeteranLoc(placedOn);
+		}
+
 		break;
 	case ERoleType::RescueDog:
 		restoreAP = 12;

@@ -245,7 +245,6 @@ protected:
 	// A value to indicate the status of the command given out
 	UPROPERTY(ReplicatedUsing = Rep_CommandStatus, VisibleAnyWhere, BlueprintReadWrite, Category = "Commanding Related")
 	EAcceptanceStatus commandAcceptance = EAcceptanceStatus::Empty;
-	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
 	bool dodgeAbility = false;
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")

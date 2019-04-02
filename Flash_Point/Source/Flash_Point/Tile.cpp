@@ -253,22 +253,9 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		movingPawn->SetPlacedOn(this);
 
 		// adjust the veteran position in gameboard 
-		if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+		if (movingPawn->GetFireFighterRole() == ERoleType::Veteran)
 		{
 			board->SetVeteranLoc(this);
-			board->AdjustAllFirefightersVicinity();
-			board->AdjustAllFirefightersDodgeAbility();
-
-			if (localPawn->IsVicinity())
-			{
-
-				if (!localPawn->HasGainedAPThisTurn())
-				{
-					// GetFreeAP
-					localPawn->SetCurrentAP(localPawn->GetCurrentAP() + 1);
-					localPawn->SetHasGainedAPThisTurn(true);
-				}
-			}
 		}
 
 		if (movingPawn->GetLeading() != nullptr)
@@ -1601,7 +1588,6 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	TArray<ATile*> traceTiles;
 	ATile* start = inPawn->GetPlacedOn();
 	ATile* goal = this;
-	UE_LOG(LogTemp, Warning, TEXT("Before search"));
 	int32 cost = GeneralTypes::AStarShortest(inPawn->GetCurrentAP(), start, goal, traceTiles);
 	// check if the player is carrying a victim and the trace has fire
 	bool hasFire = false;
@@ -1667,7 +1653,6 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	}
 	// change cost to here
 	costToHere = cost;
-	UE_LOG(LogTemp, Warning, TEXT("After search"));
 }
 
 bool ATile::AdjacentToPawn(AFireFighterPawn * inPawn)
