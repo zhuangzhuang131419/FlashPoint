@@ -987,7 +987,19 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 
-					
+					// adjust the veteran position in gameboard 
+					if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+					{
+						board->SetVeteranLoc(this);
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Current fire fighter is placed on %s"), *localPawn->GetPlacedOn()->GetName());
+						if (localPawn->CheckIsVicinty(board->GetVeteranLoc()))
+						{
+							localPawn->SetDodgeAbility(true);
+						}
+					}
 				}
 				// do ap adjustment
 				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)
@@ -1114,7 +1126,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					ATile* start = commanded->GetPlacedOn();
 					ATile* goal = this;
 					UE_LOG(LogTemp, Warning, TEXT("Before search"));
-					int32 cost = GeneralTypes::AStarShotest(localPawn->GetCommandAP(), start, goal, traceTiles);
+					int32 cost = GeneralTypes::AStarShortest(localPawn->GetCommandAP(), start, goal, traceTiles);
 					UE_LOG(LogTemp, Warning, TEXT("Path to here for commanded pawn is: %d"), traceTiles.Num());
 					// do server notify
 					localPlayer->SetNone();
@@ -1590,7 +1602,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	ATile* start = inPawn->GetPlacedOn();
 	ATile* goal = this;
 	UE_LOG(LogTemp, Warning, TEXT("Before search"));
-	int32 cost = GeneralTypes::AStarShotest(inPawn->GetCurrentAP(), start, goal, traceTiles);
+	int32 cost = GeneralTypes::AStarShortest(inPawn->GetCurrentAP(), start, goal, traceTiles);
 	// check if the player is carrying a victim and the trace has fire
 	bool hasFire = false;
 	for (ATile* traceTile : traceTiles) {

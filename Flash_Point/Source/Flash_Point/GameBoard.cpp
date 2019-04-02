@@ -202,6 +202,15 @@ void AGameBoard::ResolveKnockDownOnBoard()
 				AFPPlayerController* localController = Cast<AFPPlayerController>(fireFighterPawn->GetController());
 				if (ensure(localController) && ensure(fireFighterPawn))
 				{
+					if (fireFighterPawn->CheckIsVicinty(veteranLoc))
+					{
+						fireFighterPawn->SetDodgeAbility(true);
+					}
+					else
+					{
+						fireFighterPawn->SetDodgeAbility(false);
+					}
+
 					if (fireFighterPawn->GetCanDodge())
 					{
 						// Server
@@ -867,6 +876,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, engineLocB);
 	DOREPLIFETIME(AGameBoard, ambulanceLocA);
 	DOREPLIFETIME(AGameBoard, ambulanceLocB);
+	DOREPLIFETIME(AGameBoard, veteranLoc);
 }
 
 void AGameBoard::InitializeBoardAttributes()
@@ -1083,26 +1093,6 @@ FBoardSaveInfo AGameBoard::SaveCurrentBoard()
 	savedBoard.gameModeType = gameModeType;
 
 	return savedBoard;
-}
-
-void AGameBoard::AdjustAllFirefightersVicinity()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Adjust all firefighters vicinity"));
-
-	
-
-}
-
-void AGameBoard::AdjustAllFirefightersDodgeAbility()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Adjust all firefighters dodge ability"));
-	for (size_t i = 0; i < fireFighterPawns.Num(); i++)
-	{
-		if (fireFighterPawns[i]->IsVicinity())
-		{
-			fireFighterPawns[i]->SetDodgeAbility(true);
-		}
-	}
 }
 
 // Called every frame

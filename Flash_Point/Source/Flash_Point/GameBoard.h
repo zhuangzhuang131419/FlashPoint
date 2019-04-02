@@ -153,8 +153,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Save Game")
 	FBoardSaveInfo SaveCurrentBoard();
 
-	void AdjustAllFirefightersVicinity();
-	void AdjustAllFirefightersDodgeAbility();
 
 protected:
 	// FIELDS

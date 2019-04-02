@@ -124,6 +124,7 @@ public:
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 	bool IsAdjacentToWall(AEdgeUnit* inEdge);
+	bool CheckIsVicinty(ATile* veteran);
 
 	// Getter and setters for firefighter pawn id
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
@@ -156,10 +157,6 @@ public:
 	bool GetCanDodge();
 	bool canDodgeAcross(AEdgeUnit * targetEdge);
 	void SetDodgeAbility(bool current) { dodgeAbility = current; }
-
-	// Getter and setter for isVicinity
-	bool IsVicinity() { return isVicinity; }
-	void SetIsVicinity(bool current) { isVicinity = current; }
 
 	// Getter and setter for hasGainedAPThisTurn
 	bool HasGainedAPThisTurn() { return hasGainedAPThisTurn; }
@@ -249,8 +246,9 @@ protected:
 	UPROPERTY(ReplicatedUsing = Rep_CommandStatus, VisibleAnyWhere, BlueprintReadWrite, Category = "Commanding Related")
 	EAcceptanceStatus commandAcceptance = EAcceptanceStatus::Empty;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
 	bool dodgeAbility = false;
-	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
 	bool isVicinity = false;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool hasGainedAPThisTurn = false;

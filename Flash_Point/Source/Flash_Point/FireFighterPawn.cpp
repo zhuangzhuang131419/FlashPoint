@@ -209,10 +209,9 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 		break;
 	case ERoleType::Veteran:
 		dodgeConsumption = 1;
-		SetDodgeAbility(true);
-		SetIsVicinity(true);
-		playingBoard->AdjustAllFirefightersVicinity();
-		playingBoard->AdjustAllFirefightersDodgeAbility();
+		dodgeAbility = true;
+		playingBoard->SetVeteranLoc(placedOn);
+		
 		break;
 	case ERoleType::RescueDog:
 		restoreAP = 12;
@@ -239,6 +238,8 @@ void AFireFighterPawn::ResetProperties()
 	chopConsumption = 2;
 	extinguishConsumption = 1;
 	deckGunConsumption = 4;
+	dodgeConsumption = 2;
+	dodgeAbility = false;
 }
 
 int32 AFireFighterPawn::GetMoveConsumption()
@@ -302,6 +303,38 @@ bool AFireFighterPawn::IsAdjacentToWall(AEdgeUnit * inEdge)
 		if (tempTile->GetBack() == inEdge) { return true; }
 		if (tempTile->GetLeft() == inEdge) { return true; }
 		if (tempTile->GetRight() == inEdge) { return true; }
+	}
+	return false;
+}
+
+bool AFireFighterPawn::CheckIsVicinty(ATile * veteranLoc)
+{
+	if (veteranLoc == nullptr)
+	{
+		return false;
+	}
+	if (ensure(placedOn))
+	{
+		if (placedOn == veteranLoc) { return true; }
+		else if (placedOn->isAdjacent(veteranLoc) != nullptr)
+		{ 
+			UE_LOG(LogTemp, Warning, TEXT("%s, adjacent to veteran %s, on %s"), *placedOn->GetName(), *veteranLoc->GetName(), *placedOn->isAdjacent(veteranLoc)->GetName());
+			return true; 
+		}
+		else
+		{
+			TArray<ATile*> tempTileArray;
+			if (GeneralTypes::AStarShortest(0, placedOn, veteranLoc, tempTileArray, true) > 3) 
+			{
+				UE_LOG(LogTemp, Warning, TEXT("larger than 3 spaces"));
+				return false; 
+			}
+			else 
+			{ 
+				UE_LOG(LogTemp, Warning, TEXT("smaller than 3 spaces"));
+				return true; 
+			}
+		}
 	}
 	return false;
 }
@@ -769,6 +802,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, commandAP);
 	DOREPLIFETIME(AFireFighterPawn, orderedDoor);
 	DOREPLIFETIME(AFireFighterPawn, orderedTiles);
+	DOREPLIFETIME(AFireFighterPawn, isVicinity);
+	DOREPLIFETIME(AFireFighterPawn, dodgeAbility);
 	DOREPLIFETIME(AFireFighterPawn, captain);
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 	DOREPLIFETIME(AFireFighterPawn, leadVictim);

@@ -7,7 +7,7 @@ GeneralTypes::GeneralTypes()
 {
 }
 
-int32 GeneralTypes::AStarShotest(int32 maxDepth, ATile * start, ATile * goal, TArray<ATile*>& trace, bool countSmoke)
+int32 GeneralTypes::AStarShortest(int32 maxDepth, ATile * start, ATile * goal, TArray<ATile*>& trace, bool countSmoke)
 {
 	if (start == goal) {
 		trace.Add(start);

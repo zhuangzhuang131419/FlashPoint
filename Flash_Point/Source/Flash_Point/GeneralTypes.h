@@ -372,7 +372,7 @@ public:
 	GeneralTypes();
 
 	// A method to use a star search to find the shortest path from one tile to another
-	static int32 AStarShotest(int32 maxDepth, ATile* start, ATile* goal, TArray<ATile*> & trace, bool countSmoke = false);
+	static int32 AStarShortest(int32 maxDepth, ATile* start, ATile* goal, TArray<ATile*> & trace, bool countSmoke = false);
 	// A method to find the heuristic of a node to goal
 	static int32 GetHeuristic(ATile* cur, ATile* goal);
 
