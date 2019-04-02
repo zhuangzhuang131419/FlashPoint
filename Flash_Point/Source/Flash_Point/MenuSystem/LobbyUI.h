@@ -10,6 +10,7 @@
 class ACrewManager;
 class AChatManager;
 class AFPPlayerController;
+class UChatWidget;
 
 /**
  * 
@@ -32,5 +33,9 @@ protected:
 	// Managers related to the lobby UI
 	UPROPERTY(BlueprintReadWrite, Category = "Lobby Creation")
 	ACrewManager* crewMan;
+	
+	// BINDED WIDGETS
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UChatWidget* ChatPanel = nullptr;
 	
 };
