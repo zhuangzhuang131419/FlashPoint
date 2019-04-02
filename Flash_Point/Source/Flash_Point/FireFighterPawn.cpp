@@ -391,7 +391,7 @@ void AFireFighterPawn::Rep_CarryingVictim()
 {
 	// if the firefighter pawn is not owned by local player, return
 	if (myOwner) {
-		if (victim) {
+		if (carriedVictim) {
 			myOwner->NotifyCarryVictim(true);
 		}
 		else {
@@ -578,11 +578,11 @@ void AFireFighterPawn::KnockDown()
 					relocationFlag = !relocationFlag;
 				}
 
-				if (victim)
+				if (carriedVictim)
 				{
 					tempBoard->SetVictimLostNum(tempBoard->victimLostNum + 1);
-					victim->Destroy();
-					victim = nullptr;
+					carriedVictim->Destroy();
+					carriedVictim = nullptr;
 					tempBoard->SetCurrentPOI(tempBoard->currentPOI - 1);
 				}
 			}
@@ -684,7 +684,7 @@ void AFireFighterPawn::AcceptMoveCommand(bool accepted)
 			if (ensure(captain)) {
 				myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Accepted);
 				int32 apConsume = -GetMoveConsumption() * (orderedTiles.Num() - 1);
-				if (victim || hazmat) {
+				if (carriedVictim || hazmat) {
 					apConsume *= 2;
 				}
 				for (ATile* tempTile : orderedTiles) {
@@ -754,7 +754,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, openConsumption);
 	DOREPLIFETIME(AFireFighterPawn, chopConsumption);
 	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
-	DOREPLIFETIME(AFireFighterPawn, victim);
+	DOREPLIFETIME(AFireFighterPawn, carriedVictim);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterID);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterRole);
 	DOREPLIFETIME(AFireFighterPawn, relocationFlag);
@@ -910,13 +910,13 @@ void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 AVictim* AFireFighterPawn::GetVictim()
 {
-	if (victim) { return victim; }
+	if (carriedVictim) { return carriedVictim; }
 	else { return leadVictim; }
 }
 
-void AFireFighterPawn::SetVictim(AVictim * victim)
+void AFireFighterPawn::SetCarriedVictim(AVictim * victim)
 {
-	this->victim = victim;
+	this->carriedVictim = victim;
 }
 
 AVictim * AFireFighterPawn::GetLeading()

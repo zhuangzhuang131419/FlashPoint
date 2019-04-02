@@ -130,11 +130,15 @@ public:
 	int32 GetFireFighterID();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterID(int32 inID);
-	// getter and setter for victim
+	// getter and setter for carried victim
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	AVictim* GetCarriedVictim() { return carriedVictim; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetCarriedVictim(AVictim* victim);
+
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AVictim* GetVictim();
-	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
-	void SetVictim(AVictim* victim);
+
 	// getter and setter for leading victim
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AVictim* GetLeading();
@@ -306,7 +310,7 @@ public:
 
 protected:
 	UPROPERTY(ReplicatedUsing = Rep_CarryingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
-	AVictim* victim = nullptr;
+	AVictim* carriedVictim = nullptr;
 	UPROPERTY(ReplicatedUsing = Rep_LeadingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AVictim* leadVictim = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")

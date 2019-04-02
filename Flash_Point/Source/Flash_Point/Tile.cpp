@@ -889,7 +889,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::Squeeze:
 			if (!ensure(localPawn)) return;
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Over."));
-			if (localPawn->GetVictim() == nullptr)
+			if (localPawn->GetCarriedVictim() == nullptr)
 			{
 				if (ensure(localPawn->GetPlacedOn()))
 				{
@@ -1071,7 +1071,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::Squeeze:
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Clicked."));
-			if (localPawn->GetVictim()) { return; }
+			if (localPawn->GetCarriedVictim()) { return; }
 			if (ensure(localPawn->GetPlacedOn()))
 			{
 				AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
@@ -1602,7 +1602,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	if (cost != 0) {
 		// if the firefighter is carrying some victim, the cost is doubled
 		cost = cost * inPawn->GetMoveConsumption();
-		if (inPawn->GetVictim()) {
+		if (inPawn->GetCarriedVictim()) {
 			// if carrying any victim, double the cost
 			cost = cost * 2;
 			// if the role is rescue dog, double the cost again
@@ -1612,7 +1612,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 			}
 		}
 		// here is the case if the firefighter is carring some victim but the trace has fire
-		if (hasFire && inPawn->GetVictim()) {
+		if (hasFire && inPawn->GetCarriedVictim()) {
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(unableMat);
 			}
@@ -1744,7 +1744,7 @@ FTileSaveInfo ATile::SaveTile()
 	tileInfo.victimsOnTile = victims.Num();
 	if (placedFireFighters.Num() > 0) {
 		for (AFireFighterPawn* firefighter : placedFireFighters) {
-			if (firefighter->GetVictim()) {
+			if (firefighter->GetCarriedVictim()) {
 				tileInfo.victimsOnTile = tileInfo.victimsOnTile + 1;
 			}
 			if (firefighter->GetLeading()) {
