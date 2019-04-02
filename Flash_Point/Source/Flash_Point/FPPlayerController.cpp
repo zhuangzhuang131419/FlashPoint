@@ -56,11 +56,25 @@ void AFPPlayerController::NotifyPlayerTurn()
 	if (ensure(fireFighterPawn)) {
 		int32 currentAP = fireFighterPawn->GetCurrentAP();
 		int32 apToRestore = 0;
+		if (ensure(gameBoard))
+		{
+			if (fireFighterPawn->CheckIsVicinty(gameBoard->GetVeteranLoc()))
+			{
+				currentAP++;
+				UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
+				fireFighterPawn->SetHasGainedAPThisTurn(true);
+			}
+		}
+		
 		if (currentAP + fireFighterPawn->GetRestoreAP() > fireFighterPawn->GetMaxAP()) {
 			apToRestore = fireFighterPawn->GetMaxAP() - currentAP;
 		}
 		else {
 			apToRestore = fireFighterPawn->GetRestoreAP();
+			if (fireFighterPawn->HasGainedAPThisTurn())
+			{
+				apToRestore++;
+			}
 		}
 		// if ap to restore is more than 0 restore AP
 		if (apToRestore > 0) {
