@@ -14,6 +14,7 @@
 #include "GeneralTypes.h"
 #include "FlashPointSaveGame.h"
 #include "FlashPointGameInstance.h"
+#include "LobbyManager.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -36,6 +37,16 @@ void AFPPlayerController::SetGameBoard(AGameBoard * inGame)
 AGameBoard * AFPPlayerController::GetGameBoard()
 {
 	return gameBoard;
+}
+
+void AFPPlayerController::SetLobbyManager(ALobbyManager * inMan)
+{
+	lobbyMan = inMan;
+}
+
+ALobbyManager * AFPPlayerController::GetLobbyManager()
+{
+	return lobbyMan;
 }
 
 int32 AFPPlayerController::GetTurnNum()
@@ -1094,6 +1105,21 @@ void AFPPlayerController::FindGameBoard()
 	}
 }
 
+void AFPPlayerController::FindLobbyManager()
+{
+	// ensure there is a world
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		TArray<AActor*> allLobbyMan;
+		UGameplayStatics::GetAllActorsOfClass(world, ALobbyManager::StaticClass(), allLobbyMan);
+		// only assign correct game board if there is one found
+		if (allLobbyMan.Num() > 0) {
+			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			lobbyMan = Cast<ALobbyManager>(allLobbyMan[0]);
+		}
+	}
+}
+
 void AFPPlayerController::RelateInGameUI(AFireFighterPawn * fireFighterPawn)
 {
 	if (ensure(inGameUI)) {
@@ -1395,14 +1421,13 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	}
 }
 
-void AFPPlayerController::SelectRole(ERoleType inRole)
+void AFPPlayerController::SelectRole(ERoleType inRole, AFireFighterPawn* inPawn)
 {
+	// TODO some UI updates are needed here
 	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
 	if (ensure(gameInst)) {
-		ERoleType tempRole = gameInst->GetSelectedRole();
-		gameInst->SetSelectedRole(inRole);
 		if (ensure(crewMan)) {
-			ServerSelectRole(crewMan, tempRole, inRole);
+			ServerSelectRole(inPawn, crewMan, inRole);
 		}
 	}
 }
@@ -1536,14 +1561,14 @@ void AFPPlayerController::ServerHealVictim_Implementation(AFireFighterPawn * fir
 	}
 }
 
-void AFPPlayerController::ServerSelectRole_Implementation(ACrewManager * inCrewMan, ERoleType fromRole, ERoleType toRole)
+void AFPPlayerController::ServerSelectRole_Implementation(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
 {
 	if (ensure(inCrewMan)) {
-		inCrewMan->SwitchRolesFromTo(fromRole, toRole);
+		inCrewMan->SelectRoleForFirefighter(inPawn, toRole);
 	}
 }
 
-bool AFPPlayerController::ServerSelectRole_Validate(ACrewManager * inCrewMan, ERoleType fromRole, ERoleType toRole)
+bool AFPPlayerController::ServerSelectRole_Validate(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
 {
 	return true;
 }

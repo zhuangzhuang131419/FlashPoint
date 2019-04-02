@@ -9,6 +9,7 @@
 #include "CrewManager.generated.h"
 
 class USwitchRoleUI;
+class AFireFighterPawn;
 
 UCLASS()
 class FLASH_POINT_API ACrewManager : public AActor
@@ -28,6 +29,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole);
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
+	void SelectRoleForFirefighter(AFireFighterPawn* inPawn, ERoleType toRole);
+	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void ShowCrewChangeUI();
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void AssociatePlayer();
@@ -42,6 +45,11 @@ protected:
 	// Already selected roles in the game
 	UPROPERTY(replicated, EditAnyWhere, Category = "Switch Role")
 	TArray<ERoleType> selectedRoles;
+	// All the roles that are not yet selected
+	UPROPERTY(replicated, EditAnyWhere, Category = "Switch Role")
+	TArray<ERoleType> availableRoles = 
+	{ ERoleType::CAFSFirefighter, ERoleType::Driver, ERoleType::FireCaptain, ERoleType::Generalist, ERoleType::HazmatTechnician, 
+		ERoleType::ImagingTechnician, ERoleType::Paramedic, ERoleType::RescueDog, ERoleType::RescueSpecialist, ERoleType::Veteran };
 	// Already selected roles in the game
 	UPROPERTY(replicated, EditAnyWhere, Category = "Switch Role")
 	bool isInGame = false;

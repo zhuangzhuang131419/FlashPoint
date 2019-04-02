@@ -11,9 +11,23 @@ ALobbyManager::ALobbyManager()
 
 }
 
+void ALobbyManager::AutoJoinLobby(AFireFighterPawn * inPawn, FString playerName)
+{
+}
+
+void ALobbyManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(ALobbyManager, joinedPlayer);
+	DOREPLIFETIME(ALobbyManager, joinedPawns);
+}
+
 // Called when the game starts or when spawned
 void ALobbyManager::BeginPlay()
 {
+	if (HasAuthority()) {
+		SetReplicates(true);
+	}
 	Super::BeginPlay();
 	
 }

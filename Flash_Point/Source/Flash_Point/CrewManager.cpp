@@ -3,6 +3,7 @@
 #include "CrewManager.h"
 #include "MenuSystem/SwitchRoleUI.h"
 #include "FPPlayerController.h"
+#include "FireFighterPawn.h"
 
 
 // Sets default values
@@ -11,6 +12,7 @@ ACrewManager::ACrewManager()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
+	// Initialize the available roles array with all required values
 }
 
 
@@ -28,6 +30,18 @@ void ACrewManager::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
 {
 	selectedRoles.Remove(fromRole);
 	selectedRoles.Add(toRole);
+
+	if (!isInGame) {
+		// it would not add in a basic role since it is not valid in experienced mode
+		if (fromRole != ERoleType::Basic) {
+			availableRoles.Add(fromRole);
+		}
+		availableRoles.Remove(toRole);
+	}
+}
+
+void ACrewManager::SelectRoleForFirefighter(AFireFighterPawn * inPawn, ERoleType toRole)
+{
 }
 
 void ACrewManager::ShowCrewChangeUI()
@@ -72,7 +86,9 @@ void ACrewManager::SelectRole(ERoleType inRole)
 			localPlayer->SwitchRole(inRole);
 		}
 		else {
-			localPlayer->SelectRole(inRole);
+			AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+			if (!ensure(localPawn)) return;
+			localPlayer->SelectRole(inRole, localPawn);
 		}
 	}
 
@@ -101,6 +117,7 @@ void ACrewManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLife
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(ACrewManager, selectedRoles);
 	DOREPLIFETIME(ACrewManager, isInGame);
+	DOREPLIFETIME(ACrewManager, availableRoles);
 }
 
 // Called when the game starts or when spawned

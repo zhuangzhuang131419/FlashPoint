@@ -16,6 +16,8 @@ class AVictim;
 class AHazmat;
 class AGameBoard;
 class AFPPlayerController;
+class ACrewManager;
+class ALobbyManager;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -229,8 +231,12 @@ protected:
 	int32 flipConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	int32 lobbyPlayerID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ERoleType fireFighterRole = ERoleType::Basic;
+	UPROPERTY(replicated, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	ERoleType lobbyRole = ERoleType::Basic;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool relocationFlag = true;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterDodge, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
@@ -252,6 +258,7 @@ protected:
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool hasGainedAPThisTurn = false;
 	AGameBoard* playingBoard = nullptr;
+	ALobbyManager* lobbyMan = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;
 	// UI for visualizing the teammate's firefighter's status
@@ -284,6 +291,8 @@ protected:
 	void Rep_NotifyCommandedTiles();
 	UFUNCTION()
 	void Rep_CommandStatus();
+	UFUNCTION()
+	void Rep_LobbyPawnID();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")

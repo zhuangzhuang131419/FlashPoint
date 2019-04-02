@@ -518,6 +518,10 @@ void AFireFighterPawn::Rep_CommandStatus()
 	}
 }
 
+void AFireFighterPawn::Rep_LobbyPawnID()
+{
+}
+
 void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Firefighter Over"));
@@ -813,6 +817,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 	DOREPLIFETIME(AFireFighterPawn, leadVictim);
 	DOREPLIFETIME(AFireFighterPawn, flipConsumption);
+	DOREPLIFETIME(AFireFighterPawn, lobbyPlayerID);
+	DOREPLIFETIME(AFireFighterPawn, lobbyRole);
 }
 
 bool AFireFighterPawn::GetCanDodge()
@@ -897,6 +903,10 @@ void AFireFighterPawn::InitializeFireFighter()
 		UE_LOG(LogTemp, Warning, TEXT("Got Player controller"));
 		myOwner = owningPlayer;
 		playingBoard = myOwner->GetGameBoard();
+		// when there isn't a playing board, we are in lobby
+		if (!playingBoard) {
+			lobbyMan = myOwner->GetLobbyManager();
+		}
 		// Get the name of this pawn and set it
 		owningPlayer->ServerSetFireFighterName(this, owningPlayer->GetPlayerName());
 	}

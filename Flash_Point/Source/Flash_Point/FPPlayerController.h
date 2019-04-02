@@ -22,6 +22,7 @@ class AChatManager;
 class ACrewManager;
 class UOptionPrompt;
 class APOI;
+class ALobbyManager;
 
 /**
  * 
@@ -81,7 +82,7 @@ public:
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
-	void SelectRole(ERoleType inRole);
+	void SelectRole(ERoleType inRole, AFireFighterPawn* inPawn);
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SwitchRoleWidget(ERoleType inRole);
 	// Cheating related
@@ -93,6 +94,10 @@ public:
 	void SetGameBoard(AGameBoard* inGame);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	AGameBoard* GetGameBoard();
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void SetLobbyManager(ALobbyManager* inMan);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	ALobbyManager* GetLobbyManager();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	int32 GetTurnNum();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
@@ -172,7 +177,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerSelectRole(ACrewManager* inCrewMan, ERoleType fromRole, ERoleType toRole);
+	void ServerSelectRole(AFireFighterPawn* inPawn, ACrewManager* inCrewMan, ERoleType toRole);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSolveKnockDown(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -223,6 +228,8 @@ public:
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")
 	void FindGameBoard();
+	UFUNCTION(BlueprintCallable, Category = "Join Game")
+	void FindLobbyManager();
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void RelateInGameUI(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
@@ -244,6 +251,8 @@ protected:
 	// FIELDS
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	AGameBoard* gameBoard = nullptr;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
+	ALobbyManager* lobbyMan = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	ACrewManager* crewMan = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
