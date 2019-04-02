@@ -134,6 +134,15 @@ enum class EGameMap : uint8
 	RandomGenerate
 };
 
+// An Enum indicating the player's status in the lobby
+UENUM(BlueprintType)
+enum class EJoinStatus : uint8
+{
+	Ready,
+	Waiting,
+	Host
+};
+
 // A struct indicate the location
 USTRUCT(BlueprintType)
 struct FLocation
