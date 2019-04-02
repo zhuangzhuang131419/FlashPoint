@@ -3,6 +3,7 @@
 #include "CrewManager.h"
 #include "MenuSystem/SwitchRoleUI.h"
 #include "FPPlayerController.h"
+#include "LobbyManager.h"
 #include "FireFighterPawn.h"
 
 
@@ -110,6 +111,31 @@ void ACrewManager::CloseCrewChangePanel()
 			localPlayer->EnableOperations(true);
 		}
 	}
+}
+
+void ACrewManager::AutoSelectRole(AFireFighterPawn * inPawn)
+{
+	if (!ensure(inPawn)) return;
+	// this function should never be called within a ingame crew manager
+	if (!isInGame) {
+		// pop a role from the available roles
+		if (availableRoles.Num() > 0) {
+			ERoleType tempRole = availableRoles.Pop();
+			selectedRoles.Add(tempRole);
+			// change the firefighter's lobby role 
+			inPawn->SetFireFighterLobbyRole(tempRole);
+		}
+	}
+}
+
+ALobbyManager * ACrewManager::GetLobbyManager()
+{
+	return lobbyMan;
+}
+
+void ACrewManager::SetLobbyManager(ALobbyManager * inLobbyMan)
+{
+	lobbyMan = inLobbyMan;
 }
 
 void ACrewManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

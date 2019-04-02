@@ -8,6 +8,7 @@
 #include "LobbyManager.generated.h"
 
 class AFireFighterPawn;
+class ACrewManager;
 
 UCLASS()
 class FLASH_POINT_API ALobbyManager : public AActor
@@ -21,6 +22,10 @@ public:
 	// Assigning realted fields to the firefighter
 	UFUNCTION(BlueprintCallable, Category = "Lobby Joining")
 	void AutoJoinLobby(AFireFighterPawn* inPawn, FString playerName);
+	
+	// getter and setter for the crew manager
+	ACrewManager* GetCrewManager();
+	void SetCrewManager(ACrewManager* inCrewMan);
 
 protected:
 	// REPLICATED FIELDS
@@ -28,6 +33,10 @@ protected:
 	int32 joinedPlayer = 0;	// number of players joined the game
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")
 	TArray<AFireFighterPawn*> joinedPawns;	// all pawns currently in the game
+	
+	// FIELDS
+	// A crew manager managing role switching
+	ACrewManager* crewMan = nullptr;
 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned

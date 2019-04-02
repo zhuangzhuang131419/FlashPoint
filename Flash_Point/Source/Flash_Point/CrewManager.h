@@ -10,6 +10,7 @@
 
 class USwitchRoleUI;
 class AFireFighterPawn;
+class ALobbyManager;
 
 UCLASS()
 class FLASH_POINT_API ACrewManager : public AActor
@@ -39,6 +40,11 @@ public:
 	void SelectRole(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void CloseCrewChangePanel();
+	UFUNCTION(BlueprintCallable, Category = "Switch Role")
+	void AutoSelectRole(AFireFighterPawn* inPawn);
+	// getter and setter for lobby manager
+	ALobbyManager* GetLobbyManager();
+	void SetLobbyManager(ALobbyManager* inLobbyMan);
 
 protected:
 	// REPLICATED FIELDS
@@ -59,6 +65,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	TSubclassOf<USwitchRoleUI> SwitchRoleWidget = nullptr;
 	USwitchRoleUI* crewChangeUI = nullptr;
+	// if the crew manager is not in a game, this is essential
+	ALobbyManager* lobbyMan = nullptr;
 	
 	// REPLICAION FUNCTION
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

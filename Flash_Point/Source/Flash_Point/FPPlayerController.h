@@ -23,6 +23,7 @@ class ACrewManager;
 class UOptionPrompt;
 class APOI;
 class ALobbyManager;
+class ULobbyUI;
 
 /**
  * 
@@ -245,6 +246,8 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	UFireFighterUI* inGameUI = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	ULobbyUI* lobbyUI = nullptr;
 
 
 protected:
@@ -293,6 +296,8 @@ protected:
 	TSubclassOf<UFireFighterUI> VeteranClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UOptionPrompt> OptionClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<ULobbyUI> LobbyUIClass = nullptr;
 
 	void FindChatUI();
 	void FindCrewManager();

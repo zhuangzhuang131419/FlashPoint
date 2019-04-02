@@ -15,6 +15,7 @@
 #include "FlashPointSaveGame.h"
 #include "FlashPointGameInstance.h"
 #include "LobbyManager.h"
+#include "MenuSystem/LobbyUI.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -1225,6 +1226,7 @@ void AFPPlayerController::FindChatUI()
 				inGameUI->BindChatManagerWithUI(tempChatManager);
 				inGameUI->RelateChatUIWithPlayer(this);
 			}
+			// could also be a lobby UI if a inGameUI is not created
 		}
 	}
 }
@@ -1253,15 +1255,34 @@ void AFPPlayerController::FindCrewManager()
 void AFPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Player GIAO!"));
+	UE_LOG(LogTemp, Warning, TEXT("Player name is: %s"), *playerName);
 	FindGameBoard();
+	// if not in game board, we are in lobby
+	if (!gameBoard) {
+		FindLobbyManager();
+	}
+	FindCrewManager();
+	// it could also be that we found both lobby manager and crew manager in a lobby
+	if (lobbyMan && crewMan) {
+		UE_LOG(LogTemp, Warning, TEXT("Player in lobby"));
+		// relate both of these managers
+		lobbyMan->SetCrewManager(crewMan);
+		crewMan->SetLobbyManager(lobbyMan);
+		// Now create a lobby UI since we are in lobby
+		lobbyUI = CreateWidget<ULobbyUI>(this, LobbyUIClass);
+		if (ensure(lobbyUI)) {
+			lobbyUI->AddToViewport();
+		}
+	}
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();
 	MakeOptionPromptUI();
 	FindChatUI();
-	FindCrewManager();
+	
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyPlaceFirefighter();
+		// if both crew manager and lobby manager found, in lobby we are, create a lobby UI
+		
 	}
 	// if found a game board, switch role with regard to currently selected role
 	if (gameBoard) {

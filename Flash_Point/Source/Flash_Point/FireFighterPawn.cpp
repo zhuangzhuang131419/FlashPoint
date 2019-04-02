@@ -174,6 +174,16 @@ void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
 	}
 }
 
+ERoleType AFireFighterPawn::GetFireFighterLobbyRole()
+{
+	return lobbyRole;
+}
+
+void AFireFighterPawn::SetFireFighterLobbyRole(ERoleType inRole)
+{
+	lobbyRole = inRole;
+}
+
 void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 {
 	ResetProperties();
@@ -905,6 +915,7 @@ void AFireFighterPawn::InitializeFireFighter()
 		playingBoard = myOwner->GetGameBoard();
 		// when there isn't a playing board, we are in lobby
 		if (!playingBoard) {
+			// if the lobby manager is found, we do the initial relating
 			lobbyMan = myOwner->GetLobbyManager();
 		}
 		// Get the name of this pawn and set it

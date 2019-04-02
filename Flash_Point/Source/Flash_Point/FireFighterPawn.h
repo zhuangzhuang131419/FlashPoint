@@ -83,6 +83,11 @@ public:
 	ERoleType GetFireFighterRole();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterRole(ERoleType inRole);
+	// Getter and setter for the firefighter's lobby role
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	ERoleType GetFireFighterLobbyRole();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterLobbyRole(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void AdjustRoleProperties(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
