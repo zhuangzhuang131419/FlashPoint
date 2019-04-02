@@ -1239,6 +1239,10 @@ void AFPPlayerController::FindChatUI()
 				inGameUI->RelateChatUIWithPlayer(this);
 			}
 			// could also be a lobby UI if a inGameUI is not created
+			if (lobbyUI) {
+				lobbyUI->BindChatManagerWithUI(tempChatManager);
+				lobbyUI->RelateChatUIWithPlayer(this);
+			}
 		}
 	}
 }
