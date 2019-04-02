@@ -903,6 +903,7 @@ void AGameBoard::InitializeBoardAttributes()
 
 		int32 randomPosition;
 
+
 		if (isRandom)
 		{
 			// Initialize the fire
@@ -915,7 +916,64 @@ void AGameBoard::InitializeBoardAttributes()
 				}
 				boardTiles[randomPosition]->AdvanceFire();
 			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Initialize fire un randomly."));
+			// Initialize the fire
+			for (FLocation loc : fireInitializeLocation)
+			{
+				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceFire();
+			}
+		}
 
+		// TODO change the game type back
+		if (gameModeType == EGameType::Family)
+		{
+			// Initialize the explosion
+			// fist explosion
+			randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			while (boardTiles[randomPosition]->GetFireStatus() != EFireStatus::Fire)
+			{
+				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Advance hot spot on %s"), *boardTiles[randomPosition]->GetName());
+			boardTiles[randomPosition]->AdvanceExplosion();
+			boardTiles[randomPosition]->SetIsHotSpot(true);
+			boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
+
+			// next explosions
+			for (size_t i = 0; i < HotSpotInitializeNum - 1; i++)
+			{
+				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				UE_LOG(LogTemp, Warning, TEXT("Advance hot spot on %s"), *boardTiles[randomPosition]->GetName());
+				boardTiles[randomPosition]->AdvanceExplosion();
+				boardTiles[randomPosition]->SetIsHotSpot(true);
+				boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
+			}
+		}
+		
+		// TODO fix the type
+		if (!isRandom && gameModeType == EGameType::Experienced)
+		{
+			// Initialize the POI
+			for (FLocation loc : POIInitializeLocation)
+			{
+				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvancePOI();
+			}
+
+			// Initialize the Hazmat
+			for (FLocation loc : HazmatInitializeLocation)
+			{
+				// boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceHazmat();
+			}			
+		}
+		else
+		{
 			// Initialize the POI
 			for (size_t i = 0; i < POIInitializeNum; i++)
 			{
@@ -927,30 +985,9 @@ void AGameBoard::InitializeBoardAttributes()
 				}
 				boardTiles[randomPosition]->AdvancePOI();
 			}
-
-
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Initialize fire un randomly."));
-			// Initialize the fire
-			for (FLocation loc : fireInitializeLocation)
-			{
-				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceFire();
-			}
 
-			// Initialize the POI
-			for (FLocation loc : POIInitializeLocation)
-			{
-				boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvancePOI();
-			}
 
-			// Initialize the Hazmat
-			for (FLocation loc : HazmatInitializeLocation)
-			{
-				// boardTiles[loc.xLoc * boardLength + loc.yLoc]->AdvanceHazmat();
-			}
-		}
 		// Initialize the Hazmat
 		// TODO check the game mode
 		if (gameModeType != EGameType::Family) {
@@ -967,6 +1004,29 @@ void AGameBoard::InitializeBoardAttributes()
 				boardTiles[randomPosition]->AdvanceHazmat();
 			}
 		}
+
+		// Initialize the Hot spot
+		/*
+		if (gameModeType == EGameType::Family)
+		{
+			// randomly generate the hot spot
+			for (size_t i = 0; i < HotSpotInitializeNum; i++)
+			{
+				while (boardTiles[randomPosition]->IsOutside() ||
+					boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+					boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				if (ensure(boardTiles[randomPosition]->GetHotSpotEffect()))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Spawn hot spot location"));
+					boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
+				}
+			}
+		}
+		*/
+
 		currentPOI = maxPOI;
 	}
 }

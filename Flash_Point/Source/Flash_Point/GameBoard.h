@@ -147,6 +147,12 @@ public:
 
 	TArray<ATile*> GetboardTiles() { return boardTiles; }
 
+	// Getter and setter for initial explosion
+	int32 GetExplosionInitializeNum() { return ExplosionInitializeNum; }
+	void SetExplosionInitializeNum(int32 current) { ExplosionInitializeNum = current; }
+	int32 GetHazmatInitializeNum() { return HazmatInitializeNum; }
+	void SetHazmatInitializeNum(int32 current) { HazmatInitializeNum = current; }
+
 	// Save related functions
 	UFUNCTION(BlueprintCallable, Category = "Save Game")
 	FMapSaveInfo SaveCurrentMap();
@@ -278,7 +284,9 @@ private:
 	const int32 TILE_SIZE = 400;
 	const int32 FireInitializeNum = 10;
 	const int32 POIInitializeNum = 3;
-	const int32 HazmatInitializeNum = 3;
+	int32 HazmatInitializeNum = 3;
+	const int32 HotSpotInitializeNum = 3;
+	int32 ExplosionInitializeNum = 3;
 
 	
 	

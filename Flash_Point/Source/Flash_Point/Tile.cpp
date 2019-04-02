@@ -31,6 +31,9 @@ ATile::ATile()
 	BlastEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Blast Effect"));
 	BlastEffect->bAutoActivate = false;
 	BlastEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
+	HotSpotEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Hot Spot Effect"));
+	HotSpotEffect->bAutoActivate = false;
+	HotSpotEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
 
 }
 
@@ -1856,6 +1859,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, POIStatus);
 	DOREPLIFETIME(ATile, blastOccured);
 	DOREPLIFETIME(ATile, HazmatOnTile);
+	DOREPLIFETIME(ATile, isHotSpot);
 }
 
 // Called when the game starts or when spawned

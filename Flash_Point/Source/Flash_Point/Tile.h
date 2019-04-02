@@ -84,6 +84,7 @@ public:
 	UParticleSystemComponent* GetFireEffect();
 	UParticleSystemComponent* GetSmokeEffect();
 	UParticleSystemComponent* GetBlastEffect();
+	UParticleSystemComponent* GetHotSpotEffect() { return HotSpotEffect; }
 
 	void SetFireEffect(bool isActivate);
 	void SetSmokeEffect(bool isActivate);
@@ -105,6 +106,10 @@ public:
 
 	// Getter for Hazmat
 	AHazmat* GetHazmat() { return HazmatOnTile; }
+
+	// Getter and setter for hot spot
+	bool IsHotSpot() { return isHotSpot; }
+	void SetIsHotSpot(bool current) { isHotSpot = current; }
 
 	// Getter for gameboard
 	AGameBoard* GetGameBoard();
@@ -223,6 +228,8 @@ protected:
 	UParticleSystemComponent* SmokeEffect;
 	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
 	UParticleSystemComponent* BlastEffect;
+	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
+	UParticleSystemComponent* HotSpotEffect;
 
 	// located items and firefighters
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Tile Units")
@@ -241,6 +248,8 @@ protected:
 	bool blastOccured = false;	// used fore synchronization of the blast effect
 	UPROPERTY(replicated, EditAnyWhere, Category = "Tile Attributes")
 	AHazmat* HazmatOnTile = nullptr; // the default POI type of the tile
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
+	bool isHotSpot = false;
 
 	// A victim actor to spawn on tiles
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "SetUp")
@@ -272,6 +281,8 @@ protected:
 
 	AAmbulance* TheAmbulance = nullptr;
 	AFireEngine* TheFireEngine = nullptr;
+
+	
 
 	// is command target
 	bool isCommandTarget = false;
