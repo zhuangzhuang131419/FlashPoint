@@ -24,6 +24,9 @@ public:
 	// Assigning realted fields to the firefighter
 	UFUNCTION(BlueprintCallable, Category = "Lobby Joining")
 	void AutoJoinLobby(AFireFighterPawn* inPawn, FString playerName);	
+	// A function for player to exit from the lobby
+	UFUNCTION(BlueprintCallable, Category = "Lobby Joining")
+	void ExitLobby(AFireFighterPawn* inPawn);
 	// Selecting role using the lobby manager
 	void LobbyManagerSelectRole(AFireFighterPawn* inPawn, ERoleType inRole);
 
@@ -41,12 +44,15 @@ public:
 protected:
 
 	// FUNCTIONS
+	void UpdatePlayerStatus(int32 playerID, FPlayerLobbyInfo inInfo);
 	void UpdatePlayerStatus(int32 playerID, FString inName, ERoleType inRole, EJoinStatus inStatus);
 	void UpdatePlayerStatus(int32 playerID, FString inName);
 	void UpdatePlayerStatus(int32 playerID, ERoleType inRole);
 	void UpdatePlayerStatus(int32 playerID, EJoinStatus inStatus);
 	// this will only be called by the host who is the server to check if the game could start
 	bool IsAllPlayerReady();
+	// A function to shift the lobby information with regard to join informations
+	void ShiftLobbyInfo(int32 fromID, int32 toID);
 
 	// REPLICATED FIELDS
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")

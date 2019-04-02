@@ -100,6 +100,34 @@ void ALobbyManager::UpdatePlayerJoinStatus(AFireFighterPawn * inPawn, EJoinStatu
 	}
 }
 
+void ALobbyManager::UpdatePlayerStatus(int32 playerID, FPlayerLobbyInfo inInfo)
+{
+	// update the player name of specific id
+	switch (playerID)
+	{
+	case 0:
+		P0Status = inInfo;
+		break;
+	case 1:
+		P1Status = inInfo;
+		break;
+	case 2:
+		P2Status = inInfo;
+		break;
+	case 3:
+		P3Status = inInfo;
+		break;
+	case 4:
+		P4Status = inInfo;
+		break;
+	case 5:
+		P5Status = inInfo;
+		break;
+	default:
+		break;
+	}
+}
+
 void ALobbyManager::UpdatePlayerStatus(int32 playerID, FString inName, ERoleType inRole, EJoinStatus inStatus)
 {
 	// update all attributes of a specific player
@@ -220,6 +248,15 @@ bool ALobbyManager::IsAllPlayerReady()
 	}
 }
 
+void ALobbyManager::ShiftLobbyInfo(int32 fromID, int32 toID)
+{
+	// get the old information of the specified ID
+	FPlayerLobbyInfo tempInfo = GetPlayerLobbyInfo(fromID);
+	UpdatePlayerStatus(toID, tempInfo);
+	// clear the slot taken by the player before
+	UpdatePlayerStatus(fromID, FPlayerLobbyInfo());
+}
+
 FPlayerLobbyInfo ALobbyManager::GetPlayerLobbyInfo(int32 playerID)
 {
 	// update the player koin status of specific id
@@ -246,6 +283,21 @@ FPlayerLobbyInfo ALobbyManager::GetPlayerLobbyInfo(int32 playerID)
 	default:
 		return FPlayerLobbyInfo();
 		break;
+	}
+}
+
+void ALobbyManager::ExitLobby(AFireFighterPawn * inPawn)
+{
+	if (!ensure(inPawn)) return;
+	// Delete the joined firefighter from the lobby's record
+	joinedPawns.Remove(inPawn);
+	// get the inPawn's ID befor removing
+	int32 tempID = inPawn->GetFireFighterLobbyID();
+	// shift all other firefighter's lobby ID
+	for (AFireFighterPawn* tempPawn : joinedPawns) {
+		if (tempPawn->GetFireFighterLobbyID() >= tempID) {
+			
+		}
 	}
 }
 
