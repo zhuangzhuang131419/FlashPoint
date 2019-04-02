@@ -1838,6 +1838,13 @@ void ATile::Rep_BlastEffect()
 	BlastEffect->ActivateSystem();
 }
 
+void ATile::Rep_HotSpotEffect()
+{
+	if (!ensure(HotSpotEffect))	return;
+	if (isHotSpot) { HotSpotEffect->Activate(); }
+	else { HotSpotEffect->Deactivate(); }
+}
+
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	// super first
@@ -1881,6 +1888,4 @@ void ATile::BeginPlay()
 void ATile::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
-

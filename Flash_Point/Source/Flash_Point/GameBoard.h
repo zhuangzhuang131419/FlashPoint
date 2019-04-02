@@ -81,9 +81,6 @@ public:
 	void ResolveHazmatExplosionOnBoard();
 	void resolveHazmatExplosions();
 
-	void flareUpOnBoard();
-	void flareUp();
-
 	UFUNCTION(BlueprintCallable)
 	void endTurnRelatedOperations();
 
