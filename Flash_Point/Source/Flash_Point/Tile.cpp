@@ -257,6 +257,14 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		{
 			board->SetVeteranLoc(this);
 		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Current fire fighter is placed on %s"), *movingPawn->GetPlacedOn()->GetName());
+			if (movingPawn->CheckIsVicinty(board->GetVeteranLoc()))
+			{
+				movingPawn->SetDodgeAbility(true);
+			}
+		}
 
 		if (movingPawn->GetLeading() != nullptr)
 		{
@@ -973,21 +981,24 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					localPlayer->ServerMovePawn(this, localPawn, pathToHere);
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
+				}
 
-					// adjust the veteran position in gameboard 
-					if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+				// check get free AP or not
+				if (localPawn->CheckIsVicinty(board->GetVeteranLoc()))
+				{
+					if (!localPawn->HasGainedAPThisTurn())
 					{
-						board->SetVeteranLoc(this);
+						localPawn->SetHasGainedAPThisTurn(true);
+						localPawn->AdjustFireFighterAP(1);
+						UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
 					}
 					else
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Current fire fighter is placed on %s"), *localPawn->GetPlacedOn()->GetName());
-						if (localPawn->CheckIsVicinty(board->GetVeteranLoc()))
-						{
-							localPawn->SetDodgeAbility(true);
-						}
+						UE_LOG(LogTemp, Warning, TEXT("Already got free AP"));
 					}
 				}
+
+
 				// do ap adjustment
 				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)
 				{
@@ -1112,7 +1123,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					TArray<ATile*> traceTiles;
 					ATile* start = commanded->GetPlacedOn();
 					ATile* goal = this;
-					UE_LOG(LogTemp, Warning, TEXT("Before search"));
 					int32 cost = GeneralTypes::AStarShortest(localPawn->GetCommandAP(), start, goal, traceTiles);
 					UE_LOG(LogTemp, Warning, TEXT("Path to here for commanded pawn is: %d"), traceTiles.Num());
 					// do server notify

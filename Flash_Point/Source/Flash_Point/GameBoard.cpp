@@ -294,7 +294,20 @@ void AGameBoard::resolveKnockDown()
 // return true if end the game, otherwise return false
 void AGameBoard::endTurnRelatedOperations()
 {
-	
+	AFPPlayerController* currentController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
+	if (ensure(currentController))
+	{
+		AFireFighterPawn* currentPawn = Cast<AFireFighterPawn>(currentController->GetPawn());
+		if (ensure(currentPawn))
+		{
+			if (currentPawn->HasGainedAPThisTurn() && currentPawn->GetCurrentAP() > 0)
+			{
+				currentPawn->AdjustFireFighterAP(-1);
+			}
+			currentPawn->SetHasGainedAPThisTurn(false);
+		}
+	}
+
 	// assume family mode
 	AdvanceFire();
 	flashover();
