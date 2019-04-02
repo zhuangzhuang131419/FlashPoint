@@ -45,6 +45,8 @@ public:
 	// getter and setter for lobby manager
 	ALobbyManager* GetLobbyManager();
 	void SetLobbyManager(ALobbyManager* inLobbyMan);
+	// setting the crew change UI
+	void SetCrewChangeUI(USwitchRoleUI* inSwitchRoleUI) { crewChangeUI = inSwitchRoleUI; }
 
 protected:
 	// REPLICATED FIELDS

@@ -158,6 +158,87 @@ void ALobbyManager::UpdatePlayerStatus(int32 playerID, EJoinStatus inStatus)
 	}
 }
 
+bool ALobbyManager::IsAllPlayerReady()
+{
+	if (P0Status.joinStatus == EJoinStatus::Waiting) {
+		return false;
+	}
+	else if (P1Status.joinStatus == EJoinStatus::Waiting) {
+		return false;
+	}
+	else if (P2Status.joinStatus == EJoinStatus::Waiting) {
+		return false;
+	}
+	else if (P3Status.joinStatus == EJoinStatus::Waiting) {
+		return false;
+	}
+	else if (P4Status.joinStatus == EJoinStatus::Waiting) {
+		return false;
+	}
+	else if (P5Status.joinStatus == EJoinStatus::Waiting) {
+		return false;
+	}
+	return true;
+}
+
+FPlayerLobbyInfo ALobbyManager::GetPlayerLobbyInfo(int32 playerID)
+{
+	// update the player koin status of specific id
+	switch (playerID)
+	{
+	case 0:
+		return P0Status;
+		break;
+	case 1:
+		return P1Status;
+		break;
+	case 2:
+		return P2Status;
+		break;
+	case 3:
+		return P3Status;
+		break;
+	case 4:
+		return P4Status;
+		break;
+	case 5:
+		return P5Status;
+		break;
+	default:
+		return FPlayerLobbyInfo();
+		break;
+	}
+}
+
+void ALobbyManager::LobbyManagerSelectRole(AFireFighterPawn * inPawn, ERoleType inRole)
+{
+	if (!ensure(inPawn) || !ensure(crewMan)) return;
+	crewMan->SelectRoleForFirefighter(inPawn, inRole);
+	// update all status in the lobby
+	UpdatePlayerStatus(inPawn->GetFireFighterLobbyID(), inPawn->GetFireFighterLobbyRole());
+	// if the pawn is local pawn on server, manually update UI
+	if (HasAuthority()) {
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (ensure(localPlayer)) {
+				AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+				if (localPawn == inPawn) {
+					UE_LOG(LogTemp, Warning, TEXT("Local pawn joining"));
+					// here we know this is local pawn and we are server, so update status manually and the player's join status should be host
+					if (ensure(lobbyUI) && localPawn) {
+						lobbyUI->ShowSelectedRole(localPawn->GetFireFighterLobbyRole());
+					}
+				}
+			}
+		}
+		// update the widget manually on the server side
+		if (ensure(lobbyUI)) {
+			lobbyUI->UpdateDisplayedInfo(P0Status, P1Status, P2Status, P3Status, P4Status, P5Status);
+		}
+	}
+}
+
 void ALobbyManager::Rep_LobbyPlayerStatus()
 {
 	// as any player status changes, update all the informations to the widgets
