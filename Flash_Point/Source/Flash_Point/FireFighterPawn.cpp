@@ -6,6 +6,7 @@
 #include "FPPlayerController.h"
 #include "Tile.h"
 #include "Door.h"
+#include "MenuSystem/LobbyUI.h"
 
 
 // Sets default values
@@ -172,6 +173,16 @@ void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
 			statusBar->ChangeRolePic(inRole);
 		}
 	}
+}
+
+ERoleType AFireFighterPawn::GetFireFighterLobbyRole()
+{
+	return lobbyRole;
+}
+
+void AFireFighterPawn::SetFireFighterLobbyRole(ERoleType inRole)
+{
+	lobbyRole = inRole;
 }
 
 void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
@@ -361,6 +372,16 @@ void AFireFighterPawn::SetFireFighterID(int32 inID)
 	}
 }
 
+int32 AFireFighterPawn::GetFireFighterLobbyID()
+{
+	return lobbyPlayerID;
+}
+
+void AFireFighterPawn::SetFireFighterLobbyID(int32 inID)
+{
+	lobbyPlayerID = inID;
+}
+
 void AFireFighterPawn::Rep_PawnID()
 {
 	// when id got, set it the the player
@@ -515,6 +536,18 @@ void AFireFighterPawn::Rep_CommandStatus()
 				localPlayer->PromtCommandStatus(commandAcceptance);
 			}
 		}
+	}
+}
+
+void AFireFighterPawn::Rep_LobbyPawnID()
+{
+}
+
+void AFireFighterPawn::Rep_LobbyRole()
+{
+	// when lobby role changes, update UI
+	if (ensure(lobbyUI)) {
+		lobbyUI->ShowSelectedRole(lobbyRole);
 	}
 }
 
@@ -781,6 +814,14 @@ void AFireFighterPawn::SetVisibility(bool status){
 	FireFighter->SetVisibility(status);
 }
 
+void AFireFighterPawn::BindLobbyUIFirefighter(ULobbyUI * inLobbyUI)
+{
+	if (ensure(inLobbyUI)) {
+		UE_LOG(LogTemp, Warning, TEXT("Lobby UI binded to firefighter pawn"));
+		lobbyUI = inLobbyUI;
+	}
+}
+
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -813,6 +854,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 	DOREPLIFETIME(AFireFighterPawn, leadVictim);
 	DOREPLIFETIME(AFireFighterPawn, flipConsumption);
+	DOREPLIFETIME(AFireFighterPawn, lobbyPlayerID);
+	DOREPLIFETIME(AFireFighterPawn, lobbyRole);
 }
 
 bool AFireFighterPawn::GetCanDodge()
@@ -897,6 +940,11 @@ void AFireFighterPawn::InitializeFireFighter()
 		UE_LOG(LogTemp, Warning, TEXT("Got Player controller"));
 		myOwner = owningPlayer;
 		playingBoard = myOwner->GetGameBoard();
+		// when there isn't a playing board, we are in lobby
+		if (!playingBoard) {
+			// if the lobby manager is found, we do the initial relating
+			lobbyMan = myOwner->GetLobbyManager();
+		}
 		// Get the name of this pawn and set it
 		owningPlayer->ServerSetFireFighterName(this, owningPlayer->GetPlayerName());
 	}

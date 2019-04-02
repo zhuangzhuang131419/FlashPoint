@@ -16,6 +16,9 @@ class AVictim;
 class AHazmat;
 class AGameBoard;
 class AFPPlayerController;
+class ACrewManager;
+class ALobbyManager;
+class ULobbyUI;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -81,6 +84,11 @@ public:
 	ERoleType GetFireFighterRole();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterRole(ERoleType inRole);
+	// Getter and setter for the firefighter's lobby role
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	ERoleType GetFireFighterLobbyRole();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterLobbyRole(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void AdjustRoleProperties(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
@@ -131,6 +139,11 @@ public:
 	int32 GetFireFighterID();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterID(int32 inID);
+	// Getter and setters for firefighter lobby id
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetFireFighterLobbyID();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterLobbyID(int32 inID);
 	// getter and setter for carried victim
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AVictim* GetCarriedVictim() { return carriedVictim; }
@@ -183,10 +196,12 @@ public:
 	// getter and setter for command acceptance
 	EAcceptanceStatus GetCommandAcceptance() { return commandAcceptance; }
 	void SetCommandAcceptance(EAcceptanceStatus inAcc) { commandAcceptance = inAcc; }
-
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
-
 	void SetVisibility(bool status);
+
+	// function for binding the lobby UI with this firefighter
+	void BindLobbyUIFirefighter(ULobbyUI* inLobbyUI);
+
 	// Field
 	
 
@@ -229,8 +244,12 @@ protected:
 	int32 flipConsumption = 1;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	int32 lobbyPlayerID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ERoleType fireFighterRole = ERoleType::Basic;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyRole, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	ERoleType lobbyRole = ERoleType::Basic;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool relocationFlag = true;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterDodge, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
@@ -252,11 +271,14 @@ protected:
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool hasGainedAPThisTurn = false;
 	AGameBoard* playingBoard = nullptr;
+	ALobbyManager* lobbyMan = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
 	AFPPlayerController* myOwner = nullptr;
 	// UI for visualizing the teammate's firefighter's status
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	class UFireFighterStatus* statusBar = nullptr;
+	// UI for in lobby operations
+	ULobbyUI* lobbyUI = nullptr;
 	// Name of the firefighter's owner
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	FString fireFighterName = "";
@@ -284,6 +306,10 @@ protected:
 	void Rep_NotifyCommandedTiles();
 	UFUNCTION()
 	void Rep_CommandStatus();
+	UFUNCTION()
+	void Rep_LobbyPawnID();
+	UFUNCTION()
+	void Rep_LobbyRole();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")

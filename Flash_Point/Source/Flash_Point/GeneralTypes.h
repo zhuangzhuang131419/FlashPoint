@@ -140,7 +140,8 @@ enum class EJoinStatus : uint8
 {
 	Ready,
 	Waiting,
-	Host
+	Host,
+	NotConnected
 };
 
 // A struct indicate the location
@@ -372,6 +373,25 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
 	FString lobbyName;
 
+
+};
+
+// A struct to store player information within a lobby
+USTRUCT(BlueprintType)
+struct FPlayerLobbyInfo
+{
+	GENERATED_USTRUCT_BODY()
+
+public:
+	// if this is a saved game
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	EJoinStatus joinStatus = EJoinStatus::NotConnected;
+	// Name of the player in lobby
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	FString playerName = "";
+	// The role the player chooses in the lobby
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
+	ERoleType chosenRole = ERoleType::Basic;
 
 };
 

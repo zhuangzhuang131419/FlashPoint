@@ -22,6 +22,8 @@ class AChatManager;
 class ACrewManager;
 class UOptionPrompt;
 class APOI;
+class ALobbyManager;
+class ULobbyUI;
 
 /**
  * 
@@ -81,7 +83,7 @@ public:
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
-	void SelectRole(ERoleType inRole);
+	void SelectRole(ERoleType inRole, AFireFighterPawn* inPawn);
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SwitchRoleWidget(ERoleType inRole);
 	// Cheating related
@@ -93,6 +95,10 @@ public:
 	void SetGameBoard(AGameBoard* inGame);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	AGameBoard* GetGameBoard();
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void SetLobbyManager(ALobbyManager* inMan);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	ALobbyManager* GetLobbyManager();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	int32 GetTurnNum();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
@@ -172,7 +178,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerSelectRole(ACrewManager* inCrewMan, ERoleType fromRole, ERoleType toRole);
+	void ServerSelectRole(AFireFighterPawn* inPawn, ACrewManager* inCrewMan, ERoleType toRole);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSolveKnockDown(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -183,6 +189,8 @@ public:
 	void ServerCommandTileOperation(AFireFighterPawn* fireFighterPawn, AFireFighterPawn* captain, const TArray<ATile*>& targets);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetCommandStatus(AFireFighterPawn* captain, EAcceptanceStatus inStatus);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerJoinLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn, const FString& inName);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
@@ -223,6 +231,8 @@ public:
 	// FUNCTIONS for joining or creating games
 	UFUNCTION(BlueprintCallable, Category = "Join Game")
 	void FindGameBoard();
+	UFUNCTION(BlueprintCallable, Category = "Join Game")
+	void FindLobbyManager();
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void RelateInGameUI(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
@@ -238,12 +248,16 @@ public:
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	UFireFighterUI* inGameUI = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	ULobbyUI* lobbyUI = nullptr;
 
 
 protected:
 	// FIELDS
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	AGameBoard* gameBoard = nullptr;
+	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
+	ALobbyManager* lobbyMan = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	ACrewManager* crewMan = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
@@ -284,9 +298,13 @@ protected:
 	TSubclassOf<UFireFighterUI> VeteranClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<UOptionPrompt> OptionClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<ULobbyUI> LobbyUIClass = nullptr;
 
 	void FindChatUI();
 	void FindCrewManager();
+
+	void JoinGameLobby();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

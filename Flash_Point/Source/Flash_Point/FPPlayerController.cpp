@@ -14,6 +14,8 @@
 #include "GeneralTypes.h"
 #include "FlashPointSaveGame.h"
 #include "FlashPointGameInstance.h"
+#include "LobbyManager.h"
+#include "MenuSystem/LobbyUI.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -36,6 +38,16 @@ void AFPPlayerController::SetGameBoard(AGameBoard * inGame)
 AGameBoard * AFPPlayerController::GetGameBoard()
 {
 	return gameBoard;
+}
+
+void AFPPlayerController::SetLobbyManager(ALobbyManager * inMan)
+{
+	lobbyMan = inMan;
+}
+
+ALobbyManager * AFPPlayerController::GetLobbyManager()
+{
+	return lobbyMan;
 }
 
 int32 AFPPlayerController::GetTurnNum()
@@ -760,6 +772,18 @@ bool AFPPlayerController::ServerSetCommandStatus_Validate(AFireFighterPawn * cap
 	return true;
 }
 
+void AFPPlayerController::ServerJoinLobby_Implementation(ALobbyManager * inMan, AFireFighterPawn * inPawn, const FString& inName)
+{
+	if (ensure(inMan)) {
+		inMan->AutoJoinLobby(inPawn, inName);
+	}
+}
+
+bool AFPPlayerController::ServerJoinLobby_Validate(ALobbyManager * inMan, AFireFighterPawn * inPawn, const FString& inName)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -1108,6 +1132,21 @@ void AFPPlayerController::FindGameBoard()
 	}
 }
 
+void AFPPlayerController::FindLobbyManager()
+{
+	// ensure there is a world
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		TArray<AActor*> allLobbyMan;
+		UGameplayStatics::GetAllActorsOfClass(world, ALobbyManager::StaticClass(), allLobbyMan);
+		// only assign correct game board if there is one found
+		if (allLobbyMan.Num() > 0) {
+			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			lobbyMan = Cast<ALobbyManager>(allLobbyMan[0]);
+		}
+	}
+}
+
 void AFPPlayerController::RelateInGameUI(AFireFighterPawn * fireFighterPawn)
 {
 	if (ensure(inGameUI)) {
@@ -1193,11 +1232,16 @@ void AFPPlayerController::FindChatUI()
 		UGameplayStatics::GetAllActorsOfClass(world, AChatManager::StaticClass(), allChatMan);
 		// only assign correct game board if there is one found
 		if (allChatMan.Num() > 0) {
-			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			UE_LOG(LogTemp, Warning, TEXT("Player found chatmanager"));
 			AChatManager* tempChatManager = Cast<AChatManager>(allChatMan[0]);
 			if (ensure(inGameUI)) {
 				inGameUI->BindChatManagerWithUI(tempChatManager);
 				inGameUI->RelateChatUIWithPlayer(this);
+			}
+			// could also be a lobby UI if a inGameUI is not created
+			if (lobbyUI) {
+				lobbyUI->BindChatManagerWithUI(tempChatManager);
+				lobbyUI->RelateChatUIWithPlayer(this);
 			}
 		}
 	}
@@ -1224,18 +1268,55 @@ void AFPPlayerController::FindCrewManager()
 	}
 }
 
+void AFPPlayerController::JoinGameLobby()
+{
+	if (!ensure(lobbyMan)) return;
+	if (!ensure(crewMan)) return;
+	if (IsLocalController()) {
+		UE_LOG(LogTemp, Warning, TEXT("Player in lobby"));
+		// relate both of these managers
+		lobbyMan->SetCrewManager(crewMan);
+		crewMan->SetLobbyManager(lobbyMan);
+		// Now create a lobby UI since we are in lobby
+		lobbyUI = CreateWidget<ULobbyUI>(this, LobbyUIClass);
+		if (ensure(lobbyUI)) {
+			// binding the lobby UI and add it to viewport
+			lobbyMan->BindLobbyUI(lobbyUI);
+			lobbyUI->AddToViewport();
+			// bind alseo the firefighter with this UI
+			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+			if (ensure(fireFighterPawn)) {
+				fireFighterPawn->BindLobbyUIFirefighter(lobbyUI);
+				// join the lobby since we are local player
+				ServerJoinLobby(lobbyMan, fireFighterPawn, playerName);
+			}
+		}
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Player GIAO!"));
+	UE_LOG(LogTemp, Warning, TEXT("Player name is: %s"), *playerName);
 	FindGameBoard();
+	// if not in game board, we are in lobby
+	if (!gameBoard) {
+		FindLobbyManager();
+	}
+	FindCrewManager();
+	// it could also be that we found both lobby manager and crew manager in a lobby
+	if (lobbyMan && crewMan) {
+		JoinGameLobby();
+	}
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();
 	MakeOptionPromptUI();
 	FindChatUI();
-	FindCrewManager();
+	
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyPlaceFirefighter();
+		// if both crew manager and lobby manager found, in lobby we are, create a lobby UI
+		
 	}
 	// if found a game board, switch role with regard to currently selected role
 	if (gameBoard) {
@@ -1409,14 +1490,13 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	}
 }
 
-void AFPPlayerController::SelectRole(ERoleType inRole)
+void AFPPlayerController::SelectRole(ERoleType inRole, AFireFighterPawn* inPawn)
 {
+	// TODO some UI updates are needed here
 	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
 	if (ensure(gameInst)) {
-		ERoleType tempRole = gameInst->GetSelectedRole();
-		gameInst->SetSelectedRole(inRole);
 		if (ensure(crewMan)) {
-			ServerSelectRole(crewMan, tempRole, inRole);
+			ServerSelectRole(inPawn, crewMan, inRole);
 		}
 	}
 }
@@ -1550,14 +1630,14 @@ void AFPPlayerController::ServerHealVictim_Implementation(AFireFighterPawn * fir
 	}
 }
 
-void AFPPlayerController::ServerSelectRole_Implementation(ACrewManager * inCrewMan, ERoleType fromRole, ERoleType toRole)
+void AFPPlayerController::ServerSelectRole_Implementation(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
 {
 	if (ensure(inCrewMan)) {
-		inCrewMan->SwitchRolesFromTo(fromRole, toRole);
+		inCrewMan->SelectRoleForFirefighter(inPawn, toRole);
 	}
 }
 
-bool AFPPlayerController::ServerSelectRole_Validate(ACrewManager * inCrewMan, ERoleType fromRole, ERoleType toRole)
+bool AFPPlayerController::ServerSelectRole_Validate(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
 {
 	return true;
 }

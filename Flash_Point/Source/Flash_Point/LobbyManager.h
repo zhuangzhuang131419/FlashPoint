@@ -4,7 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "UnrealNetwork.h"
+#include "GeneralTypes.h"
 #include "LobbyManager.generated.h"
+
+class AFireFighterPawn;
+class ACrewManager;
+class ULobbyUI;
 
 UCLASS()
 class FLASH_POINT_API ALobbyManager : public AActor
@@ -15,7 +21,52 @@ public:
 	// Sets default values for this actor's properties
 	ALobbyManager();
 
+	// Assigning realted fields to the firefighter
+	UFUNCTION(BlueprintCallable, Category = "Lobby Joining")
+	void AutoJoinLobby(AFireFighterPawn* inPawn, FString playerName);	
+	// getter and setter for the crew manager
+	ACrewManager* GetCrewManager();
+	void SetCrewManager(ACrewManager* inCrewMan);
+	// binding a lobby UI with the manager
+	void BindLobbyUI(ULobbyUI* inLobbyUI);
+
 protected:
+
+	// FUNCTIONS
+	void UpdatePlayerStatus(int32 playerID, FString inName, ERoleType inRole, EJoinStatus inStatus);
+	void UpdatePlayerStatus(int32 playerID, FString inName);
+	void UpdatePlayerStatus(int32 playerID, ERoleType inRole);
+	void UpdatePlayerStatus(int32 playerID, EJoinStatus inStatus);
+
+	// REPLICATED FIELDS
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")
+	int32 joinedPlayer = 0;	// number of players joined the game
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")
+	TArray<AFireFighterPawn*> joinedPawns;	// all pawns currently in the game
+	// There are 6 of these info structs for 6 joinable slots
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
+	FPlayerLobbyInfo P0Status;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
+	FPlayerLobbyInfo P1Status;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
+	FPlayerLobbyInfo P2Status;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
+	FPlayerLobbyInfo P3Status;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
+	FPlayerLobbyInfo P4Status;
+	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
+	FPlayerLobbyInfo P5Status;
+	
+	// FIELDS
+	// A crew manager managing role switching
+	ACrewManager* crewMan = nullptr;
+	ULobbyUI* lobbyUI = nullptr;
+
+	// REPLICATION FUNCIONTS
+	UFUNCTION()
+	void Rep_LobbyPlayerStatus();
+
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
