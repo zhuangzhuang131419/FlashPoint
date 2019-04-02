@@ -1859,6 +1859,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, POIStatus);
 	DOREPLIFETIME(ATile, blastOccured);
 	DOREPLIFETIME(ATile, HazmatOnTile);
+	DOREPLIFETIME(ATile, isHotSpot);
 }
 
 // Called when the game starts or when spawned
