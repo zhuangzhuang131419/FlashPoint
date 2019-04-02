@@ -32,6 +32,11 @@ public:
 	void SetCrewManager(ACrewManager* inCrewMan);
 	// binding a lobby UI with the manager
 	void BindLobbyUI(ULobbyUI* inLobbyUI);
+	void PlayerReadyStart();
+	// Change the join status of the player
+	void UpdatePlayerJoinStatus(AFireFighterPawn* inPawn, EJoinStatus inStatus);
+	// get the realated status to the player in lobby
+	FPlayerLobbyInfo GetPlayerLobbyInfo(int32 playerID);
 
 protected:
 
@@ -42,8 +47,6 @@ protected:
 	void UpdatePlayerStatus(int32 playerID, EJoinStatus inStatus);
 	// this will only be called by the host who is the server to check if the game could start
 	bool IsAllPlayerReady();
-	// get the realated status to the player in lobby
-	FPlayerLobbyInfo GetPlayerLobbyInfo(int32 playerID);
 
 	// REPLICATED FIELDS
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")

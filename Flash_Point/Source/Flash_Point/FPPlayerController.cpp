@@ -784,6 +784,25 @@ bool AFPPlayerController::ServerJoinLobby_Validate(ALobbyManager * inMan, AFireF
 	return true;
 }
 
+void AFPPlayerController::ServerChangeReadyStatus_Implementation(ALobbyManager * inMan, AFireFighterPawn * inPawn)
+{
+	if (ensure(inMan) && ensure(inPawn)) {
+		FPlayerLobbyInfo tempInfo = inMan->GetPlayerLobbyInfo(inPawn->GetFireFighterLobbyID());
+		// switching the player's join status
+		if (tempInfo.joinStatus == EJoinStatus::Ready) {
+			inMan->UpdatePlayerJoinStatus(inPawn, EJoinStatus::Waiting);
+		}
+		else if (tempInfo.joinStatus == EJoinStatus::Waiting) {
+			inMan->UpdatePlayerJoinStatus(inPawn, EJoinStatus::Ready);
+		}
+	}
+}
+
+bool AFPPlayerController::ServerChangeReadyStatus_Validate(ALobbyManager * inMan, AFireFighterPawn * inPawn)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -1283,7 +1302,15 @@ void AFPPlayerController::JoinGameLobby()
 			// binding the lobby UI and add it to viewport
 			lobbyMan->BindLobbyUI(lobbyUI);
 			lobbyUI->BindCrewManagerWithUI(crewMan);
+			lobbyUI->BindLobbyManagerWithUI(lobbyMan);
 			lobbyUI->AddToViewport();
+			// for the server side, since its host, change button text
+			if (HasAuthority()) {
+				lobbyUI->ChangeJoinStartButtonStatus("Start", false);
+			}
+			else {
+				lobbyUI->ChangeJoinStartButtonStatus("Ready", true);
+			}
 			// bind alseo the firefighter with this UI
 			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 			if (ensure(fireFighterPawn)) {

@@ -66,6 +66,40 @@ void ALobbyManager::BindLobbyUI(ULobbyUI * inLobbyUI)
 	lobbyUI = inLobbyUI;
 }
 
+void ALobbyManager::PlayerReadyStart()
+{
+	// if is server, check join status and do the server travel
+	if (HasAuthority()) {
+		// TODO do server travel to desired level
+	}
+	else {
+		// change the ready status of the local player in lobby
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (!ensure(localPlayer)) return;
+			AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+			if (ensure(localPawn)) {
+				localPlayer->ServerChangeReadyStatus(this, localPawn);
+			}
+		}
+	}
+}
+
+void ALobbyManager::UpdatePlayerJoinStatus(AFireFighterPawn * inPawn, EJoinStatus inStatus)
+{
+	if (ensure(inPawn)) {
+		UpdatePlayerStatus(inPawn->GetFireFighterLobbyID(), inStatus);
+	}
+	// since this should be executed on the server, update server display manually
+	if (HasAuthority()) {
+		if (ensure(lobbyUI)) {
+			lobbyUI->UpdateDisplayedInfo(P0Status, P1Status, P2Status, P3Status, P4Status, P5Status);
+			lobbyUI->ChangeJoinStartButtonStatus("Start", IsAllPlayerReady());
+		}
+	}
+}
+
 void ALobbyManager::UpdatePlayerStatus(int32 playerID, FString inName, ERoleType inRole, EJoinStatus inStatus)
 {
 	// update all attributes of a specific player
@@ -178,7 +212,12 @@ bool ALobbyManager::IsAllPlayerReady()
 	else if (P5Status.joinStatus == EJoinStatus::Waiting) {
 		return false;
 	}
-	return true;
+	if (joinedPawns.Num() >= 3) {
+		return true;
+	}
+	else {
+		return false;
+	}
 }
 
 FPlayerLobbyInfo ALobbyManager::GetPlayerLobbyInfo(int32 playerID)
@@ -242,8 +281,24 @@ void ALobbyManager::LobbyManagerSelectRole(AFireFighterPawn * inPawn, ERoleType 
 void ALobbyManager::Rep_LobbyPlayerStatus()
 {
 	// as any player status changes, update all the informations to the widgets
-	if (ensure(lobbyUI)) {
-		lobbyUI->UpdateDisplayedInfo(P0Status, P1Status, P2Status, P3Status, P4Status, P5Status);
+	if (!ensure(lobbyUI)) return;
+	lobbyUI->UpdateDisplayedInfo(P0Status, P1Status, P2Status, P3Status, P4Status, P5Status);
+
+	// check the new join status of current player in lobby to update button text
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (!ensure(localPlayer)) return;
+		AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+		if (ensure(localPawn)) {
+			FPlayerLobbyInfo tempInfo = GetPlayerLobbyInfo(localPawn->GetFireFighterLobbyID());
+			if (tempInfo.joinStatus == EJoinStatus::Ready) {
+				lobbyUI->ChangeJoinStartButtonStatus("Cancel", true);
+			}
+			else if (tempInfo.joinStatus == EJoinStatus::Waiting) {
+				lobbyUI->ChangeJoinStartButtonStatus("Ready", true);
+			}
+		}
 	}
 }
 

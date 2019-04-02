@@ -194,6 +194,8 @@ public:
 	void ServerSetCommandStatus(AFireFighterPawn* captain, EAcceptanceStatus inStatus);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerJoinLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn, const FString& inName);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerChangeReadyStatus(ALobbyManager* inMan, AFireFighterPawn* inPawn);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
