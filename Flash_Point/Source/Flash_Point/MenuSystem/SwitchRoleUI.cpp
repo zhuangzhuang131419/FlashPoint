@@ -157,7 +157,7 @@ void USwitchRoleUI::OnSelGeneralist() {
 
 void USwitchRoleUI::OnSelRescueSpec() {
 	if (ensure(crewMan)) {
-		crewMan->SelectRole(ERoleType::RescueDog);
+		crewMan->SelectRole(ERoleType::RescueSpecialist);
 	}
 }
 

@@ -24,6 +24,9 @@ public:
 	// Assigning realted fields to the firefighter
 	UFUNCTION(BlueprintCallable, Category = "Lobby Joining")
 	void AutoJoinLobby(AFireFighterPawn* inPawn, FString playerName);	
+	// Selecting role using the lobby manager
+	void LobbyManagerSelectRole(AFireFighterPawn* inPawn, ERoleType inRole);
+
 	// getter and setter for the crew manager
 	ACrewManager* GetCrewManager();
 	void SetCrewManager(ACrewManager* inCrewMan);
@@ -37,6 +40,10 @@ protected:
 	void UpdatePlayerStatus(int32 playerID, FString inName);
 	void UpdatePlayerStatus(int32 playerID, ERoleType inRole);
 	void UpdatePlayerStatus(int32 playerID, EJoinStatus inStatus);
+	// this will only be called by the host who is the server to check if the game could start
+	bool IsAllPlayerReady();
+	// get the realated status to the player in lobby
+	FPlayerLobbyInfo GetPlayerLobbyInfo(int32 playerID);
 
 	// REPLICATED FIELDS
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")

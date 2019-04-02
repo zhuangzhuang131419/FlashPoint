@@ -1496,8 +1496,8 @@ void AFPPlayerController::SelectRole(ERoleType inRole, AFireFighterPawn* inPawn)
 	// TODO some UI updates are needed here
 	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
 	if (ensure(gameInst)) {
-		if (ensure(crewMan)) {
-			ServerSelectRole(inPawn, crewMan, inRole);
+		if (ensure(lobbyMan)) {
+			ServerSelectRole(inPawn, lobbyMan, inRole);
 		}
 	}
 }
@@ -1631,14 +1631,21 @@ void AFPPlayerController::ServerHealVictim_Implementation(AFireFighterPawn * fir
 	}
 }
 
-void AFPPlayerController::ServerSelectRole_Implementation(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
+void AFPPlayerController::ServerSelectRole_Implementation(AFireFighterPawn* inPawn, ALobbyManager * inMan, ERoleType toRole)
 {
-	if (ensure(inCrewMan)) {
-		inCrewMan->SelectRoleForFirefighter(inPawn, toRole);
+	if (ensure(inMan)) {
+		inMan->LobbyManagerSelectRole(inPawn, toRole);
+		// for authority we check if it is the local pawn
+		UWorld* world = GetWorld();
+		if (!ensure(world)) return;
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (localPlayer->GetPawn() == inPawn) {
+
+		}
 	}
 }
 
-bool AFPPlayerController::ServerSelectRole_Validate(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
+bool AFPPlayerController::ServerSelectRole_Validate(AFireFighterPawn* inPawn, ALobbyManager * inMan, ERoleType toRole)
 {
 	return true;
 }

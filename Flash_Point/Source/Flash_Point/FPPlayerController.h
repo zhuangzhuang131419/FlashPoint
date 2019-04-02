@@ -178,7 +178,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerSelectRole(AFireFighterPawn* inPawn, ACrewManager* inCrewMan, ERoleType toRole);
+	void ServerSelectRole(AFireFighterPawn* inPawn, ALobbyManager* inMan, ERoleType toRole);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSolveKnockDown(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)

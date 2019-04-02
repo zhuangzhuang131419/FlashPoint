@@ -11,6 +11,7 @@ class ACrewManager;
 class AChatManager;
 class AFPPlayerController;
 class UChatWidget;
+class USwitchRoleUI;
 
 /**
  * 
@@ -42,5 +43,7 @@ protected:
 	// BINDED WIDGETS
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UChatWidget* ChatPanel = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	USwitchRoleUI* SelectRolePanel = nullptr;
 	
 };

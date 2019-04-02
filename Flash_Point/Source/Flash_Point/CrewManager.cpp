@@ -43,6 +43,12 @@ void ACrewManager::SwitchRolesFromTo(ERoleType fromRole, ERoleType toRole)
 
 void ACrewManager::SelectRoleForFirefighter(AFireFighterPawn * inPawn, ERoleType toRole)
 {
+	if (!ensure(inPawn)) return;
+	selectedRoles.Add(toRole);
+	availableRoles.Remove(toRole);
+	selectedRoles.Remove(inPawn->GetFireFighterLobbyRole());
+	availableRoles.Add(inPawn->GetFireFighterLobbyRole());
+	inPawn->SetFireFighterLobbyRole(toRole);
 }
 
 void ACrewManager::ShowCrewChangeUI()
