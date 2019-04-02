@@ -31,6 +31,9 @@ ATile::ATile()
 	BlastEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Blast Effect"));
 	BlastEffect->bAutoActivate = false;
 	BlastEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
+	HotSpotEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Hot Spot Effect"));
+	HotSpotEffect->bAutoActivate = false;
+	HotSpotEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
 
 }
 

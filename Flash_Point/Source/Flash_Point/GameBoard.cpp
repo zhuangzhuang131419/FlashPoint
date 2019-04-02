@@ -928,7 +928,6 @@ void AGameBoard::InitializeBoardAttributes()
 				boardTiles[randomPosition]->AdvancePOI();
 			}
 
-
 		}
 		else
 		{
@@ -967,6 +966,29 @@ void AGameBoard::InitializeBoardAttributes()
 				boardTiles[randomPosition]->AdvanceHazmat();
 			}
 		}
+
+		// Initialize the Hot spot
+		/*
+		if (gameModeType == EGameType::Family)
+		{
+			// randomly generate the hot spot
+			for (size_t i = 0; i < HotSpotInitializeNum; i++)
+			{
+				while (boardTiles[randomPosition]->IsOutside() ||
+					boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
+					boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				if (ensure(boardTiles[randomPosition]->GetHotSpotEffect()))
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Spawn hot spot location"));
+					boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
+				}
+			}
+		}
+		*/
+
 		currentPOI = maxPOI;
 	}
 }

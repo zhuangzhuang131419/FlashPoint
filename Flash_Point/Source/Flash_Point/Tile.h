@@ -84,6 +84,7 @@ public:
 	UParticleSystemComponent* GetFireEffect();
 	UParticleSystemComponent* GetSmokeEffect();
 	UParticleSystemComponent* GetBlastEffect();
+	UParticleSystemComponent* GetHotSpotEffect() { return HotSpotEffect; }
 
 	void SetFireEffect(bool isActivate);
 	void SetSmokeEffect(bool isActivate);
@@ -223,6 +224,8 @@ protected:
 	UParticleSystemComponent* SmokeEffect;
 	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
 	UParticleSystemComponent* BlastEffect;
+	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
+	UParticleSystemComponent* HotSpotEffect;
 
 	// located items and firefighters
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Tile Units")

@@ -279,6 +279,7 @@ private:
 	const int32 FireInitializeNum = 10;
 	const int32 POIInitializeNum = 3;
 	const int32 HazmatInitializeNum = 3;
+	const int32 HotSpotInitializeNum = 3;
 
 	
 	
