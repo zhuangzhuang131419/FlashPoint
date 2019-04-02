@@ -115,6 +115,16 @@ void AGameBoard::AdvanceFireOnBoard()
 		boardTiles[randomPosition]->GetBlastEffect()->ActivateSystem();
 		boardTiles[randomPosition]->AdvanceExplosion();
 	}
+
+	if (gameModeType == EGameType::Experienced)
+	{
+		// solve flare up
+		if (boardTiles[randomPosition]->IsHotSpot() && health > 0)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Advance again"));
+			AdvanceFireOnBoard();
+		}
+	}
 }
 
 void AGameBoard::AdvanceFire()
@@ -327,13 +337,49 @@ void AGameBoard::resolveHazmatExplosions()
 	}
 }
 
-void AGameBoard::flareUpOnBoard()
+/*
+void AGameBoard::ResolveFlareUpOnBoard()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Resolve flare up"));
+	bool finishFlareUp = false;
+	while (!finishFlareUp)
+	{
+		finishFlareUp = true;
+		for (ATile* tile : boardTiles)
+		{
+			// Any firefighters in a space with fire are knocked down
+			if (tile->IsHotSpot() && tile->GetFireStatus() == EFireStatus::Fire)
+			{
+				// flare up
+				finishFlareUp = false;
+
+				int32 randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
+				{
+					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
+				}
+				boardTiles[randomPosition]->AdvanceFire();
+				break;
+			}
+		}
+	}
 }
 
-void AGameBoard::flareUp()
+void AGameBoard::ResolveFlareUp()
 {
+	if (HasAuthority())
+	{
+		ResolveFlareUpOnBoard();
+	}
+	else
+	{
+		if (ensure(localPlayer))
+		{
+			localPlayer->ServerSolveFlareUp(this);
+		}
+	}
 }
+*/
 
 // return true if end the game, otherwise return false
 void AGameBoard::endTurnRelatedOperations()

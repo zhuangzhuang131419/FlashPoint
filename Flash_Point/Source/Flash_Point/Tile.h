@@ -248,7 +248,7 @@ protected:
 	bool blastOccured = false;	// used fore synchronization of the blast effect
 	UPROPERTY(replicated, EditAnyWhere, Category = "Tile Attributes")
 	AHazmat* HazmatOnTile = nullptr; // the default POI type of the tile
-	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
+	UPROPERTY(replicatedUsing = Rep_HotSpotEffect, VisibleAnyWhere, Category = "Tile Attributes")
 	bool isHotSpot = false;
 
 	// A victim actor to spawn on tiles
@@ -312,6 +312,8 @@ protected:
 	void Rep_FireStatus();
 	UFUNCTION()
 	void Rep_BlastEffect();
+	UFUNCTION()
+	void Rep_HotSpotEffect();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
