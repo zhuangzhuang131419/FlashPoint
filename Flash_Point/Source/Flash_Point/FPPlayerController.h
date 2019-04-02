@@ -80,6 +80,8 @@ public:
 	void NotifyCarryVictim(bool isCarrying);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
+	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
+	void SelectRole(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void SwitchRoleWidget(ERoleType inRole);
 	// Cheating related
@@ -169,6 +171,8 @@ public:
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSwitchRole(ACrewManager* inCrewMan, AFireFighterPawn* fireFighterPawn, ERoleType inRole);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSelectRole(ACrewManager* inCrewMan, ERoleType fromRole, ERoleType toRole);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSolveKnockDown(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)

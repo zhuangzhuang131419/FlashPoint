@@ -65,12 +65,14 @@ void ACrewManager::AssociatePlayer()
 void ACrewManager::SelectRole(ERoleType inRole)
 {
 	// do operations only if the role is not seleted yet
+	if (!ensure(localPlayer)) return;
 	if (!selectedRoles.Contains(inRole)) {
 		// if the crew manager is in game, do role switch
 		if (isInGame) {
-			if (ensure(localPlayer)) {
-				localPlayer->SwitchRole(inRole);
-			}
+			localPlayer->SwitchRole(inRole);
+		}
+		else {
+			localPlayer->SelectRole(inRole);
 		}
 	}
 

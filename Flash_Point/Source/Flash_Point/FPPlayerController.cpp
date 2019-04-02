@@ -1393,6 +1393,18 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	}
 }
 
+void AFPPlayerController::SelectRole(ERoleType inRole)
+{
+	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+	if (ensure(gameInst)) {
+		ERoleType tempRole = gameInst->GetSelectedRole();
+		gameInst->SetSelectedRole(inRole);
+		if (ensure(crewMan)) {
+			ServerSelectRole(crewMan, tempRole, inRole);
+		}
+	}
+}
+
 void AFPPlayerController::SwitchRoleWidget(ERoleType inRole)
 {
 	// remove the old widget from view port, and add a new one
@@ -1520,4 +1532,16 @@ void AFPPlayerController::ServerHealVictim_Implementation(AFireFighterPawn * fir
 	{
 		targetVictim->SetIsHealed(true);
 	}
+}
+
+void AFPPlayerController::ServerSelectRole_Implementation(ACrewManager * inCrewMan, ERoleType fromRole, ERoleType toRole)
+{
+	if (ensure(inCrewMan)) {
+		inCrewMan->SwitchRolesFromTo(fromRole, toRole);
+	}
+}
+
+bool AFPPlayerController::ServerSelectRole_Validate(ACrewManager * inCrewMan, ERoleType fromRole, ERoleType toRole)
+{
+	return true;
 }
