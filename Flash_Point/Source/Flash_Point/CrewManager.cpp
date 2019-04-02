@@ -71,7 +71,7 @@ void ACrewManager::AssociatePlayer()
 		crewChangeUI = CreateWidget<USwitchRoleUI>(localPlayer, SwitchRoleWidget);
 		if (ensure(crewChangeUI)) {
 			crewChangeUI->BindCrewManger(this);
-			crewChangeUI->AddToViewport();
+			crewChangeUI->AddToViewport(-1);
 			crewChangeUI->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}

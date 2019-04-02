@@ -14,6 +14,11 @@ void ULobbyUI::BindChatManagerWithUI(AChatManager * inMan)
 	}
 }
 
+void ULobbyUI::BindCrewManagerWithUI(ACrewManager * inMan)
+{
+	crewMan = inMan;
+}
+
 void ULobbyUI::RelateChatUIWithPlayer(AFPPlayerController * inPlayer)
 {
 	if (ensure(ChatPanel)) {

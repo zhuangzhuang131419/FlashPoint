@@ -31,6 +31,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Lobby Creation")
 	void UpdateDisplayedInfo(FPlayerLobbyInfo P0, FPlayerLobbyInfo P1, FPlayerLobbyInfo P2, FPlayerLobbyInfo P3, FPlayerLobbyInfo P4, FPlayerLobbyInfo P5);
 	void BindChatManagerWithUI(AChatManager* inMan);
+	void BindCrewManagerWithUI(ACrewManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 	
 protected:

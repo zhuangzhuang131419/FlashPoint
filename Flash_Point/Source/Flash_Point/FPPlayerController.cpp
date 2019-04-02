@@ -1282,6 +1282,7 @@ void AFPPlayerController::JoinGameLobby()
 		if (ensure(lobbyUI)) {
 			// binding the lobby UI and add it to viewport
 			lobbyMan->BindLobbyUI(lobbyUI);
+			lobbyUI->BindCrewManagerWithUI(crewMan);
 			lobbyUI->AddToViewport();
 			// bind alseo the firefighter with this UI
 			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
