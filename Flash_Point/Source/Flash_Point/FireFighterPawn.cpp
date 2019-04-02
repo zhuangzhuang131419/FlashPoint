@@ -6,6 +6,7 @@
 #include "FPPlayerController.h"
 #include "Tile.h"
 #include "Door.h"
+#include "MenuSystem/LobbyUI.h"
 
 
 // Sets default values
@@ -371,6 +372,16 @@ void AFireFighterPawn::SetFireFighterID(int32 inID)
 	}
 }
 
+int32 AFireFighterPawn::GetFireFighterLobbyID()
+{
+	return lobbyPlayerID;
+}
+
+void AFireFighterPawn::SetFireFighterLobbyID(int32 inID)
+{
+	lobbyPlayerID = inID;
+}
+
 void AFireFighterPawn::Rep_PawnID()
 {
 	// when id got, set it the the player
@@ -530,6 +541,14 @@ void AFireFighterPawn::Rep_CommandStatus()
 
 void AFireFighterPawn::Rep_LobbyPawnID()
 {
+}
+
+void AFireFighterPawn::Rep_LobbyRole()
+{
+	// when lobby role changes, update UI
+	if (ensure(lobbyUI)) {
+		lobbyUI->ShowSelectedRole(lobbyRole);
+	}
 }
 
 void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)
@@ -793,6 +812,14 @@ void AFireFighterPawn::AcceptDoorCommand(bool accepted)
 //Set visibility
 void AFireFighterPawn::SetVisibility(bool status){
 	FireFighter->SetVisibility(status);
+}
+
+void AFireFighterPawn::BindLobbyUIFirefighter(ULobbyUI * inLobbyUI)
+{
+	if (ensure(inLobbyUI)) {
+		UE_LOG(LogTemp, Warning, TEXT("Lobby UI binded to firefighter pawn"));
+		lobbyUI = inLobbyUI;
+	}
 }
 
 void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const

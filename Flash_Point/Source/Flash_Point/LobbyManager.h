@@ -9,6 +9,7 @@
 
 class AFireFighterPawn;
 class ACrewManager;
+class ULobbyUI;
 
 UCLASS()
 class FLASH_POINT_API ALobbyManager : public AActor
@@ -21,11 +22,12 @@ public:
 
 	// Assigning realted fields to the firefighter
 	UFUNCTION(BlueprintCallable, Category = "Lobby Joining")
-	void AutoJoinLobby(AFireFighterPawn* inPawn, FString playerName);
-	
+	void AutoJoinLobby(AFireFighterPawn* inPawn, FString playerName);	
 	// getter and setter for the crew manager
 	ACrewManager* GetCrewManager();
 	void SetCrewManager(ACrewManager* inCrewMan);
+	// binding a lobby UI with the manager
+	void BindLobbyUI(ULobbyUI* inLobbyUI);
 
 protected:
 	// REPLICATED FIELDS
@@ -37,6 +39,7 @@ protected:
 	// FIELDS
 	// A crew manager managing role switching
 	ACrewManager* crewMan = nullptr;
+	ULobbyUI* lobbyUI = nullptr;
 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned

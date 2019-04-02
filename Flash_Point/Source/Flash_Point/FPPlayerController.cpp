@@ -772,6 +772,18 @@ bool AFPPlayerController::ServerSetCommandStatus_Validate(AFireFighterPawn * cap
 	return true;
 }
 
+void AFPPlayerController::ServerJoinLobby_Implementation(ALobbyManager * inMan, AFireFighterPawn * inPawn, const FString& inName)
+{
+	if (ensure(inMan)) {
+		inMan->AutoJoinLobby(inPawn, inName);
+	}
+}
+
+bool AFPPlayerController::ServerJoinLobby_Validate(ALobbyManager * inMan, AFireFighterPawn * inPawn, const FString& inName)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -1220,7 +1232,7 @@ void AFPPlayerController::FindChatUI()
 		UGameplayStatics::GetAllActorsOfClass(world, AChatManager::StaticClass(), allChatMan);
 		// only assign correct game board if there is one found
 		if (allChatMan.Num() > 0) {
-			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			UE_LOG(LogTemp, Warning, TEXT("Player found chatmanager"));
 			AChatManager* tempChatManager = Cast<AChatManager>(allChatMan[0]);
 			if (ensure(inGameUI)) {
 				inGameUI->BindChatManagerWithUI(tempChatManager);
@@ -1252,6 +1264,32 @@ void AFPPlayerController::FindCrewManager()
 	}
 }
 
+void AFPPlayerController::JoinGameLobby()
+{
+	if (!ensure(lobbyMan)) return;
+	if (!ensure(crewMan)) return;
+	if (IsLocalController()) {
+		UE_LOG(LogTemp, Warning, TEXT("Player in lobby"));
+		// relate both of these managers
+		lobbyMan->SetCrewManager(crewMan);
+		crewMan->SetLobbyManager(lobbyMan);
+		// Now create a lobby UI since we are in lobby
+		lobbyUI = CreateWidget<ULobbyUI>(this, LobbyUIClass);
+		if (ensure(lobbyUI)) {
+			// binding the lobby UI and add it to viewport
+			lobbyMan->BindLobbyUI(lobbyUI);
+			lobbyUI->AddToViewport();
+			// bind alseo the firefighter with this UI
+			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+			if (ensure(fireFighterPawn)) {
+				fireFighterPawn->BindLobbyUIFirefighter(lobbyUI);
+				// join the lobby since we are local player
+				ServerJoinLobby(lobbyMan, fireFighterPawn, playerName);
+			}
+		}
+	}
+}
+
 void AFPPlayerController::BeginPlay()
 {
 	Super::BeginPlay();
@@ -1264,15 +1302,7 @@ void AFPPlayerController::BeginPlay()
 	FindCrewManager();
 	// it could also be that we found both lobby manager and crew manager in a lobby
 	if (lobbyMan && crewMan) {
-		UE_LOG(LogTemp, Warning, TEXT("Player in lobby"));
-		// relate both of these managers
-		lobbyMan->SetCrewManager(crewMan);
-		crewMan->SetLobbyManager(lobbyMan);
-		// Now create a lobby UI since we are in lobby
-		lobbyUI = CreateWidget<ULobbyUI>(this, LobbyUIClass);
-		if (ensure(lobbyUI)) {
-			lobbyUI->AddToViewport();
-		}
+		JoinGameLobby();
 	}
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();

@@ -26,6 +26,8 @@ public:
 	// FUNCTIONS
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Lobby Creation")
 	void ShowAllLobbyInfo(FGameLobbyInfo inInfo);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Lobby Creation")
+	void ShowSelectedRole(ERoleType inRole);
 	void BindChatManagerWithUI(AChatManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 	

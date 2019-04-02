@@ -189,6 +189,8 @@ public:
 	void ServerCommandTileOperation(AFireFighterPawn* fireFighterPawn, AFireFighterPawn* captain, const TArray<ATile*>& targets);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetCommandStatus(AFireFighterPawn* captain, EAcceptanceStatus inStatus);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerJoinLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn, const FString& inName);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
@@ -301,6 +303,8 @@ protected:
 
 	void FindChatUI();
 	void FindCrewManager();
+
+	void JoinGameLobby();
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

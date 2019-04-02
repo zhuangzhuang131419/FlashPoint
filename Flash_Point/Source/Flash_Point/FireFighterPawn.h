@@ -18,6 +18,7 @@ class AGameBoard;
 class AFPPlayerController;
 class ACrewManager;
 class ALobbyManager;
+class ULobbyUI;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -138,6 +139,11 @@ public:
 	int32 GetFireFighterID();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFireFighterID(int32 inID);
+	// Getter and setters for firefighter lobby id
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetFireFighterLobbyID();
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetFireFighterLobbyID(int32 inID);
 	// getter and setter for carried victim
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AVictim* GetCarriedVictim() { return carriedVictim; }
@@ -190,10 +196,12 @@ public:
 	// getter and setter for command acceptance
 	EAcceptanceStatus GetCommandAcceptance() { return commandAcceptance; }
 	void SetCommandAcceptance(EAcceptanceStatus inAcc) { commandAcceptance = inAcc; }
-
 	void FlipServerDodgeFlag() { serverDodgeFlag = !serverDodgeFlag; }
-
 	void SetVisibility(bool status);
+
+	// function for binding the lobby UI with this firefighter
+	void BindLobbyUIFirefighter(ULobbyUI* inLobbyUI);
+
 	// Field
 	
 
@@ -240,7 +248,7 @@ protected:
 	int32 lobbyPlayerID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_RoleType, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ERoleType fireFighterRole = ERoleType::Basic;
-	UPROPERTY(replicated, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_LobbyRole, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ERoleType lobbyRole = ERoleType::Basic;
 	UPROPERTY(ReplicatedUsing = Rep_FireFighterknockDownRelocate, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	bool relocationFlag = true;
@@ -269,6 +277,8 @@ protected:
 	// UI for visualizing the teammate's firefighter's status
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	class UFireFighterStatus* statusBar = nullptr;
+	// UI for in lobby operations
+	ULobbyUI* lobbyUI = nullptr;
 	// Name of the firefighter's owner
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	FString fireFighterName = "";
@@ -298,6 +308,8 @@ protected:
 	void Rep_CommandStatus();
 	UFUNCTION()
 	void Rep_LobbyPawnID();
+	UFUNCTION()
+	void Rep_LobbyRole();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")
