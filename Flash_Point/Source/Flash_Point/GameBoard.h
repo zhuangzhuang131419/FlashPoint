@@ -73,11 +73,17 @@ public:
 	void AdvancePOI();
 	// for server to call in order to do flash over
 	void FlashOverOnBoard();
-	UFUNCTION(BlueprintCallable)
 	void flashover();
+
 	void ResolveKnockDownOnBoard();
-	UFUNCTION(BlueprintCallable)
 	void resolveKnockDown();
+
+	void ResolveHazmatExplosionOnBoard();
+	void resolveHazmatExplosions();
+
+	void flareUpOnBoard();
+	void flareUp();
+
 	UFUNCTION(BlueprintCallable)
 	void endTurnRelatedOperations();
 

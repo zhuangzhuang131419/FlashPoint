@@ -161,6 +161,7 @@ public:
 	void ServerCarryHazmat(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerHealVictim(AFireFighterPawn * fireFighterPawn, AVictim* targetVictim);
+
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetFireFighterID(AFireFighterPawn * fireFighterPawn, AGameBoard* inGameBoard);
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -181,6 +182,8 @@ public:
 	void ServerSelectRole(AFireFighterPawn* inPawn, ALobbyManager* inMan, ERoleType toRole);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSolveKnockDown(AGameBoard* board);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSolveHazmatExplosions(AGameBoard* board);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSpecialistTurnAdjust(AFireFighterPawn* fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -218,8 +221,6 @@ public:
 	void RemoveHazmat();
 
 	void Dodge();
-
-	bool hasDodgeSpace();
 
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRevealPOI(ATile* targetTile);

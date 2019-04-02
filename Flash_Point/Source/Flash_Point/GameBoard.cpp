@@ -3,6 +3,7 @@
 #include "GameBoard.h"
 #include "POI.h"
 #include "Victim.h"
+#include "Hazmat.h"
 #include "FlashPointGameInstance.h"
 
 
@@ -291,6 +292,49 @@ void AGameBoard::resolveKnockDown()
 	}
 }
 
+void AGameBoard::ResolveHazmatExplosionOnBoard()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Handling hazmatExplosion"));
+	for (ATile* tile : boardTiles)
+	{
+		// Any firefighters in a space with fire are knocked down
+		if (tile->GetHazmat() != nullptr && tile->GetFireStatus() == EFireStatus::Fire)
+		{
+			tile->AdvanceExplosion();
+			tile->SetIsHotSpot(true);
+			tile->GetHotSpotEffect()->Activate();
+
+			// remove the hazmat
+			tile->GetHazmat()->Destroy();
+			tile->SetHazmatOnTile(nullptr);
+		}
+	}
+}
+
+void AGameBoard::resolveHazmatExplosions()
+{
+
+	if (HasAuthority())
+	{
+		ResolveHazmatExplosionOnBoard();
+	}
+	else
+	{
+		if (ensure(localPlayer))
+		{
+			localPlayer->ServerSolveHazmatExplosions(this);
+		}
+	}
+}
+
+void AGameBoard::flareUpOnBoard()
+{
+}
+
+void AGameBoard::flareUp()
+{
+}
+
 // return true if end the game, otherwise return false
 void AGameBoard::endTurnRelatedOperations()
 {
@@ -309,10 +353,22 @@ void AGameBoard::endTurnRelatedOperations()
 	}
 
 	// assume family mode
-	AdvanceFire();
-	flashover();
-	resolveKnockDown();
-	AdvancePOI();
+	if (gameModeType == EGameType::Family)
+	{
+		AdvanceFire();
+		flashover();
+		resolveKnockDown();
+		AdvancePOI();
+	}
+	else if (gameModeType == EGameType::Experienced)
+	{
+		AdvanceFire();
+		flashover();
+		resolveHazmatExplosions();
+		resolveKnockDown();
+		AdvancePOI();
+	}
+	
 }
 
 int32 AGameBoard::JoinBoard()
@@ -927,8 +983,7 @@ void AGameBoard::InitializeBoardAttributes()
 			}
 		}
 
-		// TODO change the game type back
-		if (gameModeType == EGameType::Family)
+		if (gameModeType == EGameType::Experienced)
 		{
 			// Initialize the explosion
 			// fist explosion
@@ -937,7 +992,9 @@ void AGameBoard::InitializeBoardAttributes()
 			{
 				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 			}
-			UE_LOG(LogTemp, Warning, TEXT("Advance hot spot on %s"), *boardTiles[randomPosition]->GetName());
+			UE_LOG(LogTemp, Warning, TEXT("First explosion: Advance hot spot on %s"), *boardTiles[randomPosition]->GetName());
+			boardTiles[randomPosition]->SetFireStatus(EFireStatus::Fire);
+			boardTiles[randomPosition]->GetFireEffect()->Activate();
 			boardTiles[randomPosition]->AdvanceExplosion();
 			boardTiles[randomPosition]->SetIsHotSpot(true);
 			boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
@@ -951,6 +1008,8 @@ void AGameBoard::InitializeBoardAttributes()
 					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 				}
 				UE_LOG(LogTemp, Warning, TEXT("Advance hot spot on %s"), *boardTiles[randomPosition]->GetName());
+				boardTiles[randomPosition]->SetFireStatus(EFireStatus::Fire);
+				boardTiles[randomPosition]->GetFireEffect()->Activate();
 				boardTiles[randomPosition]->AdvanceExplosion();
 				boardTiles[randomPosition]->SetIsHotSpot(true);
 				boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
@@ -958,7 +1017,7 @@ void AGameBoard::InitializeBoardAttributes()
 		}
 		
 		// TODO fix the type
-		if (!isRandom && gameModeType == EGameType::Experienced)
+		if (!isRandom && gameModeType == EGameType::Family)
 		{
 			// Initialize the POI
 			for (FLocation loc : POIInitializeLocation)
@@ -1004,29 +1063,6 @@ void AGameBoard::InitializeBoardAttributes()
 				boardTiles[randomPosition]->AdvanceHazmat();
 			}
 		}
-
-		// Initialize the Hot spot
-		/*
-		if (gameModeType == EGameType::Family)
-		{
-			// randomly generate the hot spot
-			for (size_t i = 0; i < HotSpotInitializeNum; i++)
-			{
-				while (boardTiles[randomPosition]->IsOutside() ||
-					boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire ||
-					boardTiles[randomPosition]->GetPOIStatus() != EPOIStatus::Empty)
-				{
-					randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
-				}
-				if (ensure(boardTiles[randomPosition]->GetHotSpotEffect()))
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Spawn hot spot location"));
-					boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
-				}
-			}
-		}
-		*/
-
 		currentPOI = maxPOI;
 	}
 }
