@@ -253,22 +253,9 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 		movingPawn->SetPlacedOn(this);
 
 		// adjust the veteran position in gameboard 
-		if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+		if (movingPawn->GetFireFighterRole() == ERoleType::Veteran)
 		{
 			board->SetVeteranLoc(this);
-			board->AdjustAllFirefightersVicinity();
-			board->AdjustAllFirefightersDodgeAbility();
-
-			if (localPawn->IsVicinity())
-			{
-
-				if (!localPawn->HasGainedAPThisTurn())
-				{
-					// GetFreeAP
-					localPawn->SetCurrentAP(localPawn->GetCurrentAP() + 1);
-					localPawn->SetHasGainedAPThisTurn(true);
-				}
-			}
 		}
 
 		if (movingPawn->GetLeading() != nullptr)
@@ -889,7 +876,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::Squeeze:
 			if (!ensure(localPawn)) return;
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Over."));
-			if (localPawn->GetVictim() == nullptr)
+			if (localPawn->GetCarriedVictim() == nullptr)
 			{
 				if (ensure(localPawn->GetPlacedOn()))
 				{
@@ -987,7 +974,19 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 
-					
+					// adjust the veteran position in gameboard 
+					if (localPawn->GetFireFighterRole() == ERoleType::Veteran)
+					{
+						board->SetVeteranLoc(this);
+					}
+					else
+					{
+						UE_LOG(LogTemp, Warning, TEXT("Current fire fighter is placed on %s"), *localPawn->GetPlacedOn()->GetName());
+						if (localPawn->CheckIsVicinty(board->GetVeteranLoc()))
+						{
+							localPawn->SetDodgeAbility(true);
+						}
+					}
 				}
 				// do ap adjustment
 				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)
@@ -1071,7 +1070,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::Squeeze:
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Clicked."));
-			if (localPawn->GetVictim()) { return; }
+			if (localPawn->GetCarriedVictim()) { return; }
 			if (ensure(localPawn->GetPlacedOn()))
 			{
 				AEdgeUnit* adjacentEdge = isAdjacent(localPawn->GetPlacedOn());
@@ -1114,7 +1113,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					ATile* start = commanded->GetPlacedOn();
 					ATile* goal = this;
 					UE_LOG(LogTemp, Warning, TEXT("Before search"));
-					int32 cost = GeneralTypes::AStarShotest(localPawn->GetCommandAP(), start, goal, traceTiles);
+					int32 cost = GeneralTypes::AStarShortest(localPawn->GetCommandAP(), start, goal, traceTiles);
 					UE_LOG(LogTemp, Warning, TEXT("Path to here for commanded pawn is: %d"), traceTiles.Num());
 					// do server notify
 					localPlayer->SetNone();
@@ -1589,8 +1588,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	TArray<ATile*> traceTiles;
 	ATile* start = inPawn->GetPlacedOn();
 	ATile* goal = this;
-	UE_LOG(LogTemp, Warning, TEXT("Before search"));
-	int32 cost = GeneralTypes::AStarShotest(inPawn->GetCurrentAP(), start, goal, traceTiles);
+	int32 cost = GeneralTypes::AStarShortest(inPawn->GetCurrentAP(), start, goal, traceTiles);
 	// check if the player is carrying a victim and the trace has fire
 	bool hasFire = false;
 	for (ATile* traceTile : traceTiles) {
@@ -1602,7 +1600,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	if (cost != 0) {
 		// if the firefighter is carrying some victim, the cost is doubled
 		cost = cost * inPawn->GetMoveConsumption();
-		if (inPawn->GetVictim()) {
+		if (inPawn->GetCarriedVictim()) {
 			// if carrying any victim, double the cost
 			cost = cost * 2;
 			// if the role is rescue dog, double the cost again
@@ -1612,7 +1610,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 			}
 		}
 		// here is the case if the firefighter is carring some victim but the trace has fire
-		if (hasFire && inPawn->GetVictim()) {
+		if (hasFire && inPawn->GetCarriedVictim()) {
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(unableMat);
 			}
@@ -1655,7 +1653,6 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	}
 	// change cost to here
 	costToHere = cost;
-	UE_LOG(LogTemp, Warning, TEXT("After search"));
 }
 
 bool ATile::AdjacentToPawn(AFireFighterPawn * inPawn)
@@ -1744,7 +1741,7 @@ FTileSaveInfo ATile::SaveTile()
 	tileInfo.victimsOnTile = victims.Num();
 	if (placedFireFighters.Num() > 0) {
 		for (AFireFighterPawn* firefighter : placedFireFighters) {
-			if (firefighter->GetVictim()) {
+			if (firefighter->GetCarriedVictim()) {
 				tileInfo.victimsOnTile = tileInfo.victimsOnTile + 1;
 			}
 			if (firefighter->GetLeading()) {

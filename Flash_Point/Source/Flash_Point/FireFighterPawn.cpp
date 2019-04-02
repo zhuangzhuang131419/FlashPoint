@@ -177,6 +177,7 @@ void AFireFighterPawn::SetFireFighterRole(ERoleType inRole)
 void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 {
 	ResetProperties();
+	AGameBoard* tempBoard = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController())->GetGameBoard();
 	// adjust properties with respect to firefighter role type
 	switch (inRole)
 	{
@@ -209,10 +210,13 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 		break;
 	case ERoleType::Veteran:
 		dodgeConsumption = 1;
-		SetDodgeAbility(true);
-		SetIsVicinity(true);
-		playingBoard->AdjustAllFirefightersVicinity();
-		playingBoard->AdjustAllFirefightersDodgeAbility();
+		dodgeAbility = true;
+	
+		if (ensure(tempBoard) && ensure(placedOn))
+		{
+			tempBoard->SetVeteranLoc(placedOn);
+		}
+
 		break;
 	case ERoleType::RescueDog:
 		restoreAP = 12;
@@ -239,6 +243,8 @@ void AFireFighterPawn::ResetProperties()
 	chopConsumption = 2;
 	extinguishConsumption = 1;
 	deckGunConsumption = 4;
+	dodgeConsumption = 2;
+	dodgeAbility = false;
 }
 
 int32 AFireFighterPawn::GetMoveConsumption()
@@ -302,6 +308,38 @@ bool AFireFighterPawn::IsAdjacentToWall(AEdgeUnit * inEdge)
 		if (tempTile->GetBack() == inEdge) { return true; }
 		if (tempTile->GetLeft() == inEdge) { return true; }
 		if (tempTile->GetRight() == inEdge) { return true; }
+	}
+	return false;
+}
+
+bool AFireFighterPawn::CheckIsVicinty(ATile * veteranLoc)
+{
+	if (veteranLoc == nullptr)
+	{
+		return false;
+	}
+	if (ensure(placedOn))
+	{
+		if (placedOn == veteranLoc) { return true; }
+		else if (placedOn->isAdjacent(veteranLoc) != nullptr)
+		{ 
+			UE_LOG(LogTemp, Warning, TEXT("%s, adjacent to veteran %s, on %s"), *placedOn->GetName(), *veteranLoc->GetName(), *placedOn->isAdjacent(veteranLoc)->GetName());
+			return true; 
+		}
+		else
+		{
+			TArray<ATile*> tempTileArray;
+			if (GeneralTypes::AStarShortest(0, placedOn, veteranLoc, tempTileArray, true) > 3) 
+			{
+				UE_LOG(LogTemp, Warning, TEXT("larger than 3 spaces"));
+				return false; 
+			}
+			else 
+			{ 
+				UE_LOG(LogTemp, Warning, TEXT("smaller than 3 spaces"));
+				return true; 
+			}
+		}
 	}
 	return false;
 }
@@ -391,7 +429,7 @@ void AFireFighterPawn::Rep_CarryingVictim()
 {
 	// if the firefighter pawn is not owned by local player, return
 	if (myOwner) {
-		if (victim) {
+		if (carriedVictim) {
 			myOwner->NotifyCarryVictim(true);
 		}
 		else {
@@ -578,11 +616,11 @@ void AFireFighterPawn::KnockDown()
 					relocationFlag = !relocationFlag;
 				}
 
-				if (victim)
+				if (carriedVictim)
 				{
 					tempBoard->SetVictimLostNum(tempBoard->victimLostNum + 1);
-					victim->Destroy();
-					victim = nullptr;
+					carriedVictim->Destroy();
+					carriedVictim = nullptr;
 					tempBoard->SetCurrentPOI(tempBoard->currentPOI - 1);
 				}
 			}
@@ -684,7 +722,7 @@ void AFireFighterPawn::AcceptMoveCommand(bool accepted)
 			if (ensure(captain)) {
 				myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Accepted);
 				int32 apConsume = -GetMoveConsumption() * (orderedTiles.Num() - 1);
-				if (victim || hazmat) {
+				if (carriedVictim || hazmat) {
 					apConsume *= 2;
 				}
 				for (ATile* tempTile : orderedTiles) {
@@ -754,7 +792,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, openConsumption);
 	DOREPLIFETIME(AFireFighterPawn, chopConsumption);
 	DOREPLIFETIME(AFireFighterPawn, extinguishConsumption);
-	DOREPLIFETIME(AFireFighterPawn, victim);
+	DOREPLIFETIME(AFireFighterPawn, carriedVictim);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterID);
 	DOREPLIFETIME(AFireFighterPawn, fireFighterRole);
 	DOREPLIFETIME(AFireFighterPawn, relocationFlag);
@@ -769,6 +807,8 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, commandAP);
 	DOREPLIFETIME(AFireFighterPawn, orderedDoor);
 	DOREPLIFETIME(AFireFighterPawn, orderedTiles);
+	DOREPLIFETIME(AFireFighterPawn, isVicinity);
+	DOREPLIFETIME(AFireFighterPawn, dodgeAbility);
 	DOREPLIFETIME(AFireFighterPawn, captain);
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 	DOREPLIFETIME(AFireFighterPawn, leadVictim);
@@ -910,13 +950,13 @@ void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 
 AVictim* AFireFighterPawn::GetVictim()
 {
-	if (victim) { return victim; }
+	if (carriedVictim) { return carriedVictim; }
 	else { return leadVictim; }
 }
 
-void AFireFighterPawn::SetVictim(AVictim * victim)
+void AFireFighterPawn::SetCarriedVictim(AVictim * victim)
 {
-	this->victim = victim;
+	this->carriedVictim = victim;
 }
 
 AVictim * AFireFighterPawn::GetLeading()

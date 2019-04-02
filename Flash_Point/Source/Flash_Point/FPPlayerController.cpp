@@ -323,7 +323,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 
 			currentTile->SetPOIStatus(EPOIStatus::Revealed);
 		}
-		fireFighterPawn->SetVictim(nullptr);
+		fireFighterPawn->SetCarriedVictim(nullptr);
 		tempVictim->SetIsCarried(false);
 
 		// only for server, actively check if the game is won
@@ -348,8 +348,6 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 		if (!tempVictim) return;
 		if (currentTile == currentTile->GetGameBoard()->ambulanceLocA || currentTile == currentTile->GetGameBoard()->ambulanceLocB)
 		{
-			
-
 			tempVictim->Destroy();
 			currentTile->SetPOIStatus(EPOIStatus::Empty);
 			currentTile->GetGameBoard()->SetVictimSavedNum(
@@ -401,7 +399,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 		}
 		else
 		{
-			fireFighterPawn->SetVictim(nullptr);
+			fireFighterPawn->SetCarriedVictim(nullptr);
 			tempVictim->SetIsCarried(false);
 			UE_LOG(LogTemp, Warning, TEXT("Drop unhealed victim"));
 		}
@@ -437,20 +435,22 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 			if (currentTile->GetVictims()->Num() > 0)
 			{
 				AVictim* targetVictim = currentTile->GetVictims()->Pop(true);
-				if (!ensure(targetVictim)) { return; }
+				if (!(targetVictim)) { return; }
 				if (targetVictim->IsHealed())
 				{
-					AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-					if (fireFighterPawn->GetLeading() == nullptr)
+					if (ensure(fireFighterPawn))
 					{
-						fireFighterPawn->SetLeading(targetVictim);
-						targetVictim->SetActorLocation(fireFighterPawn->GetActorLocation() - FVector(0, 100, 0));
-						targetVictim->SetVictimLoc(targetVictim->GetActorLocation());
-						UE_LOG(LogTemp, Warning, TEXT("Victim has been lead"));
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Already leading"));
+						if (fireFighterPawn->GetLeading() == nullptr)
+						{
+							fireFighterPawn->SetLeading(targetVictim);
+							targetVictim->SetActorLocation(fireFighterPawn->GetActorLocation() - FVector(0, 100, 0));
+							targetVictim->SetVictimLoc(targetVictim->GetActorLocation());
+							UE_LOG(LogTemp, Warning, TEXT("Victim has been lead"));
+						}
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("Already leading"));
+						}
 					}
 				}
 				else
@@ -458,7 +458,7 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 					if (!ensure(targetVictim)) return;
 					targetVictim->SetIsCarried(true);
 					UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-					fireFighterPawn->SetVictim(targetVictim);
+					fireFighterPawn->SetCarriedVictim(targetVictim);
 					targetVictim->victimMesh->SetVisibility(false);
 					if (currentTile->GetVictims()->Num() == 0)
 					{
@@ -752,6 +752,7 @@ void AFPPlayerController::DropVictim()
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn))
 	{
+		/*
 		// for client only, do the victim position visual settings
 		if (!HasAuthority()) {
 			ATile* currentTile = fireFighterPawn->GetPlacedOn();
@@ -776,15 +777,16 @@ void AFPPlayerController::DropVictim()
 				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
 				break;
 			}
-			AVictim* tempVictim = fireFighterPawn->GetVictim();
+			AVictim* tempVictim = fireFighterPawn->GetCarriedVictim();
 			if (!ensure(tempVictim)) return;
 			tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
 		}
+		*/
 		ServerDropVictim(fireFighterPawn);
 		// only for authority, update the firefighter's carrying UI
 		if (HasAuthority()) {
 			if (ensure(inGameUI)) {
-				if (fireFighterPawn->GetVictim()) {
+				if (fireFighterPawn->GetCarriedVictim()) {
 					inGameUI->ShowCarrying(true);
 				}
 				else {
@@ -806,7 +808,7 @@ void AFPPlayerController::CarryVictim()
 		// only for server, update the UI actively
 		if (HasAuthority()) {
 			if (ensure(inGameUI)) {
-				if (fireFighterPawn->GetVictim() && (fireFighterPawn->GetVictim() != fireFighterPawn->GetLeading())) {
+				if (fireFighterPawn->GetCarriedVictim() && (fireFighterPawn->GetCarriedVictim() != fireFighterPawn->GetLeading())) {
 					inGameUI->ShowCarrying(true);
 				}
 				else {
