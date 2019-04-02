@@ -1593,7 +1593,10 @@ bool AFPPlayerController::ServerFlashOver_Validate(AGameBoard * board)
 
 void AFPPlayerController::ServerSolveKnockDown_Implementation(AGameBoard * board)
 {
-	board->ResolveKnockDownOnBoard();
+	if (ensure(board))
+	{
+		board->ResolveKnockDownOnBoard();
+	}
 }
 
 bool AFPPlayerController::ServerSolveKnockDown_Validate(AGameBoard * board)
@@ -1638,6 +1641,19 @@ void AFPPlayerController::ServerSelectRole_Implementation(AFireFighterPawn* inPa
 }
 
 bool AFPPlayerController::ServerSelectRole_Validate(AFireFighterPawn* inPawn, ACrewManager * inCrewMan, ERoleType toRole)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerSolveHazmatExplosions_Implementation(AGameBoard * board)
+{
+	if (ensure(board))
+	{
+		board->ResolveHazmatExplosionOnBoard();
+	}
+}
+
+bool AFPPlayerController::ServerSolveHazmatExplosions_Validate(AGameBoard * board)
 {
 	return true;
 }
