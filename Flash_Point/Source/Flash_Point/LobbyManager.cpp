@@ -78,6 +78,13 @@ void ALobbyManager::PlayerReadyStart()
 	// if is server, check join status and do the server travel
 	if (HasAuthority()) {
 		// TODO do server travel to desired level
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		if (!ensure(gameInst)) return;
+		gameInst->SetGameType(lobbyInfo.mode);
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			world->ServerTravel(gameInst->GetTravelURLFromLobbyInfo(lobbyInfo));
+		}
 	}
 	else {
 		// change the ready status of the local player in lobby
