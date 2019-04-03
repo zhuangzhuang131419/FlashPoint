@@ -156,6 +156,14 @@ public:
 	int32 GetHazmatInitializeNum() { return HazmatInitializeNum; }
 	void SetHazmatInitializeNum(int32 current) { HazmatInitializeNum = current; }
 
+	// Getter and setter for ambulance and fire engine
+	AAmbulance* GetAmbulance() { return ambulance; }
+	void SetAmbulance(AAmbulance* current) { ambulance = current; }
+
+	AFireEngine* GetFireEngine() { return fireEngine; }
+	void SetFireEngine(AFireEngine* current) { fireEngine = current; }
+
+
 	// Save related functions
 	UFUNCTION(BlueprintCallable, Category = "Save Game")
 	FMapSaveInfo SaveCurrentMap();
@@ -234,7 +242,10 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* veteranLoc = nullptr;
 
-
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	AAmbulance* ambulance = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	AFireEngine* fireEngine = nullptr;
 	
 	// TURN RELATED FIELDS
 	// A to indicate how many player are currently in the game

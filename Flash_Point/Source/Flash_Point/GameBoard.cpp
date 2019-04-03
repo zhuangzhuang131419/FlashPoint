@@ -992,6 +992,8 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, ambulanceLocA);
 	DOREPLIFETIME(AGameBoard, ambulanceLocB);
 	DOREPLIFETIME(AGameBoard, veteranLoc);
+	DOREPLIFETIME(AGameBoard, ambulance);
+	DOREPLIFETIME(AGameBoard, fireEngine);
 }
 
 void AGameBoard::InitializeBoardAttributes()

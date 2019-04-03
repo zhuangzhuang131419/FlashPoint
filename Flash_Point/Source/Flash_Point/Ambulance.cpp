@@ -35,7 +35,6 @@ void AAmbulance::BeginPlay()
 			}
 		}
 	}
-	
 }
 
 // Called every frame
@@ -62,10 +61,15 @@ void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
 
 	if (ensure(AmbulanceOperationsUI))
 	{
-		// AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		if (ensure(localPlayer))
+		{
+			float xPos;
+			float yPos;
+			localPlayer->GetMousePosition(xPos, yPos);
+			AmbulanceOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
+			AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
-	
-
 }
 
 void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)

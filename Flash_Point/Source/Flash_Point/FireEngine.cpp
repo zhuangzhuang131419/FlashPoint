@@ -152,5 +152,16 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
 	UE_LOG(LogTemp, Warning, TEXT("Fire engine has been clicked."));
-	FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
+
+	if (ensure(FireEngineOperationsUI))
+	{
+		if (ensure(localPlayer))
+		{
+			float xPos;
+			float yPos;
+			localPlayer->GetMousePosition(xPos, yPos);
+			FireEngineOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
+			FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		}
+	}
 }

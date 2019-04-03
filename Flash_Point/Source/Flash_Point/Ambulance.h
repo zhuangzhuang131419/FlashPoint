@@ -12,6 +12,7 @@ class ATile;
 class AVictim;
 class UAmbulanceOperationsMenu;
 class AFPPlayerController;
+class AFireFighterPawn;
 
 UCLASS()
 class FLASH_POINT_API AAmbulance : public AActor
@@ -28,6 +29,8 @@ public:
 	FLocation parkingSpot2;
 
 	AGameBoard* board;
+
+	TArray<AFireFighterPawn*>* GetPassengers() { return &passengers; }
 
 	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
 	int32 currentPosition = -1;
@@ -55,6 +58,7 @@ protected:
 	TSubclassOf<UAmbulanceOperationsMenu> AmbulanceClass = nullptr;
 
 	AFPPlayerController* localPlayer = nullptr;
+	TArray<AFireFighterPawn*> passengers;
 
 
 public:	

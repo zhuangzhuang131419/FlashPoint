@@ -11,6 +11,7 @@ class ATile;
 class AGameBoard;
 class UFireEngineOperationsMenu;
 class AFPPlayerController;
+class AFireFighterPawn;
 
 UCLASS()
 class FLASH_POINT_API AFireEngine : public AActor
@@ -54,6 +55,7 @@ protected:
 	TSubclassOf<UFireEngineOperationsMenu> FireEngineClass = nullptr;
 
 	AFPPlayerController* localPlayer = nullptr;
+	TArray<AFireFighterPawn*> passengers;
 
 
 

@@ -557,6 +557,7 @@ void ATile::SpawnAmbulance(int pos, ATile* SpawnTile)
 	TheAmbulance->board = board;
 	TheAmbulance->RescueVictims(this->GetVictims(), this);
 	ambulanceTiles = board->GetAmbulanceTiles();
+	board->SetAmbulance(TheAmbulance);
 	for (int i = 0; i < ambulanceTiles.Num(); i++)
 	{
 		ambulanceTiles[i]->TheAmbulance = this->TheAmbulance;
@@ -596,6 +597,7 @@ void ATile::SpawnFireEngine(int pos, ATile* SpawnTile)
 	TheFireEngine->board = board;
 	TheFireEngine->SetFEPosition(pos);
 	fireEngineTiles = board->GetEngineTiles();
+	board->SetFireEngine(TheFireEngine);
 	for (int i = 0; i < fireEngineTiles.Num(); i++)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("SETTING %d"), fireEngineTiles.Num());

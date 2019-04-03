@@ -14,7 +14,11 @@ class FLASH_POINT_API UFireEngineOperationsMenu : public UCarOperationsMenu
 {
 	GENERATED_BODY()
 	
-	
+protected:
+	bool Initialize();
+
+	UFUNCTION()
+	void FireDeckGun();
 	
 	
 };

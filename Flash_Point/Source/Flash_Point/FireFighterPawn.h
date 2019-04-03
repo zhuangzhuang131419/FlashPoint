@@ -175,6 +175,9 @@ public:
 	bool HasGainedAPThisTurn() { return hasGainedAPThisTurn; }
 	void SetHasGainedAPThisTurn(bool current) { hasGainedAPThisTurn = current; }
 
+	bool IsInCar() { return isInCar; }
+	void SetIsInCar(bool current) { isInCar = current; }
+
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
 	// a function for setting fire fighter material
@@ -268,6 +271,8 @@ protected:
 	bool dodgeAbility = false;
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
 	bool isVicinity = false;
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
+	bool isInCar = false;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool hasGainedAPThisTurn = false;
 	AGameBoard* playingBoard = nullptr;
