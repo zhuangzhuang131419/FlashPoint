@@ -659,92 +659,110 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 		}
 	}
 
-	// Now set up specific tiles for fire engine park or ambulance park
+	// Now set up specific tiles for fire engine park and ambulance park
+	ATile* anotherTile = nullptr;
 	tempTile = nullptr;
-	ATile* firstTile = nullptr;
-	ATile* prevTileLog = nullptr;
-	int32 firstIndex = -1;
-	int engineSpawned = 0, ambulanceSpawned = 0;
 	for (int32 i = 0; i < indicator.engineParkLoc.Num(); i++) {
-		if (indicator.engineParkLoc[i] > -1 && indicator.engineParkLoc[i] < 80) {
+		if (ensure(indicator.engineParkLoc[i] > -1) && ensure(indicator.engineParkLoc[i] < boardWidth * boardLength)) {
 			// set up for the first tile on the specified location
 			tempTile = boardTiles[indicator.engineParkLoc[i]];
-			prevTileLog = tempTile;
-			if (ensure(tempTile)) {
+			if (ensure(tempTile))
+			{
 				tempTile->SetTileType(ETileType::FireEnginePark);
 				engineTiles.Add(tempTile);
-				if (engineSpawned == 0)
-				{
-					firstTile = tempTile;
-					firstIndex = indicator.engineParkLoc[i];
-					SetFireEngineLocA(tempTile);
+				AEdgeUnit* rightEdge = tempTile->GetRight();
+				AEdgeUnit* frontEdge = tempTile->GetFront();
+				AEdgeUnit* leftEdge = tempTile->GetLeft();
+				AEdgeUnit* backEdge = tempTile->GetBack();
+				
+				if (!rightEdge || !leftEdge) 
+				{ 
+					// Get the second tile on front
+					if (ensure(frontEdge))
+					{
+						anotherTile = frontEdge->GetOtherNeighbour(tempTile);
+						if (ensure(anotherTile))
+						{
+							anotherTile->SetTileType(ETileType::FireEnginePark);
+							engineTiles.Add(anotherTile);
+						}
+					}
 				}
-			}
-			// set up for the second tile on the specified location
-			if ((indicator.engineParkLoc[i] % 8 == 0 || indicator.engineParkLoc[i] % 8 == 7) && indicator.engineParkLoc[i] != 72) {
-				tempTile = boardTiles[indicator.engineParkLoc[i] + 8];
-			}
-			else {
-				tempTile = boardTiles[indicator.engineParkLoc[i] + 1];
-			}
-			if (ensure(tempTile)) {
-				tempTile->SetTileType(ETileType::FireEnginePark);
-				if (engineSpawned == 0)
-				{
-					engineSpawned = 1;
-					SetFireEngineLocB(tempTile);
+				else if (!frontEdge || !backEdge) 
+				{ 
+					// Get the second tile on right
+					if (ensure(rightEdge))
+					{
+						anotherTile = rightEdge->GetOtherNeighbour(tempTile);
+						if (ensure(anotherTile))
+						{
+							anotherTile->SetTileType(ETileType::FireEnginePark);
+							engineTiles.Add(anotherTile);
+						}
+					}
 				}
-				tempTile->prevParkTile = prevTileLog;
-				prevTileLog->nextParkTile = tempTile;
-				engineTiles.Add(tempTile);
 			}
 		}
 	}
-	// firstTile->SpawnFireEngine(firstIndex, firstTile);
+	if (ensure(tempTile) && ensure(anotherTile))
+	{
+		tempTile->SpawnFireEngine();
+		ambulanceLocA = tempTile;
+		ambulanceLocB = anotherTile;
+	}
 
-	firstTile = nullptr;
-	prevTileLog = nullptr;
-	firstIndex = -1;
+	
+	anotherTile = nullptr;
 	tempTile = nullptr;
 	for (int32 i = 0; i < indicator.ambulanceParkLoc.Num(); i++) {
-		if (indicator.ambulanceParkLoc[i] > -1 && indicator.ambulanceParkLoc[i] < 80) {
+		if (ensure(indicator.ambulanceParkLoc[i] > -1) && ensure(indicator.ambulanceParkLoc[i] < boardWidth * boardLength)) {
+			// set up for the first tile on the specified location
 			tempTile = boardTiles[indicator.ambulanceParkLoc[i]];
-			if (ensure(tempTile)) {
+			if (ensure(tempTile))
+			{
 				tempTile->SetTileType(ETileType::AmbulancePark);
-				prevTileLog = tempTile;
 				ambulanceTiles.Add(tempTile);
-				if (ambulanceSpawned == 0)
-				{
-					firstTile = tempTile;
-					firstIndex = indicator.ambulanceParkLoc[i];
-					SetAmbulanceLocA(tempTile);
-				}
-			}
-			// set up for the second tile on the specified location
+				AEdgeUnit* rightEdge = tempTile->GetRight();
+				AEdgeUnit* frontEdge = tempTile->GetFront();
+				AEdgeUnit* leftEdge = tempTile->GetLeft();
+				AEdgeUnit* backEdge = tempTile->GetBack();
 
-
-			if ((indicator.ambulanceParkLoc[i] % 8 == 0 || indicator.ambulanceParkLoc[i] % 8 == 7) && indicator.ambulanceParkLoc[i] < 72) {
-				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 8];
-			}
-			else {
-				tempTile = boardTiles[indicator.ambulanceParkLoc[i] + 1];
-			}
-			if (ensure(tempTile)) {
-				tempTile->SetTileType(ETileType::AmbulancePark);
-				if (ambulanceSpawned == 0)
+				if (!rightEdge || !leftEdge)
 				{
-					ambulanceSpawned = 1;
-					SetAmbulanceLocB(tempTile);
+					// Get the second tile on front
+					if (ensure(frontEdge))
+					{
+						anotherTile = frontEdge->GetOtherNeighbour(tempTile);
+						if (ensure(anotherTile))
+						{
+							anotherTile->SetTileType(ETileType::AmbulancePark);
+							ambulanceTiles.Add(anotherTile);
+						}
+					}
 				}
-				tempTile->prevParkTile = prevTileLog;
-				prevTileLog->nextParkTile = tempTile;
-				ambulanceTiles.Add(tempTile);
+				else if (!frontEdge || !backEdge)
+				{
+					// Get the second tile on right
+					if (ensure(rightEdge))
+					{
+						anotherTile = rightEdge->GetOtherNeighbour(tempTile);
+						if (ensure(anotherTile))
+						{
+							anotherTile->SetTileType(ETileType::AmbulancePark);
+							ambulanceTiles.Add(anotherTile);
+						}
+					}
+				}
 			}
 		}
 	}
-	// firstTile->SpawnAmbulance(firstIndex, firstTile);
-	firstTile = nullptr;
-	firstIndex = -1;
+	if (ensure(tempTile) && ensure(anotherTile))
+	{
+		tempTile->SpawnAmbulance();
+		ambulanceLocA = tempTile;
+		ambulanceLocB = anotherTile;
+	}
+
 
 	// Now setup walls on indicated location's right side
 	tempTile = nullptr;

@@ -10,6 +10,8 @@ AFireEngine::AFireEngine()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	fireEngineMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("fireEngineMesh"));
 }
 
 void AFireEngine::FireDeckGun()
@@ -95,6 +97,12 @@ void AFireEngine::BeginPlay()
 
 	if (HasAuthority()) { SetReplicates(true); }
 	
+}
+
+void AFireEngine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AFireEngine, fireEngineMesh);
 }
 
 // Called every frame

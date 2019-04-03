@@ -46,6 +46,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
+
 	// UI related fields
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	UAmbulanceOperationsMenu* AmbulanceOperationsUI = nullptr;
@@ -58,15 +60,16 @@ protected:
 	UPROPERTY(VisibleAnyWhere, Category = "Widget class")
 	TArray<AFireFighterPawn*> passengers;
 
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
+	UStaticMeshComponent* ambulanceMesh = nullptr;
+
 	AGameBoard* board;
+	
 
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
-	UStaticMeshComponent* ambulanceMesh = nullptr;
 
 
 };

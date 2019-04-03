@@ -53,18 +53,15 @@ void UAmbulanceOperationsMenu::GetInAmbulance()
 void UAmbulanceOperationsMenu::GetOutAmbulance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Get out ambulance has been clicked.")); 
-	/*
 	if (ensure(fireFighterPawn))
 	{
 		if (!fireFighterPawn->IsInCar()) { return; }
-
-		AGameBoard* playingBoard = fireFighterPawn->GetPlayingBoard();
-		if (ensure(playingBoard))
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+		if (ensure(localPlayer))
 		{
-			// TODO
+			localPlayer->SetCurrentOperation(EGameOperations::GetOutAmbulance);
 		}
 	}
-	*/
 }
 
 void UAmbulanceOperationsMenu::CallAmbulance()

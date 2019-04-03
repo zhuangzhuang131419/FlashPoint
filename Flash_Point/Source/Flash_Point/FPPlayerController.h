@@ -39,6 +39,8 @@ public:
 	// Below functions are for changing operations
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	EGameOperations GetCurrentOperation();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void SetCurrentOperation(EGameOperations current) { CurrentOperation = current; }
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
 	void SetOpenDoor();
 	UFUNCTION(BlueprintCallable, Category="GameOperations")

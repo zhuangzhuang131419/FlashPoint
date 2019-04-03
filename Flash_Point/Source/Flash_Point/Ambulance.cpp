@@ -11,6 +11,8 @@ AAmbulance::AAmbulance()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+
+	ambulanceMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("ambulanceMesh"));
 }
 
 // Called when the game starts or when spawned
@@ -38,6 +40,12 @@ void AAmbulance::BeginPlay()
 	}
 
 	if (HasAuthority()) { SetReplicates(true); }
+}
+
+void AAmbulance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
+{
+	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
+	DOREPLIFETIME(AAmbulance, ambulanceMesh);
 }
 
 // Called every frame
@@ -77,17 +85,17 @@ void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
 
 void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)
 {
-	for (int i = 0; i < victims->Num(); i++)
-	{
-		AVictim* tempVictim = (*victims)[i];
-		if (!tempVictim) continue;
-		tempVictim->Destroy();
-		currentTile->SetPOIStatus(EPOIStatus::Empty);
-		currentTile->GetGameBoard()->SetVictimSavedNum(
-			currentTile->GetGameBoard()->victimSavedNum + 1
-		);
-		currentTile->GetGameBoard()->SetCurrentPOI(
-			currentTile->GetGameBoard()->currentPOI - 1
-		);
-	}
+	//for (int i = 0; i < victims->Num(); i++)
+	//{
+	//	AVictim* tempVictim = (*victims)[i];
+	//	if (!tempVictim) continue;
+	//	tempVictim->Destroy();
+	//	currentTile->SetPOIStatus(EPOIStatus::Empty);
+	//	currentTile->GetGameBoard()->SetVictimSavedNum(
+	//		currentTile->GetGameBoard()->victimSavedNum + 1
+	//	);
+	//	currentTile->GetGameBoard()->SetCurrentPOI(
+	//		currentTile->GetGameBoard()->currentPOI - 1
+	//	);
+	//}
 }

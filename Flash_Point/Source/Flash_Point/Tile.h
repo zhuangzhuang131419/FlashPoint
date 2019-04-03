@@ -123,8 +123,10 @@ public:
 	void PlaceVictim();
 	void PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& trace);
 	void PlacePawnHere(AFireFighterPawn* placingPawn);
-	void SpawnAmbulance(int pos, ATile* SpawnTile);
-	void SpawnFireEngine(int pos, ATile* SpawnTile);
+	void SpawnAmbulance();
+	void SpawnAmbulance(EDirection direction);
+	void SpawnFireEngine();
+	void SpawnFireEngine(EDirection direction);
 	void AdvanceFire();
 	void AdvancePOI();
 	void AdvanceHazmat();
@@ -138,7 +140,7 @@ public:
 	bool Flashover(EDirection direction);
 	bool Flashover();
 
-	AFireEngine* GetFireEngine(){return TheFireEngine;}
+	AFireEngine* GetFireEngine(){return fireEngine;}
 	// A method to check if the tile is neighbouring tile of the pawn
 	bool AdjacentToPawn(AFireFighterPawn * inPawn);
 
@@ -278,11 +280,9 @@ protected:
 	bool isReady = false;
 	int32 costToHere = 0;
 	bool expanded = false;
-	TArray<ATile*> ambulanceTiles;
-	TArray<ATile*> fireEngineTiles;
 
-	AAmbulance* TheAmbulance = nullptr;
-	AFireEngine* TheFireEngine = nullptr;
+	AAmbulance* ambulance = nullptr;
+	AFireEngine* fireEngine = nullptr;
 
 	
 
