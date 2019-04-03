@@ -9,6 +9,8 @@
 
 class ATile;
 class AGameBoard;
+class UFireEngineOperationsMenu;
+class AFPPlayerController;
 
 UCLASS()
 class FLASH_POINT_API AFireEngine : public AActor
@@ -34,11 +36,26 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Position")
 	int32 GetFEPosition();
 
+	UFUNCTION()
+	void OnFireEngineClicked(AActor* Target, FKey ButtonPressed);
+
 	AGameBoard* board;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// UI related fields
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	UFireEngineOperationsMenu* FireEngineOperationsUI = nullptr;
+
+	// Field
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UFireEngineOperationsMenu> FireEngineClass = nullptr;
+
+	AFPPlayerController* localPlayer = nullptr;
+
+
 
 public:	
 	// Called every frame
