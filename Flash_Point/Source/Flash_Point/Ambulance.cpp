@@ -3,6 +3,8 @@
 #include "Ambulance.h"
 #include "GameBoard.h"
 #include "Victim.h"
+#include "UserWidget.h"
+#include "MenuSystem/AmbulanceOperationsMenu.h"
 
 // Sets default values
 AAmbulance::AAmbulance()
@@ -15,6 +17,24 @@ AAmbulance::AAmbulance()
 void AAmbulance::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnClicked.AddUniqueDynamic(this, &AAmbulance::OnAmbulanceClicked);
+
+	// Create menu list widget
+	UWorld* world = GetWorld();
+	if (ensure(world))
+	{
+		localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (ensure(localPlayer))
+		{
+			AmbulanceOperationsUI = CreateWidget<UAmbulanceOperationsMenu>(localPlayer, AmbulanceClass);
+			if (ensure(AmbulanceOperationsUI))
+			{
+				AmbulanceOperationsUI->AddToViewport();
+				AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+			}
+		}
+	}
 	
 }
 
@@ -33,6 +53,19 @@ void AAmbulance::SetAmbulancePosition(int32 newPos)
 int32 AAmbulance::GetAmbulancePosition()
 {
 	return currentPosition;
+}
+
+void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
+{
+	if (ButtonPressed != FKey("LeftMouseButton")) return;
+	UE_LOG(LogTemp, Warning, TEXT("Ambulance has been clicked."));
+
+	if (ensure(AmbulanceOperationsUI))
+	{
+		// AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+	}
+	
+
 }
 
 void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)

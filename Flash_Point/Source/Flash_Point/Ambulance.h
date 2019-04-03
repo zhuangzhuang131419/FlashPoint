@@ -10,6 +10,8 @@
 class AGameBoard;
 class ATile;
 class AVictim;
+class UAmbulanceOperationsMenu;
+class AFPPlayerController;
 
 UCLASS()
 class FLASH_POINT_API AAmbulance : public AActor
@@ -36,10 +38,23 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Position")
 	int32 GetAmbulancePosition();
 
+	UFUNCTION()
+	void OnAmbulanceClicked(AActor* Target, FKey ButtonPressed);
+
 	void RescueVictims(TArray<AVictim*>* victims, ATile* currentTile);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	// UI related fields
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	UAmbulanceOperationsMenu* AmbulanceOperationsUI = nullptr;
+
+	// Field
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UAmbulanceOperationsMenu> AmbulanceClass = nullptr;
+
+	AFPPlayerController* localPlayer = nullptr;
 
 
 public:	

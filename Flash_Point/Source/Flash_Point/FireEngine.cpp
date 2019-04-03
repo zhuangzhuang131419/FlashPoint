@@ -2,6 +2,8 @@
 
 #include "FireEngine.h"
 #include "GameBoard.h"
+#include "UserWidget.h"
+#include "MenuSystem/FireEngineOperationsMenu.h"
 
 // Sets default values
 AFireEngine::AFireEngine()
@@ -18,22 +20,10 @@ void AFireEngine::FireDeckGun()
 	int32 starty = currentPosition % 8;
 	int32 randomTargetPosition = 0;
 	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
-	if (startx <= 4)
-	{
-		startx = 1;
-	}
-	else
-	{
-		startx = 5;
-	}
-	if (starty <= 3)
-	{
-		starty = 1;
-	}
-	else
-	{
-		starty = 4;
-	}
+	if (startx <= 4) { startx = 1; }
+	else { startx = 5; }
+	if (starty <= 3) { starty = 1; }
+	else { starty = 4; }
 
 	for (int32 x = startx; x < startx + (board->GetBoardLength() - 2) / 2 - 1; x++)
 	{
@@ -83,6 +73,24 @@ void AFireEngine::FireDeckGun()
 void AFireEngine::BeginPlay()
 {
 	Super::BeginPlay();
+
+	OnClicked.AddUniqueDynamic(this, &AFireEngine::OnFireEngineClicked);
+
+	// Create menu list widget
+	UWorld* world = GetWorld();
+	if (ensure(world))
+	{
+		localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (ensure(localPlayer))
+		{
+			FireEngineOperationsUI = CreateWidget<UFireEngineOperationsMenu>(localPlayer, FireEngineClass);
+			if (ensure(FireEngineOperationsUI))
+			{
+				FireEngineOperationsUI->AddToViewport();
+				FireEngineOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+			}
+		}
+	}
 	
 }
 
@@ -138,4 +146,11 @@ void AFireEngine::SetFEPosition(int32 newPos)
 int32 AFireEngine::GetFEPosition()
 {
 	return currentPosition;
+}
+
+void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
+{
+	if (ButtonPressed != FKey("LeftMouseButton")) return;
+	UE_LOG(LogTemp, Warning, TEXT("Fire engine has been clicked."));
+	FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
 }
