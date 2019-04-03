@@ -23,13 +23,6 @@ public:
 	// Sets default values for this actor's properties
 	AAmbulance();
 
-
-	// The parking location of the ambulance
-	FLocation parkingSpot1;
-	FLocation parkingSpot2;
-
-	AGameBoard* board;
-
 	TArray<AFireFighterPawn*>* GetPassengers() { return &passengers; }
 
 	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
@@ -40,6 +33,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Position")
 	int32 GetAmbulancePosition();
+
+	// Getter for playing board
+	AGameBoard* GetPlayingBoard() { return board; }
+	void SetPlayingGameBoard(AGameBoard* current) { board = current; }
 
 	UFUNCTION()
 	void OnAmbulanceClicked(AActor* Target, FKey ButtonPressed);
@@ -60,6 +57,8 @@ protected:
 	AFPPlayerController* localPlayer = nullptr;
 	UPROPERTY(VisibleAnyWhere, Category = "Widget class")
 	TArray<AFireFighterPawn*> passengers;
+
+	AGameBoard* board;
 
 
 public:	

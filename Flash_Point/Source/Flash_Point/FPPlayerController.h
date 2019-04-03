@@ -200,6 +200,9 @@ public:
 	void ServerExitFromLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetInCar(AFireFighterPawn * inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerFireDeckGun(AFireFighterPawn * inPawn);
+
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

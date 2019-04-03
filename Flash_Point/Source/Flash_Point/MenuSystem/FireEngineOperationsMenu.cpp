@@ -44,4 +44,15 @@ void UFireEngineOperationsMenu::GetInFireEngine()
 
 void UFireEngineOperationsMenu::FireDeckGun()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Fire deck gun has been clicked."));
+	
+	if (ensure(fireFighterPawn))
+	{
+		if (ensure(fireFighterPawn->IsWithEngine()))
+		{
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+			// localPlayer->ServerFireDeckGun(fireFighterPawn);
+			this->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
 }

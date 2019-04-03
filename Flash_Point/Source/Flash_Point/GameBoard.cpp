@@ -700,7 +700,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 		}
 	}
-	firstTile->SpawnFireEngine(firstIndex, firstTile);
+	// firstTile->SpawnFireEngine(firstIndex, firstTile);
 
 	firstTile = nullptr;
 	prevTileLog = nullptr;
@@ -742,7 +742,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 			}
 		}
 	}
-	firstTile->SpawnAmbulance(firstIndex, firstTile);
+	// firstTile->SpawnAmbulance(firstIndex, firstTile);
 	firstTile = nullptr;
 	firstIndex = -1;
 
@@ -1259,43 +1259,35 @@ void AGameBoard::Tick(float DeltaTime)
 
 }
 
-int32 AGameBoard::SetAmbulanceLocA(ATile* a)
+void AGameBoard::SetAmbulanceLocA(ATile* a)
 {
-	if (a->type != ETileType::AmbulancePark)
+	if (ensure(a->GetType() == ETileType::AmbulancePark))
 	{
-		return 0;
+		ambulanceLocA = a;
 	}
-	ambulanceLocA = a;
-	return 1;
 }
 
-int32 AGameBoard::SetAmbulanceLocB(ATile* b)
+void AGameBoard::SetAmbulanceLocB(ATile* b)
 {
-	if (b->type != ETileType::AmbulancePark)
+	if (ensure(b->GetType() == ETileType::AmbulancePark))
 	{
-		return 0;
+		ambulanceLocB = b;
 	}
-	ambulanceLocB = b;
-	return 1;
 }
 
-int32 AGameBoard::SetFireEngineLocA(ATile* a)
+void AGameBoard::SetFireEngineLocA(ATile* a)
 {
-	if (a->type != ETileType::FireEnginePark)
+	if (ensure(a->GetType() == ETileType::FireEnginePark))
 	{
-		return 0;
+		engineLocA = a;
 	}
-	engineLocA = a;
-	return 1;
 }
 
-int32 AGameBoard::SetFireEngineLocB(ATile* b)
+void AGameBoard::SetFireEngineLocB(ATile* b)
 {
-	if (b->type != ETileType::FireEnginePark)
+	if (ensure(b->GetType() == ETileType::FireEnginePark))
 	{
-		return 0;
+		engineLocB = b;
 	}
-	engineLocB = b;
-	return 1;
 }
 

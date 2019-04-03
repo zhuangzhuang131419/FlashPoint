@@ -14,6 +14,9 @@ bool UAmbulanceOperationsMenu::Initialize()
 		if (!ensure(OperationButton1)) { return false; }
 		OperationButton1->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::GetInAmbulance);
 
+		if (!ensure(OperationButton2)) { return false; }
+		OperationButton2->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::GetOutAmbulance);
+
 		if (!ensure(OperationButton3)) { return false; }
 		OperationButton3->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::CallAmbulance);
 	}
@@ -45,6 +48,23 @@ void UAmbulanceOperationsMenu::GetInAmbulance()
 			}
 		}
 	}
+}
+
+void UAmbulanceOperationsMenu::GetOutAmbulance()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Get out ambulance has been clicked.")); 
+	/*
+	if (ensure(fireFighterPawn))
+	{
+		if (!fireFighterPawn->IsInCar()) { return; }
+
+		AGameBoard* playingBoard = fireFighterPawn->GetPlayingBoard();
+		if (ensure(playingBoard))
+		{
+			// TODO
+		}
+	}
+	*/
 }
 
 void UAmbulanceOperationsMenu::CallAmbulance()

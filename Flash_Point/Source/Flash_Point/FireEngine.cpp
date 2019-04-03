@@ -19,12 +19,12 @@ void AFireEngine::FireDeckGun()
 	int32 startx = currentPosition / 10;
 	int32 starty = currentPosition % 8;
 	int32 randomTargetPosition = 0;
-	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
+
 	if (startx <= 4) { startx = 1; }
 	else { startx = 5; }
 	if (starty <= 3) { starty = 1; }
 	else { starty = 4; }
-
+	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
 	for (int32 x = startx; x < startx + (board->GetBoardLength() - 2) / 2 - 1; x++)
 	{
 		for (int32 y = starty; y < starty + (board->GetBoardWidth() - 2) / 2 - 1; y++)
@@ -49,7 +49,7 @@ void AFireEngine::FireDeckGun()
 	int32 randx = FMath::RandRange(startx, startx + 3);
 	int32 randy = FMath::RandRange(starty, starty + 2);
 	ATile* targetTile = board->GetboardTiles()[randx* 8 + randy];
-	UE_LOG(LogTemp, Warning, TEXT("The target tile is %d"), randx* 8 + randy);
+	UE_LOG(LogTemp, Warning, TEXT("The target tile is %s"), *targetTile->GetName());
 	if (targetTile)
 	{
 		// extinguish fire

@@ -554,7 +554,7 @@ void ATile::SpawnAmbulance(int pos, ATile* SpawnTile)
 						FRotator(0, Rotate, 0)
 						);
 	TheAmbulance->SetAmbulancePosition(pos);
-	TheAmbulance->board = board;
+	TheAmbulance->SetPlayingGameBoard(board);
 	TheAmbulance->RescueVictims(board->ambulanceLocA->GetVictims(), board->ambulanceLocA);
 	TheAmbulance->RescueVictims(board->ambulanceLocB->GetVictims(), board->ambulanceLocB);
 	ambulanceTiles = board->GetAmbulanceTiles();
@@ -595,7 +595,7 @@ void ATile::SpawnFireEngine(int pos, ATile* SpawnTile)
 					FireEngineSocketLocation,
 					FRotator(0, Rotate, 0)
 					);
-	TheFireEngine->board = board;
+	TheFireEngine->SetPlayingGameBoard(board);
 	TheFireEngine->SetFEPosition(pos);
 	fireEngineTiles = board->GetEngineTiles();
 	board->SetFireEngine(TheFireEngine);
@@ -1170,7 +1170,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 								return;
 							}
 						}
-						
 					}
 					// prevTop
 					else if (prevPos % 8 == 7)
@@ -1870,6 +1869,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, blastOccured);
 	DOREPLIFETIME(ATile, HazmatOnTile);
 	DOREPLIFETIME(ATile, isHotSpot);
+	DOREPLIFETIME(ATile, type);
 }
 
 // Called when the game starts or when spawned

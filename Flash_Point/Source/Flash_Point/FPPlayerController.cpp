@@ -16,6 +16,7 @@
 #include "FlashPointGameInstance.h"
 #include "LobbyManager.h"
 #include "MenuSystem/LobbyUI.h"
+#include "FireEngine.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -824,6 +825,27 @@ void AFPPlayerController::ServerGetInCar_Implementation(AFireFighterPawn * inPaw
 }
 
 bool AFPPlayerController::ServerGetInCar_Validate(AFireFighterPawn * inPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * inPawn)
+{
+	if (ensure(inPawn))
+	{
+		AGameBoard* board = inPawn->GetPlayingBoard();
+		if (ensure(board))
+		{
+			AFireEngine* fireEngine = board->GetFireEngine();
+			if (ensure(fireEngine))
+			{
+				fireEngine->FireDeckGun();
+			}
+		}
+	}
+}
+
+bool AFPPlayerController::ServerFireDeckGun_Validate(AFireFighterPawn * inPawn)
 {
 	return true;
 }

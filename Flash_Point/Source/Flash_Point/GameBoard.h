@@ -41,13 +41,13 @@ public:
 	EGameType GetGameType() { return gameModeType; }
 
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
-	int32 SetAmbulanceLocA(ATile* a);
+	void SetAmbulanceLocA(ATile* a);
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
-	int32 SetAmbulanceLocB(ATile* b);
+	void SetAmbulanceLocB(ATile* b);
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
-	int32 SetFireEngineLocA(ATile* a);
+	void SetFireEngineLocA(ATile* a);
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
-	int32 SetFireEngineLocB(ATile* b);
+	void SetFireEngineLocB(ATile* b);
 
 	int32 GetBoardWidth() { return boardWidth; }
 	int32 GetBoardLength() { return boardLength; }

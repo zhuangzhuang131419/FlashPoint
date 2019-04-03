@@ -24,10 +24,6 @@ public:
 
 	void FireDeckGun();
 
-	// The parking location of the fire engine
-	FLocation parkingSpot1;
-	FLocation parkingSpot2;
-
 	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
 	int32 currentPosition = -1;
 
@@ -40,7 +36,9 @@ public:
 	UFUNCTION()
 	void OnFireEngineClicked(AActor* Target, FKey ButtonPressed);
 
-	AGameBoard* board;
+	// Getter for playing board
+	AGameBoard* GetPlayingBoard() { return board; }
+	void SetPlayingGameBoard(AGameBoard* current) { board = current; }
 
 	TArray<AFireFighterPawn*>* GetPassengers() { return &passengers; }
 
@@ -60,6 +58,7 @@ protected:
 	UPROPERTY(VisibleAnyWhere, Category = "Widget class")
 	TArray<AFireFighterPawn*> passengers;
 
+	AGameBoard* board;
 
 
 public:	

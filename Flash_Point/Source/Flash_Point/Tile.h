@@ -27,8 +27,8 @@ class FLASH_POINT_API ATile : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ATile();
-	ETileType type = ETileType::Default;	// the default type of the tile
 	// This method will change the tile's type together with its supposed base color
+	ETileType GetType() { return type; }
 	void SetTileType(ETileType tileType);
 	// This method will set the related gameboard of the tile
 	void LinkGameBoard(AGameBoard* gameBoard);
@@ -150,7 +150,7 @@ public:
 
 	ATile* prevParkTile = nullptr;
 	ATile* GetPrevParkTile() { return prevParkTile; }
-	void SetPrevParkTile(ATile* prev) { prevParkTile = prev; }
+	void SetPrevParkTile(ATile* current) { prevParkTile = current; }
 
 	ATile* nextParkTile = nullptr;
 	ATile* GetNextParkTile() { return nextParkTile; }
@@ -238,6 +238,8 @@ protected:
 	// Other references and variables
 	UPROPERTY(ReplicatedUsing=Rep_BaseMat, EditAnyWhere, Category = "Setup")
 	UMaterialInterface* baseMat = nullptr;	// the default color of the tile
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
+	ETileType type = ETileType::Default;	// the default type of the tile
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Tile Attributes")
 	EPOIStatus POIStatus = EPOIStatus::Empty; // the default POI type of the tile
 	UPROPERTY(ReplicatedUsing=Rep_FireStatus, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")

@@ -19,7 +19,8 @@ protected:
 
 	UFUNCTION()
 	void GetInAmbulance();
-
+	UFUNCTION()
+	void GetOutAmbulance();
 	UFUNCTION()
 	void CallAmbulance();
 	
