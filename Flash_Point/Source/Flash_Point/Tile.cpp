@@ -555,7 +555,8 @@ void ATile::SpawnAmbulance(int pos, ATile* SpawnTile)
 						);
 	TheAmbulance->SetAmbulancePosition(pos);
 	TheAmbulance->board = board;
-	TheAmbulance->RescueVictims(this->GetVictims(), this);
+	TheAmbulance->RescueVictims(board->ambulanceLocA->GetVictims(), board->ambulanceLocA);
+	TheAmbulance->RescueVictims(board->ambulanceLocB->GetVictims(), board->ambulanceLocB);
 	ambulanceTiles = board->GetAmbulanceTiles();
 	board->SetAmbulance(TheAmbulance);
 	for (int i = 0; i < ambulanceTiles.Num(); i++)
