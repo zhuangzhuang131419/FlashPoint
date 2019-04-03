@@ -4,6 +4,7 @@
 #include "Kismet/GameplayStatics.h"
 
 void UFlashPointGameInstance::Init() {
+	Super::Init();
 	IOnlineSubsystem* OLSS = IOnlineSubsystem::Get();
 	FString OLSSName = OLSS->GetSubsystemName().ToString();
 	UE_LOG(LogTemp, Warning, TEXT("Found OLSS: %s"), *OLSSName);
