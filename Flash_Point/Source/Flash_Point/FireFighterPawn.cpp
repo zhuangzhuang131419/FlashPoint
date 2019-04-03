@@ -541,6 +541,20 @@ void AFireFighterPawn::Rep_CommandStatus()
 
 void AFireFighterPawn::Rep_LobbyPawnID()
 {
+	// if the id is set to exit lobby flag, exit from the session
+	if (lobbyPlayerID == FLAG_LEAVE_LOBBY) {
+		// TODO exit from the session
+		UE_LOG(LogTemp, Warning, TEXT("FireFighter %s exits from lobby"), *this->GetName());
+		// do cient travel to get away from the lobby
+		// this function is only acceptable if the firefighter is local pawn
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (ensure(localPlayer) && localPlayer->GetPawn() == this) {
+				localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+			}
+		}
+	}
 }
 
 void AFireFighterPawn::Rep_LobbyRole()

@@ -100,6 +100,42 @@ void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
 {
 	// first set the lobby info to the game instance
 	lobbyInfo = inLobbyInfo;
+	// create a session
+	if (SessionInterface.IsValid()) {
+		FNamedOnlineSession* existSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (existSession) {
+			// if the session already exist, destroy the session
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+	}
+}
+
+FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo)
+{
+	// TODO remember to check and replace paths at final build
+	FString travelURL;
+	if (inInfo.isSaved) {
+		travelURL = "/Game/maps/LoadGameLevel?listen";
+	}
+	else {
+		switch (inInfo.map)
+		{
+		case EGameMap::FamilyDefault:
+			travelURL = "/Game/maps/TestLevel?listen";
+			break;
+		case EGameMap::RandomGenerate:
+			travelURL = "/Game/maps/RandBoardLevel?listen";
+			break;
+		case EGameMap::RandomSelect:
+			// TODO add random select in future
+			travelURL = "/Game/maps/TestLevel?listen";
+			break;
+		default:
+			travelURL = "/Game/maps/TestLevel?listen";
+			break;
+		}
+	}
+	return travelURL;
 }
 
 void UFlashPointGameInstance::AssociateMenuUI(UMainMenu * inUI)

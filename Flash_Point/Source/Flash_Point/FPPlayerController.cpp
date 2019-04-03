@@ -803,6 +803,17 @@ bool AFPPlayerController::ServerChangeReadyStatus_Validate(ALobbyManager * inMan
 	return true;
 }
 
+void AFPPlayerController::ServerExitFromLobby_Implementation(ALobbyManager * inMan, AFireFighterPawn * inPawn)
+{
+	if (!ensure(inMan) || !ensure(inPawn)) return;
+	inMan->ExitLobby(inPawn);
+}
+
+bool AFPPlayerController::ServerExitFromLobby_Validate(ALobbyManager * inMan, AFireFighterPawn * inPawn)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -1304,6 +1315,7 @@ void AFPPlayerController::JoinGameLobby()
 			lobbyUI->BindCrewManagerWithUI(crewMan);
 			lobbyUI->BindLobbyManagerWithUI(lobbyMan);
 			lobbyUI->AddToViewport();
+			lobbyMan->ShowLobbyInfo();
 			// for the server side, since its host, change button text
 			if (HasAuthority()) {
 				lobbyUI->ChangeJoinStartButtonStatus("Start", false);
