@@ -196,6 +196,8 @@ public:
 	void ServerJoinLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn, const FString& inName);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerChangeReadyStatus(ALobbyManager* inMan, AFireFighterPawn* inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerExitFromLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

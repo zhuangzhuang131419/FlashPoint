@@ -7,6 +7,9 @@
 #include "MenuSystem/ChatWidget.h"
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
+#include "Engine/World.h"
+#include "FPPlayerController.h"
+#include "FireFighterPawn.h"
 
 ULobbyUI::ULobbyUI(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 
@@ -18,6 +21,8 @@ bool ULobbyUI::Initialize()
 	if (success) {
 		if (!ensure(ReadyOrStartButton)) return false;
 		ReadyOrStartButton->OnClicked.AddDynamic(this, &ULobbyUI::OnReadyOrStart);
+		if (!ensure(BackToMainMenu)) return false;
+		BackToMainMenu->OnClicked.AddDynamic(this, &ULobbyUI::OnBackToMainMenu);
 	}
 	return success;
 }
@@ -58,10 +63,30 @@ void ULobbyUI::ChangeJoinStartButtonStatus(FString inMessage, bool isEnabled)
 	}
 }
 
+void ULobbyUI::EnableRoleSelection(bool isEnabled)
+{
+	if (ensure(SwitchRoleButton)) {
+		SwitchRoleButton->SetIsEnabled(isEnabled);
+	}
+}
+
 void ULobbyUI::OnReadyOrStart()
 {
 	// this function acts differently between client and server
 	if (ensure(lobbyMan)) {
 		lobbyMan->PlayerReadyStart();
+	}
+}
+
+void ULobbyUI::OnBackToMainMenu()
+{
+	// when clicked on back to mainmenu, call the exit lobby of actor
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (ensure(localPlayer)) {
+			AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+			localPlayer->ServerExitFromLobby(lobbyMan, localPawn);
+		}
 	}
 }

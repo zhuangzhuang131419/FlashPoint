@@ -57,6 +57,8 @@ public:
 	// creating a lobby with this function	
 	UFUNCTION(BlueprintCallable, Category = "Map Generation")
 	void CreateGameLobby(FGameLobbyInfo inLobbyInfo);
+	UFUNCTION(BlueprintCallable, Category = "Map Generation")
+	FGameLobbyInfo GetLobbyInfo() { return lobbyInfo; }
 	// A function to associate the game instance with a menu UI
 	UFUNCTION(BlueprintCallable, Category = "Lobby Creation")
 	void AssociateMenuUI(UMainMenu* inUI);

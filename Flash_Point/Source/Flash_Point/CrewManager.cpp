@@ -105,6 +105,12 @@ void ACrewManager::SelectRole(ERoleType inRole)
 	}
 }
 
+void ACrewManager::DeselectRole(ERoleType inRole)
+{
+	selectedRoles.Remove(inRole);
+	availableRoles.Add(inRole);
+}
+
 void ACrewManager::CloseCrewChangePanel()
 {
 	// Collapse the UI

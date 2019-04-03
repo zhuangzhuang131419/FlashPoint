@@ -11,6 +11,7 @@ class ACrewManager;
 class AChatManager;
 class ALobbyManager;
 class AFPPlayerController;
+class AFireFighterPawn;
 class UChatWidget;
 class USwitchRoleUI;
 class UButton;
@@ -41,6 +42,7 @@ public:
 	void BindLobbyManagerWithUI(ALobbyManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 	void ChangeJoinStartButtonStatus(FString inMessage, bool isEnabled);
+	void EnableRoleSelection(bool isEnabled);
 	
 protected:
 	// Managers related to the lobby UI
@@ -57,10 +59,16 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UButton* ReadyOrStartButton = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* BackToMainMenu = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UTextBlock* JOSButtonText = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* SwitchRoleButton = nullptr;
 
 	// binding functions to button
 	UFUNCTION()
 	void OnReadyOrStart();
+	UFUNCTION()
+	void OnBackToMainMenu();
 	
 };

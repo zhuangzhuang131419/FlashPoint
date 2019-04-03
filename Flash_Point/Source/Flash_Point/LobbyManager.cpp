@@ -3,6 +3,7 @@
 #include "LobbyManager.h"
 #include "CrewManager.h"
 #include "FireFighterPawn.h"
+#include "FlashPointGameInstance.h"
 #include "FPPlayerController.h"
 #include "MenuSystem/LobbyUI.h"
 
@@ -21,7 +22,13 @@ void ALobbyManager::AutoJoinLobby(AFireFighterPawn * inPawn, FString playerName)
 	if (!ensure(inPawn)) return;
 	if (!ensure(crewMan)) return;
 	// auto select a role for the firefighter first
-	crewMan->AutoSelectRole(inPawn);
+	// if the game mode if not family mode, do the select role
+	if (lobbyInfo.mode != EGameType::Family) {
+		crewMan->AutoSelectRole(inPawn);
+	}
+	else {
+		// for family mode, disable role selection
+	}
 	inPawn->SetFireFighterLobbyID(joinedPlayer);
 	joinedPawns.Add(inPawn);
 	joinedPlayer++;
@@ -257,6 +264,16 @@ void ALobbyManager::ShiftLobbyInfo(int32 fromID, int32 toID)
 	UpdatePlayerStatus(fromID, FPlayerLobbyInfo());
 }
 
+void ALobbyManager::QueryLobbyInfo()
+{
+	// Find the game instance and get the stored info
+	if (HasAuthority()) {
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		if (!ensure(gameInst)) return;
+		lobbyInfo = gameInst->GetLobbyInfo();
+	}
+}
+
 FPlayerLobbyInfo ALobbyManager::GetPlayerLobbyInfo(int32 playerID)
 {
 	// update the player koin status of specific id
@@ -290,13 +307,43 @@ void ALobbyManager::ExitLobby(AFireFighterPawn * inPawn)
 {
 	if (!ensure(inPawn)) return;
 	// Delete the joined firefighter from the lobby's record
-	joinedPawns.Remove(inPawn);
+	if (joinedPawns.Remove(inPawn)) {
+		// as the pawn is removed successfully, decrement player count
+		joinedPlayer--;
+	}
+	if (ensure(crewMan)) {
+		crewMan->DeselectRole(inPawn->GetFireFighterLobbyRole());
+	}
 	// get the inPawn's ID befor removing
 	int32 tempID = inPawn->GetFireFighterLobbyID();
 	// shift all other firefighter's lobby ID
 	for (AFireFighterPawn* tempPawn : joinedPawns) {
-		if (tempPawn->GetFireFighterLobbyID() >= tempID) {
-			
+		if (ensure(tempPawn)) {
+			if (tempPawn->GetFireFighterLobbyID() >= tempID) {
+				// shift the firefighter's index
+				tempPawn->SetFireFighterLobbyID(tempPawn->GetFireFighterLobbyID() - 1);
+			}
+		}
+	}
+	// since leaving ID is present, shift all ID greater than it
+	for (int32 i = tempID + 1; i < 6; i++) {
+		// shift each one to previous location
+		ShiftLobbyInfo(i, i - 1);
+	}
+	// change the inpawn's ID to leave flag
+	inPawn->SetFireFighterLobbyID(FLAG_LEAVE_LOBBY);
+	// for the server, update the displaying
+	if (HasAuthority()) {
+		if (ensure(lobbyUI)) {
+			lobbyUI->UpdateDisplayedInfo(P0Status, P1Status, P2Status, P3Status, P4Status, P5Status);
+			lobbyUI->ChangeJoinStartButtonStatus("Start", IsAllPlayerReady());
+		}
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (ensure(localPlayer) && localPlayer->GetPawn() == inPawn) {
+				localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+			}
 		}
 	}
 }
@@ -354,6 +401,22 @@ void ALobbyManager::Rep_LobbyPlayerStatus()
 	}
 }
 
+void ALobbyManager::ShowLobbyInfo()
+{
+	if (!ensure(lobbyUI)) return;
+	// do the displaying of lobby information to the screen
+	lobbyUI->ShowAllLobbyInfo(lobbyInfo);
+	// depending on mode type, enable or disable role selection
+	if (lobbyInfo.mode == EGameType::Family) {
+		lobbyUI->EnableRoleSelection(false);
+	}
+}
+
+void ALobbyManager::Rep_LobbyInfo()
+{
+	ShowLobbyInfo();
+}
+
 void ALobbyManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -365,6 +428,7 @@ void ALobbyManager::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLif
 	DOREPLIFETIME(ALobbyManager, P3Status);
 	DOREPLIFETIME(ALobbyManager, P4Status);
 	DOREPLIFETIME(ALobbyManager, P5Status);
+	DOREPLIFETIME(ALobbyManager, lobbyInfo);
 }
 
 // Called when the game starts or when spawned
@@ -372,6 +436,7 @@ void ALobbyManager::BeginPlay()
 {
 	if (HasAuthority()) {
 		SetReplicates(true);
+		QueryLobbyInfo();
 	}
 	Super::BeginPlay();
 	

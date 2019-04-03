@@ -39,6 +39,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void SelectRole(ERoleType inRole);
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
+	void DeselectRole(ERoleType inRole);
+	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void CloseCrewChangePanel();
 	UFUNCTION(BlueprintCallable, Category = "Switch Role")
 	void AutoSelectRole(AFireFighterPawn* inPawn);

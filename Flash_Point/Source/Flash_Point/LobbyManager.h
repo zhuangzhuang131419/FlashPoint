@@ -10,6 +10,7 @@
 
 class AFireFighterPawn;
 class ACrewManager;
+class UFlashPointGameInstance;
 class ULobbyUI;
 
 UCLASS()
@@ -40,6 +41,7 @@ public:
 	void UpdatePlayerJoinStatus(AFireFighterPawn* inPawn, EJoinStatus inStatus);
 	// get the realated status to the player in lobby
 	FPlayerLobbyInfo GetPlayerLobbyInfo(int32 playerID);
+	void ShowLobbyInfo();	// display the lobby informations
 
 protected:
 
@@ -53,6 +55,8 @@ protected:
 	bool IsAllPlayerReady();
 	// A function to shift the lobby information with regard to join informations
 	void ShiftLobbyInfo(int32 fromID, int32 toID);
+	// A function that can get the lobby information that's set during creation, from game instance
+	void QueryLobbyInfo();
 
 	// REPLICATED FIELDS
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")
@@ -72,6 +76,9 @@ protected:
 	FPlayerLobbyInfo P4Status;
 	UPROPERTY(ReplicatedUsing = Rep_LobbyPlayerStatus, VisibleAnyWhere, Category = "Lobby Creation")
 	FPlayerLobbyInfo P5Status;
+	// A replicated lobby information
+	UPROPERTY(ReplicatedUsing = Rep_LobbyInfo, VisibleAnyWhere, Category = "Lobby Creation")
+	FGameLobbyInfo lobbyInfo;
 	
 	// FIELDS
 	// A crew manager managing role switching
@@ -81,6 +88,8 @@ protected:
 	// REPLICATION FUNCIONTS
 	UFUNCTION()
 	void Rep_LobbyPlayerStatus();
+	UFUNCTION()
+	void Rep_LobbyInfo();
 
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;
 	// Called when the game starts or when spawned

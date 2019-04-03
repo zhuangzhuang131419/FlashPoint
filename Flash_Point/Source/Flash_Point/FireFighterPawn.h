@@ -20,6 +20,8 @@ class ACrewManager;
 class ALobbyManager;
 class ULobbyUI;
 
+const static int32 FLAG_LEAVE_LOBBY = -100;
+
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
 {
