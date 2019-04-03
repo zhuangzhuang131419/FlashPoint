@@ -88,9 +88,12 @@ void AFireEngine::BeginPlay()
 			{
 				FireEngineOperationsUI->AddToViewport();
 				FireEngineOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+				FireEngineOperationsUI->AssociatePlayer(localPlayer);
 			}
 		}
 	}
+
+	if (HasAuthority()) { SetReplicates(true); }
 	
 }
 

@@ -18,6 +18,9 @@ protected:
 	bool Initialize();
 
 	UFUNCTION()
+	void GetInFireEngine();
+
+	UFUNCTION()
 	void FireDeckGun();
 	
 	

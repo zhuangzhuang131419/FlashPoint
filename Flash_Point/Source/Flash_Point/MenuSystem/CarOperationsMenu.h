@@ -56,8 +56,8 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	AFireFighterPawn* fireFighterPawn = nullptr;
 
-	UFUNCTION()
-	void GetInCar();
+	/*UFUNCTION()
+	void GetInCar();*/
 	UFUNCTION()
 	void GetOutCar();
 	UFUNCTION()

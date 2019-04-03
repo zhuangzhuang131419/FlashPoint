@@ -32,9 +32,12 @@ void AAmbulance::BeginPlay()
 			{
 				AmbulanceOperationsUI->AddToViewport();
 				AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+				AmbulanceOperationsUI->AssociatePlayer(localPlayer);
 			}
 		}
 	}
+
+	if (HasAuthority()) { SetReplicates(true); }
 }
 
 // Called every frame

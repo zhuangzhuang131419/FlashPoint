@@ -12,7 +12,7 @@ bool UAmbulanceOperationsMenu::Initialize()
 	if (Success)
 	{
 		if (!ensure(OperationButton1)) { return false; }
-		// OperationButton1->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::GetInAmbulance);
+		OperationButton1->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::GetInAmbulance);
 
 		if (!ensure(OperationButton3)) { return false; }
 		OperationButton3->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::CallAmbulance);
@@ -23,7 +23,6 @@ bool UAmbulanceOperationsMenu::Initialize()
 void UAmbulanceOperationsMenu::GetInAmbulance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Get in ambulance has been clicked."));
-	/*
 	if (ensure(fireFighterPawn))
 	{
 		if (ensure(fireFighterPawn->IsWithAmbulance()))
@@ -35,16 +34,21 @@ void UAmbulanceOperationsMenu::GetInAmbulance()
 				if (ensure(ambulanceOnBoard))
 				{
 					ambulanceOnBoard->GetPassengers()->Add(fireFighterPawn);
-					fireFighterPawn->SetVisibility(false);
+					AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+					if (ensure(localPlayer))
+					{
+						localPlayer->ServerGetInCar(fireFighterPawn);
+					}
 					UE_LOG(LogTemp, Warning, TEXT("Get in car"));
+					this->SetVisibility(ESlateVisibility::Collapsed);
 				}
 			}
 		}
 	}
-	*/
 }
 
 void UAmbulanceOperationsMenu::CallAmbulance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Call ambulance has been clicked."));
+	this->SetVisibility(ESlateVisibility::Collapsed);
 }

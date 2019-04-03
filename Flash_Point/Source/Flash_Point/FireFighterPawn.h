@@ -180,6 +180,8 @@ public:
 	bool IsInCar() { return isInCar; }
 	void SetIsInCar(bool current) { isInCar = current; }
 
+
+
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void InitializeFireFighter();
 	// a function for setting fire fighter material
@@ -192,7 +194,7 @@ public:
 	void ShowControllable(bool isLocalControl, bool isControlled);
 	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
 	void ShowIsCommanded(bool isCommanded);
-	void SetIsCommanded(bool isCommanded) { this->isCommanded = isCommanded; }
+	void SetIsCommanded(bool current) { this->isCommanded = current; }
 	bool GetIsCommanded() { return isCommanded; }
 	void CommandDoorOperation(ADoor* target, AFireFighterPawn* commander);
 	void CommandTileOperation(TArray<ATile*> targets, AFireFighterPawn* commander);
@@ -273,7 +275,7 @@ protected:
 	bool dodgeAbility = false;
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
 	bool isVicinity = false;
-	UPROPERTY(replicated, VisibleAnyWhere, Category = "Player Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_CarStatus, VisibleAnyWhere, Category = "Player Attributes")
 	bool isInCar = false;
 	UPROPERTY(VisibleAnyWhere, Category = "Player Attributes")
 	bool hasGainedAPThisTurn = false;
@@ -317,6 +319,8 @@ protected:
 	void Rep_LobbyPawnID();
 	UFUNCTION()
 	void Rep_LobbyRole();
+	UFUNCTION()
+	void Rep_CarStatus();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")

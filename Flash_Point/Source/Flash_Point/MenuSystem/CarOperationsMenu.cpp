@@ -19,9 +19,6 @@ bool UCarOperationsMenu::Initialize()
 	bool Success = Super::Initialize();
 	if (Success)
 	{
-		if (!ensure(OperationButton1)) { return false; }
-		OperationButton1->OnClicked.AddDynamic(this, &UCarOperationsMenu::GetInCar);
-
 		if (!ensure(OperationButton2)) { return false; }
 		OperationButton2->OnClicked.AddDynamic(this, &UCarOperationsMenu::GetOutCar);
 
@@ -33,10 +30,10 @@ bool UCarOperationsMenu::Initialize()
 
 
 
-void UCarOperationsMenu::GetInCar()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Get in car has been clicked."));
-}
+//void UCarOperationsMenu::GetInCar()
+//{
+//	UE_LOG(LogTemp, Warning, TEXT("Get in car has been clicked."));
+//}
 
 void UCarOperationsMenu::GetOutCar()
 {

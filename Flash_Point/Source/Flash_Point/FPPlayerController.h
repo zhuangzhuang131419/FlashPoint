@@ -198,6 +198,8 @@ public:
 	void ServerChangeReadyStatus(ALobbyManager* inMan, AFireFighterPawn* inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerExitFromLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerGetInCar(AFireFighterPawn * inPawn);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

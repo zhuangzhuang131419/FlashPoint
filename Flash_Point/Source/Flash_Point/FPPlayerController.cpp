@@ -814,6 +814,20 @@ bool AFPPlayerController::ServerExitFromLobby_Validate(ALobbyManager * inMan, AF
 	return true;
 }
 
+void AFPPlayerController::ServerGetInCar_Implementation(AFireFighterPawn * inPawn)
+{
+	if (ensure(inPawn))
+	{
+		inPawn->SetIsInCar(true);
+		inPawn->SetVisibility(false);
+	}
+}
+
+bool AFPPlayerController::ServerGetInCar_Validate(AFireFighterPawn * inPawn)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));

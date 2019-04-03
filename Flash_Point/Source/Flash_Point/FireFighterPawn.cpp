@@ -565,6 +565,12 @@ void AFireFighterPawn::Rep_LobbyRole()
 	}
 }
 
+void AFireFighterPawn::Rep_CarStatus()
+{
+	if (isInCar) { SetVisibility(false); }
+	else { SetVisibility(true); }
+}
+
 void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Firefighter Over"));

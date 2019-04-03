@@ -42,6 +42,8 @@ public:
 
 	AGameBoard* board;
 
+	TArray<AFireFighterPawn*>* GetPassengers() { return &passengers; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -55,6 +57,7 @@ protected:
 	TSubclassOf<UFireEngineOperationsMenu> FireEngineClass = nullptr;
 
 	AFPPlayerController* localPlayer = nullptr;
+	UPROPERTY(VisibleAnyWhere, Category = "Widget class")
 	TArray<AFireFighterPawn*> passengers;
 
 
