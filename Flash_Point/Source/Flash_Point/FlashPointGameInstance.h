@@ -11,16 +11,18 @@
 #include "FlashPointGameInstance.generated.h"
 
 class UMainMenu;
+class FOnlineSessionSearch;
 
 /**
  * 
  */
 
  // a session name used by all classes
-const static FName SESSION_NAME = TEXT("FpfRTEaMoNE_v0.9");
+const static FName SESSION_NAME = TEXT("FpfRTEaMoNE_v0.90");
 // a key for decrepeting the lobby infor passed with the session
-const static FName SESSION_INFO_KEY = TEXT("DcrPTFpfRTO_v0.9");
+const static FName SESSION_INFO_KEY = TEXT("DcrPTFpfRTO_v0.90");
 const static int32 FPSESSION_STANDARD_SIZE = 6;
+const static int32 MAX_SESSION_SEARCH = 50;
 
 UCLASS()
 class FLASH_POINT_API UFlashPointGameInstance : public UGameInstance
@@ -67,6 +69,10 @@ public:
 	// A function to associate the game instance with a menu UI
 	UFUNCTION(BlueprintCallable, Category = "Lobby Creation")
 	void AssociateMenuUI(UMainMenu* inUI);
+	// A function to join the session of specified index
+	void JoinSessionOfIndex(int32 index);
+	// A function to refresh lobby list
+	void RefreshLobbyList();
 
 protected:
 	// FIELDS
@@ -102,4 +108,5 @@ protected:
 	// ONLINE SUBSYSTEM RELATED
 	bool isDefaultOLSS = false;
 	IOnlineSessionPtr SessionInterface;
+	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };

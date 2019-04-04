@@ -2,6 +2,7 @@
 
 #include "FlashPointGameInstance.h"
 #include "Engine/World.h"
+#include "MenuSystem/MainMenu.h"
 #include "Kismet/GameplayStatics.h"
 #include "OnlineSessionSettings.h"
 
@@ -188,6 +189,42 @@ FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo
 void UFlashPointGameInstance::AssociateMenuUI(UMainMenu * inUI)
 {
 	mainMenuUI = inUI;
+	if (mainMenuUI) {
+		UE_LOG(LogTemp, Warning, TEXT("Menu associated"));
+	}
+}
+
+void UFlashPointGameInstance::JoinSessionOfIndex(int32 index)
+{
+	// show is joining on the main menu
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->ShowJoinStatus(false);
+	}
+	// make sure the index is valid
+	if (!SessionInterface.IsValid()) return;
+	if (!SessionSearch.IsValid()) return;
+	if (index < 0 || SessionSearch->SearchResults.Num() <= index) return;
+	// join the session if everything is valid
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[index]);
+}
+
+void UFlashPointGameInstance::RefreshLobbyList()
+{
+	// first clear the old lobby list
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->ClearAllLobbyList();
+		mainMenuUI->ShowRefreshing(true);
+	}
+	// try find the sessions from the interface
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	if (SessionSearch.IsValid())
+	{
+		SessionSearch->bIsLanQuery = true;
+		SessionSearch->MaxSearchResults = MAX_SESSION_SEARCH;
+		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	}
 }
 
 void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
@@ -211,9 +248,40 @@ void UFlashPointGameInstance::OnDestroySessionComplete(FName SessionName, bool S
 
 void UFlashPointGameInstance::OnFindSessionComplete(bool Success)
 {
+	// when session is searched, show not refreshing
+	if (!Success) return;
+	if (!ensure(mainMenuUI)) return;
+	mainMenuUI->ShowRefreshing(false);
+	if (Success && SessionSearch.IsValid() && mainMenuUI != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
+		TArray<FOnlineSessionSearchResult> results = SessionSearch->SearchResults;
+		for (int32 i = 0; i < results.Num(); i++) {
+			// get all informations within the server for updating server list
+			int32 joinedNum = results[i].Session.SessionSettings.NumPublicConnections - results[i].Session.NumOpenPublicConnections;
+			FGameLobbyInfo tempInfo;
+			FString encryptedMessage;
+			if (results[i].Session.SessionSettings.Get(SESSION_INFO_KEY, encryptedMessage)) {
+				tempInfo = FGameLobbyInfo::DecryptLobbyInfo(encryptedMessage);
+			}
+			// add a new lobby bar to the lobby list
+			mainMenuUI->InsertLobbyBar(tempInfo, i, joinedNum);
+		}
+	}
 }
 
 void UFlashPointGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type type)
 {
+	// as join session complete, join the map if valid status
+	if (!SessionInterface.IsValid()) return;
+	FString Address;
+	if (!SessionInterface->GetResolvedConnectString(SessionName, Address)) {
+		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string."));
+		return;
+	}
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+	// travel to the specified level
+	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 

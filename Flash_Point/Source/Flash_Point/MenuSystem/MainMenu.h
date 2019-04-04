@@ -5,9 +5,14 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+#include "GeneralTypes.h"
 #include "MainMenu.generated.h"
 
 class UMapOverviewPanel;
+class UVerticalBox;
+class ULobbyBar;
+class UTextBlock;
+class UFlashPointGameInstance;
 
 /**
  * 
@@ -20,22 +25,23 @@ class FLASH_POINT_API UMainMenu : public UUserWidget
 
 public:
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
+	void ClearAllLobbyList();
+	void InsertLobbyBar(FGameLobbyInfo inInfo, int32 inIndex, int32 joinedPlayers);
+	void ShowRefreshing(bool isRefreshing);
+	void ShowJoinStatus(bool hasFailed);
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void SetGameInst(UFlashPointGameInstance* inGameInst) { gameInst = inGameInst; }
 
 protected:
 	virtual bool Initialize() override;
 
+	// FIELDS
+	UPROPERTY(BlueprintReadWrite, Category = "Setup")
+	UFlashPointGameInstance* gameInst = nullptr;
+
 	// Widget class
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<UUserWidget> CreateNewGameMenu = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<UUserWidget> JoinGameMenu = nullptr;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Setup")
-	TSubclassOf<UUserWidget> LoadGameMenu = nullptr;
-
-	UPROPERTY(BluePrintReadWrite, Category = "Setup")
-	TSubclassOf<UUserWidget> OptionMenu = nullptr;
+	TSubclassOf<ULobbyBar> LobbyBarClass = nullptr;
 
 	// BINDED WIDGETS
 	UPROPERTY(meta = (BindWidget))
@@ -49,9 +55,15 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UButton* Exit_Game = nullptr;
 	UPROPERTY(meta = (BindWidget))
+	UButton* RefreshLobbies = nullptr;
+	UPROPERTY(meta = (BindWidget))
 	UMapOverviewPanel* JoinMapOverview = nullptr;
 	UPROPERTY(meta = (BindWidget))
 	UMapOverviewPanel* LoadMapOverview = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	UVerticalBox* LobbyArrangement = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* RefreshingText = nullptr;
 
 	// Button functions
 	// New Game button
@@ -65,5 +77,7 @@ protected:
 	void OnOptionClicked();
 	UFUNCTION()
 	void OnExitClicked();
+	UFUNCTION()
+	void OnRefreshLobbies();
 	
 };

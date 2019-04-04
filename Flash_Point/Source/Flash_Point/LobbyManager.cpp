@@ -446,7 +446,7 @@ void ALobbyManager::BeginPlay()
 		QueryLobbyInfo();
 	}
 	Super::BeginPlay();
-	
+	ShowLobbyInfo();
 }
 
 // Called every frame
