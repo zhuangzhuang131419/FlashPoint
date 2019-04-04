@@ -20,6 +20,7 @@ class UMainMenu;
 const static FName SESSION_NAME = TEXT("FpfRTEaMoNE_v0.9");
 // a key for decrepeting the lobby infor passed with the session
 const static FName SESSION_INFO_KEY = TEXT("DcrPTFpfRTO_v0.9");
+const static int32 FPSESSION_STANDARD_SIZE = 6;
 
 UCLASS()
 class FLASH_POINT_API UFlashPointGameInstance : public UGameInstance
@@ -96,6 +97,7 @@ protected:
 	void OnDestroySessionComplete(FName SessionName, bool Success);
 	void OnFindSessionComplete(bool Success);
 	void OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type type);
+	void CreateGameSession();
 
 	// ONLINE SUBSYSTEM RELATED
 	bool isDefaultOLSS = false;
