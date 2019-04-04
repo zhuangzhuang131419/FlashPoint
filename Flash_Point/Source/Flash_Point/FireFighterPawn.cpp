@@ -6,6 +6,7 @@
 #include "FPPlayerController.h"
 #include "Tile.h"
 #include "Door.h"
+#include "FlashPointGameInstance.h"
 #include "MenuSystem/LobbyUI.h"
 
 
@@ -183,6 +184,21 @@ ERoleType AFireFighterPawn::GetFireFighterLobbyRole()
 void AFireFighterPawn::SetFireFighterLobbyRole(ERoleType inRole)
 {
 	lobbyRole = inRole;
+	// as this changes, modify the one in game instance fo carry on to next map
+	if (HasAuthority()) {
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			// only do this on local commanded pawn
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (!ensure(localPlayer)) return;
+			if (localPlayer->GetPawn() == this) {
+				UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+				if (ensure(gameInst)) {
+					gameInst->SetSelectedRole(lobbyRole);
+				}
+			}
+		}
+	}
 }
 
 void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
@@ -562,6 +578,18 @@ void AFireFighterPawn::Rep_LobbyRole()
 	// when lobby role changes, update UI
 	if (ensure(lobbyUI)) {
 		lobbyUI->ShowSelectedRole(lobbyRole);
+		UWorld* world = GetWorld();
+		if (ensure(world)) {
+			// only do this on local pawn
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+			if (!ensure(localPlayer)) return;
+			if (localPlayer->GetPawn() == this) {
+				UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+				if (ensure(gameInst)) {
+					gameInst->SetSelectedRole(lobbyRole);
+				}
+			}
+		}
 	}
 }
 

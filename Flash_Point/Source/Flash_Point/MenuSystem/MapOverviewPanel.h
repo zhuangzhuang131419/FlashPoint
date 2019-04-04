@@ -21,6 +21,8 @@ public:
 	// FUNCTIONS
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Map Overview")
 	void ShowMapInfo(EGameMap inMap, const FString& detailedInfo);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Map Overview")
+	void ClearMapInfo();
 	
 protected:
 	// FIELDS

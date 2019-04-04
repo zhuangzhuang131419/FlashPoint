@@ -14,7 +14,8 @@ class FLASH_POINT_API AFlash_PointGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
 	
-	
-	
+public:
+	virtual void PostLogin(APlayerController* NewPlayer) override;
+	void DoSeamlessTravel(bool isSeamLess);
 	
 };

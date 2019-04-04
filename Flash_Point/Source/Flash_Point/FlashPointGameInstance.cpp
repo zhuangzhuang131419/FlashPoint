@@ -1,7 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "FlashPointGameInstance.h"
+#include "Engine/World.h"
+#include "MenuSystem/MainMenu.h"
 #include "Kismet/GameplayStatics.h"
+#include "OnlineSessionSettings.h"
+#include "Flash_PointGameModeBase.h"
 
 void UFlashPointGameInstance::Init() {
 	Super::Init();
@@ -13,10 +17,14 @@ void UFlashPointGameInstance::Init() {
 		isDefaultOLSS = true;
 		UE_LOG(LogTemp, Warning, TEXT("Using default OLSS"));
 	}
-	SessionInterface = OLSS->GetSessionInterface();
-	// bind online subsystem delicate functions
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Using steam OLSS"));
+	}
 	if (OLSS) {
+		SessionInterface = OLSS->GetSessionInterface();
+		// bind online subsystem delicate functions
 		if (SessionInterface.IsValid()) {
+			UE_LOG(LogTemp, Warning, TEXT("Got valid session interface"));
 			SessionInterface->OnCreateSessionCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnCreateSessionComplete);
 			SessionInterface->OnDestroySessionCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnDestroySessionComplete);
 			SessionInterface->OnFindSessionsCompleteDelegates.AddUObject(this, &UFlashPointGameInstance::OnFindSessionComplete);
@@ -96,16 +104,54 @@ FMapSaveInfo UFlashPointGameInstance::GetLoadedGame()
 	return loadedMap;
 }
 
-void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
+void UFlashPointGameInstance::CreateGameSession()
 {
-	// first set the lobby info to the game instance
-	lobbyInfo = inLobbyInfo;
+	UE_LOG(LogTemp, Warning, TEXT("Creating game session"));
 	// create a session
 	if (SessionInterface.IsValid()) {
+		// depending on the session interface, create either a lan game or a net game
+		FOnlineSessionSettings sessionSetting;
+		if (isDefaultOLSS) {
+			// adjust session settings
+			sessionSetting.bIsLANMatch = true;
+
+		}
+		else {
+			// adjust session settings
+			sessionSetting.bIsLANMatch = false;
+		}
+		sessionSetting.NumPublicConnections = FPSESSION_STANDARD_SIZE;
+		sessionSetting.bShouldAdvertise = true;
+		sessionSetting.bUsesPresence = true;
+		// set the session with lobby infos
+		sessionSetting.Set(SESSION_INFO_KEY, lobbyInfo.Encrypt(), EOnlineDataAdvertisementType::ViaOnlineServiceAndPing);
+		SessionInterface->CreateSession(0, SESSION_NAME, sessionSetting);
+	}
+}
+
+void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
+{
+	FString encrypted = inLobbyInfo.Encrypt();
+	FGameLobbyInfo decrypted = FGameLobbyInfo::DecryptLobbyInfo(encrypted);
+	UE_LOG(LogTemp, Warning, TEXT("The encrypted lobby info is: %s"), *encrypted);
+	UE_LOG(LogTemp, Warning, TEXT("The lobby's name is: %s"), *decrypted.lobbyName);
+	UE_LOG(LogTemp, Warning, TEXT("The lobby's health is: %d"), decrypted.boardHealth);
+	
+	// first set the lobby info to the game instance
+	lobbyInfo = inLobbyInfo;
+
+	// create a session if there isn't one already
+	if (SessionInterface.IsValid()) {
+		UE_LOG(LogTemp, Warning, TEXT("Session valid"));
 		FNamedOnlineSession* existSession = SessionInterface->GetNamedSession(SESSION_NAME);
 		if (existSession) {
+			UE_LOG(LogTemp, Warning, TEXT("Session already exists"));
 			// if the session already exist, destroy the session
 			SessionInterface->DestroySession(SESSION_NAME);
+		}
+		else {
+			UE_LOG(LogTemp, Warning, TEXT("Session first created"));
+			CreateGameSession();
 		}
 	}
 }
@@ -130,6 +176,12 @@ FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo
 			// TODO add random select in future
 			travelURL = "/Game/maps/TestLevel?listen";
 			break;
+		case EGameMap::UniversityOnFire:
+			travelURL = "/Game/maps/UniversityOnFire?listen";
+			break;
+		case EGameMap::DeansParty:
+			travelURL = "/Game/maps/DeansParty?listen";
+			break;
 		default:
 			travelURL = "/Game/maps/TestLevel?listen";
 			break;
@@ -141,21 +193,113 @@ FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo
 void UFlashPointGameInstance::AssociateMenuUI(UMainMenu * inUI)
 {
 	mainMenuUI = inUI;
+	if (mainMenuUI) {
+		UE_LOG(LogTemp, Warning, TEXT("Menu associated"));
+	}
+}
+
+void UFlashPointGameInstance::JoinSessionOfIndex(int32 index)
+{
+	// make sure the index is valid
+	if (!SessionInterface.IsValid()) return;
+	if (!SessionSearch.IsValid()) return;
+	if (index < 0 || SessionSearch->SearchResults.Num() <= index) return;
+	// show is joining on the main menu
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->ShowJoinStatus(false);
+	}
+	// join the session if everything is valid
+	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[index]);
+}
+
+void UFlashPointGameInstance::RefreshLobbyList()
+{
+	// first clear the old lobby list
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->ClearAllLobbyList();
+		mainMenuUI->ShowRefreshing(true);
+	}
+	// try find the sessions from the interface
+	SessionSearch = MakeShareable(new FOnlineSessionSearch());
+	if (SessionSearch.IsValid())
+	{
+		SessionSearch->bIsLanQuery = false;
+		SessionSearch->MaxSearchResults = MAX_SESSION_SEARCH;
+		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
+		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
+		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
+	}
 }
 
 void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
+	// as the session gets created, travel to desired map
+	if (!Success) return;
+	UWorld* world = GetWorld();
+	if (!ensure(world)) return;
+	// travel to the lobby from here as a server
+	AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
+	if (!ensure(gameMode)) return;
+	gameMode->DoSeamlessTravel(true);
+	world->ServerTravel("/Game/maps/LobbyLevel?listen");
 }
 
 void UFlashPointGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
+	// when the session is destroyed, do create session
+	if (Success) {
+		UE_LOG(LogTemp, Warning, TEXT("Session successfully destroyed"));
+		CreateGameSession();
+	}
 }
 
 void UFlashPointGameInstance::OnFindSessionComplete(bool Success)
 {
+	// when session is searched, show not refreshing
+	if (!Success) return;
+	if (!ensure(mainMenuUI)) return;
+	mainMenuUI->ShowRefreshing(false);
+	if (Success && SessionSearch.IsValid() && mainMenuUI != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
+		TArray<FOnlineSessionSearchResult> results = SessionSearch->SearchResults;
+		UE_LOG(LogTemp, Warning, TEXT("Found %d sessions"), results.Num());
+		for (int32 i = 0; i < results.Num(); i++) {
+			// get all informations within the server for updating server list
+			int32 joinedNum = results[i].Session.SessionSettings.NumPublicConnections - results[i].Session.NumOpenPublicConnections;
+			FGameLobbyInfo tempInfo;
+			FString encryptedMessage;
+			if (results[i].Session.SessionSettings.Get(SESSION_INFO_KEY, encryptedMessage)) {
+				tempInfo = FGameLobbyInfo::DecryptLobbyInfo(encryptedMessage);
+			}
+			UE_LOG(LogTemp, Warning, TEXT("Session %d: joined number %d, encrypted lobby info %s"), i, joinedNum, *encryptedMessage);
+			// add a new lobby bar to the lobby list
+			mainMenuUI->InsertLobbyBar(tempInfo, i, joinedNum);
+		}
+	}
 }
 
 void UFlashPointGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSessionCompleteResult::Type type)
 {
+	// as join session complete, join the map if valid status
+	if (!SessionInterface.IsValid()) return;
+	FString Address;
+	if (!SessionInterface->GetResolvedConnectString(SessionName, Address)) {
+		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string."));
+		return;
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Got Session String %s."), *Address);
+	}
+	APlayerController* PlayerController = GetFirstLocalPlayerController();
+	if (!ensure(PlayerController != nullptr)) return;
+	// travel to the specified level
+	UWorld* world = GetWorld();
+	if (!ensure(world)) return;
+	// travel to the lobby from here as a client
+	AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
+	if (!ensure(gameMode)) return;
+	gameMode->DoSeamlessTravel(false);
+	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 
