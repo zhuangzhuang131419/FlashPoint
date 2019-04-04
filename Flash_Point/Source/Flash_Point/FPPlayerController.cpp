@@ -776,6 +776,7 @@ bool AFPPlayerController::ServerSetCommandStatus_Validate(AFireFighterPawn * cap
 void AFPPlayerController::ServerJoinLobby_Implementation(ALobbyManager * inMan, AFireFighterPawn * inPawn, const FString& inName)
 {
 	if (ensure(inMan)) {
+		UE_LOG(LogTemp, Warning, TEXT("Joining Lobby"));
 		inMan->AutoJoinLobby(inPawn, inName);
 	}
 }
@@ -1207,7 +1208,7 @@ void AFPPlayerController::FindLobbyManager()
 		UGameplayStatics::GetAllActorsOfClass(world, ALobbyManager::StaticClass(), allLobbyMan);
 		// only assign correct game board if there is one found
 		if (allLobbyMan.Num() > 0) {
-			UE_LOG(LogTemp, Warning, TEXT("Player found gameboard"));
+			UE_LOG(LogTemp, Warning, TEXT("Player found lobby"));
 			lobbyMan = Cast<ALobbyManager>(allLobbyMan[0]);
 		}
 	}

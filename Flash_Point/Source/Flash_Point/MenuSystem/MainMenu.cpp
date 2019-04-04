@@ -33,6 +33,7 @@ void UMainMenu::InsertLobbyBar(FGameLobbyInfo inInfo, int32 inIndex, int32 joine
 	if (!ensure(LobbyBarClass)) return;
 	if (!ensure(LobbyArrangement)) return;
 	if (!ensure(gameInst)) return;
+	if (inInfo.lobbyName.IsEmpty()) return;
 	ULobbyBar* tempLobbyBar = CreateWidget<ULobbyBar>(gameInst, LobbyBarClass);
 	if (ensure(tempLobbyBar)) {
 		tempLobbyBar->InitializeAttributes(JoinMapOverview, inInfo, inIndex, joinedPlayers);

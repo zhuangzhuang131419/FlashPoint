@@ -6,6 +6,7 @@
 #include "FlashPointGameInstance.h"
 #include "FPPlayerController.h"
 #include "MenuSystem/LobbyUI.h"
+#include "Flash_PointGameModeBase.h"
 
 
 // Sets default values
@@ -83,6 +84,10 @@ void ALobbyManager::PlayerReadyStart()
 		gameInst->SetGameType(lobbyInfo.mode);
 		UWorld* world = GetWorld();
 		if (ensure(world)) {
+			// travel to the lobby from here as a server
+			AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
+			if (!ensure(gameMode)) return;
+			gameMode->DoSeamlessTravel(true);
 			world->ServerTravel(gameInst->GetTravelURLFromLobbyInfo(lobbyInfo));
 		}
 	}
@@ -349,6 +354,10 @@ void ALobbyManager::ExitLobby(AFireFighterPawn * inPawn)
 		if (ensure(world)) {
 			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
 			if (ensure(localPlayer) && localPlayer->GetPawn() == inPawn) {
+				// travel to the lobby from here as a server
+				AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
+				if (!ensure(gameMode)) return;
+				gameMode->DoSeamlessTravel(false);
 				localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
 			}
 		}
@@ -416,6 +425,9 @@ void ALobbyManager::ShowLobbyInfo()
 	// depending on mode type, enable or disable role selection
 	if (lobbyInfo.mode == EGameType::Family) {
 		lobbyUI->EnableRoleSelection(false);
+	}
+	else {
+		lobbyUI->EnableRoleSelection(true);
 	}
 }
 

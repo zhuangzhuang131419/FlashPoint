@@ -5,6 +5,7 @@
 #include "MenuSystem/MainMenu.h"
 #include "Kismet/GameplayStatics.h"
 #include "OnlineSessionSettings.h"
+#include "Flash_PointGameModeBase.h"
 
 void UFlashPointGameInstance::Init() {
 	Super::Init();
@@ -15,6 +16,9 @@ void UFlashPointGameInstance::Init() {
 		// if the OnlineSubsystem is a NULL subsystem, set using default OLSS
 		isDefaultOLSS = true;
 		UE_LOG(LogTemp, Warning, TEXT("Using default OLSS"));
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Using steam OLSS"));
 	}
 	if (OLSS) {
 		SessionInterface = OLSS->GetSessionInterface();
@@ -196,14 +200,14 @@ void UFlashPointGameInstance::AssociateMenuUI(UMainMenu * inUI)
 
 void UFlashPointGameInstance::JoinSessionOfIndex(int32 index)
 {
-	// show is joining on the main menu
-	if (ensure(mainMenuUI)) {
-		mainMenuUI->ShowJoinStatus(false);
-	}
 	// make sure the index is valid
 	if (!SessionInterface.IsValid()) return;
 	if (!SessionSearch.IsValid()) return;
 	if (index < 0 || SessionSearch->SearchResults.Num() <= index) return;
+	// show is joining on the main menu
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->ShowJoinStatus(false);
+	}
 	// join the session if everything is valid
 	SessionInterface->JoinSession(0, SESSION_NAME, SessionSearch->SearchResults[index]);
 }
@@ -219,7 +223,7 @@ void UFlashPointGameInstance::RefreshLobbyList()
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
 	if (SessionSearch.IsValid())
 	{
-		SessionSearch->bIsLanQuery = true;
+		SessionSearch->bIsLanQuery = false;
 		SessionSearch->MaxSearchResults = MAX_SESSION_SEARCH;
 		SessionSearch->QuerySettings.Set(SEARCH_PRESENCE, true, EOnlineComparisonOp::Equals);
 		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
@@ -234,6 +238,9 @@ void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Su
 	UWorld* world = GetWorld();
 	if (!ensure(world)) return;
 	// travel to the lobby from here as a server
+	AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
+	if (!ensure(gameMode)) return;
+	gameMode->DoSeamlessTravel(true);
 	world->ServerTravel("/Game/maps/LobbyLevel?listen");
 }
 
@@ -256,6 +263,7 @@ void UFlashPointGameInstance::OnFindSessionComplete(bool Success)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));
 		TArray<FOnlineSessionSearchResult> results = SessionSearch->SearchResults;
+		UE_LOG(LogTemp, Warning, TEXT("Found %d sessions"), results.Num());
 		for (int32 i = 0; i < results.Num(); i++) {
 			// get all informations within the server for updating server list
 			int32 joinedNum = results[i].Session.SessionSettings.NumPublicConnections - results[i].Session.NumOpenPublicConnections;
@@ -264,6 +272,7 @@ void UFlashPointGameInstance::OnFindSessionComplete(bool Success)
 			if (results[i].Session.SessionSettings.Get(SESSION_INFO_KEY, encryptedMessage)) {
 				tempInfo = FGameLobbyInfo::DecryptLobbyInfo(encryptedMessage);
 			}
+			UE_LOG(LogTemp, Warning, TEXT("Session %d: joined number %d, encrypted lobby info %s"), i, joinedNum, *encryptedMessage);
 			// add a new lobby bar to the lobby list
 			mainMenuUI->InsertLobbyBar(tempInfo, i, joinedNum);
 		}
@@ -279,9 +288,18 @@ void UFlashPointGameInstance::OnJoinSessionComplete(FName SessionName, EOnJoinSe
 		UE_LOG(LogTemp, Warning, TEXT("Could not get connect string."));
 		return;
 	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("Got Session String %s."), *Address);
+	}
 	APlayerController* PlayerController = GetFirstLocalPlayerController();
 	if (!ensure(PlayerController != nullptr)) return;
 	// travel to the specified level
+	UWorld* world = GetWorld();
+	if (!ensure(world)) return;
+	// travel to the lobby from here as a client
+	AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
+	if (!ensure(gameMode)) return;
+	gameMode->DoSeamlessTravel(false);
 	PlayerController->ClientTravel(Address, ETravelType::TRAVEL_Absolute);
 }
 
