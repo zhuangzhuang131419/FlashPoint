@@ -2,6 +2,7 @@
 
 #include "FlashPointGameInstance.h"
 #include "Kismet/GameplayStatics.h"
+#include "OnlineSessionSettings.h"
 
 void UFlashPointGameInstance::Init() {
 	Super::Init();
@@ -98,6 +99,7 @@ FMapSaveInfo UFlashPointGameInstance::GetLoadedGame()
 
 void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
 {
+	/*
 	// first set the lobby info to the game instance
 	lobbyInfo = inLobbyInfo;
 	// create a session
@@ -107,7 +109,28 @@ void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
 			// if the session already exist, destroy the session
 			SessionInterface->DestroySession(SESSION_NAME);
 		}
+		// depending on the session interface, create either a lan game or a net game
+		FOnlineSessionSettings sessionSetting;
+		if (isDefaultOLSS) {	
+			// adjust session settings
+			sessionSetting.bIsLANMatch = true;
+			
+		}
+		else {
+			// adjust session settings
+			sessionSetting.bIsLANMatch = false;
+		}
+		sessionSetting.NumPublicConnections = 6;
+		sessionSetting.bShouldAdvertise = true;
+		sessionSetting.bUsesPresence = true;
+		SessionInterface->CreateSession(0, SESSION_NAME, sessionSetting);
 	}
+	*/
+	FString encrypted = inLobbyInfo.Encrypt();
+	FGameLobbyInfo decrypted = FGameLobbyInfo::DecryptLobbyInfo(encrypted);
+	UE_LOG(LogTemp, Warning, TEXT("The encrypted lobby info is: %s"), *encrypted);
+	UE_LOG(LogTemp, Warning, TEXT("The lobby's name is: %s"), *decrypted.lobbyName);
+	UE_LOG(LogTemp, Warning, TEXT("The lobby's health is: %d"), decrypted.boardHealth);
 }
 
 FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo)
@@ -129,6 +152,12 @@ FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo
 		case EGameMap::RandomSelect:
 			// TODO add random select in future
 			travelURL = "/Game/maps/TestLevel?listen";
+			break;
+		case EGameMap::UniversityOnFire:
+			travelURL = "/Game/maps/UniversityOnFire?listen";
+			break;
+		case EGameMap::DeansParty:
+			travelURL = "/Game/maps/DeansParty?listen";
 			break;
 		default:
 			travelURL = "/Game/maps/TestLevel?listen";

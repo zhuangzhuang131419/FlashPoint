@@ -18,6 +18,8 @@ class UMainMenu;
 
  // a session name used by all classes
 const static FName SESSION_NAME = TEXT("FpfRTEaMoNE_v0.9");
+// a key for decrepeting the lobby infor passed with the session
+const static FName SESSION_INFO_KEY = TEXT("DcrPTFpfRTO_v0.9");
 
 UCLASS()
 class FLASH_POINT_API UFlashPointGameInstance : public UGameInstance

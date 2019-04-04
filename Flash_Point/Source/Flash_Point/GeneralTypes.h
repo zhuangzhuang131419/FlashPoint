@@ -7,6 +7,8 @@
 
 class ATile;
 
+const static int32 ENCRYPTION_LENGTH = 8;
+
 /**
  * 
  */
@@ -131,7 +133,9 @@ enum class EGameMap : uint8
 {
 	FamilyDefault,
 	RandomSelect,
-	RandomGenerate
+	RandomGenerate,
+	UniversityOnFire,
+	DeansParty
 };
 
 // An Enum indicating the player's status in the lobby
@@ -338,7 +342,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	TArray<FTileSaveInfo> tilesInfo;
 	
-	
 };
 
 // A struct to store all informations about a saved game
@@ -373,7 +376,98 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Lobby Info")
 	FString lobbyName;
 
+	// A Function that converts the lobby infomation to a string for easy sending across the server
+	FString Encrypt() {
+		// encrypt the map info into a string
+		FString mapInfoString = "";
+		// first index (from left to right) as the isSaved
+		if (isSaved) {
+			mapInfoString += "1";
+		}
+		else {
+			mapInfoString += "0";
+		}
+		// second index stands for game mode
+		switch (mode)
+		{
+		case EGameType::Family:
+			mapInfoString += "0";
+			break;
+		case EGameType::Experienced:
+			mapInfoString += "1";
+			break;
+		case EGameType::Betryal:
+			mapInfoString += "2";
+			break;
+		default:
+			break;
+		}
+		// third digit is the number of initial hazmats which never goes above 10 (1 digit)
+		mapInfoString += FString::FromInt(initialHazmatNum);
+		// fourth digit is the number of initial explosions which is also always 1 digit
+		mapInfoString += FString::FromInt(initialExplosions);
+		// fifth digit for number of lost victims (always 1 digit in valid game)
+		mapInfoString += FString::FromInt(lostVictimNum);
+		// sixth and seventh digits are the board health
+		int32 twoDigitHealth = boardHealth % 100;	// to ensure there's only two digits
+		int32 firstHealthDigit = twoDigitHealth / 10;	// first digit of the board health
+		mapInfoString += FString::FromInt(firstHealthDigit);
+		int32 secondHealthDigit = twoDigitHealth % 10;	// second digit of the health
+		mapInfoString += FString::FromInt(secondHealthDigit);
+		// eighth character for game mode
+		switch (map)
+		{
+		case EGameMap::FamilyDefault:
+			mapInfoString += "0";
+			break;
+		case EGameMap::RandomSelect:
+			mapInfoString += "1";
+			break;
+		case EGameMap::RandomGenerate:
+			mapInfoString += "2";
+			break;
+		case EGameMap::UniversityOnFire:
+			mapInfoString += "3";
+			break;
+		case EGameMap::DeansParty:
+			mapInfoString += "4";
+			break;
+		default:
+			break;
+		}
+		// rest of the string are just lobby name given by the player
+		mapInfoString += lobbyName;
+		return mapInfoString;
+	}
 
+	// convert a string encryption to lobby info
+	static FGameLobbyInfo DecryptLobbyInfo(FString encrypted) {
+		FGameLobbyInfo lobbyInfo;
+		// first 8 indices of the string is the encryption
+		if (encrypted.IsValidIndex(ENCRYPTION_LENGTH)) {
+			// lobby name is first get
+			lobbyInfo.lobbyName = encrypted.RightChop(ENCRYPTION_LENGTH);
+			// get the remaining infomations from the string
+			FString encryptedInfo = encrypted.Left(ENCRYPTION_LENGTH);
+			if (!encryptedInfo.IsNumeric()) return lobbyInfo;
+			// decrypt the informations passed with the string
+			lobbyInfo.isSaved = encryptedInfo.Mid(0, 1).ToBool();
+			// get the mode from second number
+			lobbyInfo.mode = static_cast<EGameType>(FCString::Atoi(*encryptedInfo.Mid(1, 1)));
+			// get the number of initial hazmat from third number
+			lobbyInfo.initialHazmatNum = FCString::Atoi(*encryptedInfo.Mid(2, 1));
+			// get the number of initial explosions from the fourth number
+			lobbyInfo.initialExplosions = FCString::Atoi(*encryptedInfo.Mid(3, 1));
+			// get the number of lost victims from the fifith digit
+			lobbyInfo.lostVictimNum = FCString::Atoi(*encryptedInfo.Mid(4, 1));
+			// get the board health from the sixth and seventh digits
+			lobbyInfo.boardHealth = FCString::Atoi(*encryptedInfo.Mid(5, 2));
+			// the last index is the map specified
+			lobbyInfo.map = static_cast<EGameMap>(FCString::Atoi(*encryptedInfo.Mid(7, 1)));
+		}
+		// all remaining indices are 
+		return lobbyInfo;
+	}
 };
 
 // A struct to store player information within a lobby
