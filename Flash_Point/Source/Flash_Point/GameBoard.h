@@ -40,12 +40,16 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Map Attributes")
 	EGameType GetGameType() { return gameModeType; }
 
+	ATile* GetAmbulanceLocA() { return ambulanceLocA; }
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void SetAmbulanceLocA(ATile* a);
+	ATile* GetAmbulanceLocB() { return ambulanceLocB; }
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void SetAmbulanceLocB(ATile* b);
+	ATile* GetFireEngineLocA() { return engineLocA; }
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void SetFireEngineLocA(ATile* a);
+	ATile* GetFireEngineLocB() { return engineLocB; }
 	UFUNCTION(BlueprintCallable, Category = "Vehicle")
 	void SetFireEngineLocB(ATile* b);
 

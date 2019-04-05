@@ -19,8 +19,8 @@ bool UCarOperationsMenu::Initialize()
 	bool Success = Super::Initialize();
 	if (Success)
 	{
-		if (!ensure(OperationButton4)) { return false; }
-		OperationButton4->OnClicked.AddDynamic(this, &UCarOperationsMenu::Cancel);
+		if (!ensure(OperationButton5)) { return false; }
+		OperationButton5->OnClicked.AddDynamic(this, &UCarOperationsMenu::Cancel);
 	}
 	return true;
 }
@@ -30,3 +30,5 @@ void UCarOperationsMenu::Cancel()
 	UE_LOG(LogTemp, Warning, TEXT("Cancel has been clicked."));
 	SetVisibility(ESlateVisibility::Collapsed);
 }
+
+

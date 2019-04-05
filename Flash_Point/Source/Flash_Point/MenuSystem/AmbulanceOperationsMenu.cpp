@@ -19,6 +19,9 @@ bool UAmbulanceOperationsMenu::Initialize()
 
 		if (!ensure(OperationButton3)) { return false; }
 		OperationButton3->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::CallAmbulance);
+
+		if (!ensure(OperationButton4)) { return false; }
+		OperationButton4->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::DriveAmbulance);
 	}
 	return true;
 }
@@ -68,4 +71,19 @@ void UAmbulanceOperationsMenu::CallAmbulance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Call ambulance has been clicked."));
 	this->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UAmbulanceOperationsMenu::DriveAmbulance()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Drive ambulance has been clicked."));
+	if (ensure(fireFighterPawn))
+	{
+		if (!fireFighterPawn->IsInCar()) { return; }
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+		if (ensure(localPlayer))
+		{
+			localPlayer->SetCurrentOperation(EGameOperations::DriveAmbulance);
+			SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
 }

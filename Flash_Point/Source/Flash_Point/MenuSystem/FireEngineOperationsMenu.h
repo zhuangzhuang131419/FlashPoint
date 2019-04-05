@@ -19,9 +19,10 @@ protected:
 
 	UFUNCTION()
 	void GetInFireEngine();
-
+	UFUNCTION()
+	void GetOutFireEngine();
 	UFUNCTION()
 	void FireDeckGun();
-	
-	
+	UFUNCTION()
+	void DriveFireEngine();
 };

@@ -145,11 +145,6 @@ public:
 	void setFireEngineLocation(AFireEngine* currentFireEngine);
 	void setFireEngineLocation(AFireEngine* currentFireEngine, EDirection direction);
 
-	ATile* GetAdjacentAmbulanceParkingLocation();
-	ATile* GetAdjacentAmbulanceParkingLocation(EDirection direction);
-	ATile* GetAdjacentFireEngineParkingLocation();
-
-	AFireEngine* GetFireEngine(){return fireEngine;}
 	// A method to check if the tile is neighbouring tile of the pawn
 	bool AdjacentToPawn(AFireFighterPawn * inPawn);
 
@@ -284,9 +279,6 @@ protected:
 	bool isReady = false;
 	int32 costToHere = 0;
 	bool expanded = false;
-
-	AAmbulance* ambulance = nullptr;
-	AFireEngine* fireEngine = nullptr;
 
 	UPROPERTY(replicated, VisibleAnyWhere)
 	ATile* adjacentParkTile = nullptr;
