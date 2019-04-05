@@ -20,10 +20,11 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	// IRC commands sender
-	bool SendIRC(FString FMessage);
+	// IRC sender
+	bool Send(FString Stuff);
 	bool Connect();
 	bool Authenticate();
+	bool Read(FString& Out) const;
 
 public:	
 	// Called every frame

@@ -2,31 +2,27 @@
 /* Codes below has no quality and are very very disgusting, please be extra cautious!!! */
 
 #include "Twitch.h"
+#include <string>
 
 
-// Sets default values
 ATwitch::ATwitch()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 }
 
-// Called when the game starts or when spawned
 void ATwitch::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
-// Called every frame
 void ATwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-// Setup initial Info (twitch oauth, username and channel)
 bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
 {
 	this->Oauth = Oauth;
@@ -46,7 +42,6 @@ bool ATwitch::Connect()
 	auto HostResolveError = SocketSub->GetHostByName("irc.twitch.tv", *HostAddr);
 	HostAddr->SetPort(6667);
 
-	// Create a Socket
 	FSocket* Socket = SocketSub->CreateSocket(NAME_Stream, TEXT("Socket"), false);
 	if (Socket == nullptr)
 	{
@@ -58,7 +53,6 @@ bool ATwitch::Connect()
 	Socket->SetReceiveBufferSize(1024 * 1024, NewSize);
 	Socket->SetReuseAddr(true);
 
-	// Check Connection
 	if (!Socket->Connect(*HostAddr))
 	{
 		Socket->Close();
@@ -83,9 +77,9 @@ bool ATwitch::Authenticate()
 	}
 
 	// Have no ideas what they are, just want to make sure if they are okay.
-	bool k = SendIRC("PASS " + this->Oauth);
-	bool ok = SendIRC("NICK " + this->Username);
-	bool okay = SendIRC("JOIN #" + this->Channel);
+	bool k = Send("PASS " + this->Oauth);
+	bool ok = Send("NICK " + this->Username);
+	bool okay = Send("JOIN #" + this->Channel);
 
 	bool imokay = k && ok && okay;
 	if (!imokay)
@@ -96,15 +90,13 @@ bool ATwitch::Authenticate()
 	return true;
 }
 
-bool ATwitch::SendIRC(FString FMessage)
+bool ATwitch::Send(FString Stuff)
 {
-	// FString to TCHAR
-	FMessage += "\n";
-	TCHAR* TMessage = FMessage.GetCharArray().GetData();
+	Stuff += "\n";
+	TCHAR* TStuff = Stuff.GetCharArray().GetData();
 
-	// Send commands
 	int32 OutSent;
-	return this->CurrentSocket->Send((uint8*)TCHAR_TO_UTF8(TMessage), FCString::Strlen(TMessage), OutSent);
+	return this->CurrentSocket->Send((uint8*)TCHAR_TO_UTF8(TStuff), FCString::Strlen(TStuff), OutSent);
 }
 
 bool ATwitch::ConnectAPI()
@@ -113,5 +105,39 @@ bool ATwitch::ConnectAPI()
 	{
 		return Authenticate();
 	}
+	return false;
+}
+
+bool ATwitch::Read(FString& Out) const
+{
+	if (CurrentSocket == nullptr)
+	{
+		return false;
+	}
+
+	TArray<uint8> Shit;
+	uint32 Size;
+	bool ok = false;
+	if (CurrentSocket->HasPendingData(Size))
+	{
+		ok = true;
+		Shit.SetNumUninitialized(Size);
+		int32 ShitReader;
+		CurrentSocket->Recv(Shit.GetData(), Shit.Num(), ShitReader);
+	}
+
+	FString Stuff = "";
+	if (ok)
+	{
+		const std::string c_string_data(reinterpret_cast<const char*>(Shit.GetData()), Shit.Num());
+		Stuff = FString(c_string_data.c_str());
+	}
+
+	if (Stuff != "")
+	{
+		Out = Stuff;
+		return true;
+	}
+
 	return false;
 }
