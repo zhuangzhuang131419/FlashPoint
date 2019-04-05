@@ -20,6 +20,10 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	// IRC commands sender
+	bool SendIRC(FString FMessage);
+	bool Connect();
+	bool Authenticate();
 
 public:	
 	// Called every frame
@@ -29,15 +33,16 @@ public:
 	bool SetInitialInfo(const FString Oauth, const  FString Username, const FString Channel);
 	// Method to connect
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	bool Connect();
+	bool ConnectAPI();
+	
 
 private:
 	// Parameters for Twtich authorization
 	FString Oauth;
 	FString Username;
 	FString Channel;
+	bool UserInitialized;
 
 	// Parameters for connections
 	FSocket* CurrentSocket;
-
 };
