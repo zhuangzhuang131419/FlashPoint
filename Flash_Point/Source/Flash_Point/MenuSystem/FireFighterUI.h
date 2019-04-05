@@ -53,6 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
 	void ShowCarryHazmat(bool isCarrying);
 	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
+	void ShowLeading(bool isCarrying);
+	UFUNCTION(BlueprintCallable, Category = "UI Synchronization")
 	void EnableOperationPanels(bool enable);
 	void BindChatManagerWithUI(AChatManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);

@@ -98,7 +98,7 @@ UFireFighterStatus * UFireFighterUI::GetPlayerStatusUIOf(int32 playerID)
 
 void UFireFighterUI::ShowCarrying(bool isCarrying)
 {
-	// TODO if have time do this setting with regard to the carried victim's actual looking
+	if (!ensure(VictimIcon)) return;
 	if (isCarrying) {
 		VictimIcon->SetVisibility(ESlateVisibility::Visible);
 	}
@@ -109,11 +109,23 @@ void UFireFighterUI::ShowCarrying(bool isCarrying)
 
 void UFireFighterUI::ShowCarryHazmat(bool isCarrying)
 {
+	if (!ensure(HazmatIcon)) return;
 	if (isCarrying) {
 		HazmatIcon->SetVisibility(ESlateVisibility::Visible);
 	}
 	else {
 		HazmatIcon->SetVisibility(ESlateVisibility::Collapsed);
+	}
+}
+
+void UFireFighterUI::ShowLeading(bool isCarrying)
+{
+	if (!ensure(LeadingIcon)) return;
+	if (isCarrying) {
+		LeadingIcon->SetVisibility(ESlateVisibility::Visible);
+	}
+	else {
+		LeadingIcon->SetVisibility(ESlateVisibility::Collapsed);
 	}
 }
 
