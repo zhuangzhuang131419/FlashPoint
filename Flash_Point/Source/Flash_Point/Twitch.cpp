@@ -45,6 +45,14 @@ bool ATwitch::Connect()
 	auto HostResolveError = SocketSub->GetHostByName("irc.twitch.tv", *HostAddr);
 	HostAddr->SetPort(6667);
 
+	// Create Socket
+	FSocket* Socket = SocketSub->CreateSocket(NAME_Stream, TEXT("Socket"), false);
+	if (Socket == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create socket"));
+		return false;
+	}
+
 	return false;
 }
 
