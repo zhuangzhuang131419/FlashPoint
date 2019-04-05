@@ -21,8 +21,19 @@ void ATwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
-	
+	FString In, Nom, Mes;
+	if (GetStuff(In))
+	{
+		if (okok > 2)
+		{
+			ReadStuff(In, Nom, Mes);
+			UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *Nom, *Mes);
+		}
+		else
+		{
+			okok += 1;
+		}
+	}
 
 }
 
