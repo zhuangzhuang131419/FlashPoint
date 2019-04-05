@@ -224,7 +224,7 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetOutFireEngine(AFireFighterPawn * inPawn, ATile* current, AFireEngine* inFireEngine);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerFireDeckGun(AFireFighterPawn * inPawn);
+	void ServerFireDeckGun(AFireFighterPawn * inPawn, ATile* targetTile);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerMoveAmbulance(AAmbulance* localAmbulance, ATile* currentTile);
 	UFUNCTION(Server, Reliable, WithValidation)

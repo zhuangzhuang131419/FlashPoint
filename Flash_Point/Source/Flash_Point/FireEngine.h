@@ -22,7 +22,7 @@ public:
 	// Sets default values for this actor's properties
 	AFireEngine();
 
-	void FireDeckGun(AFireFighterPawn* inPawn);
+	void FireDeckGun(AFireFighterPawn* inPawn, ATile* targetTile);
 
 	void setFireEngineUI(bool status);
 	UFUNCTION()
@@ -72,6 +72,6 @@ public:
 
 private:
 	void splashOver(ATile* targetTile, EDirection direction);
-	ATile* GenerateRandomPositionInQuadrant(int32 startx, int32 starty);
+	
 		
 };
