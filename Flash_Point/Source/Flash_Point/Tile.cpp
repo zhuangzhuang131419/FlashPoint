@@ -1565,6 +1565,9 @@ FTileSaveInfo ATile::SaveTile()
 	if (POIOnTile) {
 		tileInfo.hasPOI = true;
 	}
+	if (isHotSpot) {
+		tileInfo.hasHotspot = true;
+	}
 	tileInfo.victimsOnTile = victims.Num();
 	if (placedFireFighters.Num() > 0) {
 		for (AFireFighterPawn* firefighter : placedFireFighters) {
@@ -1610,6 +1613,13 @@ void ATile::LoadTile(FTileSaveInfo tileInfo)
 		for (int32 i = 0; i < tileInfo.victimsOnTile; i++) {
 			PlaceVictim();
 			board->currentPOI = board->currentPOI + 1;
+		}
+	}
+	// load hot spot on the tile
+	if (tileInfo.hasHotspot) {
+		isHotSpot = true;
+		if (ensure(HotSpotEffect)) {
+			HotSpotEffect->ActivateSystem();
 		}
 	}
 }

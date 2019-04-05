@@ -1398,20 +1398,22 @@ void AFPPlayerController::EnableAPConsumption(int32 flag)
 	}
 }
 
-void AFPPlayerController::SaveCurrentGame()
+void AFPPlayerController::SaveCurrentGame(FString saveName)
 {
 	if (ensure(gameBoard)) {
 		UFlashPointSaveGame* savedGames;
 		if (UGameplayStatics::DoesSaveGameExist(FString(TEXT("SaveSlot")), 0)) {
 			UE_LOG(LogTemp, Warning, TEXT("Found the saved game"));
 			savedGames = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString(TEXT("SaveSlot")), 0));
+			FMapSaveInfo tempSavedMap = gameBoard->SaveCurrentMap();
+			tempSavedMap.saveName = saveName;
 			if (ensure(savedGames)) {
 				if (savedGames->savedGames.Num() >= 10) {
 					savedGames->savedGames.RemoveAt(0);
-					savedGames->savedGames.Add(gameBoard->SaveCurrentMap());
+					savedGames->savedGames.Add(tempSavedMap);
 				}
 				else {
-					savedGames->savedGames.Add(gameBoard->SaveCurrentMap());
+					savedGames->savedGames.Add(tempSavedMap);
 				}
 				// save the game back to save slot
 				UGameplayStatics::SaveGameToSlot(savedGames, FString(TEXT("SaveSlot")), 0);

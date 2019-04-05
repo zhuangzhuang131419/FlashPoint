@@ -314,6 +314,9 @@ public:
 	// if there is a hazmat on the tile
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	bool hasHazmat = false;
+	// if there is a hotspot on the tile
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	bool hasHotspot = false;
 
 
 };
@@ -328,7 +331,12 @@ public:
 	// if the saved game is valid (default is false)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	bool isValidSave = false;
-
+	// the name of the save
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	FString saveName;
+	// the time the game got saved
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	FString saveDate;
 	// Infomation of the board
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	FBoardSaveInfo boardInfo;

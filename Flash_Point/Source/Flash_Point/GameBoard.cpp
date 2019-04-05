@@ -1261,6 +1261,9 @@ FMapSaveInfo AGameBoard::SaveCurrentMap()
 			savedMap.tilesInfo.Add(tempTile->SaveTile());
 		}
 	}
+	// Save the date of the saving
+	FString currentDate = FDateTime::Now().GetDate().ToString();
+	UE_LOG(LogTemp, Warning, TEXT("Save date is: %s"), *currentDate);
 	savedMap.isValidSave = true;
 	return savedMap;
 }

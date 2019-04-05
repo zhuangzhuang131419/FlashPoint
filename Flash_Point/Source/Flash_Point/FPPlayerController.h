@@ -271,7 +271,7 @@ public:
 	UFUNCTION(Exec, Category = "Cheating")
 	void EnableAPConsumption(int32 flag);
 	UFUNCTION(Exec, Category = "Save Load Related")
-	void SaveCurrentGame();
+	void SaveCurrentGame(FString saveName);
 	
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	UFireFighterUI* inGameUI = nullptr;
