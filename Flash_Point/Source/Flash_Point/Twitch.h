@@ -40,7 +40,8 @@ public:
 	bool GetStuff(FString& Out);
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void ReadStuff(FString In, FString& Nom, FString& Out);
-	
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	FString DisplayFormatted = "";
 	
 
 private:

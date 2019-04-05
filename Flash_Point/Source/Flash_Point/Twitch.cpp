@@ -103,7 +103,9 @@ void ATwitch::Display()
 		{
 			// Here are the final text messages
 			ReadStuff(In, Nom, Mes);
-			UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *Nom, *Mes);
+			DisplayFormatted = Nom + ": " + Mes;
+			FOutputDeviceNull ar;
+			this->CallFunctionByNameWithArguments(TEXT("DisplayMessage"), ar, NULL, true);
 		}
 		else
 		{
