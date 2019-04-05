@@ -179,10 +179,25 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 					float xPos;
 					float yPos;
 					localPlayer->GetMousePosition(xPos, yPos);
+					if (yPos > UCarOperationsMenu::GetViewportSize().Y / 2) 
+					{
+						yPos -= UCarOperationsMenu::GetViewportSize().Y / 4;
+					}
 					FireEngineOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
 					FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
 				}
 			}
 		}
+	}
+}
+
+void AFireEngine::setFireEngineUI(bool status)
+{
+	if(!status)
+	{
+		FireEngineOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else{
+		FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
 	}
 }
