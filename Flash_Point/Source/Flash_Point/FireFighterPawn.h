@@ -164,7 +164,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AHazmat* GetHazmat();
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
-	void SetHazmat(AHazmat* hazmat);
+	void SetHazmat(AHazmat* inHazmat);
 	// Getter and setter for gameboard
 	AGameBoard* GetPlayingBoard() { return playingBoard; }
 
@@ -321,6 +321,8 @@ protected:
 	void Rep_LobbyRole();
 	UFUNCTION()
 	void Rep_CarStatus();
+	UFUNCTION()
+	void Rep_CarryHazmat();
 
 	// CURSOR BINDING FUNCTIONS
 	UFUNCTION(BlueprintCallable, Category = "Command Related")
@@ -347,7 +349,7 @@ protected:
 	AVictim* carriedVictim = nullptr;
 	UPROPERTY(ReplicatedUsing = Rep_LeadingVictim, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AVictim* leadVictim = nullptr;
-	UPROPERTY(VisibleAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_CarryHazmat, VisibleAnyWhere, Category = "Firefighter Attributes")
 	AHazmat* hazmat = nullptr;
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Firefighter Attributes")
 	USkeletalMeshComponent* FireFighter = nullptr;

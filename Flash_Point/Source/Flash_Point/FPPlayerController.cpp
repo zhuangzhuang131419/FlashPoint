@@ -955,11 +955,19 @@ void AFPPlayerController::CarryVictim()
 		// only for server, update the UI actively
 		if (HasAuthority()) {
 			if (ensure(inGameUI)) {
-				if (fireFighterPawn->GetCarriedVictim() && (fireFighterPawn->GetCarriedVictim() != fireFighterPawn->GetLeading())) {
+				// show carrying victim
+				if (fireFighterPawn->GetCarriedVictim()) {
 					inGameUI->ShowCarrying(true);
 				}
 				else {
 					inGameUI->ShowCarrying(false);
+				}
+				// show leading victim
+				if (fireFighterPawn->GetLeading()) {
+					inGameUI->ShowLeading(true);
+				}
+				else {
+					inGameUI->ShowLeading(false);
 				}
 			}
 		}
@@ -1039,6 +1047,8 @@ void AFPPlayerController::HealVictim()
 				if (!(*currentTile->GetVictims())[i]->IsHealed())
 				{
 					ServerHealVictim(fireFighterPawn, (*currentTile->GetVictims())[i]);
+					// for the healed victim, show its healed marker
+
 					healed = true;
 					break;
 				}
@@ -1577,6 +1587,20 @@ void AFPPlayerController::NotifyCarryVictim(bool isCarrying)
 	}
 }
 
+void AFPPlayerController::NotifyLeadVictim(bool isCarrying)
+{
+	if (ensure(inGameUI)) {
+		inGameUI->ShowLeading(isCarrying);
+	}
+}
+
+void AFPPlayerController::NotifyCarryHazmat(bool isCarrying)
+{
+	if (ensure(inGameUI)) {
+		inGameUI->ShowCarryHazmat(isCarrying);
+	}
+}
+
 void AFPPlayerController::SwitchRole(ERoleType inRole)
 {
 	// get the localplayer's firefighter
@@ -1748,7 +1772,7 @@ void AFPPlayerController::ServerHealVictim_Implementation(AFireFighterPawn * fir
 	UE_LOG(LogTemp, Warning, TEXT("heal victim sever"));
 	if (ensure(targetVictim) && ensure(!targetVictim->IsHealed()))
 	{
-		targetVictim->SetIsHealed(true);
+		targetVictim->SetHealedAndShowEffect(true);
 	}
 }
 

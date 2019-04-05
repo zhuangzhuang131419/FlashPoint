@@ -5,6 +5,8 @@
 #include "FPPlayerController.h"
 #include "FireFighterPawn.h"
 #include "Tile.h"
+#include "Components/MaterialBillboardComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 
 // Sets default values
@@ -14,17 +16,45 @@ AVictim::AVictim()
 	PrimaryActorTick.bCanEverTick = false;
 
 	victimMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("victimMesh"));
+	SetRootComponent(victimMesh);
+	healedEffect = CreateDefaultSubobject<UMaterialBillboardComponent>(FName("HealedEffect"));
+	if (ensure(healedEffect)) {
+		healedEffect->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform, FName("HealedMarker"));
+	}
+}
+
+void AVictim::SetHealedAndShowEffect(bool healed)
+{
+	isHealed = healed;
+	if (!ensure(healedEffect)) return;
+	if (isHealed) {
+		healedEffect->SetVisibility(true);
+	}
+	else {
+		healedEffect->SetVisibility(false);
+	}
 }
 
 void AVictim::Rep_OnCarry()
 {
+	if (!ensure(victimMesh)) return;
+	if (!ensure(healedEffect)) return;
 	if (isCarried) {
 		UE_LOG(LogTemp, Warning, TEXT("Set to invisible"));
 		victimMesh->SetVisibility(false);
+		// also hide the heal effect
+		healedEffect->SetVisibility(false);
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("Set to visible"));
 		victimMesh->SetVisibility(true);
+		// as the victim is not being carried also display if it is healed
+		if (isHealed) {
+			healedEffect->SetVisibility(true);
+		}
+		else {
+			healedEffect->SetVisibility(false);
+		}
 	}
 }
 
@@ -32,6 +62,17 @@ void AVictim::Rep_OnVictimLocationChanged()
 {
 	// when the actor's world location changed, reset it
 	SetActorLocation(victimLoc);
+}
+
+void AVictim::Rep_OnHealed()
+{
+	if (!ensure(healedEffect)) return;
+	if (isHealed) {
+		healedEffect->SetVisibility(true);
+	}
+	else {
+		healedEffect->SetVisibility(false);
+	}
 }
 
 void AVictim::OnVictimClicked(AActor * Target, FKey ButtonPressed)
