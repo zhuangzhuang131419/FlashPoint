@@ -21,13 +21,13 @@ void ATwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	
-	FString OutMessage;
-	GetStuff(OutMessage);
 
-	UE_LOG(LogTemp, Warning, TEXT("%s"), *OutMessage);
-	
-
+	FString In, Nom, Mes;
+	if (GetStuff(In))
+	{
+		ReadStuff(In, Nom, Mes);
+		UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *Nom, *Mes);
+	}
 }
 
 bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
@@ -161,6 +161,21 @@ void ATwitch::ReadStuff(FString In, FString& Nom, FString& Mes)
 	const TCHAR* Delims[] = { TEXT(":"), TEXT("."), TEXT("!") };
 	Array[0].ParseIntoArray(Array2, Delims, 3);
 	Nom = Array2[0];
-	Mes = "";
+
+	TArray<FString> Array3 = TArray<FString>();
+	Array[3].ParseIntoArray(Array3, TEXT(":"));
+	
+	if (Array3.IsValidIndex(0))
+	{
+		Mes = Array3[0];
+		
+		for (int32 i = 4; i < Array.Num(); i++)
+		{
+			Mes = Mes + " " + Array[i];
+		}
+	}
+	else {
+		Mes = " ";
+	}
 	return;
 }
