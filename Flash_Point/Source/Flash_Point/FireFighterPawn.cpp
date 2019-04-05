@@ -132,21 +132,45 @@ void AFireFighterPawn::AdjustSpecialistMoveAP(int32 adjustAP)
 	if (HasAuthority()) {
 		if (movementAP < -adjustAP)
 		{
-			movementAP = 0;
 			currentAP += (adjustAP + movementAP);
+			movementAP = 0;
 		}
 		else
 		{
 			movementAP += adjustAP;
 		}
-		currentAP += adjustAP;
 		// adjust display of ap on statusbar
 		if (ensure(statusBar)) {
 			statusBar->AdjustAPBar(currentAP, maxAP);
 		}
 	}
 	else {
-		myOwner->ServerAdjustAP(this, adjustAP);
+		myOwner->ServerAdjustRescueSpecAP(this, adjustAP);
+	}
+}
+
+void AFireFighterPawn::EndTurnAdjustAP()
+{
+	// adjust AP according to firefighter
+	if (fireFighterRole == ERoleType::RescueDog) {
+		if (currentAP <= GENERAL_SAVINGAP + 2) {
+			// if the remaining AP is not as much as 6 for dog, return
+			return;
+		}
+		else {
+			// ensure the remaining AP is not over 6 for dog
+			AdjustFireFighterAP(- (currentAP - 2 - GENERAL_SAVINGAP));
+		}
+	}
+	else {
+		// for other characters, adjust the ap according to specified value
+		if (currentAP <= GENERAL_SAVINGAP) {
+			return;
+		}
+		else {
+			// ensure the remaining AP is not over specified saving maximum
+			AdjustFireFighterAP(- (currentAP - GENERAL_SAVINGAP));
+		}
 	}
 }
 
@@ -221,11 +245,13 @@ void AFireFighterPawn::AdjustRoleProperties(ERoleType inRole)
 	case ERoleType::CAFSFirefighter:
 		extinguishAP = 3;
 		restoreAP = 3;
+		maxAP = 7;
 		break;
 	case ERoleType::HazmatTechnician:
 		break;
 	case ERoleType::Generalist:
 		restoreAP = 5;
+		maxAP = 9;
 		break;
 	case ERoleType::RescueSpecialist:
 		chopConsumption = 1;

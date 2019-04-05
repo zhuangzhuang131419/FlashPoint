@@ -174,6 +174,9 @@ void UFireFighterUI::NotifyCrewChange()
 	}
 	// if not the begining of turn, this is just a prompt to notify events
 	if (!isBeginOfTurn) return;
+
+	// if it is beginning of the turn, enable operations
+	EnableOperationPanels(true);
 	if (ensure(localPlayer)) {
 		UE_LOG(LogTemp, Warning, TEXT("Notified Crew Change"));
 		localPlayer->PromtCrewChange();

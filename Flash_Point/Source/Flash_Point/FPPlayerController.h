@@ -181,6 +181,8 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerAdjustCommandAP(AFireFighterPawn* captain, int32 adjustAP);
 	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAdjustRescueSpecAP(AFireFighterPawn* fireFighterPawn, int32 adjustAP);
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSendGlobalText(AChatManager* chatMan, const FString& message);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerSetFireFighterName(AFireFighterPawn* fireFighterPawn, const FString& inName);

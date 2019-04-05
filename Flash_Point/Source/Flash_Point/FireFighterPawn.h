@@ -21,6 +21,7 @@ class ALobbyManager;
 class ULobbyUI;
 
 const static int32 FLAG_LEAVE_LOBBY = -100;
+const static int32 GENERAL_SAVINGAP = 4;
 
 UCLASS()
 class FLASH_POINT_API AFireFighterPawn : public APawn
@@ -75,6 +76,8 @@ public:
 	void AdjustCAFSFireFighterExtinguishAP(int32 adjustAP);
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void AdjustSpecialistMoveAP(int32 adjustAP);
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void EndTurnAdjustAP();
 
 	// Getter and setter for the firefighter's name
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")

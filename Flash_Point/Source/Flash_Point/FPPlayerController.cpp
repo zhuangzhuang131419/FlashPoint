@@ -120,6 +120,12 @@ void AFPPlayerController::EndPlayerTurn()
 	if (ensure(inGameUI)) {
 		inGameUI->NotifyTurnEnd();
 	}
+	// at the end of the turn, adjust ap according to end turn
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn)) {
+		fireFighterPawn->EndTurnAdjustAP();
+	}
+	// switch to next player's turn
 	if (HasAuthority()) {
 		if (ensure(gameBoard)) {
 			gameBoard->TurnSwitch();
@@ -169,7 +175,7 @@ void AFPPlayerController::PromtCrewChange()
 			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 			if (!ensure(fireFighterPawn)) return;
 			if (!ensure(crewMan)) return;
-			//if (!fireFighterPawn->IsWithEngine()) return;
+			if (!fireFighterPawn->IsWithEngine()) return;
 			crewMan->ShowCrewChangeUI();
 		}
 	}
@@ -634,6 +640,42 @@ bool AFPPlayerController::ServerAdjustCAFSAP_Validate(AFireFighterPawn * fireFig
 	return true;
 }
 
+void AFPPlayerController::ServerAdjustRescueSpecAP_Implementation(AFireFighterPawn * fireFighterPawn, int32 adjustAP)
+{
+	if (!ensure(fireFighterPawn)) return;
+	if (fireFighterPawn->GetMovementAP() < -adjustAP)
+	{
+		fireFighterPawn->SetCurrentAP(fireFighterPawn->GetCurrentAP() + adjustAP + fireFighterPawn->GetMovementAP());
+		fireFighterPawn->SetMovementAP(0);
+	}
+	else
+	{
+		fireFighterPawn->SetMovementAP(fireFighterPawn->GetMovementAP() + adjustAP);
+	}
+}
+
+bool AFPPlayerController::ServerAdjustRescueSpecAP_Validate(AFireFighterPawn * fireFighterPawn, int32 adjustAP)
+{
+	return true;
+}
+
+
+void AFPPlayerController::ServerAdjustCommandAP_Implementation(AFireFighterPawn * captain, int32 adjustAP)
+{
+	if (ensure(captain)) {
+		if (captain->GetFireFighterRole() == ERoleType::FireCaptain) {
+			UE_LOG(LogTemp, Warning, TEXT("adjustAP is %d"), adjustAP);
+			captain->SetCommandAP(FMath::Max(captain->GetCommandAP() + adjustAP, 0));
+		}
+	}
+}
+
+bool AFPPlayerController::ServerAdjustCommandAP_Validate(AFireFighterPawn * captain, int32 adjustAP)
+{
+	return true;
+}
+
+
 void AFPPlayerController::ServerSendGlobalText_Implementation(AChatManager * chatMan, const FString& message)
 {
 	if (ensure(chatMan)) {
@@ -660,11 +702,21 @@ bool AFPPlayerController::ServerSetFireFighterName_Validate(AFireFighterPawn * f
 
 void AFPPlayerController::ServerSwitchRole_Implementation(ACrewManager * inCrewMan, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
 {
+	// if the firefighter's role was veteran, set the veteran loc to null
+	if (fireFighterPawn->GetFireFighterRole() == ERoleType::Veteran) {
+		if (ensure(gameBoard)) {
+			gameBoard->SetVeteranLoc(nullptr);
+		}
+	}
 	if (ensure(inCrewMan) && ensure(fireFighterPawn)) {
 		inCrewMan->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 		fireFighterPawn->SetFireFighterRole(inRole);
 		fireFighterPawn->AdjustRoleProperties(inRole);
-	}
+		// as the switch role complete, if the firefighter is now veteran, set the veteran loc
+		if (ensure(gameBoard)) {
+			gameBoard->SetVeteranLoc(fireFighterPawn->GetPlacedOn());
+		}
+	}	
 }
 
 bool AFPPlayerController::ServerSwitchRole_Validate(ACrewManager * inCrewMan, AFireFighterPawn * fireFighterPawn, ERoleType inRole)
@@ -840,10 +892,10 @@ void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * in
 {
 	if (ensure(inPawn))
 	{
-		AGameBoard* board = inPawn->GetPlayingBoard();
-		if (ensure(board))
+		// gameBoard exists on all player controller but not on all server pawns
+		if (ensure(gameBoard))
 		{
-			AFireEngine* fireEngine = board->GetFireEngine();
+			AFireEngine* fireEngine = gameBoard->GetFireEngine();
 			if (ensure(fireEngine))
 			{
 				fireEngine->FireDeckGun();
@@ -1771,21 +1823,6 @@ void AFPPlayerController::ServerSolveKnockDown_Implementation(AGameBoard * board
 }
 
 bool AFPPlayerController::ServerSolveKnockDown_Validate(AGameBoard * board)
-{
-	return true;
-}
-
-void AFPPlayerController::ServerAdjustCommandAP_Implementation(AFireFighterPawn * captain, int32 adjustAP)
-{
-	if (ensure(captain)) {
-		if (captain->GetFireFighterRole() == ERoleType::FireCaptain) {
-			UE_LOG(LogTemp, Warning, TEXT("adjustAP is %d"), adjustAP);
-			captain->SetCommandAP(FMath::Max(captain->GetCommandAP() + adjustAP, 0));
-		}
-	}
-}
-
-bool AFPPlayerController::ServerAdjustCommandAP_Validate(AFireFighterPawn * captain, int32 adjustAP)
 {
 	return true;
 }
