@@ -12,6 +12,9 @@ AFireEngine::AFireEngine()
 	PrimaryActorTick.bCanEverTick = true;
 
 	fireEngineMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("fireEngineMesh"));
+	if (ensure(fireEngineMesh)) {
+		fireEngineMesh->SetRelativeRotation(FRotator(0, 90, 0));
+	}
 }
 
 void AFireEngine::FireDeckGun()
