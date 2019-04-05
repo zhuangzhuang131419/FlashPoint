@@ -30,12 +30,15 @@ public:
 	// Method to connect
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	bool Connect();
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	bool Authentication();
 
 private:
 	// Parameters for Twtich authorization
 	FString Oauth;
 	FString Username;
 	FString Channel;
+	bool UserInitialized;
 
 	// Parameters for connections
 	FSocket* CurrentSocket;

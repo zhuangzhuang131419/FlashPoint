@@ -72,3 +72,14 @@ bool ATwitch::Connect()
 	return true;
 }
 
+bool ATwitch::Authentication()
+{
+
+	if (CurrentSocket == nullptr || !UserInitialized)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to connect"));
+		return false;
+	}
+
+	return false;
+}
