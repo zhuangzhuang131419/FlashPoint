@@ -63,6 +63,7 @@ void AFireEngine::FireDeckGun(AFireFighterPawn* inPawn)
 		}
 		if (targetTile)
 		{
+			targetTile->ShowSplashEffect();
 			// extinguish fire
 			targetTile->SetFireStatus(EFireStatus::Clear);
 			targetTile->GetSmokeEffect()->Deactivate();
@@ -131,6 +132,7 @@ void AFireEngine::Tick(float DeltaTime)
 
 void AFireEngine::splashOver(ATile * targetTile, EDirection direction)
 {
+	if (!ensure(targetTile)) return;
 	AEdgeUnit* adjacentWall = nullptr;
 	switch (direction)
 	{

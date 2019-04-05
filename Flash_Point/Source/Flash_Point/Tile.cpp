@@ -34,6 +34,9 @@ ATile::ATile()
 	HotSpotEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Hot Spot Effect"));
 	HotSpotEffect->bAutoActivate = false;
 	HotSpotEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
+	SplashEffect = CreateDefaultSubobject<UParticleSystemComponent>(FName("Splash Effect"));
+	SplashEffect->bAutoActivate = false;
+	SplashEffect->AttachToComponent(TileMesh, FAttachmentTransformRules(EAttachmentRule::KeepRelative, false), FName("VisualEffects"));
 
 }
 
@@ -1184,6 +1187,15 @@ void ATile::ExitinguishFireOnTile()
 	}
 }
 
+void ATile::ShowSplashEffect()
+{
+	if (ensure(SplashEffect)) {
+		SplashEffect->DeactivateSystem();
+		SplashEffect->ActivateSystem();
+	}
+	splashOccured = !splashOccured;
+}
+
 void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
@@ -1728,6 +1740,7 @@ int32 ATile::GetID()
 
 void ATile::Rep_BlastEffect()
 {
+	if (!ensure(BlastEffect)) return;
 	BlastEffect->DeactivateSystem();
 	BlastEffect->ActivateSystem();
 }
@@ -1737,6 +1750,13 @@ void ATile::Rep_HotSpotEffect()
 	if (!ensure(HotSpotEffect))	return;
 	if (isHotSpot) { HotSpotEffect->Activate(); }
 	else { HotSpotEffect->Deactivate(); }
+}
+
+void ATile::Rep_SplashEffect()
+{
+	if (!ensure(SplashEffect)) return;
+	SplashEffect->DeactivateSystem();
+	SplashEffect->ActivateSystem();
 }
 
 void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -1763,6 +1783,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, isHotSpot);
 	DOREPLIFETIME(ATile, type);
 	DOREPLIFETIME(ATile, adjacentParkTile);
+	DOREPLIFETIME(ATile, splashOccured);
 }
 
 // Called when the game starts or when spawned
