@@ -21,6 +21,13 @@ void ATwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
+	FString OutMessage;
+	GetStuff(OutMessage);
+
+	UE_LOG(LogTemp, Warning, TEXT("%s"), *OutMessage);
+	
+
 }
 
 bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
@@ -30,6 +37,7 @@ bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
 	this->Channel = Channel;
 	if (!Oauth.IsEmpty() && !Username.IsEmpty() && !Channel.IsEmpty())
 	{
+		UserInitialized = true;
 		return true;
 	}
 	return false;
@@ -108,7 +116,7 @@ bool ATwitch::ConnectAPI()
 	return false;
 }
 
-bool ATwitch::Read(FString& Out) const
+bool ATwitch::GetStuff(FString& Out)
 {
 	if (CurrentSocket == nullptr)
 	{
@@ -139,5 +147,20 @@ bool ATwitch::Read(FString& Out) const
 		return true;
 	}
 
+	//UE_LOG(LogTemp, Error, TEXT("%s"), *Out);
+
 	return false;
+}
+
+void ATwitch::ReadStuff(FString In, FString& Nom, FString& Mes)
+{
+	TArray<FString> Array = TArray<FString>();
+	In.ParseIntoArray(Array, TEXT(" "));
+
+	TArray<FString> Array2 = TArray<FString>();
+	const TCHAR* Delims[] = { TEXT(":"), TEXT("."), TEXT("!") };
+	Array[0].ParseIntoArray(Array2, Delims, 3);
+	Nom = Array2[0];
+	Mes = "";
+	return;
 }
