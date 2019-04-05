@@ -82,6 +82,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryVictim(bool isCarrying);
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void NotifyLeadVictim(bool isCarrying);
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void NotifyCarryHazmat(bool isCarrying);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")

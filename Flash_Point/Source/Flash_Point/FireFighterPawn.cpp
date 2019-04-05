@@ -477,6 +477,27 @@ void AFireFighterPawn::Rep_CarryingVictim()
 
 void AFireFighterPawn::Rep_LeadingVictim()
 {
+	if (myOwner) {
+		if (leadVictim) {
+			myOwner->NotifyLeadVictim(true);
+		}
+		else {
+			myOwner->NotifyLeadVictim(false);
+		}
+	}
+}
+
+
+void AFireFighterPawn::Rep_CarryHazmat()
+{
+	if (myOwner) {
+		if (hazmat) {
+			myOwner->NotifyCarryHazmat(true);
+		}
+		else {
+			myOwner->NotifyCarryHazmat(false);
+		}
+	}
 }
 
 void AFireFighterPawn::Rep_FireFighterknockDownRelocate()
@@ -901,6 +922,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, captain);
 	DOREPLIFETIME(AFireFighterPawn, commandAcceptance);
 	DOREPLIFETIME(AFireFighterPawn, leadVictim);
+	DOREPLIFETIME(AFireFighterPawn, hazmat);
 	DOREPLIFETIME(AFireFighterPawn, flipConsumption);
 	DOREPLIFETIME(AFireFighterPawn, lobbyPlayerID);
 	DOREPLIFETIME(AFireFighterPawn, lobbyRole);
@@ -1071,9 +1093,9 @@ AHazmat * AFireFighterPawn::GetHazmat()
 	return hazmat;
 }
 
-void AFireFighterPawn::SetHazmat(AHazmat * hazmat)
+void AFireFighterPawn::SetHazmat(AHazmat * inHazmat)
 {
-	this->hazmat = hazmat;
+	this->hazmat = inHazmat;
 }
 
 

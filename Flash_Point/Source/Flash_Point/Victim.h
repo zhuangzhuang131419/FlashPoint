@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "Components/StaticMeshComponent.h"
 #include "UnrealNetwork.h"
 #include "Victim.generated.h"
 
 class AFPPlayerController;
 class ATile;
+class UMaterialBillboardComponent;
+class UStaticMeshComponent;
 
 UCLASS()
 class FLASH_POINT_API AVictim : public AActor
@@ -24,7 +25,7 @@ public:
 	void SetIsCarried(bool carried) { isCarried = carried; }
 	// Getter and setter for is healed
 	bool IsHealed() { return isHealed; }
-	void SetIsHealed(bool healed) { isHealed = healed; }
+	void SetHealedAndShowEffect(bool healed);
 	// setter for the actor's new world location
 	void SetVictimLoc(FVector loc) { victimLoc = loc; }
 
@@ -36,7 +37,7 @@ protected:
 	// REPLICATED FIELDS
 	UPROPERTY(ReplicatedUsing = Rep_OnCarry, VisibleAnyWhere)
 	bool isCarried = false;
-	UPROPERTY(replicated, VisibleAnyWhere)
+	UPROPERTY(ReplicatedUsing = Rep_OnHealed, VisibleAnyWhere)
 	bool isHealed = false;
 	UPROPERTY(ReplicatedUsing = Rep_OnVictimLocationChanged, VisibleAnyWhere)
 	FVector victimLoc;
@@ -48,6 +49,8 @@ protected:
 	void Rep_OnCarry();
 	UFUNCTION()
 	void Rep_OnVictimLocationChanged();
+	UFUNCTION()
+	void Rep_OnHealed();
 
 	// Cursor clicked method
 	UFUNCTION()
@@ -64,5 +67,7 @@ public:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
 	UStaticMeshComponent* victimMesh = nullptr;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite)
+	UMaterialBillboardComponent* healedEffect = nullptr;
 	
 };
