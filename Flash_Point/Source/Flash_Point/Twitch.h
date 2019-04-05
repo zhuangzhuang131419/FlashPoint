@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "Sockets.h"
+#include "Runtime/Engine/Public/TimerManager.h"
 #include "Runtime/Networking/Public/Networking.h"
 #include "Twitch.generated.h"
 
@@ -24,6 +25,7 @@ protected:
 	bool Send(FString Stuff);
 	bool Connect();
 	bool Authenticate();
+	void Display();
 
 public:	
 	// Called every frame
