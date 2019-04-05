@@ -40,7 +40,7 @@ public:
 	void setAmbulanceUI(bool status);
 	UFUNCTION()
 	void OnAmbulanceClicked(AActor* Target, FKey ButtonPressed);
-
+	void ShowAmbulancePlaced(bool placed);
 	void RescueVictims(TArray<AVictim*>* victims, ATile* currentTile);
 protected:
 	// Called when the game starts or when spawned
@@ -63,8 +63,14 @@ protected:
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* ambulanceMesh = nullptr;
 
+	UPROPERTY(ReplicatedUsing = Rep_AmbulancePlacing, VisibleAnyWhere, BlueprintReadWrite)
+	bool isPlaced = true;
+
 	AGameBoard* board;
 	
+
+	UFUNCTION()
+	void Rep_AmbulancePlacing();
 
 
 public:	

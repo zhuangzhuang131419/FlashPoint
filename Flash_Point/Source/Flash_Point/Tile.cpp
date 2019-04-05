@@ -1162,6 +1162,22 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 				}
 			}
 			break;
+		case EGameOperations::PlaceFireEngine: 
+			if (type == ETileType::FireEnginePark) {
+				PlaneColorSwitch(ableMat);
+			}
+			else {
+				PlaneColorSwitch(unableMat);
+			}
+			break;
+		case EGameOperations::PlaceAmbulance:
+			if (type == ETileType::AmbulancePark) {
+				PlaneColorSwitch(ableMat);
+			}
+			else {
+				PlaneColorSwitch(unableMat);
+			}
+			break;
 		case EGameOperations::None:
 			break;
 		default:
@@ -1462,6 +1478,33 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 						localPlayer->ServerMoveAmbulance(calledAmbulance, this);
 					}
 				}
+			}
+			break;
+		case EGameOperations::PlaceAmbulance:
+			if (type != ETileType::AmbulancePark) return;
+			// palce the ambulance to this tile, only server does this
+			if (HasAuthority()) {
+				if (!ensure(board)) return;
+				AAmbulance* tempAmb = board->GetAmbulance();
+				if (!ensure(tempAmb)) return;
+				setAmbulanceLocation(tempAmb);
+				localPlayer->SetCurrentOperation(EGameOperations::None);
+				tempAmb->ShowAmbulancePlaced(true);
+				// as this operation is done, turn can begin
+				board->TurnSwitch();
+			}
+			break;
+		case EGameOperations::PlaceFireEngine:
+			if (type != ETileType::FireEnginePark) return;
+			// place the engine to this tile, only server does this
+			if (HasAuthority()) {
+				if (!ensure(board)) return;
+				AFireEngine* tempEngine = board->GetFireEngine();
+				if (!ensure(tempEngine)) return;
+				setFireEngineLocation(tempEngine);
+				localPlayer->SetCurrentOperation(EGameOperations::PlaceAmbulance);
+				localPlayer->PromtPlacingVehicle("Place Ambulance");
+				tempEngine->ShowEnginePlaced(true);
 			}
 			break;
 		case EGameOperations::None:

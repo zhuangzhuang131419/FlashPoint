@@ -193,6 +193,12 @@ void AFPPlayerController::PromtCrewChange()
 	}
 }
 
+void AFPPlayerController::PromtPlacingVehicle(FString inPromptInfo)
+{
+	if (!ensure(inGameUI)) return;
+	inGameUI->NotifyPlaceCar(inPromptInfo);
+}
+
 void AFPPlayerController::PromtCommandStatus(EAcceptanceStatus commandStatus)
 {
 	if (!ensure(inGameUI)) return;

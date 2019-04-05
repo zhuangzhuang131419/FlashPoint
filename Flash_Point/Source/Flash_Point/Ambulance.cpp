@@ -46,6 +46,14 @@ void AAmbulance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AAmbulance, ambulanceMesh);
+	DOREPLIFETIME(AAmbulance, isPlaced);
+}
+
+void AAmbulance::Rep_AmbulancePlacing()
+{
+	if (ensure(ambulanceMesh)) {
+		ambulanceMesh->SetVisibility(isPlaced);
+	}
 }
 
 // Called every frame
@@ -90,6 +98,14 @@ void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
 				}
 			}
 		}
+	}
+}
+
+void AAmbulance::ShowAmbulancePlaced(bool placed)
+{
+	isPlaced = placed;
+	if (ensure(ambulanceMesh)) {
+		ambulanceMesh->SetVisibility(placed);
 	}
 }
 

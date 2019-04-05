@@ -168,6 +168,16 @@ void UFireFighterUI::NotifySomeOneLeft()
 	}
 }
 
+void UFireFighterUI::NotifyPlaceCar(FString promptInfo)
+{
+	if (ensure(YourTurnPrompt) && ensure(PromptText) && ensure(ConfirmTurnButton)) {
+		isBeginOfTurn = false;
+		YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
+		PromptText->SetText(FText::FromString(promptInfo));
+		ConfirmTurnButton->SetIsEnabled(true);
+	}
+}
+
 bool UFireFighterUI::Initialize()
 {
 	bool success = Super::Initialize();

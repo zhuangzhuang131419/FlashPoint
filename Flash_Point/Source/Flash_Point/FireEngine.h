@@ -33,7 +33,7 @@ public:
 	void SetPlayingGameBoard(AGameBoard* current) { board = current; }
 
 	TArray<AFireFighterPawn*>* GetPassengers() { return &passengers; }
-
+	void ShowEnginePlaced(bool placed);
 	UStaticMeshComponent* GetFireEngineMesh() { return fireEngineMesh; }
 
 protected:
@@ -57,7 +57,13 @@ protected:
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
 	UStaticMeshComponent* fireEngineMesh = nullptr;
 
+	UPROPERTY(ReplicatedUsing = Rep_FireEnginePlacing, VisibleAnyWhere, BlueprintReadWrite)
+	bool isPlaced = true;
+
 	AGameBoard* board;
+
+	UFUNCTION()
+	void Rep_FireEnginePlacing();
 
 
 public:	
