@@ -806,6 +806,158 @@ bool ATile::Flashover()
 	return result1 && result2 && result3 && result4;
 }
 
+void ATile::setAmbulanceLocation(AAmbulance * currentAmbulance)
+{
+	if (ensure(type == ETileType::AmbulancePark))
+	{
+		ATile* nextTile = GetAdjacentAmbulanceParkingLocation();
+		if (ensure(nextTile) && ensure(this->isAdjacent(nextTile)))
+		{
+			if (this->isAdjacent(nextTile) == frontWall)
+			{
+				if (!leftWall) { setAmbulanceLocation(currentAmbulance, EDirection::Left); }
+				else { setAmbulanceLocation(currentAmbulance, EDirection::Right); }
+
+			}
+			else if (this->isAdjacent(nextTile) == backWall)
+			{
+				if (!leftWall) { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Left); }
+				else { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Right); }
+			}
+			else if (this->isAdjacent(nextTile) == rightWall)
+			{
+				if (!frontWall) { setAmbulanceLocation(currentAmbulance, EDirection::Up); }
+				else { setAmbulanceLocation(currentAmbulance, EDirection::Down); }
+			}
+			else if (this->isAdjacent(nextTile) == leftWall)
+			{
+				if (!frontWall) { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Up); }
+				else { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Down); }
+			}
+		}
+	}
+}
+
+void ATile::setAmbulanceLocation(AAmbulance * currentAmbulance, EDirection direction)
+{
+	FVector AmbulanceSocketLocation;
+	FRotator AmbulanceSocketRotation;
+	ATile* nextTile = GetAdjacentAmbulanceParkingLocation();
+	if (ensure(nextTile) && ensure(this->isAdjacent(nextTile)))
+	{
+		switch (direction)
+		{
+		case EDirection::Down:
+			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleBot"));
+			break;
+		case EDirection::Up:
+			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleTop"));
+			break;
+		case EDirection::Left:
+			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleLeft"));
+			break;
+		case EDirection::Right:
+			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleRight"));
+			break;
+		default:
+			// impossible
+			break;
+		}
+		ambulance->SetActorLocation(AmbulanceSocketLocation);
+		ambulance->SetActorRotation(AmbulanceSocketRotation);
+		board->SetAmbulanceLocA(this);
+		board->SetAmbulanceLocB(nextTile);
+	}
+}
+
+void ATile::setFireEngineLocation(AFireEngine * currentFireEngine)
+{
+}
+
+void ATile::setFireEngineLocation(AFireEngine * currentFireEngine, EDirection direction)
+{
+}
+
+ATile * ATile::GetAdjacentAmbulanceParkingLocation()
+{
+	if (ensure(type == ETileType::AmbulancePark))
+	{
+		ATile* adjacentParkingLocation = nullptr;
+		if (!rightWall || !leftWall)
+		{
+			if (GetAdjacentAmbulanceParkingLocation(EDirection::Up))
+			{
+				return GetAdjacentAmbulanceParkingLocation(EDirection::Up);
+			}
+
+			if (GetAdjacentAmbulanceParkingLocation(EDirection::Down))
+			{
+				return GetAdjacentAmbulanceParkingLocation(EDirection::Down);
+			}
+		}
+		else if (!frontWall || !backWall)
+		{
+			if (GetAdjacentAmbulanceParkingLocation(EDirection::Right))
+			{
+				return GetAdjacentAmbulanceParkingLocation(EDirection::Right);
+			}
+
+			if (GetAdjacentAmbulanceParkingLocation(EDirection::Left))
+			{
+				return GetAdjacentAmbulanceParkingLocation(EDirection::Left);
+			}
+		}
+	}
+	return nullptr;
+}
+
+ATile * ATile::GetAdjacentAmbulanceParkingLocation(EDirection direction)
+{
+	AEdgeUnit* adjacentEdge = nullptr;
+	switch (direction)
+	{
+	case EDirection::Down:
+		adjacentEdge = backWall;
+		break;
+	case EDirection::Up:
+		adjacentEdge = frontWall;
+		break;
+	case EDirection::Left:
+		adjacentEdge = leftWall;
+		break;
+	case EDirection::Right:
+		adjacentEdge = rightWall;
+		break;
+	default:
+		// impossible
+		break;
+	}
+	if (adjacentEdge)
+	{
+		if (adjacentEdge)
+		{
+			ATile* adjacentParkingLocation = adjacentEdge->GetOtherNeighbour(this);
+			if (adjacentParkingLocation)
+			{
+				if (adjacentParkingLocation->GetType() == ETileType::AmbulancePark)
+				{
+					return adjacentParkingLocation;
+				}
+			}
+		}
+	}
+	return nullptr;
+}
+
+ATile * ATile::GetAdjacentFireEngineParkingLocation()
+{
+	return nullptr;
+}
+
 // Here is the function to bind all input bindings
 void ATile::BindCursorFunc()
 {
@@ -1107,7 +1259,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					localPlayer->SetNone();
 				}
 			}
-			
 			break;
 		case EGameOperations::Squeeze:
 			UE_LOG(LogTemp, Warning, TEXT("Squeeze Clicked."));
@@ -1137,8 +1288,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				}
 			}
 			break;
-		case EGameOperations::None:
-			break;
 		case EGameOperations::Command:
 			// check if this tile is ready and can move to
 			if (isReady && canMoveTo) {
@@ -1162,263 +1311,24 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				}				
 			}
 			break;
-		//case EGameOperations::DriveFireEngine:
-		//	if (type == ETileType::FireEnginePark && this != board->engineLocA && this != board->engineLocB)
-		//	{
-		//		if (fireEngine != nullptr)
-		//		{
-		//			int32 prevPos = fireEngine->GetFEPosition();
-		//			int32 currentPos = this->GetID();
-		//			// prevBot
-		//			if (prevPos % 8 == 0 && prevPos != 72)
-		//			{
-		//				if (currentPos % 8 == 7)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevTop
-		//			else if (prevPos % 8 == 7)
-		//			{
-		//				if (currentPos % 8 == 0 && currentPos != 72)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevLeft
-		//			else if (prevPos < 7)
-		//			{
-		//				if (currentPos >= 72)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevRight
-		//			else
-		//			{
-		//				if (currentPos < 7 && currentPos != 0)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			fireEngine->Destroy();
-		//			board->moved = true;
-		//			if (prevParkTile == nullptr)
-		//			{
-		//				board->SetFireEngineLocA(this);
-		//				board->SetFireEngineLocB(this->nextParkTile);
-		//				SpawnFireEngine(this->GetID(), this);
-		//			}
-		//			else
-		//			{
-		//				board->SetFireEngineLocA(this->prevParkTile);
-		//				board->SetFireEngineLocB(this);
-		//				SpawnFireEngine(prevParkTile->GetID(), prevParkTile);
-		//			}
-		//		}
-		//	}
-		//	break;
-		//case EGameOperations::DriveAmbulance:
-		//	if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
-		//	{
-		//		if (ambulance != nullptr)
-		//		{
-		//			int32 prevPos = ambulance->GetAmbulancePosition();
-		//			int32 currentPos = this->GetID();
-		//			// prevBot
-		//			if (prevPos % 8 == 0 && prevPos != 72)
-		//			{
-		//				if (currentPos % 8 == 7)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				
-		//			}
-		//			// prevTop
-		//			else if (prevPos % 8 == 7)
-		//			{
-		//				if (currentPos % 8 == 0 && currentPos != 72)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevLeft
-		//			else if (prevPos < 7)
-		//			{
-		//				if (currentPos >= 72)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevRight
-		//			else
-		//			{
-		//				if (currentPos < 7 && currentPos != 0)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			ambulance->Destroy();
-		//			board->moved = true;
-		//			if (prevParkTile == nullptr)
-		//			{
-		//				board->SetAmbulanceLocA(this);
-		//				board->SetAmbulanceLocB(this->nextParkTile);
-		//				SpawnAmbulance(this->GetID(), this);
-		//			}
-		//			else
-		//			{
-		//				board->SetAmbulanceLocA(this->prevParkTile);
-		//				board->SetAmbulanceLocB(this);
-		//				SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
-		//			}
-		//		}
-		//	}
-		//	break;
+		case EGameOperations::DriveFireEngine:
+			if (type == ETileType::FireEnginePark && this != board->engineLocA && this != board->engineLocB)
+			{
+				if (ensure(fireEngine))
+				{
+					setFireEngineLocation(fireEngine);
+				}
+			}
+			break;
+		case EGameOperations::DriveAmbulance:
+			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			{
+				if (ambulance != nullptr)
+				{
+					setAmbulanceLocation(ambulance);
+				}
+			}
+			break;
 		case EGameOperations::GetOutAmbulance:
 			if (type == ETileType::AmbulancePark && board->moved)
 			{
@@ -1596,6 +1506,8 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		//		}
 		//	}
 		//	break;
+		case EGameOperations::None:
+			break;
 		default:
 			break;
 		}
@@ -1894,6 +1806,7 @@ void ATile::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimePro
 	DOREPLIFETIME(ATile, HazmatOnTile);
 	DOREPLIFETIME(ATile, isHotSpot);
 	DOREPLIFETIME(ATile, type);
+	DOREPLIFETIME(ATile, adjacentParkTile);
 }
 
 // Called when the game starts or when spawned

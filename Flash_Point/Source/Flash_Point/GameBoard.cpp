@@ -685,6 +685,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 						{
 							anotherTile->SetTileType(ETileType::FireEnginePark);
 							engineTiles.Add(anotherTile);
+							tempTile->SetAdjacentParkTile(anotherTile);
+							anotherTile->SetAdjacentParkTile(tempTile);
 						}
 					}
 				}
@@ -698,6 +700,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 						{
 							anotherTile->SetTileType(ETileType::FireEnginePark);
 							engineTiles.Add(anotherTile);
+							tempTile->SetAdjacentParkTile(anotherTile);
+							anotherTile->SetAdjacentParkTile(tempTile);
 						}
 					}
 				}
@@ -737,6 +741,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 						{
 							anotherTile->SetTileType(ETileType::AmbulancePark);
 							ambulanceTiles.Add(anotherTile);
+							tempTile->SetAdjacentParkTile(anotherTile);
+							anotherTile->SetAdjacentParkTile(tempTile);
 						}
 					}
 				}
@@ -750,6 +756,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 						{
 							anotherTile->SetTileType(ETileType::AmbulancePark);
 							ambulanceTiles.Add(anotherTile);
+							tempTile->SetAdjacentParkTile(anotherTile);
+							anotherTile->SetAdjacentParkTile(tempTile);
 						}
 					}
 				}

@@ -140,6 +140,15 @@ public:
 	bool Flashover(EDirection direction);
 	bool Flashover();
 
+	void setAmbulanceLocation(AAmbulance* currentAmbulance);
+	void setAmbulanceLocation(AAmbulance* currentAmbulance, EDirection direction);
+	void setFireEngineLocation(AFireEngine* currentFireEngine);
+	void setFireEngineLocation(AFireEngine* currentFireEngine, EDirection direction);
+
+	ATile* GetAdjacentAmbulanceParkingLocation();
+	ATile* GetAdjacentAmbulanceParkingLocation(EDirection direction);
+	ATile* GetAdjacentFireEngineParkingLocation();
+
 	AFireEngine* GetFireEngine(){return fireEngine;}
 	// A method to check if the tile is neighbouring tile of the pawn
 	bool AdjacentToPawn(AFireFighterPawn * inPawn);
@@ -150,13 +159,8 @@ public:
 	FTileSaveInfo SaveTile();
 	void LoadTile(FTileSaveInfo tileInfo);
 
-	ATile* prevParkTile = nullptr;
-	ATile* GetPrevParkTile() { return prevParkTile; }
-	void SetPrevParkTile(ATile* current) { prevParkTile = current; }
-
-	ATile* nextParkTile = nullptr;
-	ATile* GetNextParkTile() { return nextParkTile; }
-	void SetNextParkTile(ATile* next) { nextParkTile = next; }
+	ATile* GetAdjacentParkTile() { return adjacentParkTile; }
+	void SetAdjacentParkTile(ATile* next) { adjacentParkTile = next; }
 
 protected:
 	// FIELDS
@@ -284,7 +288,8 @@ protected:
 	AAmbulance* ambulance = nullptr;
 	AFireEngine* fireEngine = nullptr;
 
-	
+	UPROPERTY(replicated, VisibleAnyWhere)
+	ATile* adjacentParkTile = nullptr;
 
 	// is command target
 	bool isCommandTarget = false;
