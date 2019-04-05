@@ -113,6 +113,18 @@ void AFPPlayerController::NotifyPlayerDodge()
 	}
 }
 
+void AFPPlayerController::NotifyReRoll()
+{
+	if (ensure(OptionPromptUI))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("NotifyReRoll"));
+		if (ensure(OptionPromptUI))
+		{
+			OptionPromptUI->PromptOperation(EOptionPromptType::FireDeckGun, "The target tile has been highlighted\n please choose");
+		}
+	}
+}
+
 void AFPPlayerController::EndPlayerTurn()
 {
 	// disable all operations
@@ -898,7 +910,7 @@ void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * in
 			AFireEngine* fireEngine = gameBoard->GetFireEngine();
 			if (ensure(fireEngine))
 			{
-				fireEngine->FireDeckGun();
+				fireEngine->FireDeckGun(inPawn);
 			}
 		}
 	}

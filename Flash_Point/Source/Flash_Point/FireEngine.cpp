@@ -14,14 +14,17 @@ AFireEngine::AFireEngine()
 	fireEngineMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("fireEngineMesh"));
 }
 
-void AFireEngine::FireDeckGun()
+void AFireEngine::FireDeckGun(AFireFighterPawn* inPawn)
 {
 	UE_LOG(LogTemp, Warning, TEXT("FIRING DECK GUN!"));
 	// check the quadrant has firefighter or not
-	int32 startx = currentPosition / 10;
-	int32 starty = currentPosition % 8;
+	int32 startx = -1;
+	int32 starty = -1;
 	int32 randomTargetPosition = 0;
-
+	if (ensure(board) && ensure(board->GetFireEngineLocA()))
+	{
+		board->GetFireEngineLocA()->GetLocation(startx, starty);
+	}
 	if (startx <= 4) { startx = 1; }
 	else { startx = 5; }
 	if (starty <= 3) { starty = 1; }
@@ -46,29 +49,40 @@ void AFireEngine::FireDeckGun()
 			}
 		}
 	}
-	// randomly choose a target fire 
-	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
-	int32 randx = FMath::RandRange(startx, startx + 3);
-	int32 randy = FMath::RandRange(starty, starty + 2);
-	ATile* targetTile = board->GetboardTiles()[randx* 8 + randy];
-	UE_LOG(LogTemp, Warning, TEXT("The target tile is %s"), *targetTile->GetName());
-	if (targetTile)
+
+	if (ensure(inPawn))
 	{
-		// extinguish fire
-		targetTile->SetFireStatus(EFireStatus::Clear);
-		targetTile->GetSmokeEffect()->Deactivate();
-		targetTile->GetFireEffect()->Deactivate();
+		ATile* targetTile = GenerateRandomPositionInQuadrant(startx, starty);
+		if (inPawn->GetFireFighterRole() == ERoleType::Driver)
+		{
+			AFPPlayerController* player = Cast<AFPPlayerController>(inPawn->GetController());
+			if (player)
+			{
+				player->NotifyReRoll();
+			}
+		}
+		if (targetTile)
+		{
+			// extinguish fire
+			targetTile->SetFireStatus(EFireStatus::Clear);
+			targetTile->GetSmokeEffect()->Deactivate();
+			targetTile->GetFireEffect()->Deactivate();
+			// splash over
+			splashOver(targetTile, EDirection::Up);
+			splashOver(targetTile, EDirection::Down);
+			splashOver(targetTile, EDirection::Left);
+			splashOver(targetTile, EDirection::Right);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("random Error"));
+		}
+		
 	}
-	else 
-	{
-		UE_LOG(LogTemp, Warning, TEXT("random Error"));
-	}
+
 	
-	// splash over
-	splashOver(targetTile, EDirection::Up);
-	splashOver(targetTile, EDirection::Down);
-	splashOver(targetTile, EDirection::Left);
-	splashOver(targetTile, EDirection::Right);
+	
+	
 }
 
 // Called when the game starts or when spawned
@@ -143,6 +157,7 @@ void AFireEngine::splashOver(ATile * targetTile, EDirection direction)
 			{
 				if (adjacentTile->GetFireStatus() != EFireStatus::Clear)
 				{
+					UE_LOG(LogTemp, Warning, TEXT("Use fire engine at %s"), *adjacentTile->GetName());
 					adjacentTile->SetFireStatus(EFireStatus::Clear);
 					adjacentTile->SetFireEffect(false);
 					adjacentTile->SetSmokeEffect(false);
@@ -152,14 +167,13 @@ void AFireEngine::splashOver(ATile * targetTile, EDirection direction)
 	}
 }
 
-void AFireEngine::SetFEPosition(int32 newPos)
+ATile * AFireEngine::GenerateRandomPositionInQuadrant(int32 startx, int32 starty)
 {
-	currentPosition = newPos;
-}
-
-int32 AFireEngine::GetFEPosition()
-{
-	return currentPosition;
+	// randomly choose a target fire 
+	int32 randx = FMath::RandRange(startx, startx + 3);
+	int32 randy = FMath::RandRange(starty, starty + 2);
+	UE_LOG(LogTemp, Warning, TEXT("Random Position $d, %d"), randx, randy);
+	return board->GetboardTiles()[randx * 8 + randy];
 }
 
 void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)

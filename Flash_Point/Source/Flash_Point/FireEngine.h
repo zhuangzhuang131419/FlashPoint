@@ -22,16 +22,7 @@ public:
 	// Sets default values for this actor's properties
 	AFireEngine();
 
-	void FireDeckGun();
-
-	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
-	int32 currentPosition = -1;
-
-	UFUNCTION(BlueprintCallable, Category = "Position")
-	void SetFEPosition(int32 newPos);
-
-	UFUNCTION(BlueprintCallable, Category = "Position")
-	int32 GetFEPosition();
+	void FireDeckGun(AFireFighterPawn* inPawn);
 
 	UFUNCTION()
 	void OnFireEngineClicked(AActor* Target, FKey ButtonPressed);
@@ -74,4 +65,6 @@ public:
 
 private:
 	void splashOver(ATile* targetTile, EDirection direction);
+	ATile* GenerateRandomPositionInQuadrant(int32 startx, int32 starty);
+		
 };

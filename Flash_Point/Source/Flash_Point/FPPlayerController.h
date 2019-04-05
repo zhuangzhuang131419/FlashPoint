@@ -88,6 +88,7 @@ public:
 	void NotifyLeadVictim(bool isCarrying);
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryHazmat(bool isCarrying);
+
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
@@ -113,8 +114,10 @@ public:
 	void SetTurnNum(int32 turnNum);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void NotifyPlayerTurn();
-	UFUNCTION(Exec, BlueprintCallable, Category = "Take Turn")
+	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void NotifyPlayerDodge();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void NotifyReRoll();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void EndPlayerTurn();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")

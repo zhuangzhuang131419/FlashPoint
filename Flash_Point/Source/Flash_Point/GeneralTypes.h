@@ -123,6 +123,7 @@ UENUM(BlueprintType)
 enum class EOptionPromptType : uint8
 {
 	Dodge,
+	FireDeckGun,
 	CommandDoor,
 	CommandTile
 };

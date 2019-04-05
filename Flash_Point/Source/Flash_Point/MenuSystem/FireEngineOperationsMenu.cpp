@@ -77,6 +77,7 @@ void UFireEngineOperationsMenu::FireDeckGun()
 		{
 			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
 			localPlayer->ServerFireDeckGun(fireFighterPawn);
+			fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetFireDeckGunConsumption());
 			this->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
