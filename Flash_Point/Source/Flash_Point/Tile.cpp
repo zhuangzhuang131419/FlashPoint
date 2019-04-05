@@ -1205,7 +1205,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				isReady = false;
 				costToHere = 0;
 			}
-
 			break;
 		case EGameOperations::ChopWall:
 			break;
@@ -1329,12 +1328,13 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				if (ensure(board->GetAmbulance()))
 				{
 					localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
+					board->GetAmbulance()->setAmbulanceUI(false);
 				}
 			}
 			break;
 		case EGameOperations::GetOutAmbulance:
 			UE_LOG(LogTemp, Warning, TEXT("Get out of ambulance."));
-			if (type == ETileType::AmbulancePark && board->moved)
+			if (type == ETileType::AmbulancePark)
 			{
 				if (this == board->ambulanceLocA || this == board->ambulanceLocB)
 				{
@@ -1351,7 +1351,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::GetOutFireEngine:
 			UE_LOG(LogTemp, Warning, TEXT("Get out of ambulance."));
-			if (type == ETileType::FireEnginePark && board->moved)
+			if (type == ETileType::FireEnginePark)
 			{
 				if (this == board->engineLocA || this == board->engineLocB)
 				{
@@ -1367,135 +1367,21 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				}
 			}
 			break;
-		
-		//case EGameOperations::Radio:
-		//	if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
-		//	{
-		//		if (ambulance != nullptr)
-		//		{
-		//			int32 prevPos = ambulance->GetAmbulancePosition();
-		//			int32 currentPos = this->GetID();
-		//			// prevBot
-		//			if (prevPos % 8 == 0 && prevPos != 72)
-		//			{
-		//				if (currentPos % 8 == 7)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				
-		//			}
-		//			// prevTop
-		//			else if (prevPos % 8 == 7)
-		//			{
-		//				if (currentPos % 8 == 0 && currentPos != 72)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevLeft
-		//			else if (prevPos < 7)
-		//			{
-		//				if (currentPos >= 72)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			// prevRight
-		//			else
-		//			{
-		//				if (currentPos < 7 && currentPos != 0)
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 4)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-4);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//				else
-		//				{
-		//					if (localPawn->GetCurrentAP() >= 2)
-		//					{
-		//						localPawn->AdjustFireFighterAP(-2);
-		//					}
-		//					else
-		//					{
-		//						return;
-		//					}
-		//				}
-		//			}
-		//			ambulance->Destroy();
-		//			if (prevParkTile == nullptr)
-		//			{
-		//				board->SetAmbulanceLocA(this);
-		//				board->SetAmbulanceLocB(this->nextParkTile);
-		//				SpawnAmbulance(this->GetID(), this);
-		//			}
-		//			else
-		//			{
-		//				board->SetAmbulanceLocA(this->prevParkTile);
-		//				board->SetAmbulanceLocB(this);
-		//				SpawnAmbulance(prevParkTile->GetID(), prevParkTile);
-		//			}
-		//		}
-		//	}
-		//	break;
+		case EGameOperations::Radio:
+			UE_LOG(LogTemp, Warning, TEXT("Radio/Call the ambulance."));
+			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			{
+				AAmbulance* calledAmbulance = nullptr;
+				if (ensure(board))
+				{
+					calledAmbulance = board->GetAmbulance();
+					if (ensure(calledAmbulance))
+					{
+
+					}
+				}
+			}
+			break;
 		case EGameOperations::None:
 			break;
 		default:

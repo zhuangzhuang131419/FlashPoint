@@ -77,6 +77,10 @@ void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
 			float xPos;
 			float yPos;
 			localPlayer->GetMousePosition(xPos, yPos);
+
+			if(yPos > UCarOperationsMenu::GetViewportSize().Y / 2){
+				yPos -= UCarOperationsMenu::GetViewportSize().Y / 4;
+			}
 			AmbulanceOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
 			AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
 		}
@@ -98,4 +102,15 @@ void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)
 	//		currentTile->GetGameBoard()->currentPOI - 1
 	//	);
 	//}
+}
+
+void AAmbulance::setAmbulanceUI(bool status)
+{
+	if(!status)
+	{
+		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else{
+		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+	}
 }

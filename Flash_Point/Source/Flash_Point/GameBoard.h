@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "Engine/World.h"
 #include "Tile.h"
+#include "Twitch.h"
 #include "ViewPortCamera.h"
 #include "GameBoard.generated.h"
 
@@ -112,12 +113,10 @@ public:
 	UPROPERTY(BlueprintReadWrite, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
-	UPROPERTY(BlueprintReadWrite, Category = "Vehicle")
-	bool moved = true;
-
 	// Operation realted fields and functions
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
+	bool moved = true;
 
 	void SetVictimLostNum(int32 num) { victimLostNum = num; }
 
@@ -183,6 +182,9 @@ protected:
 	// The road tile class for spawning
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ATile> RoadClass = nullptr;
+	// Twitch integration class
+	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<ATwitch> TwitchClass = nullptr;
 	// A camera class to relocate player view port to
 	UPROPERTY(BlueprintReadWrite, EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<AViewPortCamera> CameraClass = nullptr;
