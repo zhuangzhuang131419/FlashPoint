@@ -25,3 +25,16 @@ void ATwitch::Tick(float DeltaTime)
 
 }
 
+// Setup initial Info (twitch oauth, username and channel)
+bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
+{
+	this->Oauth = Oauth;
+	this->Username = Username;
+	this->Channel = Channel;
+	if (!Oauth.IsEmpty() && !Username.IsEmpty() && !Channel.IsEmpty())
+	{
+		return true;
+	}
+	return false;
+}
+

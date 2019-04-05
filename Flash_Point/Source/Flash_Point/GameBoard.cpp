@@ -884,7 +884,7 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 		}
 	}
 
-	// Generate Twitch 
+	// Spawn Twitch 
 	GetWorld()->SpawnActor<ATwitch>(
 		TwitchClass,
 		FVector(0, 0, 0),
