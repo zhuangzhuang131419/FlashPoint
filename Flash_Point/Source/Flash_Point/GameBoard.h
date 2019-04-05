@@ -93,6 +93,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	int32 JoinBoard();
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
+	void LeaveBoard(AFireFighterPawn* leavePawn);
+	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	void TurnSwitch();
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	void InitialPlacing();
@@ -118,6 +120,7 @@ public:
 	int32 victimSavedNum = 0;
 
 	void SetVictimSavedNum(int32 num) { victimSavedNum = num; }
+	void SetLeaveFlag(int32 flag) { leaveFlag = flag; }
 
 	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Setup")
 	int32 maxSavedVictim = 7;
@@ -264,6 +267,8 @@ protected:
 	int32 placedNum = 0;	// when this number is the same as joined number, the game can start by changing turn
 	UPROPERTY(ReplicatedUsing = Rep_TurnNotify, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
 	int32 currentTurn = -1;	// this is initialized to -1 to indicate a placing firefighter state
+	UPROPERTY(ReplicatedUsing = Rep_SomeOneLeft, VisibleAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
+	int32 leaveFlag = -1;	// this is initialized to -1 to indicate a placing firefighter state
 
 	// FUNCTIONS
 	// This method will initilize the default board
@@ -295,6 +300,8 @@ protected:
 	void Rep_RelocateAmbulance();
 	UFUNCTION()
 	void Rep_RelocateEngine();
+	UFUNCTION()
+	void Rep_SomeOneLeft();
 
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

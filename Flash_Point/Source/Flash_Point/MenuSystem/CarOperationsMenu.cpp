@@ -22,7 +22,7 @@ bool UCarOperationsMenu::Initialize()
 		if (!ensure(OperationButton5)) { return false; }
 		OperationButton5->OnClicked.AddDynamic(this, &UCarOperationsMenu::Cancel);
 	}
-	return true;
+	return Success;
 }
 
 void UCarOperationsMenu::Cancel()

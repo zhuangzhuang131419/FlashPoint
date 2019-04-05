@@ -1688,6 +1688,13 @@ void AFPPlayerController::NotifyLeadVictim(bool isCarrying)
 	}
 }
 
+void AFPPlayerController::NotifyGameForcedStop()
+{
+	if (ensure(inGameUI)) {
+		inGameUI->NotifySomeOneLeft();
+	}
+}
+
 void AFPPlayerController::NotifyCarryHazmat(bool isCarrying)
 {
 	if (ensure(inGameUI)) {
@@ -1883,6 +1890,26 @@ void AFPPlayerController::ServerSolveHazmatExplosions_Implementation(AGameBoard 
 }
 
 bool AFPPlayerController::ServerSolveHazmatExplosions_Validate(AGameBoard * board)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerExitFromBoard_Implementation(AGameBoard * inBoard, AFireFighterPawn * inPawn)
+{
+	if (!ensure(inBoard)) return;
+	if (!ensure(inPawn)) return;
+	inBoard->SetLeaveFlag(inPawn->GetFireFighterID());
+	// also notify the server seperately
+	UWorld* world = GetWorld();
+	if (ensure(world)) {
+		AFPPlayerController* serverController = Cast<AFPPlayerController>(world->GetFirstPlayerController());
+		if (ensure(serverController)) {
+			serverController->NotifyGameForcedStop();
+		}
+	}
+}
+
+bool AFPPlayerController::ServerExitFromBoard_Validate(AGameBoard * inBoard, AFireFighterPawn * inPawn)
 {
 	return true;
 }

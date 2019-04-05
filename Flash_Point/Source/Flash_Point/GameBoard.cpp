@@ -426,6 +426,16 @@ int32 AGameBoard::JoinBoard()
 	return -1;
 }
 
+void AGameBoard::LeaveBoard(AFireFighterPawn * leavePawn)
+{
+	if (HasAuthority()) {
+		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	}
+	else {
+		localPlayer->ServerExitFromBoard(this, leavePawn);
+	}
+}
+
 void AGameBoard::TurnSwitch()
 {
 	if (HasAuthority()) {
@@ -1018,6 +1028,18 @@ void AGameBoard::Rep_RelocateEngine()
 	}
 }
 
+void AGameBoard::Rep_SomeOneLeft()
+{
+	if (!ensure(localPlayer)) return;
+	if (leaveFlag >= 0 && leaveFlag == localPlayer->GetTurnNum()) {
+		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	}
+	else {
+		// notify the client that someone has left the game
+		localPlayer->NotifyGameForcedStop();
+	}
+}
+
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
@@ -1050,6 +1072,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, ambulance);
 	DOREPLIFETIME(AGameBoard, fireEngine);
 	DOREPLIFETIME(AGameBoard, gameMap);
+	DOREPLIFETIME(AGameBoard, leaveFlag);
 }
 
 void AGameBoard::InitializeBoardAttributes()

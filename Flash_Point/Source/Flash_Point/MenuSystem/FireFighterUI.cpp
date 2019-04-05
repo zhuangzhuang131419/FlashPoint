@@ -4,9 +4,12 @@
 #include "UObject/ConstructorHelpers.h"
 #include "Components/Button.h"
 #include "GameBoard.h"
+#include "SavePanel.h"
 
 UFireFighterUI::UFireFighterUI(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
-
+	ConstructorHelpers::FClassFinder<USavePanel> SavePanelClassFinder(TEXT("/Game/BPs/WidgetComponents/WBP_save"));
+	if (!ensure(SavePanelClassFinder.Class)) return;
+	SavePanelClass = SavePanelClassFinder.Class;
 }
 
 void UFireFighterUI::PromptCommandStatus(EAcceptanceStatus acceptState)
@@ -155,12 +158,26 @@ void UFireFighterUI::SetBeginTurnNotify(bool isBegin)
 	isBeginOfTurn = isBegin;
 }
 
+void UFireFighterUI::NotifySomeOneLeft()
+{
+	isNotifyPlayerLeave = true;
+	if (ensure(YourTurnPrompt) && ensure(PromptText) && ensure(ConfirmTurnButton)) {
+		YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
+		PromptText->SetText(FText::FromString("Some has left the game, game has to stop..."));
+		ConfirmTurnButton->SetIsEnabled(true);
+	}
+}
+
 bool UFireFighterUI::Initialize()
 {
 	bool success = Super::Initialize();
 	if (success) {
 		if (!ensure(ConfirmTurnButton)) return false;
 		ConfirmTurnButton->OnClicked.AddDynamic(this, &UFireFighterUI::NotifyCrewChange);
+		if (!ensure(SaveButton)) return false;
+		SaveButton->OnClicked.AddDynamic(this, &UFireFighterUI::OnSaveClicked);
+		if (!ensure(ExitButton)) return false;
+		ExitButton->OnClicked.AddDynamic(this, &UFireFighterUI::OnExitClicked);
 	}
 	return success;
 }
@@ -172,6 +189,9 @@ void UFireFighterUI::NotifyCrewChange()
 			localPlayer->ServerSetCommandStatus(localPawn, EAcceptanceStatus::Empty);
 		}
 	}
+	if (isNotifyPlayerLeave) {
+		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	}
 	// if not the begining of turn, this is just a prompt to notify events
 	if (!isBeginOfTurn) return;
 
@@ -180,5 +200,32 @@ void UFireFighterUI::NotifyCrewChange()
 	if (ensure(localPlayer)) {
 		UE_LOG(LogTemp, Warning, TEXT("Notified Crew Change"));
 		localPlayer->PromtCrewChange();
+	}
+}
+
+void UFireFighterUI::OnExitClicked()
+{
+	// first disable the button as it is clicked
+	if (!ensure(ExitButton)) return;
+	if (!ensure(gameBoard)) return;
+	ExitButton->SetIsEnabled(false);
+	EnableOperationPanels(false);
+	// notify there's some player leaving
+	gameBoard->LeaveBoard(localPawn);
+}
+
+void UFireFighterUI::OnSaveClicked()
+{
+	// when clicekd on save button show the save game panel
+	if (!saveGamePanel) {
+		if (ensure(SavePanelClass)) {
+			saveGamePanel = CreateWidget<USavePanel>(localPlayer, SavePanelClass);
+			if (ensure(saveGamePanel)) {
+				saveGamePanel->AddToViewport();
+			}
+		}
+	}
+	else {
+		saveGamePanel->SetVisibility(ESlateVisibility::Visible);
 	}
 }

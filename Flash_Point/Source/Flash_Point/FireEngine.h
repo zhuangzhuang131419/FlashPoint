@@ -24,6 +24,7 @@ public:
 
 	void FireDeckGun(AFireFighterPawn* inPawn);
 
+	void setFireEngineUI(bool status);
 	UFUNCTION()
 	void OnFireEngineClicked(AActor* Target, FKey ButtonPressed);
 

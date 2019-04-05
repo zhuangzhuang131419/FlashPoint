@@ -23,7 +23,7 @@ bool UAmbulanceOperationsMenu::Initialize()
 		if (!ensure(OperationButton4)) { return false; }
 		OperationButton4->OnClicked.AddDynamic(this, &UAmbulanceOperationsMenu::DriveAmbulance);
 	}
-	return true;
+	return Success;
 }
 
 void UAmbulanceOperationsMenu::GetInAmbulance()

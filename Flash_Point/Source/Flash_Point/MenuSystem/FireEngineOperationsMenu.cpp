@@ -23,7 +23,7 @@ bool UFireEngineOperationsMenu::Initialize()
 		if (!ensure(OperationButton4)) { return false; }
 		OperationButton4->OnClicked.AddDynamic(this, &UFireEngineOperationsMenu::DriveFireEngine);
 	}
-	return true;
+	return Success;
 }
 
 void UFireEngineOperationsMenu::GetInFireEngine()
