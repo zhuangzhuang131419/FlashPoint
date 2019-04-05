@@ -19,7 +19,7 @@ void AFireEngine::FireDeckGun(AFireFighterPawn * inPawn, ATile * targetTile)
 	if (ensure(inPawn) && ensure(targetTile))
 	{
 		// ensure no fighter in 
-
+		targetTile->ShowSplashEffect();
 		// extinguish fire
 		targetTile->SetFireStatus(EFireStatus::Clear);
 		targetTile->GetSmokeEffect()->Deactivate();
