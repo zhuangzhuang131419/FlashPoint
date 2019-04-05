@@ -14,6 +14,7 @@ class AGameBoard;
 class AFireFighterPawn;
 class AFPPlayerController;
 class UButton;
+class USavePanel;
 
 /**
  * 
@@ -65,6 +66,10 @@ protected:
 	bool Initialize() override;
 	UFUNCTION()
 	void NotifyCrewChange();
+	UFUNCTION()
+	void OnExitClicked();
+	UFUNCTION()
+	void OnSaveClicked();
 
 	// BINDED WIDGETS
 	// A text box to add text on during chat
@@ -80,6 +85,10 @@ protected:
 	UWidget* InventoryAndSkip = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UButton* ConfirmTurnButton = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* SaveButton = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* ExitButton = nullptr;
 	// teammate status
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UFireFighterStatus* P0Status = nullptr;
@@ -110,4 +119,6 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* localPlayer = nullptr;
 	bool isBeginOfTurn = false;
+	TSubclassOf<USavePanel> SavePanelClass = nullptr;
+	USavePanel* saveGamePanel = nullptr;
 };

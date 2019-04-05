@@ -21,6 +21,7 @@ bool ULobbyBar::Initialize()
 		else { return false; }
 		if (ensure(DummyBorder)) { DummyBorder->OnMouseDoubleClickEvent.BindUFunction(this, FName("OnDoubleClickDummyBorder")); }
 		else { return false; }
+		return true;
 	}
 	return false;
 }

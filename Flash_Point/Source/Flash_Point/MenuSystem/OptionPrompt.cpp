@@ -16,8 +16,9 @@ bool UOptionPrompt::Initialize()
 
 		if (!ensure(RefuseButton)) { return false; }
 		RefuseButton->OnClicked.AddDynamic(this, &UOptionPrompt::Refuse);
+		return true;
 	}
-	return true;
+	return false;
 }
 
 void UOptionPrompt::AssociatePlayer(AFPPlayerController* inPlayer) {
