@@ -579,6 +579,9 @@ void AFPPlayerController::ServerDropHazmat_Implementation(AFireFighterPawn * fir
 		{
 			tempHazmat->Destroy();
 			UE_LOG(LogTemp, Warning, TEXT("Hazmat Dropped Outside"));
+			if (ensure(gameBoard)) {
+				gameBoard->removedHazmat = gameBoard->removedHazmat + 1;
+			}
 		}
 		else
 		{
@@ -989,6 +992,27 @@ void AFPPlayerController::ServerMoveFireEngine_Implementation(AFireEngine * loca
 	}
 }
 
+void AFPPlayerController::ServerRemoveHazmat_Implementation(AFireFighterPawn * haztec, AHazmat * inHazmat)
+{
+	if (ensure(haztec)) {
+		if (haztec->GetCurrentAP() < 2) return;
+		if (haztec->GetFireFighterRole() == ERoleType::HazmatTechnician) {
+			if (inHazmat) {
+				inHazmat->Destroy();
+			}
+			haztec->GetPlacedOn()->SetHazmatOnTile(nullptr);
+			if (ensure(gameBoard)) {
+				gameBoard->removedHazmat = gameBoard->removedHazmat + 1;
+			}
+		}
+	}
+}
+
+bool AFPPlayerController::ServerRemoveHazmat_Validate(AFireFighterPawn * haztec, AHazmat * inHazmat)
+{
+	return true;
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
@@ -1169,15 +1193,15 @@ void AFPPlayerController::RemoveHazmat()
 	{
 		if (ensure(fireFighterPawn->GetFireFighterRole() == ERoleType::HazmatTechnician))
 		{
+			if (fireFighterPawn->GetCurrentAP() < 2) return;
 			ATile* currentTile = fireFighterPawn->GetPlacedOn();
 			if (ensure(currentTile))
 			{
 				if (currentTile->GetHazmat() != nullptr)
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Reveal Hazmat."));
-					fireFighterPawn->GetPlayingBoard()->removedHazmat++;
-					currentTile->GetHazmat()->Destroy();
-					currentTile->SetHazmatOnTile(nullptr);
+					ServerRemoveHazmat(fireFighterPawn, currentTile->GetHazmat());
+					ServerAdjustAP(fireFighterPawn, -2);
 				}
 			}
 		}

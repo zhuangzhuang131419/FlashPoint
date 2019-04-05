@@ -229,6 +229,8 @@ public:
 	void ServerMoveAmbulance(AAmbulance* localAmbulance, ATile* currentTile);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerMoveFireEngine(AFireEngine* localEngine, ATile* currentTile);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerRemoveHazmat(AFireFighterPawn* haztec, AHazmat* inHazmat);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();
