@@ -14,8 +14,14 @@ bool UFireEngineOperationsMenu::Initialize()
 		if (!ensure(OperationButton1)) { return false; }
 		OperationButton1->OnClicked.AddDynamic(this, &UFireEngineOperationsMenu::GetInFireEngine);
 
+		if (!ensure(OperationButton2)) { return false; }
+		OperationButton2->OnClicked.AddDynamic(this, &UFireEngineOperationsMenu::GetOutFireEngine);
+
 		if (!ensure(OperationButton3)) { return false; }
 		OperationButton3->OnClicked.AddDynamic(this, &UFireEngineOperationsMenu::FireDeckGun);
+
+		if (!ensure(OperationButton4)) { return false; }
+		OperationButton4->OnClicked.AddDynamic(this, &UFireEngineOperationsMenu::DriveFireEngine);
 	}
 	return true;
 }
@@ -42,10 +48,23 @@ void UFireEngineOperationsMenu::GetInFireEngine()
 	}
 }
 
+void UFireEngineOperationsMenu::GetOutFireEngine()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Get out fire engine has been clicked."));
+	if (ensure(fireFighterPawn))
+	{
+		if (!fireFighterPawn->IsInCar()) { return; }
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+		if (ensure(localPlayer))
+		{
+			localPlayer->SetCurrentOperation(EGameOperations::GetOutFireEngine);
+		}
+	}
+}
+
 void UFireEngineOperationsMenu::FireDeckGun()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Fire deck gun has been clicked."));
-	
 	if (ensure(fireFighterPawn))
 	{
 		if (ensure(fireFighterPawn->IsWithEngine()))
@@ -53,6 +72,21 @@ void UFireEngineOperationsMenu::FireDeckGun()
 			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
 			localPlayer->ServerFireDeckGun(fireFighterPawn);
 			this->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+}
+
+void UFireEngineOperationsMenu::DriveFireEngine()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Drive fire engine has been clicked."));
+	if (ensure(fireFighterPawn))
+	{
+		if (!fireFighterPawn->IsInCar()) { return; }
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+		if (ensure(localPlayer))
+		{
+			localPlayer->SetCurrentOperation(EGameOperations::DriveFireEngine);
+			SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }

@@ -563,7 +563,7 @@ void ATile::SpawnAmbulance(EDirection direction)
 		break;
 	}
 
-	ambulance = GetWorld()->SpawnActor<AAmbulance>(
+	AAmbulance* ambulance = GetWorld()->SpawnActor<AAmbulance>(
 		AmbulanceClass,
 		AmbulanceSocketLocation,
 		AmbulanceSocketRotation
@@ -573,8 +573,8 @@ void ATile::SpawnAmbulance(EDirection direction)
 		ambulance->SetPlayingGameBoard(board);
 		board->SetAmbulance(ambulance);
 		// ambulance->SetAmbulancePosition(pos);
-		ambulance->RescueVictims(board->ambulanceLocA->GetVictims(), board->ambulanceLocA);
-		ambulance->RescueVictims(board->ambulanceLocB->GetVictims(), board->ambulanceLocB);
+		// ambulance->RescueVictims(board->ambulanceLocA->GetVictims(), board->ambulanceLocA);
+		// ambulance->RescueVictims(board->ambulanceLocB->GetVictims(), board->ambulanceLocB);
 	}
 }
 
@@ -617,7 +617,7 @@ void ATile::SpawnFireEngine(EDirection direction)
 		break;
 	}
 
-	fireEngine = GetWorld()->SpawnActor<AFireEngine>(
+	AFireEngine* fireEngine = GetWorld()->SpawnActor<AFireEngine>(
 		FireEngineClass,
 		FireEngineSocketLocation,
 		FireEngineSocketRotation
@@ -808,31 +808,39 @@ bool ATile::Flashover()
 
 void ATile::setAmbulanceLocation(AAmbulance * currentAmbulance)
 {
+	AEdgeUnit* adjacentParkingWall = nullptr;
 	if (ensure(type == ETileType::AmbulancePark))
 	{
-		ATile* nextTile = GetAdjacentAmbulanceParkingLocation();
-		if (ensure(nextTile) && ensure(this->isAdjacent(nextTile)))
+		if (ensure(adjacentParkTile))
 		{
-			if (this->isAdjacent(nextTile) == frontWall)
+			adjacentParkingWall = isAdjacent(adjacentParkTile);
+			if (ensure(adjacentParkingWall))
 			{
-				if (!leftWall) { setAmbulanceLocation(currentAmbulance, EDirection::Left); }
-				else { setAmbulanceLocation(currentAmbulance, EDirection::Right); }
+				if (adjacentParkingWall == frontWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
+					if (!leftWall) { setAmbulanceLocation(currentAmbulance, EDirection::Left); }
+					else { setAmbulanceLocation(currentAmbulance, EDirection::Right); }
 
-			}
-			else if (this->isAdjacent(nextTile) == backWall)
-			{
-				if (!leftWall) { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Left); }
-				else { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Right); }
-			}
-			else if (this->isAdjacent(nextTile) == rightWall)
-			{
-				if (!frontWall) { setAmbulanceLocation(currentAmbulance, EDirection::Up); }
-				else { setAmbulanceLocation(currentAmbulance, EDirection::Down); }
-			}
-			else if (this->isAdjacent(nextTile) == leftWall)
-			{
-				if (!frontWall) { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Up); }
-				else { nextTile->setAmbulanceLocation(currentAmbulance, EDirection::Down); }
+				}
+				else if (adjacentParkingWall == backWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *adjacentParkTile->GetName());
+					if (!leftWall) { adjacentParkTile->setAmbulanceLocation(currentAmbulance, EDirection::Left); }
+					else { adjacentParkTile->setAmbulanceLocation(currentAmbulance, EDirection::Right); }
+				}
+				else if (adjacentParkingWall == rightWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
+					if (!frontWall) { setAmbulanceLocation(currentAmbulance, EDirection::Up); }
+					else { setAmbulanceLocation(currentAmbulance, EDirection::Down); }
+				}
+				else if (adjacentParkingWall == leftWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *adjacentParkTile->GetName());
+					if (!frontWall) { adjacentParkTile->setAmbulanceLocation(currentAmbulance, EDirection::Up); }
+					else { adjacentParkTile->setAmbulanceLocation(currentAmbulance, EDirection::Down); }
+				}
 			}
 		}
 	}
@@ -842,35 +850,40 @@ void ATile::setAmbulanceLocation(AAmbulance * currentAmbulance, EDirection direc
 {
 	FVector AmbulanceSocketLocation;
 	FRotator AmbulanceSocketRotation;
-	ATile* nextTile = GetAdjacentAmbulanceParkingLocation();
-	if (ensure(nextTile) && ensure(this->isAdjacent(nextTile)))
+	switch (direction)
 	{
-		switch (direction)
+	case EDirection::Down:
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleBot"));
+		break;
+	case EDirection::Up:
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleTop"));
+		break;
+	case EDirection::Left:
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleLeft"));
+		break;
+	case EDirection::Right:
+		AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleRight"));
+		break;
+	default:
+		// impossible
+		break;
+	}
+	if (ensure(adjacentParkTile))
+	{
+		if (ensure(board))
 		{
-		case EDirection::Down:
-			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
-			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleBot"));
-			break;
-		case EDirection::Up:
-			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
-			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleTop"));
-			break;
-		case EDirection::Left:
-			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
-			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleLeft"));
-			break;
-		case EDirection::Right:
-			AmbulanceSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
-			AmbulanceSocketRotation = TileMesh->GetSocketRotation(FName("VehicleRight"));
-			break;
-		default:
-			// impossible
-			break;
+			if (board->GetAmbulance())
+			{
+				board->GetAmbulance()->SetActorLocation(AmbulanceSocketLocation);
+				board->GetAmbulance()->SetActorRotation(AmbulanceSocketRotation);
+				board->SetAmbulanceLocA(this);
+				board->SetAmbulanceLocB(adjacentParkTile);
+			}
 		}
-		ambulance->SetActorLocation(AmbulanceSocketLocation);
-		ambulance->SetActorRotation(AmbulanceSocketRotation);
-		board->SetAmbulanceLocA(this);
-		board->SetAmbulanceLocB(nextTile);
 	}
 }
 
@@ -880,82 +893,6 @@ void ATile::setFireEngineLocation(AFireEngine * currentFireEngine)
 
 void ATile::setFireEngineLocation(AFireEngine * currentFireEngine, EDirection direction)
 {
-}
-
-ATile * ATile::GetAdjacentAmbulanceParkingLocation()
-{
-	if (ensure(type == ETileType::AmbulancePark))
-	{
-		ATile* adjacentParkingLocation = nullptr;
-		if (!rightWall || !leftWall)
-		{
-			if (GetAdjacentAmbulanceParkingLocation(EDirection::Up))
-			{
-				return GetAdjacentAmbulanceParkingLocation(EDirection::Up);
-			}
-
-			if (GetAdjacentAmbulanceParkingLocation(EDirection::Down))
-			{
-				return GetAdjacentAmbulanceParkingLocation(EDirection::Down);
-			}
-		}
-		else if (!frontWall || !backWall)
-		{
-			if (GetAdjacentAmbulanceParkingLocation(EDirection::Right))
-			{
-				return GetAdjacentAmbulanceParkingLocation(EDirection::Right);
-			}
-
-			if (GetAdjacentAmbulanceParkingLocation(EDirection::Left))
-			{
-				return GetAdjacentAmbulanceParkingLocation(EDirection::Left);
-			}
-		}
-	}
-	return nullptr;
-}
-
-ATile * ATile::GetAdjacentAmbulanceParkingLocation(EDirection direction)
-{
-	AEdgeUnit* adjacentEdge = nullptr;
-	switch (direction)
-	{
-	case EDirection::Down:
-		adjacentEdge = backWall;
-		break;
-	case EDirection::Up:
-		adjacentEdge = frontWall;
-		break;
-	case EDirection::Left:
-		adjacentEdge = leftWall;
-		break;
-	case EDirection::Right:
-		adjacentEdge = rightWall;
-		break;
-	default:
-		// impossible
-		break;
-	}
-	if (adjacentEdge)
-	{
-		if (adjacentEdge)
-		{
-			ATile* adjacentParkingLocation = adjacentEdge->GetOtherNeighbour(this);
-			if (adjacentParkingLocation)
-			{
-				if (adjacentParkingLocation->GetType() == ETileType::AmbulancePark)
-				{
-					return adjacentParkingLocation;
-				}
-			}
-		}
-	}
-	return nullptr;
-}
-
-ATile * ATile::GetAdjacentFireEngineParkingLocation()
-{
-	return nullptr;
 }
 
 // Here is the function to bind all input bindings
@@ -1224,15 +1161,6 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::OpenDoor:
 			break;
-		case EGameOperations::FireDeckGun:
-			if(!ensure(localPawn)){
-				return;
-			}
-			if(localPawn->GetCurrentAP() >= localPawn->GetFireDeckGunConsumption()){
-				localPawn->GetPlacedOn()->GetFireEngine()->FireDeckGun();
-				localPawn->AdjustFireFighterAP(-localPawn->GetFireDeckGunConsumption());
-			}
-			break;
 		case EGameOperations::FlipPOI:
 			if (!ensure(localPawn)) return;
 			if (!ensure(localPlayer)) return;
@@ -1312,20 +1240,22 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::DriveFireEngine:
+			UE_LOG(LogTemp, Warning, TEXT("Drive Fire Engine Operation."));
 			if (type == ETileType::FireEnginePark && this != board->engineLocA && this != board->engineLocB)
 			{
-				if (ensure(fireEngine))
+				if (ensure(board->GetFireEngine()))
 				{
-					setFireEngineLocation(fireEngine);
+					setFireEngineLocation(board->GetFireEngine());
 				}
 			}
 			break;
 		case EGameOperations::DriveAmbulance:
+			UE_LOG(LogTemp, Warning, TEXT("Drive Ambulance Operation."));
 			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
 			{
-				if (ambulance != nullptr)
+				if (ensure(board->GetAmbulance()))
 				{
-					setAmbulanceLocation(ambulance);
+					setAmbulanceLocation(board->GetAmbulance());
 				}
 			}
 			break;
@@ -1336,19 +1266,11 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				{
 					if (!ensure(localPlayer)) return;
 					if (!ensure(localPawn)) return;
-					if (ensure(localPawn))
+					if (!ensure(board)) return;
+					AAmbulance* ambulanceOnTile = board->GetAmbulance();
+					if (ensure(ambulanceOnTile))
 					{
-						if (HasAuthority()) {
-							PlacePawnHere(localPawn);
-							localPawn->SetVisibility(true);
-							localPlayer->inGameUI->EnableOperationPanels(true);
-						}
-						else {
-							localPlayer->ServerPlacePawn(this, localPawn);
-							// to make the placing visible to operation client
-							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-							localPawn->SetVisibility(true);
-						}
+						localPlayer->ServerGetOutAmbulance(localPawn, this, ambulanceOnTile);
 					}
 				}
 			}

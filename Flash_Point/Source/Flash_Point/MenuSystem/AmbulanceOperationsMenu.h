@@ -23,6 +23,6 @@ protected:
 	void GetOutAmbulance();
 	UFUNCTION()
 	void CallAmbulance();
-	
-	
+	UFUNCTION()
+	void DriveAmbulance();
 };

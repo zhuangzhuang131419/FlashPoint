@@ -17,6 +17,7 @@
 #include "LobbyManager.h"
 #include "MenuSystem/LobbyUI.h"
 #include "FireEngine.h"
+#include "Ambulance.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -821,6 +822,11 @@ void AFPPlayerController::ServerGetInCar_Implementation(AFireFighterPawn * inPaw
 	if (ensure(inPawn))
 	{
 		inPawn->SetIsInCar(true);
+		if (ensure(inPawn->GetPlacedOn()))
+		{
+			inPawn->GetPlacedOn()->GetPlacedFireFighters()->Remove(inPawn);
+		}
+		inPawn->SetPlacedOn(nullptr);
 		inPawn->SetVisibility(false);
 	}
 }
@@ -847,6 +853,24 @@ void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * in
 }
 
 bool AFPPlayerController::ServerFireDeckGun_Validate(AFireFighterPawn * inPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerGetOutAmbulance_Implementation(AFireFighterPawn * inPawn, ATile * current, AAmbulance * inAmbulance)
+{
+	if (ensure(inPawn) && ensure(current) && ensure(inAmbulance))
+	{
+		inPawn->SetIsInCar(false);
+		current->GetPlacedFireFighters()->Add(inPawn);
+		inAmbulance->GetPassengers()->Remove(inPawn);
+		inPawn->SetPlacedOn(current);
+		inPawn->SetActorLocation(current->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+		inPawn->SetVisibility(true);
+	}
+}
+
+bool AFPPlayerController::ServerGetOutAmbulance_Validate(AFireFighterPawn * inPawn, ATile * current, AAmbulance * inAmbulance)
 {
 	return true;
 }

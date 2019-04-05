@@ -49,6 +49,11 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	class UButton* OperationButton4 = nullptr;
 
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UTextBlock* OperationText5 = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	class UButton* OperationButton5 = nullptr;
+
 	// FIELDS
 	UPROPERTY(BlueprintReadWrite)
 	AFPPlayerController* myOwner = nullptr;
@@ -58,4 +63,5 @@ protected:
 
 	UFUNCTION()
 	void Cancel();
+
 };

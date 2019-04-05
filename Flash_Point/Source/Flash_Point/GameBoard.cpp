@@ -1031,7 +1031,7 @@ void AGameBoard::InitializeBoardAttributes()
 			gameModeType = gameInst->GetGameType();
 		}
 
-		int32 randomPosition;
+		int32 randomPosition = 0;
 
 
 		if (isRandom)
