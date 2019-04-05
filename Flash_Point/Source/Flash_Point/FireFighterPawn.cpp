@@ -961,6 +961,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, lobbyPlayerID);
 	DOREPLIFETIME(AFireFighterPawn, lobbyRole);
 	DOREPLIFETIME(AFireFighterPawn, isInCar);
+	DOREPLIFETIME(AFireFighterPawn, driveConsumption);
 }
 
 bool AFireFighterPawn::GetCanDodge()

@@ -1106,7 +1106,8 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			FindPathToCurrent(localPlayer->GetCommanded());
 			break;
 		case EGameOperations::DriveAmbulance:
-			if (this->type == ETileType::AmbulancePark)
+			if (!ensure(localPawn)) { return; }
+			if (this->type == ETileType::AmbulancePark && localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
 			{
 				PlaneColorSwitch(ableMat);
 			}
@@ -1116,7 +1117,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			}
 			break;
 		case EGameOperations::DriveFireEngine:
-			if (this->type == ETileType::FireEnginePark)
+			if (this->type == ETileType::FireEnginePark && localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
 			{
 				PlaneColorSwitch(ableMat);
 			}
@@ -1369,9 +1370,16 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			UE_LOG(LogTemp, Warning, TEXT("Drive Fire Engine Operation."));
 			if (type == ETileType::FireEnginePark && this != board->GetFireEngineLocA() && this != board->GetFireEngineLocB())
 			{
-				if (ensure(board->GetFireEngine()))
+				if (ensure(localPawn))
 				{
-					localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
+					if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+					{
+						if (ensure(board->GetFireEngine()))
+						{
+							localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
+							localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
+						}
+					}
 				}
 			}
 			break;
@@ -1379,10 +1387,17 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			UE_LOG(LogTemp, Warning, TEXT("Drive Ambulance Operation."));
 			if (type == ETileType::AmbulancePark && this != board->GetAmbulanceLocA() && this != board->GetAmbulanceLocB())
 			{
-				if (ensure(board->GetAmbulance()))
+				if (ensure(localPawn))
 				{
-					localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
-					board->GetAmbulance()->setAmbulanceUI(false);
+					if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+					{
+						if (ensure(board->GetAmbulance()))
+						{
+							localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
+							localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
+							board->GetAmbulance()->setAmbulanceUI(false);
+						}
+					}
 				}
 			}
 			break;

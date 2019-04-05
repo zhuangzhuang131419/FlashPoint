@@ -134,6 +134,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetFlipConsumption(int32 current) { flipConsumption = current; }
 
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	int32 GetDriveConsumption() { return driveConsumption; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetDriveConsumption(int32 current) { driveConsumption = current; }
+
 	// chceking if a operation can be performed by the pawn
 	bool CheckCanExtinguish(int32 baseCost);
 	bool IsAdjacentToWall(AEdgeUnit* inEdge);
@@ -252,6 +257,8 @@ protected:
 	int32 sequeezeConsumption = 1;
 	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
 	int32 flipConsumption = 1;
+	UPROPERTY(replicated, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
+	int32 driveConsumption = 2;
 	UPROPERTY(ReplicatedUsing = Rep_PawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
 	int32 fireFighterID = -1;
 	UPROPERTY(ReplicatedUsing = Rep_LobbyPawnID, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
