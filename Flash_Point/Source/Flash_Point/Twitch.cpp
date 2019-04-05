@@ -38,3 +38,13 @@ bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
 	return false;
 }
 
+bool ATwitch::Connect()
+{
+	auto SocketSub = ISocketSubsystem::Get(PLATFORM_SOCKETSUBSYSTEM);
+	auto HostAddr = SocketSub->CreateInternetAddr();
+	auto HostResolveError = SocketSub->GetHostByName("irc.twitch.tv", *HostAddr);
+	HostAddr->SetPort(6667);
+
+	return false;
+}
+

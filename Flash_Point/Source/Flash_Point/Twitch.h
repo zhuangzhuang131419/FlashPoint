@@ -24,12 +24,17 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-	// Uses Oauth token to connect Twitch API
+	// Oauth token for Twitch API connection
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	bool SetInitialInfo(const FString Oauth, const  FString Username, const FString Channel);
+	// Method to connect
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+		bool Connect();
 
 private:
+	// Parameters for Twtich authorization
 	FString Oauth;
 	FString Username;
 	FString Channel;
+
 };
