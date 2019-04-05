@@ -1266,19 +1266,11 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				{
 					if (!ensure(localPlayer)) return;
 					if (!ensure(localPawn)) return;
-					if (ensure(localPawn))
+					if (!ensure(board)) return;
+					AAmbulance* ambulanceOnTile = board->GetAmbulance();
+					if (ensure(ambulanceOnTile))
 					{
-						if (HasAuthority()) {
-							PlacePawnHere(localPawn);
-							localPawn->SetVisibility(true);
-							localPlayer->inGameUI->EnableOperationPanels(true);
-						}
-						else {
-							localPlayer->ServerPlacePawn(this, localPawn);
-							// to make the placing visible to operation client
-							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-							localPawn->SetVisibility(true);
-						}
+						localPlayer->ServerGetOutAmbulance(localPawn, this, ambulanceOnTile);
 					}
 				}
 			}

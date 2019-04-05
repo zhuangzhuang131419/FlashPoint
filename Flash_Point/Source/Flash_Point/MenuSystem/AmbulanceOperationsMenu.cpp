@@ -63,6 +63,7 @@ void UAmbulanceOperationsMenu::GetOutAmbulance()
 		if (ensure(localPlayer))
 		{
 			localPlayer->SetCurrentOperation(EGameOperations::GetOutAmbulance);
+			this->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }

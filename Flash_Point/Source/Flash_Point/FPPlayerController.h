@@ -24,6 +24,8 @@ class UOptionPrompt;
 class APOI;
 class ALobbyManager;
 class ULobbyUI;
+class AAmbulance;
+class AFireEngine;
 
 /**
  * 
@@ -202,6 +204,8 @@ public:
 	void ServerExitFromLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetInCar(AFireFighterPawn * inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerGetOutAmbulance(AFireFighterPawn * inPawn, ATile* current, AAmbulance* inAmbulance);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerFireDeckGun(AFireFighterPawn * inPawn);
 
