@@ -23,7 +23,7 @@ public:
 	AFireEngine();
 
 	void FireDeckGun();
-
+	void setFireEngineUI(bool status);
 	UPROPERTY(BlueprintReadWrite, Category = "Position Info")
 	int32 currentPosition = -1;
 

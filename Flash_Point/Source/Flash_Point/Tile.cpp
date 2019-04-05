@@ -1378,6 +1378,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 						{
 							localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
 							localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
+							board->GetFireEngine()->setFireEngineUI(false);
 						}
 					}
 				}
