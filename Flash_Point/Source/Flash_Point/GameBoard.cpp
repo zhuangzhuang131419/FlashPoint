@@ -4,6 +4,8 @@
 #include "POI.h"
 #include "Victim.h"
 #include "Hazmat.h"
+#include "FireEngine.h"
+#include "Ambulance.h"
 #include "FlashPointGameInstance.h"
 
 
@@ -455,7 +457,17 @@ void AGameBoard::InitialPlacing()
 	if (HasAuthority()) {
 		placedNum++;
 		if (placedNum == joinedPlayerNum) {
-			TurnSwitch();
+			// if the game mode is not family mode, do not do turn switch yet
+			if (gameModeType == EGameType::Family) {
+				TurnSwitch();
+			}
+			else {
+				// notify the host player to do initial fire engine placement
+				if (ensure(localPlayer)) {
+					localPlayer->PromtPlacingVehicle("Place Fire Engine");
+					localPlayer->SetCurrentOperation(EGameOperations::PlaceFireEngine);
+				}
+			}
 		}
 	}
 }
@@ -725,9 +737,14 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	}
 	if (ensure(tempTile) && ensure(anotherTile))
 	{
-		tempTile->SpawnFireEngine();
-		engineLocA = tempTile;
-		engineLocB = anotherTile;
+		if (!(gameModeType == EGameType::Family)) {
+			tempTile->SpawnFireEngine();
+			engineLocA = tempTile;
+			engineLocB = anotherTile;
+			if (ensure(fireEngine)) {
+				fireEngine->ShowEnginePlaced(false);
+			}
+		}
 	}
 
 	
@@ -781,9 +798,14 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	}
 	if (ensure(tempTile) && ensure(anotherTile))
 	{
-		tempTile->SpawnAmbulance();
-		ambulanceLocA = tempTile;
-		ambulanceLocB = anotherTile;
+		if (!(gameModeType == EGameType::Family)) {
+			tempTile->SpawnAmbulance();
+			ambulanceLocA = tempTile;
+			ambulanceLocB = anotherTile;
+			if (ensure(ambulance)) {
+				ambulance->ShowAmbulancePlaced(false);
+			}
+		}
 	}
 
 

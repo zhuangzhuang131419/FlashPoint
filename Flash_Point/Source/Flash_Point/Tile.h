@@ -133,6 +133,7 @@ public:
 	void SetSmokeOnTile();
 	void SetClearOnTile();
 	void ExitinguishFireOnTile();
+	void ShowSplashEffect();
 
 	void AdvanceExplosion(EDirection direction);
 	void AdvanceExplosion();
@@ -231,6 +232,8 @@ protected:
 	UParticleSystemComponent* BlastEffect;
 	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
 	UParticleSystemComponent* HotSpotEffect;
+	UPROPERTY(VisibleAnyWhere, Category = "Fire Status")
+	UParticleSystemComponent* SplashEffect;
 
 	// located items and firefighters
 	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Tile Units")
@@ -249,6 +252,8 @@ protected:
 	APOI* POIOnTile = nullptr; // the default POI type of the tile
 	UPROPERTY(ReplicatedUsing = Rep_BlastEffect, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
 	bool blastOccured = false;	// used fore synchronization of the blast effect
+	UPROPERTY(ReplicatedUsing = Rep_SplashEffect, EditAnyWhere, BlueprintReadWrite, Category = "Tile Attributes")
+	bool splashOccured = false;	// used fore synchronization of the blast effect
 	UPROPERTY(replicated, EditAnyWhere, Category = "Tile Attributes")
 	AHazmat* HazmatOnTile = nullptr; // the default POI type of the tile
 	UPROPERTY(replicatedUsing = Rep_HotSpotEffect, VisibleAnyWhere, Category = "Tile Attributes")
@@ -313,6 +318,8 @@ protected:
 	void Rep_BlastEffect();
 	UFUNCTION()
 	void Rep_HotSpotEffect();
+	UFUNCTION()
+	void Rep_SplashEffect();
 
 	// Overriding setting all lifetime replicates function
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

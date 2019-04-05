@@ -135,6 +135,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void PromtCrewChange();
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
+	void PromtPlacingVehicle(FString inPromptInfo);
+	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void PromtCommandStatus(EAcceptanceStatus commandStatus);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void PromtOptionPanel(EOptionPromptType option, FString optionText);

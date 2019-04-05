@@ -61,6 +61,7 @@ public:
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 	void SetBeginTurnNotify(bool isBegin);
 	void NotifySomeOneLeft();
+	void NotifyPlaceCar(FString promptInfo);
 
 protected:
 	// BIDNING FUNCTIONS

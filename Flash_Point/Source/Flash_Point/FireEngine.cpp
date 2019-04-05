@@ -32,6 +32,14 @@ void AFireEngine::FireDeckGun(AFireFighterPawn * inPawn, ATile * targetTile)
 	}
 }
 
+void AFireEngine::ShowEnginePlaced(bool placed)
+{
+	isPlaced = placed;
+	if (ensure(fireEngineMesh)) {
+		fireEngineMesh->SetVisibility(placed);
+	}
+}
+
 // Called when the game starts or when spawned
 void AFireEngine::BeginPlay()
 {
@@ -67,6 +75,14 @@ void AFireEngine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AFireEngine, fireEngineMesh);
+	DOREPLIFETIME(AFireEngine, isPlaced);
+}
+
+void AFireEngine::Rep_FireEnginePlacing()
+{
+	if (ensure(fireEngineMesh)) {
+		fireEngineMesh->SetVisibility(isPlaced);
+	}
 }
 
 // Called every frame
@@ -78,6 +94,7 @@ void AFireEngine::Tick(float DeltaTime)
 
 void AFireEngine::splashOver(ATile * targetTile, EDirection direction)
 {
+	if (!ensure(targetTile)) return;
 	AEdgeUnit* adjacentWall = nullptr;
 	switch (direction)
 	{
