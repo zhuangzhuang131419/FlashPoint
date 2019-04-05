@@ -115,6 +115,7 @@ public:
 	// Operation realted fields and functions
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
+	bool moved = true;
 
 	void SetVictimLostNum(int32 num) { victimLostNum = num; }
 
