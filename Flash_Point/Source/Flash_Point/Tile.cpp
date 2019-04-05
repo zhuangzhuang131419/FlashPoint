@@ -961,7 +961,7 @@ void ATile::setFireEngineLocation(AFireEngine * currentFireEngine, EDirection di
 			if (board->GetFireEngine())
 			{
 				board->GetFireEngine()->SetActorLocation(FireEngineSocketLocation);
-				board->GetFireEngine()->SetActorRotation(FireEngineSocketRotation);
+				board->GetFireEngine()->SetActorRotation(FireEngineSocketRotation + FRotator(0, 90, 0));
 				board->SetFireEngineLocA(this);
 				board->SetFireEngineLocB(adjacentParkTile);
 			}
@@ -1104,6 +1104,59 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::Command:
 			if (!localPlayer->GetCommanded()) return;
 			FindPathToCurrent(localPlayer->GetCommanded());
+			break;
+		case EGameOperations::DriveAmbulance:
+			if (this->type == ETileType::AmbulancePark)
+			{
+				PlaneColorSwitch(ableMat);
+			}
+			else
+			{
+				PlaneColorSwitch(unableMat);
+			}
+			break;
+		case EGameOperations::DriveFireEngine:
+			if (this->type == ETileType::FireEnginePark)
+			{
+				PlaneColorSwitch(ableMat);
+			}
+			else
+			{
+				PlaneColorSwitch(unableMat);
+			}
+			break;
+		case EGameOperations::GetOutAmbulance:
+			if (ensure(board))
+			{
+				// UE_LOG(LogTemp, Warning, TEXT("this -> %s, LocA = %s"), *GetName(), *board->GetAmbulanceLocA()->GetName());
+				if (ensure(board->GetAmbulanceLocA()) && ensure(board->GetAmbulanceLocB()))
+				{
+					if (this == board->GetAmbulanceLocA() || this == board->GetAmbulanceLocB())
+					{
+						PlaneColorSwitch(ableMat);
+					}
+					else
+					{
+						PlaneColorSwitch(unableMat);
+					}
+				}
+			}
+			break;
+		case EGameOperations::GetOutFireEngine:
+			if (ensure(board))
+			{
+				if (ensure(board->GetAmbulanceLocA()) && ensure(board->GetAmbulanceLocB()))
+				{
+					if (this == board->GetFireEngineLocA() || this == board->GetFireEngineLocB())
+					{
+						PlaneColorSwitch(ableMat);
+					}
+					else
+					{
+						PlaneColorSwitch(unableMat);
+					}
+				}
+			}
 			break;
 		case EGameOperations::None:
 			break;
@@ -1314,7 +1367,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::DriveFireEngine:
 			UE_LOG(LogTemp, Warning, TEXT("Drive Fire Engine Operation."));
-			if (type == ETileType::FireEnginePark && this != board->engineLocA && this != board->engineLocB)
+			if (type == ETileType::FireEnginePark && this != board->GetFireEngineLocA() && this != board->GetFireEngineLocB())
 			{
 				if (ensure(board->GetFireEngine()))
 				{
@@ -1324,7 +1377,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::DriveAmbulance:
 			UE_LOG(LogTemp, Warning, TEXT("Drive Ambulance Operation."));
-			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			if (type == ETileType::AmbulancePark && this != board->GetAmbulanceLocA() && this != board->GetAmbulanceLocB())
 			{
 				if (ensure(board->GetAmbulance()))
 				{
@@ -1337,7 +1390,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			UE_LOG(LogTemp, Warning, TEXT("Get out of ambulance."));
 			if (type == ETileType::AmbulancePark)
 			{
-				if (this == board->ambulanceLocA || this == board->ambulanceLocB)
+				if (this == board->GetAmbulanceLocA() || this == board->GetAmbulanceLocB())
 				{
 					if (!ensure(localPlayer)) return;
 					if (!ensure(localPawn)) return;
@@ -1354,7 +1407,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			UE_LOG(LogTemp, Warning, TEXT("Get out of ambulance."));
 			if (type == ETileType::FireEnginePark)
 			{
-				if (this == board->engineLocA || this == board->engineLocB)
+				if (this == board->GetFireEngineLocA() || this == board->GetFireEngineLocB())
 				{
 					if (!ensure(localPlayer)) return;
 					if (!ensure(localPawn)) return;
@@ -1370,7 +1423,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			break;
 		case EGameOperations::Radio:
 			UE_LOG(LogTemp, Warning, TEXT("Radio/Call the ambulance."));
-			if (type == ETileType::AmbulancePark && this != board->ambulanceLocA && this != board->ambulanceLocB)
+			if (type == ETileType::AmbulancePark && this != board->GetAmbulanceLocA() && this != board->GetAmbulanceLocB())
 			{
 				AAmbulance* calledAmbulance = nullptr;
 				if (ensure(board))

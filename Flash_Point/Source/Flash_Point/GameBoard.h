@@ -89,15 +89,6 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void endTurnRelatedOperations();
 
-	UPROPERTY(ReplicatedUsing = Rep_RelocateAmbulance, EditAnyWhere, Category = "Map Attributes")
-	ATile* ambulanceLocA = nullptr;
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	ATile* ambulanceLocB = nullptr;
-	UPROPERTY(ReplicatedUsing = Rep_RelocateEngine, EditAnyWhere, Category = "Map Attributes")
-	ATile* engineLocA = nullptr;
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
-	ATile* engineLocB = nullptr;
-
 	// Functions of turn related operaetions
 	UFUNCTION(BlueprintCallable, Category = "Take turn")
 	int32 JoinBoard();
@@ -251,10 +242,19 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* veteranLoc = nullptr;
 
+	// car related field
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	AAmbulance* ambulance = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	AFireEngine* fireEngine = nullptr;
+	UPROPERTY(ReplicatedUsing = Rep_RelocateAmbulance, EditAnyWhere, Category = "Map Attributes")
+	ATile* ambulanceLocA = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* ambulanceLocB = nullptr;
+	UPROPERTY(ReplicatedUsing = Rep_RelocateEngine, EditAnyWhere, Category = "Map Attributes")
+	ATile* engineLocA = nullptr;
+	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	ATile* engineLocB = nullptr;
 	
 	// TURN RELATED FIELDS
 	// A to indicate how many player are currently in the game

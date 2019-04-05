@@ -39,7 +39,11 @@ int32 AFireFighterPawn::GetCurrentAP()
 
 bool AFireFighterPawn::IsWithEngine()
 {
-	if (ensure(placedOn)) {
+	if (IsInCar())
+	{
+		return true;
+	}
+	else if (ensure(placedOn)) {
 		if (ensure(placedOn->GetGameBoard())) {
 			return placedOn->GetGameBoard()->IsEngineTile(placedOn);
 		}
@@ -49,7 +53,11 @@ bool AFireFighterPawn::IsWithEngine()
 
 bool AFireFighterPawn::IsWithAmbulance()
 {
-	if (ensure(placedOn)) {
+	if (IsInCar())
+	{
+		return true;
+	}
+	else if (ensure(placedOn)) {
 		if (ensure(placedOn->GetGameBoard())) {
 			return placedOn->GetGameBoard()->IsAmbulanceTile(placedOn);
 		}

@@ -380,7 +380,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 		UE_LOG(LogTemp, Warning, TEXT("Drop unhealed victim"));
 		AVictim* tempVictim = fireFighterPawn->GetVictim();
 		if (!tempVictim) return;
-		if (currentTile == currentTile->GetGameBoard()->ambulanceLocA || currentTile == currentTile->GetGameBoard()->ambulanceLocB)
+		if (currentTile == currentTile->GetGameBoard()->GetAmbulanceLocA() || currentTile == currentTile->GetGameBoard()->GetAmbulanceLocB())
 		{
 			tempVictim->Destroy();
 			currentTile->SetPOIStatus(EPOIStatus::Empty);

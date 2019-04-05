@@ -183,7 +183,6 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 					FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
 				}
 			}
-			
 		}
 	}
 }
