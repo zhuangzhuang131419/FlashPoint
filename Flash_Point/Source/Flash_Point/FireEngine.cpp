@@ -12,9 +12,6 @@ AFireEngine::AFireEngine()
 	PrimaryActorTick.bCanEverTick = true;
 
 	fireEngineMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("fireEngineMesh"));
-	if (ensure(fireEngineMesh)) {
-		fireEngineMesh->SetRelativeRotation(FRotator(0, 90, 0));
-	}
 }
 
 void AFireEngine::FireDeckGun()
@@ -98,7 +95,10 @@ void AFireEngine::BeginPlay()
 		}
 	}
 
-	if (HasAuthority()) { SetReplicates(true); }
+	if (HasAuthority()) 
+	{ 
+		SetReplicates(true); 
+	}
 	
 }
 
@@ -171,11 +171,19 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 	{
 		if (ensure(localPlayer))
 		{
-			float xPos;
-			float yPos;
-			localPlayer->GetMousePosition(xPos, yPos);
-			FireEngineOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
-			FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
+			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+			if (ensure(fireFighterPawn))
+			{
+				if (fireFighterPawn->IsWithEngine())
+				{
+					float xPos;
+					float yPos;
+					localPlayer->GetMousePosition(xPos, yPos);
+					FireEngineOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
+					FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
+				}
+			}
+			
 		}
 	}
 }

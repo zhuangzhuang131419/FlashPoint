@@ -42,6 +42,8 @@ public:
 
 	TArray<AFireFighterPawn*>* GetPassengers() { return &passengers; }
 
+	UStaticMeshComponent* GetFireEngineMesh() { return fireEngineMesh; }
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

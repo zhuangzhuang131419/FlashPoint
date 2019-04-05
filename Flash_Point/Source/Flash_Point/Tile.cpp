@@ -201,7 +201,7 @@ void ATile::BindLeftEdge(AEdgeUnit * edge)
 void ATile::BindRightEdge(AEdgeUnit * edge)
 {
 	// if a right wall already exist, delete it
-	if (ensure(rightWall)) {
+	if (rightWall) {
 		rightWall->Destroy();
 	}
 	rightWall = edge;
@@ -620,8 +620,9 @@ void ATile::SpawnFireEngine(EDirection direction)
 	AFireEngine* fireEngine = GetWorld()->SpawnActor<AFireEngine>(
 		FireEngineClass,
 		FireEngineSocketLocation,
-		FireEngineSocketRotation
+		FireEngineSocketRotation + FRotator(0, 90, 0)
 		);
+
 	if (ensure(fireEngine))
 	{
 		fireEngine->SetPlayingGameBoard(board);
@@ -1377,7 +1378,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					calledAmbulance = board->GetAmbulance();
 					if (ensure(calledAmbulance))
 					{
-
+						localPlayer->ServerMoveAmbulance(calledAmbulance, this);
 					}
 				}
 			}

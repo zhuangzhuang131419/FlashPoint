@@ -69,20 +69,26 @@ void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
 	UE_LOG(LogTemp, Warning, TEXT("Ambulance has been clicked."));
-
 	if (ensure(AmbulanceOperationsUI))
 	{
 		if (ensure(localPlayer))
 		{
-			float xPos;
-			float yPos;
-			localPlayer->GetMousePosition(xPos, yPos);
+			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+			if (ensure(fireFighterPawn))
+			{
+				if (fireFighterPawn->IsWithAmbulance())
+				{
+					float xPos;
+					float yPos;
+					localPlayer->GetMousePosition(xPos, yPos);
 
-			if(yPos > UCarOperationsMenu::GetViewportSize().Y / 2){
-				yPos -= UCarOperationsMenu::GetViewportSize().Y / 4;
+					if (yPos > UCarOperationsMenu::GetViewportSize().Y / 2) {
+						yPos -= UCarOperationsMenu::GetViewportSize().Y / 4;
+					}
+					AmbulanceOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
+					AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+				}
 			}
-			AmbulanceOperationsUI->SetPositionInViewport(FVector2D(xPos, yPos));
-			AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
 		}
 	}
 }
