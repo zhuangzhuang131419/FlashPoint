@@ -2,6 +2,7 @@
 /* Codes below has no quality and are very very disgusting, please be extra cautious!!! */
 
 #include "Twitch.h"
+#include "Engine/World.h"
 #include <string>
 
 
@@ -14,6 +15,8 @@ ATwitch::ATwitch()
 void ATwitch::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle, this, &ATwitch::Display, 0.5f, true);
 	
 }
 
@@ -21,13 +24,6 @@ void ATwitch::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-
-	FString In, Nom, Mes;
-	if (GetStuff(In))
-	{
-		ReadStuff(In, Nom, Mes);
-		UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *Nom, *Mes);
-	}
 }
 
 bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
@@ -96,6 +92,24 @@ bool ATwitch::Authenticate()
 		return false;
 	}
 	return true;
+}
+
+void ATwitch::Display()
+{
+	FString In, Nom, Mes;
+	if (GetStuff(In))
+	{
+		if (okok > 1)
+		{
+			// Here are the final text messages
+			ReadStuff(In, Nom, Mes);
+			UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *Nom, *Mes);
+		}
+		else
+		{
+			okok += 1;
+		}
+	}
 }
 
 bool ATwitch::Send(FString Stuff)
@@ -179,3 +193,4 @@ void ATwitch::ReadStuff(FString In, FString& Nom, FString& Mes)
 	}
 	return;
 }
+
