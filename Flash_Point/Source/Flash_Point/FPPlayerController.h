@@ -87,6 +87,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyLeadVictim(bool isCarrying);
 	UFUNCTION(BlueprintCallable, Category = "GameOperations")
+	void NotifyGameForcedStop();
+	UFUNCTION(BlueprintCallable, Category = "GameOperations")
 	void NotifyCarryHazmat(bool isCarrying);
 	UFUNCTION(Exec, BlueprintCallable, Category = "GameOperations")
 	void SwitchRole(ERoleType inRole);
@@ -208,6 +210,8 @@ public:
 	void ServerChangeReadyStatus(ALobbyManager* inMan, AFireFighterPawn* inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerExitFromLobby(ALobbyManager* inMan, AFireFighterPawn* inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerExitFromBoard(AGameBoard* inBoard, AFireFighterPawn* inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetInCar(AFireFighterPawn * inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)

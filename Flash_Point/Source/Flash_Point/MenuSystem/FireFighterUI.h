@@ -60,6 +60,7 @@ public:
 	void BindChatManagerWithUI(AChatManager* inMan);
 	void RelateChatUIWithPlayer(AFPPlayerController* inPlayer);
 	void SetBeginTurnNotify(bool isBegin);
+	void NotifySomeOneLeft();
 
 protected:
 	// BIDNING FUNCTIONS
@@ -119,6 +120,7 @@ protected:
 	UPROPERTY(BlueprintReadWrite, Category = "Setup")
 	AFPPlayerController* localPlayer = nullptr;
 	bool isBeginOfTurn = false;
+	bool isNotifyPlayerLeave = false;
 	TSubclassOf<USavePanel> SavePanelClass = nullptr;
 	USavePanel* saveGamePanel = nullptr;
 };

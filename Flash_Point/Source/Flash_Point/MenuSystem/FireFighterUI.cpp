@@ -158,6 +158,16 @@ void UFireFighterUI::SetBeginTurnNotify(bool isBegin)
 	isBeginOfTurn = isBegin;
 }
 
+void UFireFighterUI::NotifySomeOneLeft()
+{
+	isNotifyPlayerLeave = true;
+	if (ensure(YourTurnPrompt) && ensure(PromptText) && ensure(ConfirmTurnButton)) {
+		YourTurnPrompt->SetVisibility(ESlateVisibility::Visible);
+		PromptText->SetText(FText::FromString("Some has left the game, game has to stop..."));
+		ConfirmTurnButton->SetIsEnabled(true);
+	}
+}
+
 bool UFireFighterUI::Initialize()
 {
 	bool success = Super::Initialize();
@@ -179,6 +189,9 @@ void UFireFighterUI::NotifyCrewChange()
 			localPlayer->ServerSetCommandStatus(localPawn, EAcceptanceStatus::Empty);
 		}
 	}
+	if (isNotifyPlayerLeave) {
+		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	}
 	// if not the begining of turn, this is just a prompt to notify events
 	if (!isBeginOfTurn) return;
 
@@ -194,8 +207,11 @@ void UFireFighterUI::OnExitClicked()
 {
 	// first disable the button as it is clicked
 	if (!ensure(ExitButton)) return;
+	if (!ensure(gameBoard)) return;
 	ExitButton->SetIsEnabled(false);
 	EnableOperationPanels(false);
+	// notify there's some player leaving
+	gameBoard->LeaveBoard(localPawn);
 }
 
 void UFireFighterUI::OnSaveClicked()
