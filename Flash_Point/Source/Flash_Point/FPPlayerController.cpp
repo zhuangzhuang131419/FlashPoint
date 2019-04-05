@@ -900,9 +900,9 @@ bool AFPPlayerController::ServerGetInCar_Validate(AFireFighterPawn * inPawn)
 	return true;
 }
 
-void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * inPawn)
+void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * inPawn, ATile* targetTile)
 {
-	if (ensure(inPawn))
+	if (ensure(inPawn) && ensure(targetTile))
 	{
 		// gameBoard exists on all player controller but not on all server pawns
 		if (ensure(gameBoard))
@@ -910,13 +910,13 @@ void AFPPlayerController::ServerFireDeckGun_Implementation(AFireFighterPawn * in
 			AFireEngine* fireEngine = gameBoard->GetFireEngine();
 			if (ensure(fireEngine))
 			{
-				fireEngine->FireDeckGun(inPawn);
+				fireEngine->FireDeckGun(inPawn, targetTile);
 			}
 		}
 	}
 }
 
-bool AFPPlayerController::ServerFireDeckGun_Validate(AFireFighterPawn * inPawn)
+bool AFPPlayerController::ServerFireDeckGun_Validate(AFireFighterPawn * inPawn, ATile* targetTile)
 {
 	return true;
 }

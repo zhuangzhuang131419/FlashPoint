@@ -188,6 +188,8 @@ public:
 	bool IsInCar() { return isInCar; }
 	void SetIsInCar(bool current) { isInCar = current; }
 
+	ATile* GetFireDeckTargetTile() { return fireDeckTargetTile; }
+	void SetFireDeckTargetTile(ATile* current) { fireDeckTargetTile = current; }
 
 
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
@@ -275,6 +277,10 @@ protected:
 	ADoor* orderedDoor = nullptr;
 	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedTiles, BlueprintReadWrite, VisibleAnyWhere, Category = "Commanding Related")
 	TArray<ATile*> orderedTiles;
+
+	// only used for driver
+	ATile* fireDeckTargetTile = nullptr;
+
 	// the captain who is commanding the current firefighter
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Commanding Related")
 	AFireFighterPawn* captain = nullptr;

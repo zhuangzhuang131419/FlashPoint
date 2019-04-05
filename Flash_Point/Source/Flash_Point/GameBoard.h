@@ -167,6 +167,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Save Game")
 	FBoardSaveInfo SaveCurrentBoard();
 
+	ATile* GenerateRandomPositionInQuadrant();
+
 
 protected:
 	// FIELDS

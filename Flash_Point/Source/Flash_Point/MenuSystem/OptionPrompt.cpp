@@ -4,6 +4,7 @@
 #include "Components/Button.h"
 #include "FPPlayerController.h"
 #include "FireFighterPawn.h"
+#include "Tile.h"
 
 bool UOptionPrompt::Initialize()
 {
@@ -51,6 +52,9 @@ void UOptionPrompt::Accept()
 	case EOptionPromptType::Dodge:
 		DodgeAccept();
 		break;
+	case EOptionPromptType::FireDeckGun:
+		FireDeckGunAccept();
+		break;
 	default:
 		break;
 	}
@@ -70,6 +74,9 @@ void UOptionPrompt::Refuse()
 		break;
 	case EOptionPromptType::Dodge:
 		DodgeRefuse();
+		break;
+	case EOptionPromptType::FireDeckGun:
+		FireDeckGunRefuse();
 		break;
 	default:
 		break;
@@ -101,6 +108,11 @@ void UOptionPrompt::CommandTileAccept()
 	}
 }
 
+void UOptionPrompt::FireDeckGunAccept()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Fire Deck Gun Accept"));
+}
+
 void UOptionPrompt::DodgeRefuse()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Dodge Refuse"));
@@ -121,5 +133,24 @@ void UOptionPrompt::CommandTileRefuse()
 {
 	if (ensure(fireFighterPawn)) {
 		fireFighterPawn->AcceptMoveCommand(false);
+	}
+}
+
+void UOptionPrompt::FireDeckGunRefuse()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Fire Deck Gun Refuse"));
+	if (ensure(fireFighterPawn)) 
+	{
+		ATile* tempTile = fireFighterPawn->GetFireDeckTargetTile();
+		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+		if (ensure(tempTile))
+		{
+			tempTile->SetCommandTarget(false);
+			if (ensure(localPlayer))
+			{
+				localPlayer->ServerFireDeckGun(fireFighterPawn, tempTile);
+			}
+		}
+		fireFighterPawn->SetFireDeckTargetTile(nullptr);
 	}
 }

@@ -53,10 +53,12 @@ protected:
 	void DodgeAccept();
 	void CommandDoorAccept();
 	void CommandTileAccept();
+	void FireDeckGunAccept();
 
 	UFUNCTION()
 	void Refuse();
 	void DodgeRefuse();
 	void CommandDoorRefuse();
 	void CommandTileRefuse();
+	void FireDeckGunRefuse();
 };

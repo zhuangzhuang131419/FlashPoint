@@ -1331,6 +1331,27 @@ FBoardSaveInfo AGameBoard::SaveCurrentBoard()
 	return savedBoard;
 }
 
+ATile * AGameBoard::GenerateRandomPositionInQuadrant()
+{
+	int32 startx;
+	int32 starty;
+	if (ensure(engineLocA))
+	{
+		engineLocA->GetLocation(startx, starty);
+		UE_LOG(LogTemp, Warning, TEXT("Start Position $d, %d"), startx, starty);
+	}
+	if (startx <= 4) { startx = 1; }
+	else { startx = 5; }
+	if (starty <= 3) { starty = 1; }
+	else { starty = 4; }
+	
+	// randomly choose a target fire 
+	int32 randx = FMath::RandRange(startx, startx + 3);
+	int32 randy = FMath::RandRange(starty, starty + 2);
+	UE_LOG(LogTemp, Warning, TEXT("Random Position $d, %d"), randx, randy);
+	return boardTiles[randx * 8 + randy];
+}
+
 // Called every frame
 void AGameBoard::Tick(float DeltaTime)
 {

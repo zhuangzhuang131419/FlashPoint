@@ -8,81 +8,28 @@
 // Sets default values
 AFireEngine::AFireEngine()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	fireEngineMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("fireEngineMesh"));
 }
 
-void AFireEngine::FireDeckGun(AFireFighterPawn* inPawn)
+void AFireEngine::FireDeckGun(AFireFighterPawn * inPawn, ATile * targetTile)
 {
-	UE_LOG(LogTemp, Warning, TEXT("FIRING DECK GUN!"));
-	// check the quadrant has firefighter or not
-	int32 startx = -1;
-	int32 starty = -1;
-	int32 randomTargetPosition = 0;
-	if (ensure(board) && ensure(board->GetFireEngineLocA()))
+	if (ensure(inPawn) && ensure(targetTile))
 	{
-		board->GetFireEngineLocA()->GetLocation(startx, starty);
-	}
-	if (startx <= 4) { startx = 1; }
-	else { startx = 5; }
-	if (starty <= 3) { starty = 1; }
-	else { starty = 4; }
-	UE_LOG(LogTemp, Warning, TEXT("x: %d, y: %d"), startx, starty);
-	for (int32 x = startx; x < startx + (board->GetBoardLength() - 2) / 2 - 1; x++)
-	{
-		for (int32 y = starty; y < starty + (board->GetBoardWidth() - 2) / 2 - 1; y++)
-		{
-			if (board)
-			{
-				if (board->GetboardTiles()[x * board->GetBoardLength() + y]->GetPlacedFireFighters()->Num() > 0)
-				{
-					UE_LOG(LogTemp, Warning, TEXT("Checking tile: %d, %d"), x, y);
-					UE_LOG(LogTemp, Warning, TEXT("Unable to use fire engine. Some one is in the quadrant"));
-					return;
-				}
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Board has not initialize."));
-			}
-		}
-	}
+		// ensure no fighter in 
 
-	if (ensure(inPawn))
-	{
-		ATile* targetTile = GenerateRandomPositionInQuadrant(startx, starty);
-		if (inPawn->GetFireFighterRole() == ERoleType::Driver)
-		{
-			AFPPlayerController* player = Cast<AFPPlayerController>(inPawn->GetController());
-			if (player)
-			{
-				player->NotifyReRoll();
-			}
-		}
-		if (targetTile)
-		{
-			// extinguish fire
-			targetTile->SetFireStatus(EFireStatus::Clear);
-			targetTile->GetSmokeEffect()->Deactivate();
-			targetTile->GetFireEffect()->Deactivate();
-			// splash over
-			splashOver(targetTile, EDirection::Up);
-			splashOver(targetTile, EDirection::Down);
-			splashOver(targetTile, EDirection::Left);
-			splashOver(targetTile, EDirection::Right);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("random Error"));
-		}
-		
+		// extinguish fire
+		targetTile->SetFireStatus(EFireStatus::Clear);
+		targetTile->GetSmokeEffect()->Deactivate();
+		targetTile->GetFireEffect()->Deactivate();
+		// splash over
+		splashOver(targetTile, EDirection::Up);
+		splashOver(targetTile, EDirection::Down);
+		splashOver(targetTile, EDirection::Left);
+		splashOver(targetTile, EDirection::Right);
 	}
-
-	
-	
-	
 }
 
 // Called when the game starts or when spawned
@@ -109,11 +56,11 @@ void AFireEngine::BeginPlay()
 		}
 	}
 
-	if (HasAuthority()) 
-	{ 
-		SetReplicates(true); 
+	if (HasAuthority())
+	{
+		SetReplicates(true);
 	}
-	
+
 }
 
 void AFireEngine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
@@ -167,15 +114,6 @@ void AFireEngine::splashOver(ATile * targetTile, EDirection direction)
 	}
 }
 
-ATile * AFireEngine::GenerateRandomPositionInQuadrant(int32 startx, int32 starty)
-{
-	// randomly choose a target fire 
-	int32 randx = FMath::RandRange(startx, startx + 3);
-	int32 randy = FMath::RandRange(starty, starty + 2);
-	UE_LOG(LogTemp, Warning, TEXT("Random Position $d, %d"), randx, randy);
-	return board->GetboardTiles()[randx * 8 + randy];
-}
-
 void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 {
 	if (ButtonPressed != FKey("LeftMouseButton")) return;
@@ -193,7 +131,7 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 					float xPos;
 					float yPos;
 					localPlayer->GetMousePosition(xPos, yPos);
-					if (yPos > UCarOperationsMenu::GetViewportSize().Y / 2) 
+					if (yPos > UCarOperationsMenu::GetViewportSize().Y / 2)
 					{
 						yPos -= UCarOperationsMenu::GetViewportSize().Y / 4;
 					}
@@ -207,11 +145,11 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 
 void AFireEngine::setFireEngineUI(bool status)
 {
-	if(!status)
+	if (!status)
 	{
 		FireEngineOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	else{
+	else {
 		FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
 	}
 }
