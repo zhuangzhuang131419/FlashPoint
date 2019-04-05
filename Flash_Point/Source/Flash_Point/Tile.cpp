@@ -1318,7 +1318,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			{
 				if (ensure(board->GetFireEngine()))
 				{
-					setFireEngineLocation(board->GetFireEngine());
+					localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
 				}
 			}
 			break;
@@ -1328,7 +1328,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			{
 				if (ensure(board->GetAmbulance()))
 				{
-					setAmbulanceLocation(board->GetAmbulance());
+					localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
 				}
 			}
 			break;

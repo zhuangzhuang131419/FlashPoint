@@ -989,6 +989,22 @@ void AGameBoard::Rep_HealthChangeNotify()
 	}
 }
 
+void AGameBoard::Rep_RelocateAmbulance()
+{
+	if (ensure(ambulanceLocA) && ensure(ambulance))
+	{
+		ambulanceLocA->setAmbulanceLocation(ambulance);
+	}
+}
+
+void AGameBoard::Rep_RelocateEngine()
+{
+	if (ensure(engineLocA) && ensure(fireEngine))
+	{
+		engineLocA->setFireEngineLocation(fireEngine);
+	}
+}
+
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);

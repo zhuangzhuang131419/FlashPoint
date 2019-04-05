@@ -88,11 +88,11 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void endTurnRelatedOperations();
 
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_RelocateAmbulance, EditAnyWhere, Category = "Map Attributes")
 	ATile* ambulanceLocA = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* ambulanceLocB = nullptr;
-	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_RelocateEngine, EditAnyWhere, Category = "Map Attributes")
 	ATile* engineLocA = nullptr;
 	UPROPERTY(replicated, EditAnyWhere, Category = "Map Attributes")
 	ATile* engineLocB = nullptr;
@@ -286,6 +286,10 @@ protected:
 	void Rep_RescuedNotify();
 	UFUNCTION()
 	void Rep_HealthChangeNotify();
+	UFUNCTION()
+	void Rep_RelocateAmbulance();
+	UFUNCTION()
+	void Rep_RelocateEngine();
 
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

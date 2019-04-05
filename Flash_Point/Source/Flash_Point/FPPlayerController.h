@@ -214,6 +214,10 @@ public:
 	void ServerGetOutFireEngine(AFireFighterPawn * inPawn, ATile* current, AFireEngine* inFireEngine);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerFireDeckGun(AFireFighterPawn * inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerMoveAmbulance(AAmbulance* localAmbulance, ATile* currentTile);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerMoveFireEngine(AFireEngine* localEngine, ATile* currentTile);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

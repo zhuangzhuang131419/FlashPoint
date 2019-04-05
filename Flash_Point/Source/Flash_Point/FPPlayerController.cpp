@@ -893,6 +893,32 @@ void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn
 	}
 }
 
+bool AFPPlayerController::ServerMoveAmbulance_Validate(AAmbulance * localAmbulance, ATile * currentTile)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerMoveAmbulance_Implementation(AAmbulance * localAmbulance, ATile * currentTile)
+{
+	if (ensure(localAmbulance) && ensure(currentTile))
+	{
+		currentTile->setAmbulanceLocation(localAmbulance);
+	}
+}
+
+bool AFPPlayerController::ServerMoveFireEngine_Validate(AFireEngine * localEngine, ATile * currentTile)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerMoveFireEngine_Implementation(AFireEngine * localEngine, ATile * currentTile)
+{
+	if (ensure(localEngine) && ensure(currentTile))
+	{
+		currentTile->setFireEngineLocation(localEngine);
+	}
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
