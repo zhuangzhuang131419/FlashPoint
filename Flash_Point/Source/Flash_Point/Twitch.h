@@ -22,6 +22,8 @@ protected:
 	virtual void BeginPlay() override;
 	// IRC commands sender
 	bool SendIRC(FString FMessage);
+	bool Connect();
+	bool Authenticate();
 
 public:	
 	// Called every frame
@@ -31,10 +33,8 @@ public:
 	bool SetInitialInfo(const FString Oauth, const  FString Username, const FString Channel);
 	// Method to connect
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-	bool Connect();
-	// Method to authenticate
-	UFUNCTION(BlueprintCallable, Category = "Setup")
-	bool Authenticate();
+	bool ConnectAPI();
+	
 
 private:
 	// Parameters for Twtich authorization

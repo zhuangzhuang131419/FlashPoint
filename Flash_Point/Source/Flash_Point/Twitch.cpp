@@ -106,3 +106,12 @@ bool ATwitch::SendIRC(FString FMessage)
 	int32 OutSent;
 	return this->CurrentSocket->Send((uint8*)TCHAR_TO_UTF8(TMessage), FCString::Strlen(TMessage), OutSent);
 }
+
+bool ATwitch::ConnectAPI()
+{
+	if (Connect())
+	{
+		return Authenticate();
+	}
+	return false;
+}
