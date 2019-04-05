@@ -560,6 +560,11 @@ void AGameBoard::InitializeDefaultBoard()
 			}
 		}
 	}
+	// figure out the game mode from the server's game instance
+	UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+	if (ensure(gameInst)) {
+		gameModeType = gameInst->GetGameType();
+	}
 }
 
 void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
@@ -925,6 +930,7 @@ void AGameBoard::GenerateSaved()
 			removedHazmat = loadedMap.boardInfo.removedHazmat;
 			storedIndicator = loadedMap.boardInfo.indicator;
 			gameModeType = loadedMap.boardInfo.gameModeType;
+			gameMap = loadedMap.map;
 
 			// Assign to all edges their corresponding attributes
 			for (int32 i = 0; i < specialEdges.Num(); i++) {
@@ -1043,17 +1049,12 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, veteranLoc);
 	DOREPLIFETIME(AGameBoard, ambulance);
 	DOREPLIFETIME(AGameBoard, fireEngine);
+	DOREPLIFETIME(AGameBoard, gameMap);
 }
 
 void AGameBoard::InitializeBoardAttributes()
 {
 	if (HasAuthority()) {
-		// figure out the game mode first
-		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
-		if (ensure(gameInst)) {
-			gameModeType = gameInst->GetGameType();
-		}
-
 		int32 randomPosition = 0;
 
 
@@ -1243,6 +1244,8 @@ FMapSaveInfo AGameBoard::SaveCurrentMap()
 	FMapSaveInfo savedMap;
 	// Save the board for board regeneration
 	savedMap.boardInfo = SaveCurrentBoard();
+	// save the current map's name
+	savedMap.map = gameMap;
 	// Save all the edge informations
 	for (AEdgeUnit* tempEdge : specialEdges) {
 		if (ensure(tempEdge)) {
@@ -1264,6 +1267,7 @@ FMapSaveInfo AGameBoard::SaveCurrentMap()
 	// Save the date of the saving
 	FString currentDate = FDateTime::Now().GetDate().ToString();
 	UE_LOG(LogTemp, Warning, TEXT("Save date is: %s"), *currentDate);
+	savedMap.saveDate = currentDate;
 	savedMap.isValidSave = true;
 	return savedMap;
 }

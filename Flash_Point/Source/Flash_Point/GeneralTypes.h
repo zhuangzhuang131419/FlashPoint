@@ -349,6 +349,9 @@ public:
 	// Information on tiles within the board
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
 	TArray<FTileSaveInfo> tilesInfo;
+	// Which map it is
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Save Info")
+	EGameMap map;
 	
 };
 

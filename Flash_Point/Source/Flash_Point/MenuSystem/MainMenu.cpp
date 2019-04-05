@@ -3,6 +3,7 @@
 #include "MainMenu.h"
 #include "MapOverviewPanel.h"
 #include "MenuSystem/LobbyBar.h"
+#include "MenuSystem/SavedGameBar.h"
 #include "Components/VerticalBox.h"
 #include "Components/TextBlock.h"
 #include "Engine/World.h"
@@ -10,9 +11,14 @@
 #include "UObject/ConstructorHelpers.h"
 
 UMainMenu::UMainMenu(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
+	// find the lobby bar class
 	ConstructorHelpers::FClassFinder<UUserWidget> LobbyBarClassFinder(TEXT("/Game/BPs/WidgetComponents/WBP_LobbyBar"));
 	if (!ensure(LobbyBarClassFinder.Class))	return;
 	LobbyBarClass = LobbyBarClassFinder.Class;
+	// find the saved bar class
+	ConstructorHelpers::FClassFinder<UUserWidget> SavedBarClassFinder(TEXT("/Game/BPs/WidgetComponents/WBP_SavedBar"));
+	if (!ensure(SavedBarClassFinder.Class))	return;
+	SavedBarClass = SavedBarClassFinder.Class;
 }
 
 void UMainMenu::ClearAllLobbyList()
@@ -24,6 +30,17 @@ void UMainMenu::ClearAllLobbyList()
 	// also clear the map overview
 	if (ensure(JoinMapOverview)) {
 		JoinMapOverview->ClearMapInfo();
+	}
+}
+
+void UMainMenu::ClearAllSavedList()
+{
+	if (ensure(LoadArrangement)) {
+		LoadArrangement->ClearChildren();
+	}
+	// also clear the map overview
+	if (ensure(LoadMapOverview)) {
+		LoadMapOverview->ClearMapInfo();
 	}
 }
 
@@ -50,6 +67,19 @@ void UMainMenu::ShowRefreshing(bool isRefreshing)
 		}
 		else {
 			RefreshingText->SetVisibility(ESlateVisibility::Collapsed);
+		}
+	}
+}
+
+void UMainMenu::ShowLoading(bool isLoading)
+{
+	if (ensure(LoadingText)) {
+		LoadingText->SetText(FText::FromString("Loading..."));
+		if (isLoading) {
+			LoadingText->SetVisibility(ESlateVisibility::Visible);
+		}
+		else {
+			LoadingText->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }
@@ -99,7 +129,22 @@ void UMainMenu::OnJoinGameClicked()
 
 void UMainMenu::OnLoadGameClicked()
 {
-	// TODO refresh the saved games in order for player to select
+	// load all games that are saved
+	if (UGameplayStatics::DoesSaveGameExist(FString(TEXT("SaveSlot")), 0)) {
+		UFlashPointSaveGame* savedGames = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString(TEXT("SaveSlot")), 0));
+		if (ensure(savedGames)) {
+			// Get the saved games
+			if (savedGames->savedGames.Num() > 0) {
+				for (FMapSaveInfo tempInfo : savedGames->savedGames) {
+					USavedGameBar* tempSavedBar = CreateWidget<USavedGameBar>(gameInst, SavedBarClass);
+					if (ensure(tempSavedBar)) {
+						tempSavedBar->InitializeAttributes(LoadMapOverview, tempInfo);
+						LoadArrangement->AddChild(tempSavedBar);
+					}
+				}
+			}
+		}
+	}
 }
 
 void UMainMenu::OnOptionClicked()
