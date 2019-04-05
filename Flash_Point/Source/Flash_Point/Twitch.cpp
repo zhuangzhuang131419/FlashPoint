@@ -1,4 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
+/* Codes below has no quality and are very very disgusting, please be extra cautious!!! */
 
 #include "Twitch.h"
 
@@ -72,7 +73,7 @@ bool ATwitch::Connect()
 	return true;
 }
 
-bool ATwitch::Authentication()
+bool ATwitch::Authenticate()
 {
 
 	if (CurrentSocket == nullptr || !UserInitialized)
@@ -81,5 +82,27 @@ bool ATwitch::Authentication()
 		return false;
 	}
 
-	return false;
+	// Have no ideas what they are, just want to make sure if they are okay.
+	bool k = SendIRC("PASS " + this->Oauth);
+	bool ok = SendIRC("NICK " + this->Username);
+	bool okay = SendIRC("JOIN #" + this->Channel);
+
+	bool imokay = k && ok && okay;
+	if (!imokay)
+	{
+		UE_LOG(LogTemp, Error, TEXT("no ok"));
+		return false;
+	}
+	return true;
+}
+
+bool ATwitch::SendIRC(FString FMessage)
+{
+	// FString to TCHAR
+	FMessage += "\n";
+	TCHAR* TMessage = FMessage.GetCharArray().GetData();
+
+	// Send commands
+	int32 OutSent;
+	return this->CurrentSocket->Send((uint8*)TCHAR_TO_UTF8(TMessage), FCString::Strlen(TMessage), OutSent);
 }
