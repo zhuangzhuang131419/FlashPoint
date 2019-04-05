@@ -52,4 +52,5 @@ private:
 	FSocket* CurrentSocket;
 
 	FTimerHandle TimerHandle;
+	int32 okok = 0;
 };

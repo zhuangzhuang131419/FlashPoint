@@ -22,12 +22,8 @@ void ATwitch::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 
 
-	FString In, Nom, Mes;
-	if (GetStuff(In))
-	{
-		ReadStuff(In, Nom, Mes);
-		UE_LOG(LogTemp, Warning, TEXT("%s: %s"), *Nom, *Mes);
-	}
+	
+
 }
 
 bool ATwitch::SetInitialInfo(FString Oauth, FString Username, FString Channel)
