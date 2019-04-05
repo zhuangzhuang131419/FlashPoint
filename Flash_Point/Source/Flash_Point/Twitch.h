@@ -29,12 +29,15 @@ public:
 	bool SetInitialInfo(const FString Oauth, const  FString Username, const FString Channel);
 	// Method to connect
 	UFUNCTION(BlueprintCallable, Category = "Setup")
-		bool Connect();
+	bool Connect();
 
 private:
 	// Parameters for Twtich authorization
 	FString Oauth;
 	FString Username;
 	FString Channel;
+
+	// Parameters for connections
+	FSocket* CurrentSocket;
 
 };

@@ -45,7 +45,7 @@ bool ATwitch::Connect()
 	auto HostResolveError = SocketSub->GetHostByName("irc.twitch.tv", *HostAddr);
 	HostAddr->SetPort(6667);
 
-	// Create Socket
+	// Create a Socket
 	FSocket* Socket = SocketSub->CreateSocket(NAME_Stream, TEXT("Socket"), false);
 	if (Socket == nullptr)
 	{
@@ -53,6 +53,22 @@ bool ATwitch::Connect()
 		return false;
 	}
 
-	return false;
+	int32 NewSize;
+	Socket->SetReceiveBufferSize(1024 * 1024, NewSize);
+	Socket->SetReuseAddr(true);
+
+	// Check Connection
+	if (!Socket->Connect(*HostAddr))
+	{
+		Socket->Close();
+		SocketSub->DestroySocket(Socket);
+		UE_LOG(LogTemp, Error, TEXT("Failed to connect"));
+		return false;
+	}
+
+	this->CurrentSocket = Socket;
+	UE_LOG(LogTemp, Warning, TEXT("Twtich is f**king connected"));
+
+	return true;
 }
 
