@@ -889,10 +889,83 @@ void ATile::setAmbulanceLocation(AAmbulance * currentAmbulance, EDirection direc
 
 void ATile::setFireEngineLocation(AFireEngine * currentFireEngine)
 {
+	AEdgeUnit* adjacentParkingWall = nullptr;
+	if (ensure(type == ETileType::FireEnginePark))
+	{
+		if (ensure(adjacentParkTile))
+		{
+			adjacentParkingWall = isAdjacent(adjacentParkTile);
+			if (ensure(adjacentParkingWall))
+			{
+				if (adjacentParkingWall == frontWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
+					if (!leftWall) { setFireEngineLocation(currentFireEngine, EDirection::Left); }
+					else { setFireEngineLocation(currentFireEngine, EDirection::Right); }
+
+				}
+				else if (adjacentParkingWall == backWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *adjacentParkTile->GetName());
+					if (!leftWall) { adjacentParkTile->setFireEngineLocation(currentFireEngine, EDirection::Left); }
+					else { adjacentParkTile->setFireEngineLocation(currentFireEngine, EDirection::Right); }
+				}
+				else if (adjacentParkingWall == rightWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *GetName());
+					if (!frontWall) { setFireEngineLocation(currentFireEngine, EDirection::Up); }
+					else { setFireEngineLocation(currentFireEngine, EDirection::Down); }
+				}
+				else if (adjacentParkingWall == leftWall)
+				{
+					UE_LOG(LogTemp, Warning, TEXT("%s"), *adjacentParkTile->GetName());
+					if (!frontWall) { adjacentParkTile->setFireEngineLocation(currentFireEngine, EDirection::Up); }
+					else { adjacentParkTile->setFireEngineLocation(currentFireEngine, EDirection::Down); }
+				}
+			}
+		}
+	}
 }
 
 void ATile::setFireEngineLocation(AFireEngine * currentFireEngine, EDirection direction)
 {
+	FVector FireEngineSocketLocation;
+	FRotator FireEngineSocketRotation;
+	switch (direction)
+	{
+	case EDirection::Down:
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleBot"));
+		FireEngineSocketRotation = TileMesh->GetSocketRotation(FName("VehicleBot"));
+		break;
+	case EDirection::Up:
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleTop"));
+		FireEngineSocketRotation = TileMesh->GetSocketRotation(FName("VehicleTop"));
+		break;
+	case EDirection::Left:
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleLeft"));
+		FireEngineSocketRotation = TileMesh->GetSocketRotation(FName("VehicleLeft"));
+		break;
+	case EDirection::Right:
+		FireEngineSocketLocation = TileMesh->GetSocketLocation(FName("VehicleRight"));
+		FireEngineSocketRotation = TileMesh->GetSocketRotation(FName("VehicleRight"));
+		break;
+	default:
+		// impossible
+		break;
+	}
+	if (ensure(adjacentParkTile))
+	{
+		if (ensure(board))
+		{
+			if (board->GetFireEngine())
+			{
+				board->GetFireEngine()->SetActorLocation(FireEngineSocketLocation);
+				board->GetFireEngine()->SetActorRotation(FireEngineSocketRotation);
+				board->SetFireEngineLocA(this);
+				board->SetFireEngineLocB(adjacentParkTile);
+			}
+		}
+	}
 }
 
 // Here is the function to bind all input bindings
@@ -1260,6 +1333,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::GetOutAmbulance:
+			UE_LOG(LogTemp, Warning, TEXT("Get out of ambulance."));
 			if (type == ETileType::AmbulancePark && board->moved)
 			{
 				if (this == board->ambulanceLocA || this == board->ambulanceLocB)
@@ -1276,25 +1350,19 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			}
 			break;
 		case EGameOperations::GetOutFireEngine:
+			UE_LOG(LogTemp, Warning, TEXT("Get out of ambulance."));
 			if (type == ETileType::FireEnginePark && board->moved)
 			{
 				if (this == board->engineLocA || this == board->engineLocB)
 				{
 					if (!ensure(localPlayer)) return;
 					if (!ensure(localPawn)) return;
-					if (ensure(localPawn))
+
+					if (!ensure(board)) return;
+					AFireEngine* fireEngineOnTile = board->GetFireEngine();
+					if (ensure(fireEngineOnTile))
 					{
-						if (HasAuthority()) {
-							PlacePawnHere(localPawn);
-							localPawn->SetVisibility(true);
-							localPlayer->inGameUI->EnableOperationPanels(true);
-						}
-						else {
-							localPlayer->ServerPlacePawn(this, localPawn);
-							// to make the placing visible to operation client
-							localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
-							localPawn->SetVisibility(true);
-						}
+						localPlayer->ServerGetOutFireEngine(localPawn, this, fireEngineOnTile);
 					}
 				}
 			}

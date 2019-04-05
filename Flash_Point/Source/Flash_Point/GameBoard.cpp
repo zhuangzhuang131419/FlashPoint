@@ -711,8 +711,8 @@ void AGameBoard::GenerateSpecified(FSpawnIndicator indicator)
 	if (ensure(tempTile) && ensure(anotherTile))
 	{
 		tempTile->SpawnFireEngine();
-		ambulanceLocA = tempTile;
-		ambulanceLocB = anotherTile;
+		engineLocA = tempTile;
+		engineLocB = anotherTile;
 	}
 
 	

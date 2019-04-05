@@ -40,8 +40,13 @@ void UFireEngineOperationsMenu::GetInFireEngine()
 				if (ensure(fireEngineOnBoard))
 				{
 					fireEngineOnBoard->GetPassengers()->Add(fireFighterPawn);
-					fireFighterPawn->SetVisibility(false);
+					AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+					if (ensure(localPlayer))
+					{
+						localPlayer->ServerGetInCar(fireFighterPawn);
+					}
 					UE_LOG(LogTemp, Warning, TEXT("Get in car"));
+					this->SetVisibility(ESlateVisibility::Collapsed);
 				}
 			}
 		}
@@ -58,6 +63,7 @@ void UFireEngineOperationsMenu::GetOutFireEngine()
 		if (ensure(localPlayer))
 		{
 			localPlayer->SetCurrentOperation(EGameOperations::GetOutFireEngine);
+			this->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }
