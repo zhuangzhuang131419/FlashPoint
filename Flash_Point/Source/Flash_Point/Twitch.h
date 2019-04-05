@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Sockets.h"
+#include "Runtime/Networking/Public/Networking.h"
 #include "Twitch.generated.h"
 
 UCLASS()
