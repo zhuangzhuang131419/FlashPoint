@@ -211,6 +211,9 @@ protected:
 	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
 	EGameType gameModeType = EGameType::Experienced;
 
+	UPROPERTY(replicated, EditAnyWhere, Category = "Setup")
+	EGameMap gameMap = EGameMap::FamilyDefault;
+
 	UPROPERTY(EditAnyWhere, Category = "Setup")
 	TArray<FLocation> fireInitializeLocation;
 

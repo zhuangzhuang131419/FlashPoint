@@ -11,6 +11,7 @@
 class UMapOverviewPanel;
 class UVerticalBox;
 class ULobbyBar;
+class USavedGameBar;
 class UTextBlock;
 class UFlashPointGameInstance;
 
@@ -26,8 +27,10 @@ class FLASH_POINT_API UMainMenu : public UUserWidget
 public:
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
 	void ClearAllLobbyList();
+	void ClearAllSavedList();
 	void InsertLobbyBar(FGameLobbyInfo inInfo, int32 inIndex, int32 joinedPlayers);
 	void ShowRefreshing(bool isRefreshing);
+	void ShowLoading(bool isLoading);
 	void ShowJoinStatus(bool hasFailed);
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	void SetGameInst(UFlashPointGameInstance* inGameInst) { gameInst = inGameInst; }
@@ -42,6 +45,8 @@ protected:
 	// Widget class
 	UPROPERTY(EditDefaultsOnly, Category = "Setup")
 	TSubclassOf<ULobbyBar> LobbyBarClass = nullptr;
+	UPROPERTY(EditDefaultsOnly, Category = "Setup")
+	TSubclassOf<USavedGameBar> SavedBarClass = nullptr;
 
 	// BINDED WIDGETS
 	UPROPERTY(meta = (BindWidget))
@@ -63,7 +68,11 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UVerticalBox* LobbyArrangement = nullptr;
 	UPROPERTY(meta = (BindWidget))
+	UVerticalBox* LoadArrangement = nullptr;
+	UPROPERTY(meta = (BindWidget))
 	UTextBlock* RefreshingText = nullptr;
+	UPROPERTY(meta = (BindWidget))
+	UTextBlock* LoadingText = nullptr;
 
 	// Button functions
 	// New Game button

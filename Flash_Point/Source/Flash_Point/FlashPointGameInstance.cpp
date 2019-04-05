@@ -99,6 +99,12 @@ void UFlashPointGameInstance::LoadMapOfIndex(int32 index)
 	}
 }
 
+void UFlashPointGameInstance::LoadSpecifiedMap(FMapSaveInfo inInfo)
+{
+	loadedMap = inInfo;
+	gameType = loadedMap.boardInfo.gameModeType;
+}
+
 FMapSaveInfo UFlashPointGameInstance::GetLoadedGame()
 {
 	return loadedMap;
@@ -229,6 +235,22 @@ void UFlashPointGameInstance::RefreshLobbyList()
 		UE_LOG(LogTemp, Warning, TEXT("Starting Find Session"));
 		SessionInterface->FindSessions(0, SessionSearch.ToSharedRef());
 	}
+}
+
+void UFlashPointGameInstance::CreateSavedLobby(FMapSaveInfo inInfo)
+{
+	// show is creating the lobby and clear all saved map list
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->ClearAllSavedList();
+	}
+	LoadSpecifiedMap(inInfo);
+	lobbyInfo.boardHealth = inInfo.boardInfo.currentHealth;
+	lobbyInfo.isSaved = true;
+	lobbyInfo.lobbyName = inInfo.saveName;
+	lobbyInfo.lostVictimNum = inInfo.boardInfo.victimLostNum;
+	lobbyInfo.map = inInfo.map;
+	lobbyInfo.mode = inInfo.boardInfo.gameModeType;
+	CreateGameLobby(lobbyInfo);
 }
 
 void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)

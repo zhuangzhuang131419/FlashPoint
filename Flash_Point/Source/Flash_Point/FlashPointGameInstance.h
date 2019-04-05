@@ -18,9 +18,9 @@ class FOnlineSessionSearch;
  */
 
  // a session name used by all classes
-const static FName SESSION_NAME = TEXT("FpfrTova");
+const static FName SESSION_NAME = TEXT("FpfrTova090");
 // a key for decrepeting the lobby infor passed with the session
-const static FName SESSION_INFO_KEY = TEXT("DcRPTFpfRTOva");
+const static FName SESSION_INFO_KEY = TEXT("DcRPTFpfRTOva090");
 const static int32 FPSESSION_STANDARD_SIZE = 6;
 const static int32 MAX_SESSION_SEARCH = 200;
 
@@ -56,6 +56,8 @@ public:
 	// load a certain map
 	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
 	void LoadMapOfIndex(int32 index);
+	// load a specific map with corresponding data
+	void LoadSpecifiedMap(FMapSaveInfo inInfo);
 	// Setting the game to be loaded
 	UFUNCTION(Exec, BlueprintCallable, Category = "Map Generation")
 	FMapSaveInfo GetLoadedGame();
@@ -73,6 +75,8 @@ public:
 	void JoinSessionOfIndex(int32 index);
 	// A function to refresh lobby list
 	void RefreshLobbyList();
+	// A function for lobby to create a saved game
+	void CreateSavedLobby(FMapSaveInfo inInfo);
 
 protected:
 	// FIELDS
