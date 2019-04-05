@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Engine.h"
 #include "CarOperationsMenu.generated.h"
 
 class UTextBlock;
@@ -19,7 +20,7 @@ class FLASH_POINT_API UCarOperationsMenu : public UUserWidget
 	GENERATED_BODY()
 public:
 	// UCarOperationsMenu(const FObjectInitializer& ObjectInitializer);
-
+	static FVector2D GetViewportSize();
 	void AssociatePlayer(AFPPlayerController* inPlayer);
 	
 protected:

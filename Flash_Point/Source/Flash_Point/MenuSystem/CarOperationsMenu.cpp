@@ -31,4 +31,15 @@ void UCarOperationsMenu::Cancel()
 	SetVisibility(ESlateVisibility::Collapsed);
 }
 
+FVector2D UCarOperationsMenu::GetViewportSize()
+{
+	FVector2D size = FVector2D(1, 1);
+ 
+     if ( GEngine && GEngine->GameViewport )
+     {
+         GEngine->GameViewport->GetViewportSize(size);
+     }
+ 
+     return size;
+}
 
