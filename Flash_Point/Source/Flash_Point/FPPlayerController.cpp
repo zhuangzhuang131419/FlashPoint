@@ -875,6 +875,24 @@ bool AFPPlayerController::ServerGetOutAmbulance_Validate(AFireFighterPawn * inPa
 	return true;
 }
 
+bool AFPPlayerController::ServerGetOutFireEngine_Validate(AFireFighterPawn * inPawn, ATile * current, AFireEngine * inFireEngine)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn * inPawn, ATile * current, AFireEngine * inFireEngine)
+{
+	if (ensure(inPawn) && ensure(current) && ensure(inFireEngine))
+	{
+		inPawn->SetIsInCar(false);
+		current->GetPlacedFireFighters()->Add(inPawn);
+		inFireEngine->GetPassengers()->Remove(inPawn);
+		inPawn->SetPlacedOn(current);
+		inPawn->SetActorLocation(current->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+		inPawn->SetVisibility(true);
+	}
+}
+
 void AFPPlayerController::DropVictim()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drop victim."));
