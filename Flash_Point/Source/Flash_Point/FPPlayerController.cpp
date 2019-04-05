@@ -1424,11 +1424,6 @@ void AFPPlayerController::BeginPlay()
 	MakeOptionPromptUI();
 	FindChatUI();
 	
-	if (ensure(inGameUI)) {
-		inGameUI->NotifyPlaceFirefighter();
-		// if both crew manager and lobby manager found, in lobby we are, create a lobby UI
-		
-	}
 	// if found a game board, switch role with regard to currently selected role
 	if (gameBoard) {
 		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
@@ -1438,8 +1433,15 @@ void AFPPlayerController::BeginPlay()
 				EnableAPConsumption(false);
 				SwitchRole(tempRole);
 				EnableAPConsumption(true);
+				EnableOperations(false);
 			}
 		}
+	}
+
+	if (ensure(inGameUI)) {
+		inGameUI->NotifyPlaceFirefighter();
+		// if both crew manager and lobby manager found, in lobby we are, create a lobby UI
+		inGameUI->EnableOperationPanels(false);
 	}
 }
 
