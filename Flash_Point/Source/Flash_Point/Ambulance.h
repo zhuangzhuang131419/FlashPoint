@@ -37,7 +37,7 @@ public:
 	// Getter for playing board
 	AGameBoard* GetPlayingBoard() { return board; }
 	void SetPlayingGameBoard(AGameBoard* current) { board = current; }
-
+	void setAmbulanceUI(bool status);
 	UFUNCTION()
 	void OnAmbulanceClicked(AActor* Target, FKey ButtonPressed);
 

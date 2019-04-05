@@ -1328,6 +1328,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				if (ensure(board->GetAmbulance()))
 				{
 					localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
+					board->GetAmbulance()->setAmbulanceUI(false);
 				}
 			}
 			break;

@@ -103,3 +103,14 @@ void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)
 	//	);
 	//}
 }
+
+void AAmbulance::setAmbulanceUI(bool status)
+{
+	if(!status)
+	{
+		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+	}
+	else{
+		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+	}
+}
