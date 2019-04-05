@@ -24,7 +24,6 @@ protected:
 	bool Send(FString Stuff);
 	bool Connect();
 	bool Authenticate();
-	bool Read(FString& Out) const;
 
 public:	
 	// Called every frame
@@ -35,6 +34,11 @@ public:
 	// Method to connect
 	UFUNCTION(BlueprintCallable, Category = "Setup")
 	bool ConnectAPI();
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	bool GetStuff(FString& Out);
+	UFUNCTION(BlueprintCallable, Category = "Setup")
+	void ReadStuff(FString In, FString& Nom, FString& Out);
+	
 	
 
 private:
@@ -46,4 +50,6 @@ private:
 
 	// Parameters for connections
 	FSocket* CurrentSocket;
+
+	FTimerHandle TimerHandle;
 };
