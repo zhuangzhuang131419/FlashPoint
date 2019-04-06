@@ -61,14 +61,19 @@ protected:
 	void DodgeAccept();
 	void CommandDoorAccept();
 	void CommandTileAccept();
-	void FireDeckGunAccept();
+	void FireDeckGunReRollAccept();
+	void FireDeckGunPositionComfirm();
+	void FireDeckGunChooseRow();
+	void FireDeckGunChooseCol();
 
 	UFUNCTION()
 	void Refuse();
 	void DodgeRefuse();
 	void CommandDoorRefuse();
 	void CommandTileRefuse();
-	void FireDeckGunRefuse();
+	void FireDeckGunReRowRefuse();
+
+	
 
 	UFUNCTION()
 	void OnThirdOption();

@@ -125,9 +125,10 @@ UENUM(BlueprintType)
 enum class EOptionPromptType : uint8
 {
 	Dodge,
-	FireDeckGun,
+	FireDeckGunReRoll,
 	CommandDoor,
-	CommandTile
+	CommandTile,
+	FireDeckGunPositionUnComfirm,
 };
 
 // An Enum indicating which game map is the game in
