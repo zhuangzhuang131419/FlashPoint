@@ -17,6 +17,10 @@ bool UOptionPrompt::Initialize()
 
 		if (!ensure(RefuseButton)) { return false; }
 		RefuseButton->OnClicked.AddDynamic(this, &UOptionPrompt::Refuse);
+
+		if (!ensure(ThirdOption)) { return false; }
+		ThirdOption->OnClicked.AddDynamic(this, &UOptionPrompt::OnThirdOption);
+
 		return true;
 	}
 	return false;
@@ -82,6 +86,11 @@ void UOptionPrompt::Refuse()
 		break;
 	}
 	this->SetVisibility(ESlateVisibility::Collapsed);
+}
+
+void UOptionPrompt::OnThirdOption()
+{
+
 }
 
 void UOptionPrompt::DodgeAccept()

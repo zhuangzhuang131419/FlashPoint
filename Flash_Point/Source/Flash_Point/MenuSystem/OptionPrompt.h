@@ -35,9 +35,17 @@ protected:
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UTextBlock* PromptText = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UTextBlock* ButtonText_One = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UTextBlock* ButtonText_Two = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UTextBlock* ButtonText_Three = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	class UButton* AcceptButton = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	class UButton* RefuseButton = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	class UButton* ThirdOption = nullptr;
 
 	// FIELDS
 	UPROPERTY(BlueprintReadWrite)
@@ -61,4 +69,7 @@ protected:
 	void CommandDoorRefuse();
 	void CommandTileRefuse();
 	void FireDeckGunRefuse();
+
+	UFUNCTION()
+	void OnThirdOption();
 };

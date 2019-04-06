@@ -1102,6 +1102,12 @@ void AGameBoard::InitializeBoardAttributes()
 	if (HasAuthority()) {
 		int32 randomPosition = 0;
 
+		// load the initialized value from the 
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		if (ensure(gameInst)) {
+			ExplosionInitializeNum = gameInst->GetLobbyInfo().initialExplosions;
+			HazmatInitializeNum = gameInst->GetLobbyInfo().initialHazmatNum;
+		}
 
 		if (isRandom)
 		{
@@ -1143,7 +1149,7 @@ void AGameBoard::InitializeBoardAttributes()
 			boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
 
 			// next explosions
-			for (size_t i = 0; i < HotSpotInitializeNum - 1; i++)
+			for (size_t i = 0; i < ExplosionInitializeNum - 1; i++)
 			{
 				randomPosition = FMath::RandRange(0, boardTiles.Num() - 1);
 				while (boardTiles[randomPosition]->IsOutside() || boardTiles[randomPosition]->GetFireStatus() == EFireStatus::Fire)
