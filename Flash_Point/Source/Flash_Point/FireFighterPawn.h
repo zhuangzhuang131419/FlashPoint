@@ -224,7 +224,7 @@ public:
 
 protected:
 	// current firefighter position
-	UPROPERTY(replicated, VisibleAnyWhere, Category = "Firefighter Attributes")
+	UPROPERTY(ReplicatedUsing = Rep_PlaceChanges, VisibleAnyWhere, Category = "Firefighter Attributes")
 	ATile* placedOn = nullptr;
 	// The firefighter's current ap value and max ap value
 	UPROPERTY(ReplicatedUsing = Rep_APChanges, BlueprintReadWrite, EditAnyWhere, Category = "Firefighter Attributes")
@@ -311,6 +311,8 @@ protected:
 	bool isCommanded = false;
 
 	// REPLICATION FUNCTIONS
+	UFUNCTION()
+	void Rep_PlaceChanges();
 	UFUNCTION()
 	void Rep_PawnID();
 	UFUNCTION()

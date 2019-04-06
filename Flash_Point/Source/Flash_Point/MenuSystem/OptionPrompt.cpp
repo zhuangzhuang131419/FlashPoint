@@ -120,6 +120,13 @@ void UOptionPrompt::CommandTileAccept()
 void UOptionPrompt::FireDeckGunAccept()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Fire Deck Gun Accept"));
+	if (ensure(fireFighterPawn) && ensure(fireFighterPawn->GetFireFighterRole() == ERoleType::Driver))
+	{
+		if (ensure(fireFighterPawn->GetFireDeckGunConsumption()))
+		{
+
+		}
+	}
 }
 
 void UOptionPrompt::DodgeRefuse()

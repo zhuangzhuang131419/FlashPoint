@@ -432,6 +432,14 @@ void AFireFighterPawn::SetFireFighterLobbyID(int32 inID)
 	lobbyPlayerID = inID;
 }
 
+void AFireFighterPawn::Rep_PlaceChanges()
+{
+	if (placedOn)
+	{
+		SetActorLocation(placedOn->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+	}
+}
+
 void AFireFighterPawn::Rep_PawnID()
 {
 	// when id got, set it the the player
