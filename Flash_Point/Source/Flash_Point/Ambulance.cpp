@@ -84,7 +84,7 @@ void AAmbulance::OnAmbulanceClicked(AActor * Target, FKey ButtonPressed)
 			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
 			if (ensure(fireFighterPawn))
 			{
-				if (fireFighterPawn->IsWithAmbulance())
+				// if (fireFighterPawn->IsWithAmbulance())
 				{
 					float xPos;
 					float yPos;

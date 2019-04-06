@@ -1009,7 +1009,13 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
-			FindPathToCurrent(localPawn);
+			if (ensure(localPawn))
+			{
+				if (localPawn->GetPlacedOn())
+				{
+					FindPathToCurrent(localPawn);
+				}
+			}
 			break;
 		case EGameOperations::ChopWall:
 			break;
@@ -1248,6 +1254,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (isReady && canMoveTo) {
 				if (!ensure(localPlayer)) return;
 				if (!ensure(localPawn)) return;
+				if (!localPawn->GetPlacedOn()) return;
 				localPlayer->SetNone();
 				if (HasAuthority()) {
 					PawnMoveToHere(localPawn, pathToHere);
