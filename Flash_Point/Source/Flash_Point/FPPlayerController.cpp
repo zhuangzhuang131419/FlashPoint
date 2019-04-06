@@ -1470,6 +1470,12 @@ void AFPPlayerController::SaveCurrentGame(FString saveName)
 	}
 }
 
+void AFPPlayerController::Possess(APawn * InPawn)
+{
+	// on event possessing pawn
+	Super::Possess(InPawn);
+}
+
 void AFPPlayerController::FindChatUI()
 {
 	// when UI is created, try finding a chat manager
@@ -1515,11 +1521,11 @@ void AFPPlayerController::FindCrewManager()
 	}
 }
 
-void AFPPlayerController::JoinGameLobby()
+void AFPPlayerController::JoinGameLobby(APawn* inPawn)
 {
 	if (!ensure(lobbyMan)) return;
 	if (!ensure(crewMan)) return;
-	if (IsLocalController()) {
+	if (IsLocalPlayerController()) {
 		UE_LOG(LogTemp, Warning, TEXT("Player in lobby"));
 		// relate both of these managers
 		lobbyMan->SetCrewManager(crewMan);
@@ -1541,7 +1547,7 @@ void AFPPlayerController::JoinGameLobby()
 				lobbyUI->ChangeJoinStartButtonStatus("Ready", true);
 			}
 			// bind alseo the firefighter with this UI
-			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+			AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(inPawn);
 			if (ensure(fireFighterPawn)) {
 				fireFighterPawn->BindLobbyUIFirefighter(lobbyUI);
 				// join the lobby since we are local player
@@ -1563,15 +1569,18 @@ void AFPPlayerController::BeginPlay()
 	FindCrewManager();
 	// it could also be that we found both lobby manager and crew manager in a lobby
 	if (lobbyMan && crewMan) {
-		JoinGameLobby();
+		
+		JoinGameLobby(GetPawn());
 	}
 	// TODO on later version make different UI with regard of different game
 	MakeBasicFireFighterUI();
 	MakeOptionPromptUI();
 	FindChatUI();
-	
+
 	// if found a game board, switch role with regard to currently selected role
+	if (!IsLocalPlayerController()) return;
 	if (gameBoard) {
+		// do it only on local controller 
 		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
 		if (ensure(gameInst)) {
 			ERoleType tempRole = gameInst->GetSelectedRole();
@@ -1589,6 +1598,7 @@ void AFPPlayerController::BeginPlay()
 		// if both crew manager and lobby manager found, in lobby we are, create a lobby UI
 		inGameUI->EnableOperationPanels(false);
 	}
+	
 }
 
 void AFPPlayerController::SetOpenDoor()

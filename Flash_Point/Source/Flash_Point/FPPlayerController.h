@@ -291,6 +291,10 @@ public:
 
 
 protected:
+
+	// for pawn possessing
+	virtual void Possess(APawn* InPawn) override;
+
 	// FIELDS
 	UPROPERTY(VisibleAnyWhere, BlueprintReadWrite, Category = "Player Attributes")
 	AGameBoard* gameBoard = nullptr;
@@ -342,7 +346,7 @@ protected:
 	void FindChatUI();
 	void FindCrewManager();
 
-	void JoinGameLobby();
+	void JoinGameLobby(APawn* inPawn);
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
