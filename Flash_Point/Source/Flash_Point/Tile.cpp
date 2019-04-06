@@ -306,6 +306,12 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 void ATile::PlacePawnHere(AFireFighterPawn* placingPawn)
 {
 	if (ensure(placingPawn)) {
+		// if teh firefighter is veteran, just set it in board
+		if (placingPawn->GetFireFighterRole() == ERoleType::Veteran) {
+			if (ensure(board)) {
+				board->SetVeteranLoc(this);
+			}
+		}
 		// Add the firefighter to the current position actors
 		placingPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 		// Associate the firefighter with this tile
@@ -746,6 +752,12 @@ void ATile::AdvanceExplosion(EDirection direction)
 void ATile::AdvanceExplosion()
 {
 	blastOccured = !blastOccured;
+	if (ensure(board) && board->GetGameType() != EGameType::Family) {
+		isHotSpot = true;
+		if (ensure(HotSpotEffect)) {
+			HotSpotEffect->ActivateSystem();
+		}
+	}
 	AdvanceExplosion(EDirection::Down);
 	AdvanceExplosion(EDirection::Left);
 	AdvanceExplosion(EDirection::Right);
@@ -1258,28 +1270,26 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				localPlayer->SetNone();
 				if (HasAuthority()) {
 					PawnMoveToHere(localPawn, pathToHere);
+					// check get free AP or not
+					if (localPawn->CheckIsVicinty(board->GetVeteranLoc()) && localPawn->GetFireFighterRole() != ERoleType::Veteran)
+					{
+						if (!localPawn->HasGainedAPThisTurn())
+						{
+							localPawn->SetHasGainedAPThisTurn(true);
+							localPawn->AdjustFireFighterAP(1);
+							UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
+						}
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("Already got free AP"));
+						}
+					}
 				}
 				else {
 					localPlayer->ServerMovePawn(this, localPawn, pathToHere);
 					// to make the placing visible to operation client
 					localPawn->SetActorLocation(TileMesh->GetSocketLocation("VisualEffects"));
 				}
-
-				// check get free AP or not
-				if (localPawn->CheckIsVicinty(board->GetVeteranLoc()))
-				{
-					if (!localPawn->HasGainedAPThisTurn())
-					{
-						localPawn->SetHasGainedAPThisTurn(true);
-						localPawn->AdjustFireFighterAP(1);
-						UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Already got free AP"));
-					}
-				}
-
 
 				// do ap adjustment
 				if (localPawn->GetFireFighterRole() != ERoleType::RescueSpecialist)
