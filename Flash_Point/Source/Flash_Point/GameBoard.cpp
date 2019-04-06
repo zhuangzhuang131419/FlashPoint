@@ -386,20 +386,6 @@ void AGameBoard::ResolveFlareUp()
 // return true if end the game, otherwise return false
 void AGameBoard::endTurnRelatedOperations()
 {
-	AFPPlayerController* currentController = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (ensure(currentController))
-	{
-		AFireFighterPawn* currentPawn = Cast<AFireFighterPawn>(currentController->GetPawn());
-		if (ensure(currentPawn))
-		{
-			if (currentPawn->HasGainedAPThisTurn() && currentPawn->GetCurrentAP() > 0)
-			{
-				currentPawn->AdjustFireFighterAP(-1);
-			}
-			currentPawn->SetHasGainedAPThisTurn(false);
-		}
-	}
-
 	// assume family mode
 	if (gameModeType == EGameType::Family)
 	{
@@ -1145,8 +1131,6 @@ void AGameBoard::InitializeBoardAttributes()
 			boardTiles[randomPosition]->SetFireStatus(EFireStatus::Fire);
 			boardTiles[randomPosition]->GetFireEffect()->Activate();
 			boardTiles[randomPosition]->AdvanceExplosion();
-			boardTiles[randomPosition]->SetIsHotSpot(true);
-			boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
 
 			// next explosions
 			for (size_t i = 0; i < ExplosionInitializeNum - 1; i++)
@@ -1160,8 +1144,6 @@ void AGameBoard::InitializeBoardAttributes()
 				boardTiles[randomPosition]->SetFireStatus(EFireStatus::Fire);
 				boardTiles[randomPosition]->GetFireEffect()->Activate();
 				boardTiles[randomPosition]->AdvanceExplosion();
-				boardTiles[randomPosition]->SetIsHotSpot(true);
-				boardTiles[randomPosition]->GetHotSpotEffect()->Activate();
 			}
 		}
 		

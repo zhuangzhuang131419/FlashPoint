@@ -88,6 +88,7 @@ int32 AFireFighterPawn::GetRestoreAP()
 
 void AFireFighterPawn::AdjustFireFighterAP(int32 adjustAP)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Adjust AP %d"), adjustAP);
 	if (!ensure(myOwner)) return;
 	if (currentAP + adjustAP < 0) return;	// negative ap is impossible
 	// This is cheating for test purpose
@@ -159,11 +160,19 @@ void AFireFighterPawn::AdjustSpecialistMoveAP(int32 adjustAP)
 
 void AFireFighterPawn::EndTurnAdjustAP()
 {
+	int32 apToAdjust = 0;
+	if (HasGainedAPThisTurn() && GetCurrentAP() > 0) {
+		UE_LOG(LogTemp, Warning, TEXT("End turn adjust experience AP"));
+		apToAdjust -= 1;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("End turn adjust general AP"));
 	// adjust AP according to firefighter
 	if (fireFighterRole == ERoleType::RescueDog) {
 		if (currentAP <= GENERAL_SAVINGAP + 2) {
 			// if the remaining AP is not as much as 6 for dog, return
-			return;
+			if (currentAP + apToAdjust >= 0) {
+				AdjustFireFighterAP(apToAdjust);
+			}
 		}
 		else {
 			// ensure the remaining AP is not over 6 for dog
@@ -173,6 +182,9 @@ void AFireFighterPawn::EndTurnAdjustAP()
 	else {
 		// for other characters, adjust the ap according to specified value
 		if (currentAP <= GENERAL_SAVINGAP) {
+			if (currentAP + apToAdjust >= 0) {
+				AdjustFireFighterAP(apToAdjust);
+			}
 			return;
 		}
 		else {
@@ -389,6 +401,9 @@ bool AFireFighterPawn::CheckIsVicinty(ATile * veteranLoc)
 		}
 		else
 		{
+			if (ensure(placedOn->GetGameBoard())) {
+				placedOn->GetGameBoard()->ClearAllTile();
+			}
 			TArray<ATile*> tempTileArray;
 			if (GeneralTypes::AStarShortest(0, placedOn, veteranLoc, tempTileArray, true) > 3) 
 			{
@@ -437,6 +452,22 @@ void AFireFighterPawn::Rep_PlaceChanges()
 	if (placedOn)
 	{
 		SetActorLocation(placedOn->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+		// check get free AP or not
+		if (!placedOn->GetGameBoard()) return;
+		if (CheckIsVicinty(placedOn->GetGameBoard()->GetVeteranLoc()) && GetFireFighterRole() != ERoleType::Veteran && fireFighterID == placedOn->GetGameBoard()->GetCurrentTurn())
+		{
+			if (!HasGainedAPThisTurn())
+			{
+				UE_LOG(LogTemp, Warning, TEXT("REP location change adjust ap"));
+				SetHasGainedAPThisTurn(true);
+				AdjustFireFighterAP(1);
+				UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Already got free AP"));
+			}
+		}
 	}
 }
 

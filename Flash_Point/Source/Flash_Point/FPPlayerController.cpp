@@ -66,36 +66,40 @@ void AFPPlayerController::SetTurnNum(int32 turnNum)
 void AFPPlayerController::NotifyPlayerTurn()
 {
 	// restore AP
+	if (!IsLocalController()) return;
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn)) {
 		int32 currentAP = fireFighterPawn->GetCurrentAP();
 		int32 apToRestore = 0;
-		if (ensure(gameBoard))
-		{
-			if (fireFighterPawn->CheckIsVicinty(gameBoard->GetVeteranLoc()))
-			{
-				currentAP++;
-				UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
-				fireFighterPawn->SetHasGainedAPThisTurn(true);
-			}
-		}
 		
 		if (currentAP + fireFighterPawn->GetRestoreAP() > fireFighterPawn->GetMaxAP()) {
 			apToRestore = fireFighterPawn->GetMaxAP() - currentAP;
 		}
 		else {
 			apToRestore = fireFighterPawn->GetRestoreAP();
-			if (fireFighterPawn->HasGainedAPThisTurn())
-			{
-				apToRestore++;
-			}
 		}
 		// if ap to restore is more than 0 restore AP
 		if (apToRestore > 0) {
+			// player turn adjust Ap
+			UE_LOG(LogTemp, Warning, TEXT("Player turn adjust AP"));
 			fireFighterPawn->AdjustFireFighterAP(apToRestore);
 		}
 		ServerSpecialistTurnAdjust(fireFighterPawn);
 	}
+
+	// if the ap is not max, also increase the veteran vicinity ap
+	if (fireFighterPawn->GetCurrentAP() < fireFighterPawn->GetMaxAP()) {
+		if (ensure(gameBoard))
+		{
+			if (fireFighterPawn->CheckIsVicinty(gameBoard->GetVeteranLoc()) && fireFighterPawn->GetFireFighterRole() != ERoleType::Veteran)
+			{
+				fireFighterPawn->AdjustFireFighterAP(1);
+				UE_LOG(LogTemp, Warning, TEXT("Get free AP"));
+				fireFighterPawn->SetHasGainedAPThisTurn(true);
+			}
+		}
+	}
+
 	if (ensure(inGameUI)) {
 		inGameUI->SetBeginTurnNotify(true);
 		inGameUI->NotifyTurnBegin();
@@ -127,6 +131,7 @@ void AFPPlayerController::NotifyReRoll()
 
 void AFPPlayerController::EndPlayerTurn()
 {
+	if (!this->IsLocalController()) return;
 	// disable all operations
 	SetNone();
 	if (ensure(inGameUI)) {
@@ -136,6 +141,7 @@ void AFPPlayerController::EndPlayerTurn()
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn)) {
 		fireFighterPawn->EndTurnAdjustAP();
+		fireFighterPawn->SetHasGainedAPThisTurn(false);
 	}
 	// switch to next player's turn
 	if (HasAuthority()) {
