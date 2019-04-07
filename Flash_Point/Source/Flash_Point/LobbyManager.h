@@ -42,6 +42,8 @@ public:
 	// get the realated status to the player in lobby
 	FPlayerLobbyInfo GetPlayerLobbyInfo(int32 playerID);
 	void ShowLobbyInfo();	// display the lobby informations
+	// A function that can get the lobby information that's set during creation, from game instance
+	void QueryLobbyInfo();
 
 protected:
 
@@ -55,8 +57,6 @@ protected:
 	bool IsAllPlayerReady();
 	// A function to shift the lobby information with regard to join informations
 	void ShiftLobbyInfo(int32 fromID, int32 toID);
-	// A function that can get the lobby information that's set during creation, from game instance
-	void QueryLobbyInfo();
 
 	// REPLICATED FIELDS
 	UPROPERTY(replicated, VisibleAnyWhere, Category = "Lobby Creation")

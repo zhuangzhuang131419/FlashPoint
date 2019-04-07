@@ -135,11 +135,11 @@ void AFireFighterPawn::AdjustCAFSFireFighterExtinguishAP(int32 adjustAP)
 void AFireFighterPawn::AdjustSpecialistMoveAP(int32 adjustAP)
 {
 	if (!ensure(myOwner)) return;
-	if (currentAP + adjustAP < 0) return;	// negative ap is impossible
+	if (currentAP + adjustAP + movementAP < 0) return;	// negative ap is impossible
 	// This is cheating for test purpose
 	if (!myOwner->ConsumptionOn() && adjustAP <= 0) return;
 	if (HasAuthority()) {
-		if (movementAP < -adjustAP)
+		if (movementAP <= -adjustAP)
 		{
 			currentAP += (adjustAP + movementAP);
 			movementAP = 0;
@@ -1122,6 +1122,16 @@ void AFireFighterPawn::InitializeFireFighter()
 void AFireFighterPawn::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// when firefighter begin play, notify the player controller
+	myOwner = Cast<AFPPlayerController>(GetController());
+	if (ensure(myOwner)) {
+		if (!myOwner->HasActorBegunPlay()) {
+			myOwner->DispatchBeginPlay();
+		}
+		myOwner->NotifyPlayerInitialization(this);
+	}
+
 	InitializeFireFighter();
 	// bind mouse over click left functions
 	OnBeginCursorOver.AddDynamic(this, &AFireFighterPawn::OnOverFirefighter);

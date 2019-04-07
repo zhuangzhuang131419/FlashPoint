@@ -18,6 +18,7 @@
 #include "MenuSystem/LobbyUI.h"
 #include "FireEngine.h"
 #include "Ambulance.h"
+#include "UObject/ConstructorHelpers.h"
 
 bool AFPPlayerController::ConsumptionOn()
 {
@@ -29,6 +30,10 @@ AFPPlayerController::AFPPlayerController() {
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
+	// binding the widget class to cursor
+	ConstructorHelpers::FClassFinder<UUserWidget> CursorWidgetClassFinder(TEXT("/Game/BPs/WidgetComponents/CursorWidget"));
+	if (!ensure(CursorWidgetClassFinder.Class))	return;
+	CursorWidgetClass = CursorWidgetClassFinder.Class;
 
 }
 
@@ -670,13 +675,16 @@ bool AFPPlayerController::ServerAdjustCAFSAP_Validate(AFireFighterPawn * fireFig
 void AFPPlayerController::ServerAdjustRescueSpecAP_Implementation(AFireFighterPawn * fireFighterPawn, int32 adjustAP)
 {
 	if (!ensure(fireFighterPawn)) return;
-	if (fireFighterPawn->GetMovementAP() < -adjustAP)
+	if (fireFighterPawn->GetMovementAP() <= -adjustAP)
 	{
-		fireFighterPawn->SetCurrentAP(fireFighterPawn->GetCurrentAP() + adjustAP + fireFighterPawn->GetMovementAP());
+		UE_LOG(LogTemp, Warning, TEXT("Not enough movement AP"));
+		adjustAP += fireFighterPawn->GetMovementAP();
+		fireFighterPawn->SetCurrentAP(fireFighterPawn->GetCurrentAP() + adjustAP);
 		fireFighterPawn->SetMovementAP(0);
 	}
 	else
 	{
+		UE_LOG(LogTemp, Warning, TEXT("Enough movement AP"));
 		fireFighterPawn->SetMovementAP(fireFighterPawn->GetMovementAP() + adjustAP);
 	}
 }
@@ -946,6 +954,11 @@ void AFPPlayerController::ServerGetOutAmbulance_Implementation(AFireFighterPawn 
 		inPawn->SetPlacedOn(current);
 		inPawn->SetActorLocation(current->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
 		inPawn->SetVisibility(true);
+		if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
+			if (ensure(current->GetGameBoard())) {
+				current->GetGameBoard()->SetVeteranLoc(current);
+			}
+		}
 	}
 }
 
@@ -969,6 +982,11 @@ void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn
 		inPawn->SetPlacedOn(current);
 		inPawn->SetActorLocation(current->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
 		inPawn->SetVisibility(true);
+		if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
+			if (ensure(current->GetGameBoard())) {
+				current->GetGameBoard()->SetVeteranLoc(current);
+			}
+		}
 	}
 }
 
@@ -1075,7 +1093,7 @@ void AFPPlayerController::CarryVictim()
 	UE_LOG(LogTemp, Warning, TEXT("Carry victim."));
 
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn))
+	if (ensure(fireFighterPawn) && !fireFighterPawn->GetHazmat())
 	{
 		ServerCarryVictim(fireFighterPawn);
 		// only for server, update the UI actively
@@ -1139,7 +1157,7 @@ void AFPPlayerController::CarryHazmat()
 {
 	// TODO carry hazmat on tile when called
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn))
+	if (ensure(fireFighterPawn) && !fireFighterPawn->GetCarriedVictim())
 	{
 		ServerCarryHazmat(fireFighterPawn);
 		// only for server, update the UI actively
@@ -1324,14 +1342,12 @@ void AFPPlayerController::ServerRevealPOI_Implementation(ATile* targetTile)
 						else
 						{
 							targetTile->SetPOIStatus(EPOIStatus::Empty);
-							targetTile->GetGameBoard()->SetCurrentPOI(GetGameBoard()->currentPOI - 1);
+							if (ensure(targetTile->GetGameBoard())) {
+								targetTile->GetGameBoard()->SetCurrentPOI(targetTile->GetGameBoard()->currentPOI - 1);
+							}
 						}
 						targetTile->GetPOIOnTile()->Destroy();
 						targetTile->SetPOIOnTile(nullptr);
-						if (fireFighterPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
-						{
-							fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetFlipConsumption());
-						}
 					}
 					else
 					{
@@ -1389,6 +1405,9 @@ void AFPPlayerController::FindLobbyManager()
 			UE_LOG(LogTemp, Warning, TEXT("Player found lobby"));
 			lobbyMan = Cast<ALobbyManager>(allLobbyMan[0]);
 		}
+		if (ensure(lobbyMan)) {
+			lobbyMan->QueryLobbyInfo();
+		}
 	}
 }
 
@@ -1401,14 +1420,14 @@ void AFPPlayerController::RelateInGameUI(AFireFighterPawn * fireFighterPawn)
 	}
 }
 
-void AFPPlayerController::MakeBasicFireFighterUI()
+void AFPPlayerController::MakeBasicFireFighterUI(AFireFighterPawn * inPawn)
 {
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn) && ensure(gameBoard))
+	if (!IsLocalController()) return;
+	if (ensure(inPawn) && ensure(gameBoard))
 	{
 		if (ensure(BasicFireFighterClass)) {
 			inGameUI = CreateWidget<UFireFighterUI>(this, BasicFireFighterClass);
-			RelateInGameUI(fireFighterPawn);
+			RelateInGameUI(inPawn);
 			if (ensure(inGameUI)) {
 				inGameUI->AddToViewport();
 			}
@@ -1474,6 +1493,7 @@ void AFPPlayerController::Possess(APawn * InPawn)
 {
 	// on event possessing pawn
 	Super::Possess(InPawn);
+	
 }
 
 void AFPPlayerController::FindChatUI()
@@ -1557,23 +1577,15 @@ void AFPPlayerController::JoinGameLobby(APawn* inPawn)
 	}
 }
 
-void AFPPlayerController::BeginPlay()
+void AFPPlayerController::NotifyPlayerInitialization(AFireFighterPawn* inPawn)
 {
-	Super::BeginPlay();
-	UE_LOG(LogTemp, Warning, TEXT("Player name is: %s"), *playerName);
-	FindGameBoard();
-	// if not in game board, we are in lobby
-	if (!gameBoard) {
-		FindLobbyManager();
-	}
-	FindCrewManager();
 	// it could also be that we found both lobby manager and crew manager in a lobby
 	if (lobbyMan && crewMan) {
-		
-		JoinGameLobby(GetPawn());
+
+		JoinGameLobby(inPawn);
 	}
 	// TODO on later version make different UI with regard of different game
-	MakeBasicFireFighterUI();
+	MakeBasicFireFighterUI(inPawn);
 	MakeOptionPromptUI();
 	FindChatUI();
 
@@ -1598,7 +1610,21 @@ void AFPPlayerController::BeginPlay()
 		// if both crew manager and lobby manager found, in lobby we are, create a lobby UI
 		inGameUI->EnableOperationPanels(false);
 	}
-	
+}
+
+void AFPPlayerController::BeginPlay()
+{
+	Super::BeginPlay();
+	UE_LOG(LogTemp, Warning, TEXT("Player name is: %s"), *playerName);
+	FindGameBoard();
+	// if not in game board, we are in lobby
+	if (!gameBoard) {
+		FindLobbyManager();
+	}
+	FindCrewManager();	
+	// change the mouse cursor to spcified widget
+	// TODO uncomment this line for final build
+	//SetMouseCursorWidget(EMouseCursor::Default, CreateWidget<UUserWidget>(this, CursorWidgetClass));	
 }
 
 void AFPPlayerController::SetOpenDoor()

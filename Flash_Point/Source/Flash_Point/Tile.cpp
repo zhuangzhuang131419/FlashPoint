@@ -1262,6 +1262,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		case EGameOperations::RespawnFireFighter:
 			break;
 		case EGameOperations::Move:
+			UE_LOG(LogTemp, Warning, TEXT("Cost to this tile is: %d"), costToHere);
 			// Move operations are done below
 			if (isReady && canMoveTo) {
 				if (!ensure(localPlayer)) return;
@@ -1337,6 +1338,10 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (!ensure(localPawn)) return;
 			if (!ensure(localPlayer)) return;
 			localPlayer->ServerRevealPOI(this);
+			if (localPawn->GetFireFighterRole() == ERoleType::ImagingTechnician)
+			{
+				localPawn->AdjustFireFighterAP(-1);
+			}
 			break;
 		case EGameOperations::Dodge:
 			if (!ensure(localPawn)) return;
@@ -1462,6 +1467,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 						localPlayer->ServerGetOutAmbulance(localPawn, this, ambulanceOnTile);
 					}
 				}
+				localPlayer->SetNone();
 			}
 			break;
 		case EGameOperations::GetOutFireEngine:
@@ -1480,6 +1486,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 						localPlayer->ServerGetOutFireEngine(localPawn, this, fireEngineOnTile);
 					}
 				}
+				localPlayer->SetNone();
 			}
 			break;
 		case EGameOperations::Radio:
@@ -1569,7 +1576,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 	if (cost != 0) {
 		// if the firefighter is carrying some victim, the cost is doubled
 		cost = cost * inPawn->GetMoveConsumption();
-		if (inPawn->GetCarriedVictim()) {
+		if (inPawn->GetCarriedVictim() || inPawn->GetHazmat()) {
 			// if carrying any victim, double the cost
 			cost = cost * 2;
 			// if the role is rescue dog, double the cost again

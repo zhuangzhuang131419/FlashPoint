@@ -26,6 +26,7 @@ class ALobbyManager;
 class ULobbyUI;
 class AAmbulance;
 class AFireEngine;
+class UUserWidget;
 
 /**
  * 
@@ -37,6 +38,9 @@ class FLASH_POINT_API AFPPlayerController : public APlayerController
 	
 public:
 	AFPPlayerController();
+
+	// for firefighter to call on inorder to initialize payer and fire fighter attributes
+	void NotifyPlayerInitialization(AFireFighterPawn* inPawn);
 
 	// Below functions are for changing operations
 	UFUNCTION(BlueprintCallable, Category="GameOperations")
@@ -274,7 +278,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
 	void RelateInGameUI(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(BlueprintCallable, Category = "Role switch")
-	void MakeBasicFireFighterUI();
+	void MakeBasicFireFighterUI(AFireFighterPawn * inPawn);
 	UFUNCTION(BlueprintCallable, Category = "Option Prompt")
 	void MakeOptionPromptUI();
 
@@ -342,6 +346,8 @@ protected:
 	TSubclassOf<UOptionPrompt> OptionClass = nullptr;
 	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
 	TSubclassOf<ULobbyUI> LobbyUIClass = nullptr;
+	UPROPERTY(BlueprintReadWrite, Category = "Widget class")
+	TSubclassOf<UUserWidget> CursorWidgetClass = nullptr;
 
 	void FindChatUI();
 	void FindCrewManager();

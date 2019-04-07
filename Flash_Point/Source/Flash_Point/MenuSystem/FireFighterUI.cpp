@@ -194,8 +194,10 @@ bool UFireFighterUI::Initialize()
 
 void UFireFighterUI::NotifyCrewChange()
 {
+	if (!ensure(localPlayer)) return;
 	if (ensure(localPawn)) {
-		if (localPawn->GetFireFighterRole() == ERoleType::FireCaptain) {
+		if (localPawn->GetFireFighterRole() == ERoleType::FireCaptain && localPlayer->GetCurrentOperation() == EGameOperations::Command) {
+			// for starting of the game this is not applicapable
 			localPlayer->ServerSetCommandStatus(localPawn, EAcceptanceStatus::Empty);
 		}
 	}
