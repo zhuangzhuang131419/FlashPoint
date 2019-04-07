@@ -1299,8 +1299,8 @@ FBoardSaveInfo AGameBoard::SaveCurrentBoard()
 
 ATile * AGameBoard::GenerateRandomPositionInQuadrant()
 {
-	int32 startx;
-	int32 starty;
+	int32 startx = -1;
+	int32 starty = -1;
 	if (ensure(engineLocA))
 	{
 		engineLocA->GetLocation(startx, starty);
