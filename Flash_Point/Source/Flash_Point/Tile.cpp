@@ -13,7 +13,7 @@
 // Sets default values
 ATile::ATile()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	// Intialize the floor and plane objects
@@ -240,7 +240,7 @@ void ATile::PlaceVictim()
 		VictimSocketLocation,
 		FRotator(0, 0, 0)
 		);
-	
+
 	if (ensure(newVictim))
 	{
 		newVictim->SetPlacedOn(this);
@@ -298,7 +298,7 @@ void ATile::PawnMoveToHere(AFireFighterPawn* movingPawn, const TArray<ATile*>& t
 				board->SetCurrentPOI(board->currentPOI - 1);
 			}
 			POIOnTile->Destroy();
-			POIOnTile = nullptr;			
+			POIOnTile = nullptr;
 		}
 	}
 }
@@ -508,7 +508,7 @@ void ATile::AdvancePOI()
 				if (ensure(POIStatus == EPOIStatus::Empty))
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Advance POI"));
-					
+
 					SetPOIStatus(EPOIStatus::Hided);
 					FVector POISocketLocation = TileMesh->GetSocketLocation(FName("POI"));
 					APOI* inPOI = GetWorld()->SpawnActor<APOI>(
@@ -526,7 +526,7 @@ void ATile::AdvancePOI()
 					{
 						UE_LOG(LogTemp, Warning, TEXT("Wrong"));
 					}
-					
+
 				}
 			}
 		}
@@ -652,7 +652,7 @@ void ATile::AdvanceHazmat()
 				HazmatClass,
 				TileMesh->GetSocketLocation(FName("VisualEffects")),
 				FRotator(0, 0, 0)
-			);
+				);
 			if (ensure(inHazmat))
 			{
 				inHazmat->SetHazmatLoc(inHazmat->GetActorLocation());
@@ -686,26 +686,26 @@ void ATile::SetClearOnTile()
 void ATile::AdvanceExplosion(EDirection direction)
 {
 	AEdgeUnit* adjacentWall = nullptr;
-	switch (direction) 
+	switch (direction)
 	{
-		case EDirection::Down:
-			adjacentWall = backWall;
-			break;
-		case EDirection::Left:
-			adjacentWall = leftWall;
-			break;
-		case EDirection::Right:
-			adjacentWall = rightWall;
-			break;
-		case EDirection::Up:
-			adjacentWall = frontWall;
-			break;
+	case EDirection::Down:
+		adjacentWall = backWall;
+		break;
+	case EDirection::Left:
+		adjacentWall = leftWall;
+		break;
+	case EDirection::Right:
+		adjacentWall = rightWall;
+		break;
+	case EDirection::Up:
+		adjacentWall = frontWall;
+		break;
 	}
 
 	if (adjacentWall)
 	{
 		if (adjacentWall->IsBlocked())
-		{			
+		{
 			if (adjacentWall->GetEdgeType() == EEdgeType::Wall)
 			{
 				if (Cast<AWall>(adjacentWall)->isChoped)
@@ -812,7 +812,7 @@ bool ATile::Flashover()
 	bool result2 = true;
 	bool result3 = true;
 	bool result4 = true;
-	if (GetFireStatus() == EFireStatus::Smoke) 
+	if (GetFireStatus() == EFireStatus::Smoke)
 	{
 		result1 = Flashover(EDirection::Down);
 		result2 = Flashover(EDirection::Up);
@@ -1082,7 +1082,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 		case EGameOperations::Dodge:
 			if (!ensure(localPawn)) return;
 			if (!localPawn->GetCanDodge()) return;
-			if (fireStatus != EFireStatus::Fire) 
+			if (fireStatus != EFireStatus::Fire)
 			{
 				if (AdjacentToPawn(localPawn))
 				{
@@ -1128,9 +1128,78 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			break;
 		case EGameOperations::DriveAmbulance:
 			if (!ensure(localPawn)) { return; }
-			if (this->type == ETileType::AmbulancePark && localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+			if (this->type == ETileType::AmbulancePark)
 			{
-				PlaneColorSwitch(ableMat);
+				if (ensure(board) && ensure(board->GetAmbulanceLocA()) && ensure(board->GetAmbulance()))
+				{
+					if ((!board->GetAmbulanceLocA()->GetLeft() && !this->GetRight())
+						|| (!board->GetAmbulanceLocA()->GetRight() && !this->GetLeft())
+						|| (!board->GetAmbulanceLocA()->GetBack() && !this->GetFront())
+						|| (!board->GetAmbulanceLocA()->GetFront() && !this->GetBack()))
+					{
+						if (localPawn->GetCurrentAP() >= 2 * localPawn->GetDriveConsumption())
+						{
+							PlaneColorSwitch(ableMat);
+						}
+						else
+						{
+							PlaneColorSwitch(unableMat);
+						}
+					}
+					else
+					{
+						if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+						{
+							PlaneColorSwitch(ableMat);
+						}
+						else
+						{
+							PlaneColorSwitch(unableMat);
+						}
+					}
+				}
+			}
+			else
+			{
+				PlaneColorSwitch(unableMat);
+			}
+			break;
+		case EGameOperations::Radio:
+			if (type == ETileType::AmbulancePark && this != board->GetAmbulanceLocA() && this != board->GetAmbulanceLocB())
+			{
+				AAmbulance* calledAmbulance = nullptr;
+				if (ensure(board))
+				{
+					calledAmbulance = board->GetAmbulance();
+					if (ensure(calledAmbulance))
+					{
+						if ((!board->GetAmbulanceLocA()->GetLeft() && !this->GetRight())
+							|| (!board->GetAmbulanceLocA()->GetRight() && !this->GetLeft())
+							|| (!board->GetAmbulanceLocA()->GetBack() && !this->GetFront())
+							|| (!board->GetAmbulanceLocA()->GetFront() && !this->GetBack()))
+						{
+							if (localPawn->GetCurrentAP() >= 2 * localPawn->GetDriveConsumption())
+							{
+								PlaneColorSwitch(ableMat);
+							}
+							else
+							{
+								PlaneColorSwitch(unableMat);
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+							{
+								PlaneColorSwitch(ableMat);
+							}
+							else
+							{
+								PlaneColorSwitch(unableMat);
+							}
+						}
+					}
+				}
 			}
 			else
 			{
@@ -1138,9 +1207,36 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 			}
 			break;
 		case EGameOperations::DriveFireEngine:
-			if (this->type == ETileType::FireEnginePark && localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+			if (this->type == ETileType::FireEnginePark)
 			{
-				PlaneColorSwitch(ableMat);
+				if (ensure(board) && ensure(board->GetFireEngineLocA()) && ensure(board->GetFireEngine()))
+				{
+					if ((!board->GetFireEngineLocA()->GetLeft() && !this->GetRight())
+						|| (!board->GetFireEngineLocA()->GetRight() && !this->GetLeft())
+						|| (!board->GetFireEngineLocA()->GetBack() && !this->GetFront())
+						|| (!board->GetFireEngineLocA()->GetFront() && !this->GetBack()))
+					{
+						if (localPawn->GetCurrentAP() >= 2 * localPawn->GetDriveConsumption())
+						{
+							PlaneColorSwitch(ableMat);
+						}
+						else
+						{
+							PlaneColorSwitch(unableMat);
+						}
+					}
+					else
+					{
+						if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+						{
+							PlaneColorSwitch(ableMat);
+						}
+						else
+						{
+							PlaneColorSwitch(unableMat);
+						}
+					}
+				}
 			}
 			else
 			{
@@ -1180,7 +1276,7 @@ void ATile::OnTileOver(UPrimitiveComponent * Component)
 				}
 			}
 			break;
-		case EGameOperations::PlaceFireEngine: 
+		case EGameOperations::PlaceFireEngine:
 			if (type == ETileType::FireEnginePark) {
 				PlaneColorSwitch(ableMat);
 			}
@@ -1238,7 +1334,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 		EGameOperations ops = localPlayer->GetCurrentOperation();
 		switch (ops)
 		{
-		case EGameOperations::PlaceFireFighter:			
+		case EGameOperations::PlaceFireFighter:
 			if (outside) {
 				localPlayer->SetNone();
 				// Place firefighter to current tile
@@ -1301,7 +1397,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 				{
 					localPawn->AdjustSpecialistMoveAP(-costToHere);
 				}
-				
+
 				canMoveTo = false;
 				isReady = false;
 				costToHere = 0;
@@ -1315,7 +1411,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			if (!ensure(localPawn)) return;
 			if (localPawn->GetCurrentAP() + localPawn->GetExtinguishAP() < localPawn->GetExtinguishConsumption()) return;
 			if (fireStatus == EFireStatus::Clear) return;
-			if (localPawn->GetFireFighterRole() != ERoleType::CAFSFirefighter) 
+			if (localPawn->GetFireFighterRole() != ERoleType::CAFSFirefighter)
 			{
 				localPawn->AdjustFireFighterAP(-localPawn->GetExtinguishConsumption());
 			}
@@ -1349,8 +1445,8 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			UE_LOG(LogTemp, Warning, TEXT("Dodge Clicked"));
 			UE_LOG(LogTemp, Warning, TEXT("AdjacentToPawn(localPawn)::%d "), AdjacentToPawn(localPawn));
 			if (fireStatus == EFireStatus::Fire) { return; }
-			if (AdjacentToPawn(localPawn)) 
-			{  
+			if (AdjacentToPawn(localPawn))
+			{
 				if (localPawn->GetCurrentAP() >= localPawn->GetDodgeConsumption())
 				{
 					pathToHere.Empty();
@@ -1413,7 +1509,7 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					localPlayer->SetNone();
 					localPlayer->CancelCommand();
 					localPlayer->ServerCommandTileOperation(commanded, localPawn, traceTiles);
-				}				
+				}
 			}
 			break;
 		case EGameOperations::DriveFireEngine:
@@ -1422,13 +1518,28 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			{
 				if (ensure(localPawn))
 				{
-					if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+					if (ensure(board) && ensure(board->GetFireEngineLocA()) && ensure(board->GetFireEngine()))
 					{
-						if (ensure(board->GetFireEngine()))
+						if ((!board->GetFireEngineLocA()->GetLeft() && !this->GetRight())
+							|| (!board->GetFireEngineLocA()->GetRight() && !this->GetLeft())
+							|| (!board->GetFireEngineLocA()->GetBack() && !this->GetFront())
+							|| (!board->GetFireEngineLocA()->GetFront() && !this->GetBack()))
 						{
-							localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
-							localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
-							board->GetFireEngine()->setFireEngineUI(false);
+							if (localPawn->GetCurrentAP() >= 2 * localPawn->GetDriveConsumption())
+							{
+								localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
+								localPawn->AdjustFireFighterAP(-2 * localPawn->GetDriveConsumption());
+								board->GetFireEngine()->setFireEngineUI(false);
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+							{
+								localPlayer->ServerMoveFireEngine(board->GetFireEngine(), this);
+								localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
+								board->GetFireEngine()->setFireEngineUI(false);
+							}
 						}
 					}
 				}
@@ -1440,13 +1551,28 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 			{
 				if (ensure(localPawn))
 				{
-					if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+					if (ensure(board) && ensure(board->GetAmbulanceLocA()) && ensure(board->GetAmbulance()))
 					{
-						if (ensure(board->GetAmbulance()))
+						if ((!board->GetAmbulanceLocA()->GetLeft() && !this->GetRight())
+							|| (!board->GetAmbulanceLocA()->GetRight() && !this->GetLeft())
+							|| (!board->GetAmbulanceLocA()->GetBack() && !this->GetFront())
+							|| (!board->GetAmbulanceLocA()->GetFront() && !this->GetBack()))
 						{
-							localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
-							localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
-							board->GetAmbulance()->setAmbulanceUI(false);
+							if (localPawn->GetCurrentAP() >= 2 * localPawn->GetDriveConsumption())
+							{
+								localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
+								localPawn->AdjustFireFighterAP(-2 * localPawn->GetDriveConsumption());
+								board->GetAmbulance()->setAmbulanceUI(false);
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+							{
+								localPlayer->ServerMoveAmbulance(board->GetAmbulance(), this);
+								localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
+								board->GetAmbulance()->setAmbulanceUI(false);
+							}
 						}
 					}
 				}
@@ -1499,9 +1625,30 @@ void ATile::OnTileClicked(AActor* Target, FKey ButtonPressed)
 					calledAmbulance = board->GetAmbulance();
 					if (ensure(calledAmbulance))
 					{
-						localPlayer->ServerMoveAmbulance(calledAmbulance, this);
+						if ((!board->GetAmbulanceLocA()->GetLeft() && !this->GetRight())
+							|| (!board->GetAmbulanceLocA()->GetRight() && !this->GetLeft())
+							|| (!board->GetAmbulanceLocA()->GetBack() && !this->GetFront())
+							|| (!board->GetAmbulanceLocA()->GetFront() && !this->GetBack()))
+						{
+							if (localPawn->GetCurrentAP() >= 2 * localPawn->GetDriveConsumption())
+							{
+								localPlayer->ServerMoveAmbulance(calledAmbulance, this);
+								localPawn->AdjustFireFighterAP(-2 * localPawn->GetDriveConsumption());
+								board->GetAmbulance()->setAmbulanceUI(false);
+							}
+						}
+						else
+						{
+							if (localPawn->GetCurrentAP() >= localPawn->GetDriveConsumption())
+							{
+								localPlayer->ServerMoveAmbulance(calledAmbulance, this);
+								localPawn->AdjustFireFighterAP(-localPawn->GetDriveConsumption());
+								board->GetAmbulance()->setAmbulanceUI(false);
+							}
+						}
 					}
 				}
+				localPlayer->SetNone();
 			}
 			break;
 		case EGameOperations::PlaceAmbulance:
@@ -1641,7 +1788,7 @@ bool ATile::AdjacentToPawn(AFireFighterPawn * inPawn)
 		// check if the pawn is around the tile
 		ATile* tempTile = nullptr;
 		// check on front tile
-		if (frontWall && !frontWall->IsBlocked()) {			
+		if (frontWall && !frontWall->IsBlocked()) {
 			tempTile = frontWall->GetOtherNeighbour(this);
 			if (ensure(tempTile)) {
 				if (tempTile->placedFireFighters.Contains(inPawn)) {
@@ -1802,7 +1949,7 @@ void ATile::Rep_FireStatus()
 
 int32 ATile::GetID()
 {
-	return xLoc*8 + yLoc;
+	return xLoc * 8 + yLoc;
 }
 
 void ATile::Rep_BlastEffect()
@@ -1861,7 +2008,7 @@ void ATile::BeginPlay()
 	if (HasAuthority()) {
 		SetReplicates(true);
 	}
-	BindCursorFunc();	
+	BindCursorFunc();
 
 	// Find the local player and local pawn
 	localPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());

@@ -129,7 +129,7 @@ void AFPPlayerController::NotifyReRoll()
 		UE_LOG(LogTemp, Warning, TEXT("NotifyReRoll"));
 		if (ensure(OptionPromptUI))
 		{
-			OptionPromptUI->PromptOperation(EOptionPromptType::FireDeckGunReRoll, "The target tile has been highlighted\n please choose");
+			OptionPromptUI->PromptOperation(EOptionPromptType::FireDeckGunReRoll, "The target tile has been highlighted\n Please Reroll");
 		}
 	}
 }
