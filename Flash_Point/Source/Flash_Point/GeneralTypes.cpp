@@ -26,7 +26,6 @@ int32 GeneralTypes::AStarShortest(int32 maxDepth, ATile * start, ATile * goal, T
 	int32 cost = 0;
 	int32 tempCost = 0;
 	while (searchNodes.Num() > 0) {
-		UE_LOG(LogTemp, Warning, TEXT("Before expansion"));
 		// get the min node
 		searchNodes.HeapPop(tempNode);
 		current = tempNode.nodeTile;
@@ -65,8 +64,6 @@ int32 GeneralTypes::AStarShortest(int32 maxDepth, ATile * start, ATile * goal, T
 				}
 			}
 		}
-		UE_LOG(LogTemp, Warning, TEXT("After expansion"));
-		UE_LOG(LogTemp, Warning, TEXT("Heap size: %d"), searchNodes.Num());
 		// check if min of the heap is a goal state
 		if (searchNodes.Num() > 0 && searchNodes.HeapTop().nodeTile == goal) {
 			success = true;
@@ -78,7 +75,6 @@ int32 GeneralTypes::AStarShortest(int32 maxDepth, ATile * start, ATile * goal, T
 		temp = goal;
 		while (temp && temp != start && trace.Num() < 80) {
 			// insert at begining each time
-			UE_LOG(LogTemp, Warning, TEXT("trace adding"));
 			trace.Add(temp);
 			temp = temp->GetPrev();
 		}

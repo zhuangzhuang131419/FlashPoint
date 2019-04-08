@@ -41,7 +41,8 @@ public:
 	UFUNCTION()
 	void OnAmbulanceClicked(AActor* Target, FKey ButtonPressed);
 	void ShowAmbulancePlaced(bool placed);
-	void RescueVictims(TArray<AVictim*>* victims, ATile* currentTile);
+	void RescueVictims();
+	void RescueVictims(ATile* targetTile);
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

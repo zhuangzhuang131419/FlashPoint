@@ -9,7 +9,7 @@
 // Sets default values
 AAmbulance::AAmbulance()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
 	ambulanceMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("ambulanceMesh"));
@@ -109,30 +109,47 @@ void AAmbulance::ShowAmbulancePlaced(bool placed)
 	}
 }
 
-void AAmbulance::RescueVictims(TArray<AVictim*>* victims, ATile* currentTile)
+void AAmbulance::RescueVictims()
 {
-	//for (int i = 0; i < victims->Num(); i++)
-	//{
-	//	AVictim* tempVictim = (*victims)[i];
-	//	if (!tempVictim) continue;
-	//	tempVictim->Destroy();
-	//	currentTile->SetPOIStatus(EPOIStatus::Empty);
-	//	currentTile->GetGameBoard()->SetVictimSavedNum(
-	//		currentTile->GetGameBoard()->victimSavedNum + 1
-	//	);
-	//	currentTile->GetGameBoard()->SetCurrentPOI(
-	//		currentTile->GetGameBoard()->currentPOI - 1
-	//	);
-	//}
+	UE_LOG(LogTemp, Warning, TEXT("Ambulance rescue victim."));
+	if (ensure(board) && ensure(board->GetAmbulanceLocA()) && ensure(board->GetAmbulanceLocB()))
+	{
+		RescueVictims(board->GetAmbulanceLocA());
+		RescueVictims(board->GetAmbulanceLocB());
+	}
+}
+
+void AAmbulance::RescueVictims(ATile* targetTile)
+{
+	if (ensure(targetTile) && ensure(targetTile->GetType() == ETileType::AmbulancePark))
+	{
+		for (size_t i = 0; i < targetTile->GetVictims()->Num(); i++)
+		{
+			AVictim* tempVictim = (*targetTile->GetVictims())[i];
+			if (ensure(tempVictim))
+			{
+				tempVictim->Destroy();
+				targetTile->SetPOIStatus(EPOIStatus::Empty);
+				targetTile->GetGameBoard()->SetVictimSavedNum(
+					targetTile->GetGameBoard()->victimSavedNum + 1
+				);
+				UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), targetTile->GetGameBoard()->victimSavedNum);
+				targetTile->GetGameBoard()->SetCurrentPOI(
+					targetTile->GetGameBoard()->currentPOI - 1
+				);
+				UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), targetTile->GetGameBoard()->currentPOI);
+			}
+		}
+	}
 }
 
 void AAmbulance::setAmbulanceUI(bool status)
 {
-	if(!status)
+	if (!status)
 	{
 		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
 	}
-	else{
+	else {
 		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
 	}
 }

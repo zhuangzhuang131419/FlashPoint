@@ -857,6 +857,7 @@ void ATile::setAmbulanceLocation(AAmbulance * currentAmbulance)
 					if (!frontWall) { adjacentParkTile->setAmbulanceLocation(currentAmbulance, EDirection::Up); }
 					else { adjacentParkTile->setAmbulanceLocation(currentAmbulance, EDirection::Down); }
 				}
+				currentAmbulance->RescueVictims();
 			}
 		}
 	}
