@@ -48,6 +48,7 @@ void AAmbulance::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AAmbulance, ambulanceMesh);
 	DOREPLIFETIME(AAmbulance, isPlaced);
 	DOREPLIFETIME(AAmbulance, passengers);
+	DOREPLIFETIME(AAmbulance, board);
 }
 
 void AAmbulance::Rep_AmbulancePlacing()

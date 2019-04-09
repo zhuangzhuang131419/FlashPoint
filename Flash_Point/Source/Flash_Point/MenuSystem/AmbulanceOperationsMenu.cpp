@@ -64,7 +64,7 @@ void UAmbulanceOperationsMenu::GetOutAmbulance()
 void UAmbulanceOperationsMenu::CallAmbulance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Call ambulance has been clicked."));
-	if (ensure(fireFighterPawn))
+	if (ensure(fireFighterPawn) && fireFighterPawn->GetFireFighterRole() != ERoleType::RescueDog)
 	{
 		// if (!fireFighterPawn->IsInCar()) { return; }
 		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
@@ -79,7 +79,7 @@ void UAmbulanceOperationsMenu::CallAmbulance()
 void UAmbulanceOperationsMenu::DriveAmbulance()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drive ambulance has been clicked."));
-	if (ensure(fireFighterPawn))
+	if (ensure(fireFighterPawn) && fireFighterPawn->GetFireFighterRole() != ERoleType::RescueDog)
 	{
 		if (!fireFighterPawn->IsInCar()) { return; }
 		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
