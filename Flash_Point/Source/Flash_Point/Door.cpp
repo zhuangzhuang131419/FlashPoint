@@ -176,12 +176,13 @@ void ADoor::OnDoorClicked(AActor* Target, FKey ButtonPressed)
 					// check if the player's firefighter has enough command AP
 					AFireFighterPawn* fireFighterPawn = playerController->GetCommanded();
 					AFireFighterPawn* commander = Cast<AFireFighterPawn>(playerController->GetPawn());
-					if (fireFighterPawn && commander) {
+					if (fireFighterPawn && commander && (fireFighterPawn->GetFireFighterRole() != ERoleType::RescueDog)) {
 						if (commander->GetCommandAP() < fireFighterPawn->GetOpenConsumption()) {
 							UE_LOG(LogTemp, Warning, TEXT("AP not enough to open/close door"));
 							return;
 						}
 						if (!fireFighterPawn->IsAdjacentToWall(this)) return;
+						if (commander->HasCommandedCAFS() && fireFighterPawn->GetFireFighterRole() == ERoleType::CAFSFirefighter) return;
 						playerController->ServerCommandDoorOperation(fireFighterPawn, commander, this);
 						playerController->SetNone();
 						playerController->CancelCommand();
@@ -231,7 +232,7 @@ void ADoor::OnDoorOver(UPrimitiveComponent * Component)
 		// if firefighter is not adjacent to this wall, just return
 		if (!fireFighterPawn->IsAdjacentToWall(this)) return;
 		// if the firefighter's Ap is not enough, switch color to disable
-		if (commander->GetCommandAP() < fireFighterPawn->GetOpenConsumption()) {
+		if (commander->GetCommandAP() < fireFighterPawn->GetOpenConsumption() || (fireFighterPawn->GetFireFighterRole() == ERoleType::RescueDog)) {
 			if (ensure(WallMesh)) {
 				WallMesh->SetMaterial(0, unableMat);
 			}
@@ -242,7 +243,12 @@ void ADoor::OnDoorOver(UPrimitiveComponent * Component)
 					WallMesh->SetMaterial(0, unableMat);
 				}
 				else {
-					WallMesh->SetMaterial(0, ableMat);
+					if (fireFighterPawn->GetFireFighterRole() == ERoleType::CAFSFirefighter && commander->HasCommandedCAFS()) {
+						WallMesh->SetMaterial(0, unableMat);
+					}
+					else {
+						WallMesh->SetMaterial(0, ableMat);
+					}
 				}
 			}
 		}

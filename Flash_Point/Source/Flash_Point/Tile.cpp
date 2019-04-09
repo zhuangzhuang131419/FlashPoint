@@ -1734,7 +1734,7 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 			}
 		}
 		// here is the case if the firefighter is carring some victim but the trace has fire
-		if (hasFire && inPawn->GetCarriedVictim()) {
+		if (hasFire && (inPawn->GetCarriedVictim() || inPawn->GetLeading())) {
 			for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 				traceTiles[i]->PlaneColorSwitch(unableMat);
 			}
@@ -1742,10 +1742,27 @@ void ATile::FindPathToCurrent(AFireFighterPawn* inPawn)
 		else if (inPawn->GetIsCommanded()) {
 			// here we are chekcing if the captain has enough command ap to command the operation
 			if (ensure(localPawn)) {
-				if (localPawn->GetCommandAP() >= cost) {
+				if ((inPawn->GetFireFighterRole() != ERoleType::CAFSFirefighter) && (localPawn->GetCommandAP() >= cost)) {
 					canMoveTo = true;
 					for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
 						traceTiles[i]->PlaneColorSwitch(ableMat);
+					}
+				}
+				else if ((inPawn->GetFireFighterRole() == ERoleType::CAFSFirefighter) && (cost <= 1)) {
+					// see if local player has commanded CAFS
+					if (ensure(localPlayer)) {
+						if (!localPawn->HasCommandedCAFS()) {
+							// CAFS can only be commanded for once
+							canMoveTo = true;
+							for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+								traceTiles[i]->PlaneColorSwitch(ableMat);
+							}
+						}
+						else {
+							for (int32 i = traceTiles.Num() - 1; i >= 0; i--) {
+								traceTiles[i]->PlaneColorSwitch(unableMat);
+							}
+						}
 					}
 				}
 				else {

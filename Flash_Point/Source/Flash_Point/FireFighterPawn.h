@@ -55,6 +55,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCommandAP(int32 inAP) { commandAP = inAP; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	bool HasCommandedCAFS() { return captainCommandedCAFS; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
+	void SetHasCommandedCAFS(bool hasCommanded) { captainCommandedCAFS = hasCommanded; }
+	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	int32 GetExtinguishAP() { return extinguishAP; }
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetExtinguishAP(int32 inAP) { extinguishAP = inAP; }
@@ -279,6 +283,8 @@ protected:
 	ADoor* orderedDoor = nullptr;
 	UPROPERTY(ReplicatedUsing = Rep_NotifyCommandedTiles, BlueprintReadWrite, VisibleAnyWhere, Category = "Commanding Related")
 	TArray<ATile*> orderedTiles;
+	UPROPERTY(replicated, BlueprintReadWrite, VisibleAnyWhere, Category = "Firefighter Attributes")
+	bool captainCommandedCAFS = false;
 
 	// only used for driver
 	ATile* fireDeckTargetTile = nullptr;

@@ -72,6 +72,8 @@ protected:
 	void OnExitClicked();
 	UFUNCTION()
 	void OnSaveClicked();
+	UFUNCTION()
+	void OnEndGameExit();
 
 	// BINDED WIDGETS
 	// A text box to add text on during chat
@@ -91,6 +93,8 @@ protected:
 	UButton* SaveButton = nullptr;
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UButton* ExitButton = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* EndGameQuit = nullptr;
 	// teammate status
 	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
 	UFireFighterStatus* P0Status = nullptr;

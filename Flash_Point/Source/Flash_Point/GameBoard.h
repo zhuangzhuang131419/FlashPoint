@@ -170,6 +170,7 @@ public:
 	FBoardSaveInfo SaveCurrentBoard();
 
 	ATile* GenerateRandomPositionInQuadrant();
+	void RelocateCamera();
 
 
 protected:

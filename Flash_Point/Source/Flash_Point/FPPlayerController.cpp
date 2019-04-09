@@ -145,6 +145,9 @@ void AFPPlayerController::EndPlayerTurn()
 	// at the end of the turn, adjust ap according to end turn
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (ensure(fireFighterPawn)) {
+		if (fireFighterPawn->GetFireFighterRole() == ERoleType::FireCaptain) {
+			ServerSetHasControlledCAFS(fireFighterPawn, false);
+		}
 		fireFighterPawn->EndTurnAdjustAP();
 		fireFighterPawn->SetHasGainedAPThisTurn(false);
 	}
@@ -831,6 +834,7 @@ void AFPPlayerController::ServerSwitchRole_Implementation(ACrewManager * inCrewM
 	// if the firefighter's role was veteran, set the veteran loc to null
 	if (fireFighterPawn->GetFireFighterRole() == ERoleType::Veteran) {
 		if (ensure(gameBoard)) {
+			UE_LOG(LogTemp, Warning, TEXT("Empty veteran location at switch role."));
 			gameBoard->SetVeteranLoc(nullptr);
 		}
 	}
@@ -839,7 +843,8 @@ void AFPPlayerController::ServerSwitchRole_Implementation(ACrewManager * inCrewM
 		fireFighterPawn->SetFireFighterRole(inRole);
 		fireFighterPawn->AdjustRoleProperties(inRole);
 		// as the switch role complete, if the firefighter is now veteran, set the veteran loc
-		if (ensure(gameBoard)) {
+		if (ensure(gameBoard) && (inRole == ERoleType::Veteran)) {
+			UE_LOG(LogTemp, Warning, TEXT("Reset veteran location at switch role."));
 			gameBoard->SetVeteranLoc(fireFighterPawn->GetPlacedOn());
 		}
 	}	
@@ -875,7 +880,7 @@ bool AFPPlayerController::ServerSpecialistTurnAdjust_Validate(AFireFighterPawn *
 
 void AFPPlayerController::ServerCommandDoorOperation_Implementation(AFireFighterPawn * fireFighterPawn, AFireFighterPawn * captain, ADoor * target)
 {
-	if (ensure(fireFighterPawn) && ensure(captain)) {
+	if (ensure(fireFighterPawn)) {
 		fireFighterPawn->CommandDoorOperation(target, captain);
 		// as the operation is sent to the player, captain should be waiting for the command to be done
 		if (!captain) { return; }
@@ -1219,6 +1224,19 @@ void AFPPlayerController::ServerRemoveHazmat_Implementation(AFireFighterPawn * h
 }
 
 bool AFPPlayerController::ServerRemoveHazmat_Validate(AFireFighterPawn * haztec, AHazmat * inHazmat)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerSetHasControlledCAFS_Implementation(AFireFighterPawn * captain, bool hasCommanded)
+{
+	if (!ensure(captain)) return;
+	if (captain->GetFireFighterRole() == ERoleType::FireCaptain) {
+		captain->SetHasCommandedCAFS(hasCommanded);
+	}
+}
+
+bool AFPPlayerController::ServerSetHasControlledCAFS_Validate(AFireFighterPawn * captain, bool hasCommanded)
 {
 	return true;
 }
@@ -1970,6 +1988,16 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	// just switch fire fighter role if the player is server
 	if (HasAuthority()) {
 		if (ensure(crewMan)) {
+			if (fireFighterPawn->GetFireFighterRole() == ERoleType::Veteran) {
+				if (ensure(gameBoard)) {
+					UE_LOG(LogTemp, Warning, TEXT("Empty veteran location at switch role."));
+					gameBoard->SetVeteranLoc(nullptr);
+				}
+			}
+			if (ensure(gameBoard) && (inRole == ERoleType::Veteran)) {
+				UE_LOG(LogTemp, Warning, TEXT("Reset veteran location at switch role."));
+				gameBoard->SetVeteranLoc(fireFighterPawn->GetPlacedOn());
+			}
 			crewMan->SwitchRolesFromTo(fireFighterPawn->GetFireFighterRole(), inRole);
 			fireFighterPawn->SetFireFighterRole(inRole);
 			fireFighterPawn->AdjustRoleProperties(inRole);

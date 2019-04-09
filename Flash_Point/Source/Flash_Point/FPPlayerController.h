@@ -246,6 +246,8 @@ public:
 	void ServerMoveFireEngine(AFireEngine* localEngine, ATile* currentTile);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerRemoveHazmat(AFireFighterPawn* haztec, AHazmat* inHazmat);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerSetHasControlledCAFS(AFireFighterPawn* captain, bool hasCommanded);
 
 	UFUNCTION(BlueprintCallable)
 	void DropVictim();

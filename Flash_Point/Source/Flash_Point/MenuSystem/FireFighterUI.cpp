@@ -188,6 +188,8 @@ bool UFireFighterUI::Initialize()
 		SaveButton->OnClicked.AddDynamic(this, &UFireFighterUI::OnSaveClicked);
 		if (!ensure(ExitButton)) return false;
 		ExitButton->OnClicked.AddDynamic(this, &UFireFighterUI::OnExitClicked);
+		if (!ensure(EndGameQuit)) return false;
+		EndGameQuit->OnClicked.AddDynamic(this, &UFireFighterUI::OnEndGameExit);
 	}
 	return success;
 }
@@ -240,4 +242,10 @@ void UFireFighterUI::OnSaveClicked()
 	else {
 		saveGamePanel->SetVisibility(ESlateVisibility::Visible);
 	}
+}
+
+void UFireFighterUI::OnEndGameExit()
+{
+	if (!ensure(localPlayer)) return;
+	localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
 }

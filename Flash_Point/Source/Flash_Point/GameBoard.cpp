@@ -1192,6 +1192,19 @@ void AGameBoard::InitializeBoardAttributes()
 	}
 }
 
+void AGameBoard::RelocateCamera()
+{
+	// relocate each player's camera
+	if (ensure(CameraClass)) {
+		AViewPortCamera* camera = GetWorld()->SpawnActor<AViewPortCamera>(
+			CameraClass,
+			FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight),
+			FRotator(0, 0, 0)
+			);
+		camera->RelocateAndSetToViewPort(FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
+	}
+}
+
 // Called when the game starts or when spawned
 void AGameBoard::BeginPlay()
 {
@@ -1223,15 +1236,6 @@ void AGameBoard::BeginPlay()
 	Super::BeginPlay();
 
 	//RefreshBoard();
-	// relocate each player's camera
-	if (ensure(CameraClass)) {
-		AViewPortCamera* camera = GetWorld()->SpawnActor<AViewPortCamera>(
-			CameraClass,
-			FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight),
-			FRotator(0, 0, 0)
-			);
-		camera->RelocateAndSetToViewPort(FVector(boardWidth * TILE_SIZE / 2 - TILE_SIZE, boardLength * TILE_SIZE / 2 + TILE_SIZE, camHeight));
-	}
 
 	// get the local player reference
 	localPlayer = Cast<AFPPlayerController>(GetWorld()->GetFirstPlayerController());

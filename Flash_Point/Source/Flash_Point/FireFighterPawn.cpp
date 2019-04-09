@@ -604,7 +604,7 @@ void AFireFighterPawn::Rep_NotifyCommandedDoor()
 				orderedDoor->SetCommandTarget(true);
 			}
 			// prompt the movement operation
-			localPlayer->PromtOptionPanel(EOptionPromptType::CommandDoor, "Captain wants you to open the door.");
+			localPlayer->PromtOptionPanel(EOptionPromptType::CommandDoor, "Captain wants you to handle the door.");
 		}	
 	}
 }
@@ -895,6 +895,9 @@ void AFireFighterPawn::AcceptMoveCommand(bool accepted)
 			}
 			// Set the captain's acceptance status to accepted
 			if (ensure(captain)) {
+				if (fireFighterRole == ERoleType::CAFSFirefighter) {
+					myOwner->ServerSetHasControlledCAFS(captain, true);
+				}
 				myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Accepted);
 				int32 apConsume = -GetMoveConsumption() * (orderedTiles.Num() - 1);
 				if (carriedVictim || hazmat) {
@@ -938,16 +941,20 @@ void AFireFighterPawn::AcceptDoorCommand(bool accepted)
 		}
 		// Set the captain's acceptance status to accepted
 		if (ensure(captain)) {
+			if (fireFighterRole == ERoleType::CAFSFirefighter) {
+				myOwner->ServerSetHasControlledCAFS(captain, true);
+			}
 			myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Accepted);
 			myOwner->ServerAdjustCommandAP(captain, -GetOpenConsumption());
 		}
 	}
 	else {
-		// Set the captain's acceptance status to accepted
+		// Set the captain's acceptance status to rejected
 		if (ensure(captain)) {
 			myOwner->ServerSetCommandStatus(captain, EAcceptanceStatus::Rejected);
 		}
 	}
+	orderedDoor->SetCommandTarget(false);
 	myOwner->ServerCommandDoorOperation(this, nullptr, nullptr);
 }
 
@@ -1001,6 +1008,7 @@ void AFireFighterPawn::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& Out
 	DOREPLIFETIME(AFireFighterPawn, lobbyRole);
 	DOREPLIFETIME(AFireFighterPawn, isInCar);
 	DOREPLIFETIME(AFireFighterPawn, driveConsumption);
+	DOREPLIFETIME(AFireFighterPawn, captainCommandedCAFS);
 }
 
 bool AFireFighterPawn::GetCanDodge()
@@ -1099,6 +1107,9 @@ void AFireFighterPawn::InitializeFireFighter()
 	if (ensure(world)) {
 		if (owningPlayer == world->GetFirstPlayerController()) {
 			ShowControllable(true, true);
+			if (ensure(playingBoard)) {
+				playingBoard->RelocateCamera();
+			}
 		}
 	}
 
