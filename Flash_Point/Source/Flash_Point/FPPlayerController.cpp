@@ -694,7 +694,7 @@ void AFPPlayerController::ServerUnleadVictim_Implementation(AFireFighterPawn * f
 			currentTile->SetPOIStatus(EPOIStatus::Revealed);
 		}
 
-		if (tempVictim->IsHealed())
+		if (tempVictim->IsHealed() && ensure(fireFighterPawn))
 		{
 			fireFighterPawn->SetLeading(nullptr);
 			UE_LOG(LogTemp, Warning, TEXT("No lead anymore"));
@@ -1447,6 +1447,24 @@ void AFPPlayerController::LeadVictim()
 				}
 			}
 		}
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				// show carrying victim
+				if (fireFighterPawn->GetCarriedVictim()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+				// show leading victim
+				if (fireFighterPawn->GetLeading()) {
+					inGameUI->ShowLeading(true);
+				}
+				else {
+					inGameUI->ShowLeading(false);
+				}
+			}
+		}
 	}
 }
 
@@ -1460,6 +1478,24 @@ void AFPPlayerController::UnLeadVictim()
 		if (ensure(tempVictim) && ensure(tempVictim->IsHealed()))
 		{
 			ServerUnleadVictim(fireFighterPawn, tempVictim);
+		}
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				// show carrying victim
+				if (fireFighterPawn->GetCarriedVictim()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+				// show leading victim
+				if (fireFighterPawn->GetLeading()) {
+					inGameUI->ShowLeading(true);
+				}
+				else {
+					inGameUI->ShowLeading(false);
+				}
+			}
 		}
 	}
 }

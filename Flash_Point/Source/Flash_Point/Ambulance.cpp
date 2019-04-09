@@ -142,6 +142,9 @@ void AAmbulance::RescueVictims(ATile* targetTile)
 				UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), targetTile->GetGameBoard()->currentPOI);
 			}
 		}
+		if (ensure(targetTile->GetVictims())) {
+			targetTile->GetVictims()->Empty();
+		}
 	}
 }
 
