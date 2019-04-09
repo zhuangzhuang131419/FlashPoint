@@ -160,9 +160,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	void SetCarriedVictim(AVictim* victim);
 
-	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
-	AVictim* GetVictim();
-
 	// getter and setter for leading victim
 	UFUNCTION(BlueprintCallable, Category = "Firefighter Attributes")
 	AVictim* GetLeading();

@@ -263,11 +263,15 @@ void AGameBoard::ResolveKnockDownOnBoard()
 		{
 			if (tile->GetFireStatus() == EFireStatus::Fire)
 			{
-				for (AVictim* victim : *tile->GetVictims())
+				while (tile->GetVictims()->Num() > 0)
 				{
-					victim->Destroy();
-					tile->GetGameBoard()->SetCurrentPOI(tile->GetGameBoard()->currentPOI - 1);
-					tile->GetGameBoard()->SetVictimLostNum(tile->GetGameBoard()->victimLostNum + 1);
+					AVictim* tempVictim = tile->GetVictims()->Pop();
+					if (ensure(tempVictim))
+					{
+						tempVictim->Destroy();
+						tile->GetGameBoard()->SetCurrentPOI(tile->GetGameBoard()->currentPOI - 1);
+						tile->GetGameBoard()->SetVictimLostNum(tile->GetGameBoard()->victimLostNum + 1);
+					}
 				}
 				tile->removeVictims();
 			}

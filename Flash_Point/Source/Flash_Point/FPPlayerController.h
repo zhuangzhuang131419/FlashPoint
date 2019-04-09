@@ -180,6 +180,11 @@ public:
 	void ServerCarryHazmat(AFireFighterPawn * fireFighterPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerHealVictim(AFireFighterPawn * fireFighterPawn, AVictim* targetVictim);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerLeadVictim(AFireFighterPawn * fireFighterPawn, AVictim* targetVictim);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerUnleadVictim(AFireFighterPawn * fireFighterPawn, AVictim* targetVictim);
+
 
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetFireFighterID(AFireFighterPawn * fireFighterPawn, AGameBoard* inGameBoard);
@@ -248,6 +253,11 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void HealVictim();
+
+	UFUNCTION(BlueprintCallable)
+	void LeadVictim();
+	UFUNCTION(BlueprintCallable)
+	void UnLeadVictim();
 
 	UFUNCTION(BlueprintCallable)
 	bool GetInAmbulance();

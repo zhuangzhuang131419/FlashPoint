@@ -1151,12 +1151,6 @@ void AFireFighterPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCom
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
-AVictim* AFireFighterPawn::GetVictim()
-{
-	if (carriedVictim) { return carriedVictim; }
-	else { return leadVictim; }
-}
-
 void AFireFighterPawn::SetCarriedVictim(AVictim * victim)
 {
 	this->carriedVictim = victim;

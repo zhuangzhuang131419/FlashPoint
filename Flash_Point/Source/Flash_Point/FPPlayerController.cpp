@@ -338,7 +338,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 	{
 		// if the tile is on fire, just return
 		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
-		AVictim* tempVictim = fireFighterPawn->GetVictim();
+		AVictim* tempVictim = fireFighterPawn->GetCarriedVictim();
 		if (!tempVictim) return;
 		if (currentTile->IsOutside())
 		{
@@ -381,7 +381,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 			tempVictim->SetVictimLoc(tempVictim->GetActorLocation());
 
 			UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-			currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
+			currentTile->GetVictims()->Add(fireFighterPawn->GetCarriedVictim());
 			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 
 			currentTile->SetPOIStatus(EPOIStatus::Revealed);
@@ -407,7 +407,7 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 		// if the tile is on fire, just return
 		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
 		UE_LOG(LogTemp, Warning, TEXT("Drop unhealed victim"));
-		AVictim* tempVictim = fireFighterPawn->GetVictim();
+		AVictim* tempVictim = fireFighterPawn->GetCarriedVictim();
 		if (!tempVictim) return;
 		if (currentTile == currentTile->GetGameBoard()->GetAmbulanceLocA() || currentTile == currentTile->GetGameBoard()->GetAmbulanceLocB())
 		{
@@ -449,18 +449,13 @@ void AFPPlayerController::ServerDropVictim_Implementation(AFireFighterPawn * fir
 			tempVictim->SetVictimLoc(tempVictim->GetActorLocation());
 
 			UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
-			currentTile->GetVictims()->Add(fireFighterPawn->GetVictim());
+			currentTile->GetVictims()->Add(fireFighterPawn->GetCarriedVictim());
 			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 
 			currentTile->SetPOIStatus(EPOIStatus::Revealed);
 		}
 
-		if (tempVictim->IsHealed())
-		{
-			fireFighterPawn->SetLeading(nullptr);
-			UE_LOG(LogTemp, Warning, TEXT("No lead anymore"));
-		}
-		else
+		if (ensure(!tempVictim->IsHealed()))
 		{
 			fireFighterPawn->SetCarriedVictim(nullptr);
 			tempVictim->SetIsCarried(false);
@@ -495,30 +490,28 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 	{
 		if (currentTile->GetPOIStatus() == EPOIStatus::Revealed)
 		{
-			if (currentTile->GetVictims()->Num() > 0)
+			AVictim* targetVictim = nullptr;
+			for (size_t i = 0; i < currentTile->GetVictims()->Num(); i++)
 			{
-				AVictim* targetVictim = currentTile->GetVictims()->Pop(true);
-				if (!(targetVictim)) { return; }
-				if (targetVictim->IsHealed())
+				targetVictim = (*currentTile->GetVictims())[i];
+				if (ensure(targetVictim))
 				{
-					if (ensure(fireFighterPawn))
+					if (!targetVictim->IsHealed())
 					{
-						if (fireFighterPawn->GetLeading() == nullptr)
-						{
-							fireFighterPawn->SetLeading(targetVictim);
-							targetVictim->SetActorLocation(fireFighterPawn->GetActorLocation() - FVector(0, 100, 0));
-							targetVictim->SetVictimLoc(targetVictim->GetActorLocation());
-							UE_LOG(LogTemp, Warning, TEXT("Victim has been lead"));
-						}
-						else
-						{
-							UE_LOG(LogTemp, Warning, TEXT("Already leading"));
-						}
+						currentTile->GetVictims()->Remove(targetVictim);
+						break;
+					}
+					else
+					{
+						targetVictim = nullptr;
 					}
 				}
-				else
+			}
+
+			if (targetVictim)
+			{
+				if (!ensure(targetVictim->IsHealed()))
 				{
-					if (!ensure(targetVictim)) return;
 					targetVictim->SetIsCarried(true);
 					UE_LOG(LogTemp, Warning, TEXT("After pop(). Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
 					fireFighterPawn->SetCarriedVictim(targetVictim);
@@ -531,7 +524,7 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("No victim."));
+				UE_LOG(LogTemp, Warning, TEXT("No UnHeal Victim. Please try leading."));
 			}
 		}
 	}
@@ -542,7 +535,6 @@ void AFPPlayerController::ServerCarryVictim_Implementation(AFireFighterPawn * fi
 			UE_LOG(LogTemp, Warning, TEXT("Leading Victim correct"));
 		}
 	}
-	
 }
 
 bool AFPPlayerController::ServerCarryVictim_Validate(AFireFighterPawn * fireFighterPawn)
@@ -611,6 +603,105 @@ void AFPPlayerController::ServerDropHazmat_Implementation(AFireFighterPawn * fir
 }
 
 bool AFPPlayerController::ServerDropHazmat_Validate(AFireFighterPawn * fireFighterPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerLeadVictim_Implementation(AFireFighterPawn * fireFighterPawn, AVictim * targetVictim)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Server Lead Victim"));
+	if (ensure(targetVictim->IsHealed()))
+	{
+		if (ensure(fireFighterPawn))
+		{
+			if (fireFighterPawn->GetLeading() == nullptr)
+			{
+				fireFighterPawn->SetLeading(targetVictim);
+				targetVictim->SetActorLocation(fireFighterPawn->GetActorLocation() - FVector(0, 100, 0));
+				targetVictim->SetVictimLoc(targetVictim->GetActorLocation());
+				UE_LOG(LogTemp, Warning, TEXT("Victim has been lead"));
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Already leading"));
+			}
+		}
+	}
+}
+
+bool AFPPlayerController::ServerLeadVictim_Validate(AFireFighterPawn * fireFighterPawn, AVictim * targetVictim)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerUnleadVictim_Implementation(AFireFighterPawn * fireFighterPawn, AVictim * targetVictim)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Server UnLead Victim"));
+	ATile* currentTile = fireFighterPawn->GetPlacedOn();
+	if (ensure(currentTile) && ensure(currentTile->GetGameBoard()->GetGameType() == EGameType::Experienced))
+	{
+		// if the tile is on fire, just return
+		if (currentTile->GetFireStatus() == EFireStatus::Fire)	return;
+		UE_LOG(LogTemp, Warning, TEXT("Drop unhealed victim"));
+		AVictim* tempVictim = fireFighterPawn->GetLeading();
+		if (!tempVictim) return;
+		if (currentTile == currentTile->GetGameBoard()->GetAmbulanceLocA() || currentTile == currentTile->GetGameBoard()->GetAmbulanceLocB())
+		{
+			tempVictim->Destroy();
+			currentTile->SetPOIStatus(EPOIStatus::Empty);
+			currentTile->GetGameBoard()->SetVictimSavedNum(
+				currentTile->GetGameBoard()->victimSavedNum + 1
+			);
+			UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), currentTile->GetGameBoard()->victimSavedNum);
+			currentTile->GetGameBoard()->SetCurrentPOI(
+				currentTile->GetGameBoard()->currentPOI - 1
+			);
+			UE_LOG(LogTemp, Warning, TEXT("Current saved victim: %d"), currentTile->GetGameBoard()->currentPOI);
+		}
+		else {
+			tempVictim->victimMesh->SetVisibility(true);
+			FVector VictimSocketLocation;
+			switch (currentTile->GetVictims()->Num())
+			{
+			case 0:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+				break;
+			case 1:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim1"));
+				break;
+			case 2:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim3"));
+				break;
+			case 3:
+				VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim4"));
+				break;
+			default:
+				UE_LOG(LogTemp, Warning, TEXT("No more position"))
+					VictimSocketLocation = currentTile->GetTileMesh()->GetSocketLocation(FName("Victim"));
+				break;
+			}
+
+			tempVictim->victimMesh->SetRelativeLocation(VictimSocketLocation);
+			tempVictim->SetVictimLoc(tempVictim->GetActorLocation());
+
+			UE_LOG(LogTemp, Warning, TEXT("Before Add Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+			currentTile->GetVictims()->Add(fireFighterPawn->GetLeading());
+			UE_LOG(LogTemp, Warning, TEXT("Current Tile: %s have %d victims."), *currentTile->GetName(), currentTile->GetVictims()->Num());
+
+			currentTile->SetPOIStatus(EPOIStatus::Revealed);
+		}
+
+		if (tempVictim->IsHealed())
+		{
+			fireFighterPawn->SetLeading(nullptr);
+			UE_LOG(LogTemp, Warning, TEXT("No lead anymore"));
+		}
+	}
+
+	
+}
+
+bool AFPPlayerController::ServerUnleadVictim_Validate(AFireFighterPawn * fireFighterPawn, AVictim* targetVictim)
 {
 	return true;
 }
@@ -1192,7 +1283,6 @@ void AFPPlayerController::HealVictim()
 				{
 					ServerHealVictim(fireFighterPawn, (*currentTile->GetVictims())[i]);
 					// for the healed victim, show its healed marker
-
 					healed = true;
 					break;
 				}
@@ -1206,6 +1296,42 @@ void AFPPlayerController::HealVictim()
 			{
 				UE_LOG(LogTemp, Warning, TEXT("All victim has already been healed"));
 			}
+		}
+	}
+}
+
+void AFPPlayerController::LeadVictim()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Lead victim."));
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		ATile* currentTile = fireFighterPawn->GetPlacedOn();
+		if (ensure(currentTile))
+		{
+			for (size_t i = 0; i < currentTile->GetVictims()->Num(); i++)
+			{
+				AVictim* targetVictim = (*currentTile->GetVictims())[i];
+				if (targetVictim->IsHealed())
+				{
+					currentTile->GetVictims()->Remove(targetVictim);
+					ServerLeadVictim(fireFighterPawn, targetVictim);
+				}
+			}
+		}
+	}
+}
+
+void AFPPlayerController::UnLeadVictim()
+{
+	UE_LOG(LogTemp, Warning, TEXT("UnLead victim."));
+	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
+	if (ensure(fireFighterPawn))
+	{
+		AVictim* tempVictim = fireFighterPawn->GetLeading();
+		if (ensure(tempVictim) && ensure(tempVictim->IsHealed()))
+		{
+			ServerUnleadVictim(fireFighterPawn, tempVictim);
 		}
 	}
 }
