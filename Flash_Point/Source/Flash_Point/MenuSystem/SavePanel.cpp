@@ -31,6 +31,7 @@ void USavePanel::OnYesButtonClicked()
 	if (ensure(localPlayer)) {
 		localPlayer->SaveCurrentGame(SavedGameName->GetText().ToString());
 	}
+	SetVisibility(ESlateVisibility::Collapsed);
 }
 
 void USavePanel::OnCancelButtonClicked()

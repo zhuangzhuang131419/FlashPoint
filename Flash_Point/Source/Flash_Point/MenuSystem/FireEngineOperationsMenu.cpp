@@ -98,28 +98,30 @@ void UFireEngineOperationsMenu::FireDeckGun()
 					}
 				}
 
-				ATile* targetTile = board->GenerateRandomPositionInQuadrant();
-				if (ensure(targetTile))
+				if (fireFighterPawn->GetCurrentAP() > fireFighterPawn->GetFireDeckGunConsumption())
 				{
-					UE_LOG(LogTemp, Warning, TEXT("target tile %s"), *targetTile->GetName());
-					if (fireFighterPawn->GetFireFighterRole() == ERoleType::Driver)
+					ATile* targetTile = board->GenerateRandomPositionInQuadrant();
+					if (ensure(targetTile))
 					{
-						targetTile->SetCommandTarget(true);
-						fireFighterPawn->SetFireDeckTargetTile(targetTile);
-						localPlayer->NotifyReRoll();
-					}
-					else
-					{
-						UE_LOG(LogTemp, Warning, TEXT("Firefighter Fire Deck Gun"));
-						if (ensure(localPlayer) && ensure(targetTile))
+						UE_LOG(LogTemp, Warning, TEXT("target tile %s"), *targetTile->GetName());
+						if (fireFighterPawn->GetFireFighterRole() == ERoleType::Driver)
 						{
-							localPlayer->ServerFireDeckGun(fireFighterPawn, targetTile);
+							targetTile->SetCommandTarget(true);
+							fireFighterPawn->SetFireDeckTargetTile(targetTile);
+							localPlayer->NotifyReRoll();
+						}
+						else
+						{
+							UE_LOG(LogTemp, Warning, TEXT("Firefighter Fire Deck Gun"));
+							if (ensure(localPlayer) && ensure(targetTile))
+							{
+								localPlayer->ServerFireDeckGun(fireFighterPawn, targetTile);
+							}
 						}
 					}
+					fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetFireDeckGunConsumption());
 				}
 			}
-
-			fireFighterPawn->AdjustFireFighterAP(-fireFighterPawn->GetFireDeckGunConsumption());
 			this->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
