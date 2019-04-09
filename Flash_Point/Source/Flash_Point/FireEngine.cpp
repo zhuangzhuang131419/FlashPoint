@@ -163,11 +163,14 @@ void AFireEngine::OnFireEngineClicked(AActor * Target, FKey ButtonPressed)
 
 void AFireEngine::setFireEngineUI(bool status)
 {
-	if (!status)
+	if (ensure(FireEngineOperationsUI))
 	{
-		FireEngineOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
-	}
-	else {
-		FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		if (!status)
+		{
+			FireEngineOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else {
+			FireEngineOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }

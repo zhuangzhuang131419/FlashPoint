@@ -127,7 +127,7 @@ void AAmbulance::RescueVictims(ATile* targetTile)
 		for (size_t i = 0; i < targetTile->GetVictims()->Num(); i++)
 		{
 			AVictim* tempVictim = (*targetTile->GetVictims())[i];
-			if (ensure(tempVictim))
+			if (ensure(tempVictim) && ensure(targetTile->GetGameBoard()))
 			{
 				tempVictim->Destroy();
 				targetTile->SetPOIStatus(EPOIStatus::Empty);
@@ -146,11 +146,14 @@ void AAmbulance::RescueVictims(ATile* targetTile)
 
 void AAmbulance::setAmbulanceUI(bool status)
 {
-	if (!status)
+	if (ensure(AmbulanceOperationsUI))
 	{
-		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
-	}
-	else {
-		AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		if (!status)
+		{
+			AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Collapsed);
+		}
+		else {
+			AmbulanceOperationsUI->SetVisibility(ESlateVisibility::Visible);
+		}
 	}
 }

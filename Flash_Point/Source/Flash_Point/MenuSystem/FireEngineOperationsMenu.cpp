@@ -40,6 +40,7 @@ void UFireEngineOperationsMenu::GetInFireEngine()
 			}
 			UE_LOG(LogTemp, Warning, TEXT("Get in car"));
 			this->SetVisibility(ESlateVisibility::Collapsed);
+			fireFighterPawn->DecolAdjust(true);
 		}
 	}
 }
@@ -55,6 +56,7 @@ void UFireEngineOperationsMenu::GetOutFireEngine()
 		{
 			localPlayer->SetCurrentOperation(EGameOperations::GetOutFireEngine);
 			this->SetVisibility(ESlateVisibility::Collapsed);
+			fireFighterPawn->DecolAdjust(false);
 		}
 	}
 }

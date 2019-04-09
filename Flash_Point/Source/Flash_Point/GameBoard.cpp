@@ -349,17 +349,9 @@ void AGameBoard::ForceGetOutAmbulance()
 	if (ensure(ambulance) && ambulance->GetPassengers()->Num() > 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current ambulance has %d firefighters."), ambulance->GetPassengers()->Num());
-		for (size_t i = 0; i < ambulance->GetPassengers()->Num(); i++)
+		if (ensure(localPlayer) && ensure(ambulanceLocA))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("%d fire fighter get out ambulance."), i);
-			AFireFighterPawn* inPawn = (*ambulance->GetPassengers())[i];
-			AFPPlayerController* inController = Cast<AFPPlayerController>(inPawn->GetController());
-			if (ensure(inPawn) && ensure(inPawn->IsInCar()) && ensure(inController) && ensure(ambulanceLocA))
-			{
-				// localPlayer->ServerGetOutAmbulance(inPawn, ambulanceLocA, ambulance);
-				inController->ServerGetOutAmbulance(inPawn, ambulanceLocA, ambulance);
-			}
-			UE_LOG(LogTemp, Warning, TEXT("A fire fighter get out ambulance."));
+			localPlayer->ServerAllPassengersGetOutAmbulance(ambulanceLocA, ambulance);
 		}
 	}
 	else
@@ -374,15 +366,9 @@ void AGameBoard::ForceGetOutFireEngine()
 	if (ensure(fireEngine) && fireEngine->GetPassengers()->Num() > 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current fire engine has %d firefighters."), fireEngine->GetPassengers()->Num());
-		for (size_t i = 0; i < fireEngine->GetPassengers()->Num(); i++)
+		if (ensure(localPlayer) && ensure(ambulanceLocA))
 		{
-			AFireFighterPawn* inPawn = (*fireEngine->GetPassengers())[i];
-			UE_LOG(LogTemp, Warning, TEXT("%d fire fighter get out fire engine."), i);
-			if (ensure(inPawn) && ensure(inPawn->IsInCar()) && ensure(localPlayer) && ensure(engineLocA))
-			{
-				localPlayer->ServerGetOutFireEngine(inPawn, engineLocA, fireEngine);
-				UE_LOG(LogTemp, Warning, TEXT("A fire fighter get out fire engine."));
-			}
+			localPlayer->ServerAllPassengersGetOutFireEngine(engineLocA, fireEngine);
 		}
 	}
 	else

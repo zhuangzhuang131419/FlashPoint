@@ -233,7 +233,11 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetOutAmbulance(AFireFighterPawn * inPawn, ATile* current, AAmbulance* inAmbulance);
 	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAllPassengersGetOutAmbulance(ATile* current, AAmbulance* inAmbulance);
+	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetOutFireEngine(AFireFighterPawn * inPawn, ATile* current, AFireEngine* inFireEngine);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerAllPassengersGetOutFireEngine(ATile* current, AFireEngine* inFireEngine);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerFireDeckGun(AFireFighterPawn * inPawn, ATile* targetTile);
 	UFUNCTION(Server, Reliable, WithValidation)
@@ -262,18 +266,12 @@ public:
 	void UnLeadVictim();
 
 	UFUNCTION(BlueprintCallable)
-	bool GetInAmbulance();
-	UFUNCTION(BlueprintCallable)
-	void GetOutAmbulance();
-	UFUNCTION(BlueprintCallable)
-	bool GetInFireEngine();
-	UFUNCTION(BlueprintCallable)
-	void GetOutFireEngine();
-
-	UFUNCTION(BlueprintCallable)
 	void RemoveHazmat();
 
 	void Dodge();
+
+	void getOutAmbulance(AFireFighterPawn * inPawn, ATile * target, AAmbulance * inAmbulance);
+	void getOutFireEngine(AFireFighterPawn * inPawn, ATile * target, AFireEngine * inFireEngine);
 
 	UFUNCTION(Server, Reliable, WithValidation, BlueprintCallable)
 	void ServerRevealPOI(ATile* targetTile);

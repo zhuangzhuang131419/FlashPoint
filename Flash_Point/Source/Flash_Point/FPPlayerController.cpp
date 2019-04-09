@@ -1012,7 +1012,6 @@ void AFPPlayerController::ServerGetInFireEngine_Implementation(AFireFighterPawn 
 				inPawn->SetVisibility(false);
 			}
 		}
-		inPawn->DecolAdjust(true);
 	}
 }
 
@@ -1072,18 +1071,37 @@ void AFPPlayerController::ServerGetOutAmbulance_Implementation(AFireFighterPawn 
 {
 	if (ensure(inPawn) && ensure(target) && ensure(inAmbulance))
 	{
-		inPawn->SetIsInCar(false);
-		target->GetPlacedFireFighters()->Add(inPawn);
-		inAmbulance->GetPassengers()->Remove(inPawn);
-		inPawn->SetPlacedOn(target);
-		inPawn->SetActorLocation(target->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
-		inPawn->SetVisibility(true);
-		if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
-			if (ensure(target->GetGameBoard())) {
-				target->GetGameBoard()->SetVeteranLoc(target);
-			}
+		getOutAmbulance(inPawn, target, inAmbulance);
+	}
+}
+
+void AFPPlayerController::getOutAmbulance(AFireFighterPawn * inPawn, ATile * target, AAmbulance * inAmbulance)
+{
+	inPawn->SetIsInCar(false);
+	target->GetPlacedFireFighters()->Add(inPawn);
+	inAmbulance->GetPassengers()->Remove(inPawn);
+	inPawn->SetPlacedOn(target);
+	inPawn->SetActorLocation(target->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+	inPawn->SetVisibility(true);
+	if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
+		if (ensure(target->GetGameBoard())) {
+			target->GetGameBoard()->SetVeteranLoc(target);
 		}
-		inPawn->DecolAdjust(false);
+	}
+}
+
+void AFPPlayerController::getOutFireEngine(AFireFighterPawn * inPawn, ATile * target, AFireEngine * inFireEngine)
+{
+	inPawn->SetIsInCar(false);
+	target->GetPlacedFireFighters()->Add(inPawn);
+	inFireEngine->GetPassengers()->Remove(inPawn);
+	inPawn->SetPlacedOn(target);
+	inPawn->SetActorLocation(target->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+	inPawn->SetVisibility(true);
+	if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
+		if (ensure(target->GetGameBoard())) {
+			target->GetGameBoard()->SetVeteranLoc(target);
+		}
 	}
 }
 
@@ -1091,6 +1109,33 @@ bool AFPPlayerController::ServerGetOutAmbulance_Validate(AFireFighterPawn * inPa
 {
 	return true;
 }
+
+void AFPPlayerController::ServerAllPassengersGetOutAmbulance_Implementation(ATile * targetTile, AAmbulance * inAmbulance)
+{
+	if (ensure(targetTile) && ensure(targetTile->GetType() == ETileType::AmbulancePark) && ensure(inAmbulance))
+	{
+		for (AFireFighterPawn* inPawn : *inAmbulance->GetPassengers())
+		{
+			inPawn->SetIsInCar(false);
+			targetTile->GetPlacedFireFighters()->Add(inPawn);
+			inPawn->SetPlacedOn(targetTile);
+			inPawn->SetActorLocation(targetTile->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+			inPawn->SetVisibility(true);
+			if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
+				if (ensure(targetTile->GetGameBoard())) {
+					targetTile->GetGameBoard()->SetVeteranLoc(targetTile);
+				}
+			}
+		}
+		inAmbulance->GetPassengers()->Empty();
+	}
+}
+
+bool AFPPlayerController::ServerAllPassengersGetOutAmbulance_Validate(ATile * current, AAmbulance * inAmbulance)
+{
+	return true;
+}
+
 
 bool AFPPlayerController::ServerGetOutFireEngine_Validate(AFireFighterPawn * inPawn, ATile * current, AFireEngine * inFireEngine)
 {
@@ -1101,19 +1146,34 @@ void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn
 {
 	if (ensure(inPawn) && ensure(target) && ensure(inFireEngine))
 	{
-		inPawn->SetIsInCar(false);
-		target->GetPlacedFireFighters()->Add(inPawn);
-		inFireEngine->GetPassengers()->Remove(inPawn);
-		inPawn->SetPlacedOn(target);
-		inPawn->SetActorLocation(target->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
-		inPawn->SetVisibility(true);
-		if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
-			if (ensure(target->GetGameBoard())) {
-				target->GetGameBoard()->SetVeteranLoc(target);
+		getOutFireEngine(inPawn, target, inFireEngine);
+	}
+}
+
+void AFPPlayerController::ServerAllPassengersGetOutFireEngine_Implementation(ATile* targetTile, AFireEngine* inFireEngine)
+{
+	if (ensure(targetTile) && ensure(targetTile->GetType() == ETileType::FireEnginePark) && ensure(inFireEngine))
+	{
+		for (AFireFighterPawn* inPawn : *inFireEngine->GetPassengers())
+		{
+			inPawn->SetIsInCar(false);
+			targetTile->GetPlacedFireFighters()->Add(inPawn);
+			inPawn->SetPlacedOn(targetTile);
+			inPawn->SetActorLocation(targetTile->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+			inPawn->SetVisibility(true);
+			if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
+				if (ensure(targetTile->GetGameBoard())) {
+					targetTile->GetGameBoard()->SetVeteranLoc(targetTile);
+				}
 			}
 		}
-		inPawn->DecolAdjust(false);
+		inFireEngine->GetPassengers()->Empty();
 	}
+}
+
+bool AFPPlayerController::ServerAllPassengersGetOutFireEngine_Validate(ATile* current, AFireEngine* inFireEngine)
+{
+	return true;
 }
 
 bool AFPPlayerController::ServerMoveAmbulance_Validate(AAmbulance * localAmbulance, ATile * currentTile)
@@ -1392,50 +1452,6 @@ void AFPPlayerController::RemoveHazmat()
 		}
 	}
 }
-
-//Todo Refactor
-bool AFPPlayerController::GetInAmbulance() {
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn)) {
-		if (fireFighterPawn->IsWithAmbulance()) {
-			fireFighterPawn->SetVisibility(false);
-			gameBoard->moved = false;
-			return true;
-		}
-	}
-	return false;
-}
-void AFPPlayerController::GetOutAmbulance() {
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn)) {
-		if (fireFighterPawn->IsWithAmbulance()) {
-			fireFighterPawn->SetVisibility(true);
-			gameBoard->moved = true;
-		}
-	}
-}
-
-bool AFPPlayerController::GetInFireEngine() {
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn)) {
-		if (fireFighterPawn->IsWithEngine()) {
-			fireFighterPawn->SetVisibility(false);
-			gameBoard->moved = false;
-			return true;
-		}
-	}
-	return false;
-}
-void AFPPlayerController::GetOutFireEngine() {
-	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
-	if (ensure(fireFighterPawn)) {
-		if (fireFighterPawn->IsWithEngine()) {
-			fireFighterPawn->SetVisibility(true);
-			gameBoard->moved = true;
-		}
-	}
-}
-
 
 void AFPPlayerController::Dodge()
 {
