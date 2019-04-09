@@ -694,7 +694,7 @@ void AFPPlayerController::ServerUnleadVictim_Implementation(AFireFighterPawn * f
 			currentTile->SetPOIStatus(EPOIStatus::Revealed);
 		}
 
-		if (tempVictim->IsHealed())
+		if (tempVictim->IsHealed() && ensure(fireFighterPawn))
 		{
 			fireFighterPawn->SetLeading(nullptr);
 			UE_LOG(LogTemp, Warning, TEXT("No lead anymore"));
