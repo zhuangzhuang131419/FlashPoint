@@ -1010,7 +1010,6 @@ void AFPPlayerController::ServerGetInFireEngine_Implementation(AFireFighterPawn 
 				UE_LOG(LogTemp, Warning, TEXT("A firefighter has been get in the car. The car now has %d firefighters."), fireEngineOnBoard->GetPassengers()->Num());
 				inPawn->SetPlacedOn(nullptr);
 				inPawn->SetVisibility(false);
-				inPawn->DecolAdjust(true);
 			}
 		}
 	}
@@ -1036,7 +1035,6 @@ void AFPPlayerController::ServerGetInAmbulance_Implementation(AFireFighterPawn *
 				UE_LOG(LogTemp, Warning, TEXT("A firefighter has been get in the car. The car now has %d firefighters."), ambulanceOnBoard->GetPassengers()->Num());
 				inPawn->SetPlacedOn(nullptr);
 				inPawn->SetVisibility(false);
-				inPawn->DecolAdjust(true);
 			}
 		}
 	}
@@ -1090,7 +1088,6 @@ void AFPPlayerController::getOutAmbulance(AFireFighterPawn * inPawn, ATile * tar
 			target->GetGameBoard()->SetVeteranLoc(target);
 		}
 	}
-	inPawn->DecolAdjust(false);
 }
 
 void AFPPlayerController::getOutFireEngine(AFireFighterPawn * inPawn, ATile * target, AFireEngine * inFireEngine)
@@ -1106,7 +1103,6 @@ void AFPPlayerController::getOutFireEngine(AFireFighterPawn * inPawn, ATile * ta
 			target->GetGameBoard()->SetVeteranLoc(target);
 		}
 	}
-	inPawn->DecolAdjust(false);
 }
 
 bool AFPPlayerController::ServerGetOutAmbulance_Validate(AFireFighterPawn * inPawn, ATile * current, AAmbulance * inAmbulance)
@@ -1130,7 +1126,6 @@ void AFPPlayerController::ServerAllPassengersGetOutAmbulance_Implementation(ATil
 					targetTile->GetGameBoard()->SetVeteranLoc(targetTile);
 				}
 			}
-			inPawn->DecolAdjust(false);
 		}
 		inAmbulance->GetPassengers()->Empty();
 	}
@@ -1171,7 +1166,6 @@ void AFPPlayerController::ServerAllPassengersGetOutFireEngine_Implementation(ATi
 					targetTile->GetGameBoard()->SetVeteranLoc(targetTile);
 				}
 			}
-			inPawn->DecolAdjust(false);
 		}
 		inFireEngine->GetPassengers()->Empty();
 	}

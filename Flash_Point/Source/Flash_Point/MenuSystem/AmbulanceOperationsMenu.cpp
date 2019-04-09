@@ -40,6 +40,7 @@ void UAmbulanceOperationsMenu::GetInAmbulance()
 			}
 			UE_LOG(LogTemp, Warning, TEXT("Get in car"));
 			this->SetVisibility(ESlateVisibility::Collapsed);
+			fireFighterPawn->DecolAdjust(true);
 		}
 	}
 }
@@ -55,6 +56,7 @@ void UAmbulanceOperationsMenu::GetOutAmbulance()
 		{
 			localPlayer->SetCurrentOperation(EGameOperations::GetOutAmbulance);
 			this->SetVisibility(ESlateVisibility::Collapsed);
+			fireFighterPawn->DecolAdjust(false);
 		}
 	}
 }
