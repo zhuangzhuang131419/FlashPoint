@@ -1432,6 +1432,24 @@ void AFPPlayerController::LeadVictim()
 				}
 			}
 		}
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				// show carrying victim
+				if (fireFighterPawn->GetCarriedVictim()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+				// show leading victim
+				if (fireFighterPawn->GetLeading()) {
+					inGameUI->ShowLeading(true);
+				}
+				else {
+					inGameUI->ShowLeading(false);
+				}
+			}
+		}
 	}
 }
 
@@ -1445,6 +1463,24 @@ void AFPPlayerController::UnLeadVictim()
 		if (ensure(tempVictim) && ensure(tempVictim->IsHealed()))
 		{
 			ServerUnleadVictim(fireFighterPawn, tempVictim);
+		}
+		if (HasAuthority()) {
+			if (ensure(inGameUI)) {
+				// show carrying victim
+				if (fireFighterPawn->GetCarriedVictim()) {
+					inGameUI->ShowCarrying(true);
+				}
+				else {
+					inGameUI->ShowCarrying(false);
+				}
+				// show leading victim
+				if (fireFighterPawn->GetLeading()) {
+					inGameUI->ShowLeading(true);
+				}
+				else {
+					inGameUI->ShowLeading(false);
+				}
+			}
 		}
 	}
 }
