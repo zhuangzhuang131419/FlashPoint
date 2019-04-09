@@ -66,7 +66,7 @@ void UFireEngineOperationsMenu::FireDeckGun()
 	UE_LOG(LogTemp, Warning, TEXT("Fire deck gun has been clicked."));
 	if (ensure(fireFighterPawn))
 	{
-		if (ensure(fireFighterPawn->IsWithEngine()))
+		if (ensure(fireFighterPawn->IsWithEngine()) && fireFighterPawn->GetFireFighterRole() != ERoleType::RescueDog)
 		{
 			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
 			if (!ensure(localPlayer)) { return; }
@@ -130,7 +130,7 @@ void UFireEngineOperationsMenu::FireDeckGun()
 void UFireEngineOperationsMenu::DriveFireEngine()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Drive fire engine has been clicked."));
-	if (ensure(fireFighterPawn))
+	if (ensure(fireFighterPawn) && fireFighterPawn->GetFireFighterRole() != ERoleType::RescueDog)
 	{
 		if (!fireFighterPawn->IsInCar()) { return; }
 		AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
