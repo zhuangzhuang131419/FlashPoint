@@ -60,6 +60,7 @@ protected:
 	UPROPERTY(ReplicatedUsing = Rep_FireEnginePlacing, VisibleAnyWhere, BlueprintReadWrite)
 	bool isPlaced = true;
 
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
 	AGameBoard* board;
 
 	UFUNCTION()

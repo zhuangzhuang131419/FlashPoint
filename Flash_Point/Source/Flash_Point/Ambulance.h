@@ -67,6 +67,7 @@ protected:
 	UPROPERTY(ReplicatedUsing = Rep_AmbulancePlacing, VisibleAnyWhere, BlueprintReadWrite)
 	bool isPlaced = true;
 
+	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
 	AGameBoard* board;
 	
 
