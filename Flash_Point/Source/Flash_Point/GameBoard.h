@@ -105,7 +105,7 @@ public:
 	void setPOIalarm(APOI* inPOI);
 
 	// Max health of the board to be specified at begining
-	UPROPERTY(EditAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
+	UPROPERTY(replicated, EditAnyWhere, BlueprintReadWrite, Category = "Map Attributes")
 	int32 MAX_HEALTH = 24;
 
 	// Operation realted fields and functions

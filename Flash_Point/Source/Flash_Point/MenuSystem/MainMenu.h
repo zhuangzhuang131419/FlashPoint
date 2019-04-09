@@ -28,6 +28,8 @@ public:
 	UMainMenu(const FObjectInitializer& ObjectInitializer);
 	void ClearAllLobbyList();
 	void ClearAllSavedList();
+	void EnableRefreshButton(bool enabled);
+	void EnableCreateLobby(bool enabled);
 	void InsertLobbyBar(FGameLobbyInfo inInfo, int32 inIndex, int32 joinedPlayers);
 	void ShowRefreshing(bool isRefreshing);
 	void ShowLoading(bool isLoading);
@@ -61,6 +63,8 @@ protected:
 	UButton* Exit_Game = nullptr;
 	UPROPERTY(meta = (BindWidget))
 	UButton* RefreshLobbies = nullptr;
+	UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
+	UButton* CreateNewGame = nullptr;
 	UPROPERTY(meta = (BindWidget))
 	UMapOverviewPanel* JoinMapOverview = nullptr;
 	UPROPERTY(meta = (BindWidget))

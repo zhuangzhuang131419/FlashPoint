@@ -923,6 +923,9 @@ void AGameBoard::GenerateRandom()
 {
 	// get and generate a random map from instance data set
 	if (HasAuthority()) {
+		// as the random generation of the game is called, also randomly generate a maximum health of the board
+		MAX_HEALTH = FMath::RandRange(24, 50);
+		health = MAX_HEALTH;
 		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
 		if (ensure(gameInst)) {
 			GenerateSpecified(gameInst->GetRandomMap());
@@ -1085,6 +1088,7 @@ void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifeti
 	DOREPLIFETIME(AGameBoard, fireEngine);
 	DOREPLIFETIME(AGameBoard, gameMap);
 	DOREPLIFETIME(AGameBoard, leaveFlag);
+	DOREPLIFETIME(AGameBoard, MAX_HEALTH);
 }
 
 void AGameBoard::InitializeBoardAttributes()

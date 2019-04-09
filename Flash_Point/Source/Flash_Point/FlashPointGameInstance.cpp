@@ -112,6 +112,10 @@ FMapSaveInfo UFlashPointGameInstance::GetLoadedGame()
 
 void UFlashPointGameInstance::CreateGameSession()
 {
+	// when creating the game session, disable the create game button
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->EnableCreateLobby(false);
+	}
 	UE_LOG(LogTemp, Warning, TEXT("Creating game session"));
 	// create a session
 	if (SessionInterface.IsValid()) {
@@ -179,8 +183,24 @@ FString UFlashPointGameInstance::GetTravelURLFromLobbyInfo(FGameLobbyInfo inInfo
 			travelURL = "/Game/maps/RandBoardLevel?listen";
 			break;
 		case EGameMap::RandomSelect:
-			// TODO add random select in future
-			travelURL = "/Game/maps/TestLevel?listen";
+			switch (FMath::RandRange(0, 3))
+			{
+			case 0:
+				travelURL = "/Game/maps/TestLevel?listen";
+				break;
+			case 1:
+				travelURL = "/Game/maps/UniversityOnFire?listen";
+				break;
+			case 2:
+				travelURL = "/Game/maps/DeansParty?listen";
+				break;
+			case 3:
+				travelURL = "/Game/maps/RandBoardLevel?listen";
+				break;
+			default:
+				travelURL = "/Game/maps/TestLevel?listen";
+				break;
+			}	
 			break;
 		case EGameMap::UniversityOnFire:
 			travelURL = "/Game/maps/UniversityOnFire?listen";
@@ -224,6 +244,7 @@ void UFlashPointGameInstance::RefreshLobbyList()
 	if (ensure(mainMenuUI)) {
 		mainMenuUI->ClearAllLobbyList();
 		mainMenuUI->ShowRefreshing(true);
+		mainMenuUI->EnableRefreshButton(false);
 	}
 	// try find the sessions from the interface
 	SessionSearch = MakeShareable(new FOnlineSessionSearch());
@@ -255,6 +276,10 @@ void UFlashPointGameInstance::CreateSavedLobby(FMapSaveInfo inInfo)
 
 void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
+	// as the session got created, re enable the create lobby button
+	if (ensure(mainMenuUI)) {
+		mainMenuUI->EnableCreateLobby(true);
+	}
 	// as the session gets created, travel to desired map
 	if (!Success) return;
 	UWorld* world = GetWorld();
@@ -281,6 +306,7 @@ void UFlashPointGameInstance::OnFindSessionComplete(bool Success)
 	if (!Success) return;
 	if (!ensure(mainMenuUI)) return;
 	mainMenuUI->ShowRefreshing(false);
+	mainMenuUI->EnableRefreshButton(true);
 	if (Success && SessionSearch.IsValid() && mainMenuUI != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Finished Find Session"));

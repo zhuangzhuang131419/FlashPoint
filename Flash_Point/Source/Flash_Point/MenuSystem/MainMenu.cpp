@@ -44,6 +44,20 @@ void UMainMenu::ClearAllSavedList()
 	}
 }
 
+void UMainMenu::EnableRefreshButton(bool enabled)
+{
+	if (ensure(RefreshLobbies)) {
+		RefreshLobbies->SetIsEnabled(enabled);
+	}
+}
+
+void UMainMenu::EnableCreateLobby(bool enabled)
+{
+	if (ensure(CreateNewGame)) {
+		CreateNewGame->SetIsEnabled(enabled);
+	}
+}
+
 void UMainMenu::InsertLobbyBar(FGameLobbyInfo inInfo, int32 inIndex, int32 joinedPlayers)
 {
 	// create a new lobby bar with specified informations
