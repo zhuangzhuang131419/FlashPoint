@@ -689,8 +689,30 @@ void AFireFighterPawn::Rep_LobbyRole()
 
 void AFireFighterPawn::Rep_CarStatus()
 {
-	if (isInCar) { SetVisibility(false); }
-	else { SetVisibility(true); }
+	// Adjust decol
+	if (isInCar) 
+	{ 
+		SetVisibility(false); 
+	}
+	else 
+	{ 
+		SetVisibility(true); 
+	}
+
+	if (ensure(GetWorld()) && ensure(GetWorld()->GetFirstPlayerController()) && ensure(GetWorld()->GetFirstPlayerController()->GetPawn()))
+	{
+		if (this == Cast<AFireFighterPawn>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+		{
+			if (isInCar)
+			{
+				DecolAdjust(true);
+			}
+			else
+			{
+				DecolAdjust(false);
+			}
+		}
+	}
 }
 
 void AFireFighterPawn::OnOverFirefighter(AActor * TouchedActor)

@@ -366,7 +366,7 @@ void AGameBoard::ForceGetOutFireEngine()
 	if (ensure(fireEngine) && fireEngine->GetPassengers()->Num() > 0)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Current fire engine has %d firefighters."), fireEngine->GetPassengers()->Num());
-		if (ensure(localPlayer) && ensure(ambulanceLocA))
+		if (ensure(localPlayer) && ensure(engineLocA))
 		{
 			localPlayer->ServerAllPassengersGetOutFireEngine(engineLocA, fireEngine);
 		}

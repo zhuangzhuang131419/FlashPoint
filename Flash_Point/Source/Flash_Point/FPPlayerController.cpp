@@ -1121,6 +1121,14 @@ void AFPPlayerController::ServerAllPassengersGetOutAmbulance_Implementation(ATil
 	{
 		for (AFireFighterPawn* inPawn : *inAmbulance->GetPassengers())
 		{
+			if (ensure(GetWorld()) && ensure(GetWorld()->GetFirstPlayerController()) && ensure(GetWorld()->GetFirstPlayerController()->GetPawn()))
+			{
+				if (inPawn == Cast<AFireFighterPawn>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+				{
+					inPawn->DecolAdjust(false);
+				}
+			}
+			
 			inPawn->SetIsInCar(false);
 			targetTile->GetPlacedFireFighters()->Add(inPawn);
 			inPawn->SetPlacedOn(targetTile);
@@ -1161,6 +1169,13 @@ void AFPPlayerController::ServerAllPassengersGetOutFireEngine_Implementation(ATi
 	{
 		for (AFireFighterPawn* inPawn : *inFireEngine->GetPassengers())
 		{
+			if (ensure(GetWorld()) && ensure(GetWorld()->GetFirstPlayerController()) && ensure(GetWorld()->GetFirstPlayerController()->GetPawn()))
+			{
+				if (inPawn == Cast<AFireFighterPawn>(GetWorld()->GetFirstPlayerController()->GetPawn()))
+				{
+					inPawn->DecolAdjust(false);
+				}
+			}
 			inPawn->SetIsInCar(false);
 			targetTile->GetPlacedFireFighters()->Add(inPawn);
 			inPawn->SetPlacedOn(targetTile);
