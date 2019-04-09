@@ -33,22 +33,13 @@ void UFireEngineOperationsMenu::GetInFireEngine()
 	{
 		if (ensure(fireFighterPawn->IsWithEngine()))
 		{
-			AGameBoard* playingBoard = fireFighterPawn->GetPlayingBoard();
-			if (ensure(playingBoard))
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+			if (ensure(localPlayer))
 			{
-				AFireEngine* fireEngineOnBoard = playingBoard->GetFireEngine();
-				if (ensure(fireEngineOnBoard))
-				{
-					fireEngineOnBoard->GetPassengers()->Add(fireFighterPawn);
-					AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
-					if (ensure(localPlayer))
-					{
-						localPlayer->ServerGetInCar(fireFighterPawn);
-					}
-					UE_LOG(LogTemp, Warning, TEXT("Get in car"));
-					this->SetVisibility(ESlateVisibility::Collapsed);
-				}
+				localPlayer->ServerGetInFireEngine(fireFighterPawn);
 			}
+			UE_LOG(LogTemp, Warning, TEXT("Get in car"));
+			this->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }
@@ -95,7 +86,7 @@ void UFireEngineOperationsMenu::FireDeckGun()
 				{
 					for (int32 y = starty; y <= starty + 2; y++)
 					{
-						UE_LOG(LogTemp, Warning, TEXT("Checking tile: %d, %d, %s"), x, y, *board->GetboardTiles()[x * board->GetBoardLength() + y]->GetName());
+						// UE_LOG(LogTemp, Warning, TEXT("Checking tile: %d, %d, %s"), x, y, *board->GetboardTiles()[x * board->GetBoardLength() + y]->GetName());
 						if (board->GetboardTiles()[x * board->GetBoardLength() + y]->GetPlacedFireFighters()->Num() > 0)
 						{
 							this->SetVisibility(ESlateVisibility::Collapsed);

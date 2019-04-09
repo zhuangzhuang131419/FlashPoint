@@ -995,7 +995,7 @@ bool AFPPlayerController::ServerExitFromLobby_Validate(ALobbyManager * inMan, AF
 	return true;
 }
 
-void AFPPlayerController::ServerGetInCar_Implementation(AFireFighterPawn * inPawn)
+void AFPPlayerController::ServerGetInFireEngine_Implementation(AFireFighterPawn * inPawn)
 {
 	if (ensure(inPawn))
 	{
@@ -1003,14 +1003,46 @@ void AFPPlayerController::ServerGetInCar_Implementation(AFireFighterPawn * inPaw
 		if (ensure(inPawn->GetPlacedOn()))
 		{
 			inPawn->GetPlacedOn()->GetPlacedFireFighters()->Remove(inPawn);
+			AFireEngine* fireEngineOnBoard = gameBoard->GetFireEngine();
+			if (ensure(fireEngineOnBoard))
+			{
+				fireEngineOnBoard->GetPassengers()->Add(inPawn);
+				UE_LOG(LogTemp, Warning, TEXT("A firefighter has been get in the car. The car now has %d firefighters."), fireEngineOnBoard->GetPassengers()->Num());
+				inPawn->SetPlacedOn(nullptr);
+				inPawn->SetVisibility(false);
+			}
 		}
-		inPawn->SetPlacedOn(nullptr);
-		inPawn->SetVisibility(false);
 		inPawn->DecolAdjust(true);
 	}
 }
 
-bool AFPPlayerController::ServerGetInCar_Validate(AFireFighterPawn * inPawn)
+bool AFPPlayerController::ServerGetInFireEngine_Validate(AFireFighterPawn * inPawn)
+{
+	return true;
+}
+
+void AFPPlayerController::ServerGetInAmbulance_Implementation(AFireFighterPawn * inPawn)
+{
+	if (ensure(inPawn))
+	{
+		inPawn->SetIsInCar(true);
+		if (ensure(inPawn->GetPlacedOn()))
+		{
+			inPawn->GetPlacedOn()->GetPlacedFireFighters()->Remove(inPawn);
+			AAmbulance* ambulanceOnBoard = gameBoard->GetAmbulance();
+			if (ensure(ambulanceOnBoard))
+			{
+				ambulanceOnBoard->GetPassengers()->Add(inPawn);
+				UE_LOG(LogTemp, Warning, TEXT("A firefighter has been get in the car. The car now has %d firefighters."), ambulanceOnBoard->GetPassengers()->Num());
+				inPawn->SetPlacedOn(nullptr);
+				inPawn->SetVisibility(false);
+			}
+		}
+	}
+}
+
+
+bool AFPPlayerController::ServerGetInAmbulance_Validate(AFireFighterPawn * inPawn)
 {
 	return true;
 }
@@ -1036,19 +1068,19 @@ bool AFPPlayerController::ServerFireDeckGun_Validate(AFireFighterPawn * inPawn, 
 	return true;
 }
 
-void AFPPlayerController::ServerGetOutAmbulance_Implementation(AFireFighterPawn * inPawn, ATile * current, AAmbulance * inAmbulance)
+void AFPPlayerController::ServerGetOutAmbulance_Implementation(AFireFighterPawn * inPawn, ATile * target, AAmbulance * inAmbulance)
 {
-	if (ensure(inPawn) && ensure(current) && ensure(inAmbulance))
+	if (ensure(inPawn) && ensure(target) && ensure(inAmbulance))
 	{
 		inPawn->SetIsInCar(false);
-		current->GetPlacedFireFighters()->Add(inPawn);
+		target->GetPlacedFireFighters()->Add(inPawn);
 		inAmbulance->GetPassengers()->Remove(inPawn);
-		inPawn->SetPlacedOn(current);
-		inPawn->SetActorLocation(current->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+		inPawn->SetPlacedOn(target);
+		inPawn->SetActorLocation(target->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
 		inPawn->SetVisibility(true);
 		if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
-			if (ensure(current->GetGameBoard())) {
-				current->GetGameBoard()->SetVeteranLoc(current);
+			if (ensure(target->GetGameBoard())) {
+				target->GetGameBoard()->SetVeteranLoc(target);
 			}
 		}
 		inPawn->DecolAdjust(false);
@@ -1065,19 +1097,19 @@ bool AFPPlayerController::ServerGetOutFireEngine_Validate(AFireFighterPawn * inP
 	return true;
 }
 
-void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn * inPawn, ATile * current, AFireEngine * inFireEngine)
+void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn * inPawn, ATile * target, AFireEngine * inFireEngine)
 {
-	if (ensure(inPawn) && ensure(current) && ensure(inFireEngine))
+	if (ensure(inPawn) && ensure(target) && ensure(inFireEngine))
 	{
 		inPawn->SetIsInCar(false);
-		current->GetPlacedFireFighters()->Add(inPawn);
+		target->GetPlacedFireFighters()->Add(inPawn);
 		inFireEngine->GetPassengers()->Remove(inPawn);
-		inPawn->SetPlacedOn(current);
-		inPawn->SetActorLocation(current->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
+		inPawn->SetPlacedOn(target);
+		inPawn->SetActorLocation(target->GetTileMesh()->GetSocketLocation(FName("VisualEffects")));
 		inPawn->SetVisibility(true);
 		if (inPawn->GetFireFighterRole() == ERoleType::Veteran) {
-			if (ensure(current->GetGameBoard())) {
-				current->GetGameBoard()->SetVeteranLoc(current);
+			if (ensure(target->GetGameBoard())) {
+				target->GetGameBoard()->SetVeteranLoc(target);
 			}
 		}
 		inPawn->DecolAdjust(false);

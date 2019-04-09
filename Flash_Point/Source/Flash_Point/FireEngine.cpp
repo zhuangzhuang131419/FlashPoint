@@ -76,6 +76,7 @@ void AFireEngine::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifet
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
 	DOREPLIFETIME(AFireEngine, fireEngineMesh);
 	DOREPLIFETIME(AFireEngine, isPlaced);
+	DOREPLIFETIME(AFireEngine, passengers);
 }
 
 void AFireEngine::Rep_FireEnginePlacing()

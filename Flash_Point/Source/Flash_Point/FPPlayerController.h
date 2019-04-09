@@ -227,7 +227,9 @@ public:
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerExitFromBoard(AGameBoard* inBoard, AFireFighterPawn* inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
-	void ServerGetInCar(AFireFighterPawn * inPawn);
+	void ServerGetInFireEngine(AFireFighterPawn * inPawn);
+	UFUNCTION(Server, Reliable, WithValidation)
+	void ServerGetInAmbulance(AFireFighterPawn * inPawn);
 	UFUNCTION(Server, Reliable, WithValidation)
 	void ServerGetOutAmbulance(AFireFighterPawn * inPawn, ATile* current, AAmbulance* inAmbulance);
 	UFUNCTION(Server, Reliable, WithValidation)

@@ -33,22 +33,13 @@ void UAmbulanceOperationsMenu::GetInAmbulance()
 	{
 		if (ensure(fireFighterPawn->IsWithAmbulance()))
 		{
-			AGameBoard* playingBoard = fireFighterPawn->GetPlayingBoard();
-			if (ensure(playingBoard))
+			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
+			if (ensure(localPlayer))
 			{
-				AAmbulance* ambulanceOnBoard = playingBoard->GetAmbulance();
-				if (ensure(ambulanceOnBoard))
-				{
-					ambulanceOnBoard->GetPassengers()->Add(fireFighterPawn);
-					AFPPlayerController* localPlayer = Cast<AFPPlayerController>(fireFighterPawn->GetController());
-					if (ensure(localPlayer))
-					{
-						localPlayer->ServerGetInCar(fireFighterPawn);
-					}
-					UE_LOG(LogTemp, Warning, TEXT("Get in car"));
-					this->SetVisibility(ESlateVisibility::Collapsed);
-				}
+				localPlayer->ServerGetInAmbulance(fireFighterPawn);
 			}
+			UE_LOG(LogTemp, Warning, TEXT("Get in car"));
+			this->SetVisibility(ESlateVisibility::Collapsed);
 		}
 	}
 }

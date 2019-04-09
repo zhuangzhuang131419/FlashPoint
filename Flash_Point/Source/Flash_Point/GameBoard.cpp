@@ -343,6 +343,54 @@ void AGameBoard::resolveHazmatExplosions()
 	}
 }
 
+void AGameBoard::ForceGetOutAmbulance()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Force get out of ambulance."));
+	if (ensure(ambulance) && ambulance->GetPassengers()->Num() > 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Current ambulance has %d firefighters."), ambulance->GetPassengers()->Num());
+		for (size_t i = 0; i < ambulance->GetPassengers()->Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("%d fire fighter get out ambulance."), i);
+			AFireFighterPawn* inPawn = (*ambulance->GetPassengers())[i];
+			AFPPlayerController* inController = Cast<AFPPlayerController>(inPawn->GetController());
+			if (ensure(inPawn) && ensure(inPawn->IsInCar()) && ensure(inController) && ensure(ambulanceLocA))
+			{
+				// localPlayer->ServerGetOutAmbulance(inPawn, ambulanceLocA, ambulance);
+				inController->ServerGetOutAmbulance(inPawn, ambulanceLocA, ambulance);
+			}
+			UE_LOG(LogTemp, Warning, TEXT("A fire fighter get out ambulance."));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No passenger is in the ambulance"));
+	}
+}
+
+void AGameBoard::ForceGetOutFireEngine()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Force get out of fire engine."));
+	if (ensure(fireEngine) && fireEngine->GetPassengers()->Num() > 0)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Current fire engine has %d firefighters."), fireEngine->GetPassengers()->Num());
+		for (size_t i = 0; i < fireEngine->GetPassengers()->Num(); i++)
+		{
+			AFireFighterPawn* inPawn = (*fireEngine->GetPassengers())[i];
+			UE_LOG(LogTemp, Warning, TEXT("%d fire fighter get out fire engine."), i);
+			if (ensure(inPawn) && ensure(inPawn->IsInCar()) && ensure(localPlayer) && ensure(engineLocA))
+			{
+				localPlayer->ServerGetOutFireEngine(inPawn, engineLocA, fireEngine);
+				UE_LOG(LogTemp, Warning, TEXT("A fire fighter get out fire engine."));
+			}
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("No passenger is in the fire engine"));
+	}
+}
+
 // return true if end the game, otherwise return false
 void AGameBoard::endTurnRelatedOperations()
 {
@@ -356,6 +404,8 @@ void AGameBoard::endTurnRelatedOperations()
 	}
 	else if (gameModeType == EGameType::Experienced)
 	{
+		ForceGetOutAmbulance();
+		ForceGetOutFireEngine();
 		AdvanceFire();
 		flashover();
 		resolveHazmatExplosions();

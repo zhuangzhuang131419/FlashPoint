@@ -85,6 +85,9 @@ public:
 	void ResolveHazmatExplosionOnBoard();
 	void resolveHazmatExplosions();
 
+	void ForceGetOutAmbulance();
+	void ForceGetOutFireEngine();
+
 	UFUNCTION(BlueprintCallable)
 	void endTurnRelatedOperations();
 

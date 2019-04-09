@@ -58,7 +58,7 @@ protected:
 	TSubclassOf<UAmbulanceOperationsMenu> AmbulanceClass = nullptr;
 
 	AFPPlayerController* localPlayer = nullptr;
-	UPROPERTY(VisibleAnyWhere, Category = "Widget class")
+	UPROPERTY(replicated, VisibleAnyWhere, Category = "Widget class")
 	TArray<AFireFighterPawn*> passengers;
 
 	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadWrite)
