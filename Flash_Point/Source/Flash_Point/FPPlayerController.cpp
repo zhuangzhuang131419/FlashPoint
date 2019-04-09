@@ -1006,6 +1006,7 @@ void AFPPlayerController::ServerGetInCar_Implementation(AFireFighterPawn * inPaw
 		}
 		inPawn->SetPlacedOn(nullptr);
 		inPawn->SetVisibility(false);
+		inPawn->DecolAdjust(true);
 	}
 }
 
@@ -1050,6 +1051,7 @@ void AFPPlayerController::ServerGetOutAmbulance_Implementation(AFireFighterPawn 
 				current->GetGameBoard()->SetVeteranLoc(current);
 			}
 		}
+		inPawn->DecolAdjust(false);
 	}
 }
 
@@ -1078,6 +1080,7 @@ void AFPPlayerController::ServerGetOutFireEngine_Implementation(AFireFighterPawn
 				current->GetGameBoard()->SetVeteranLoc(current);
 			}
 		}
+		inPawn->DecolAdjust(false);
 	}
 }
 

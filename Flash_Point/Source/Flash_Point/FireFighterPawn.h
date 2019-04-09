@@ -207,6 +207,11 @@ public:
 	void CommandTileOperation(TArray<ATile*> targets, AFireFighterPawn* commander);
 	void AcceptMoveCommand(bool accepted);
 	void AcceptDoorCommand(bool accepted);
+
+	// Decol related function
+	UFUNCTION(BlueprintImplementableEvent, Category = "Firefighter Attributes")
+	void DecolAdjust(bool showInCar);
+
 	// getter and setter for command acceptance
 	EAcceptanceStatus GetCommandAcceptance() { return commandAcceptance; }
 	void SetCommandAcceptance(EAcceptanceStatus inAcc) { commandAcceptance = inAcc; }
