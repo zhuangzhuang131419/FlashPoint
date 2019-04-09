@@ -1446,7 +1446,7 @@ void AFPPlayerController::RemoveHazmat()
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Reveal Hazmat."));
 					ServerRemoveHazmat(fireFighterPawn, currentTile->GetHazmat());
-					ServerAdjustAP(fireFighterPawn, -2);
+					fireFighterPawn->AdjustFireFighterAP(-2);
 				}
 			}
 		}
@@ -1956,6 +1956,15 @@ void AFPPlayerController::SwitchRole(ERoleType inRole)
 	// get the localplayer's firefighter
 	AFireFighterPawn* fireFighterPawn = Cast<AFireFighterPawn>(GetPawn());
 	if (!ensure(fireFighterPawn))	return;
+
+	if (fireFighterPawn->GetFireFighterRole() == ERoleType::Veteran)
+	{
+		if (ensure(gameBoard))
+		{
+			gameBoard->SetVeteranLoc(nullptr);
+		}
+	}
+
 	// Switch role widget first
 	SwitchRoleWidget(inRole);
 	// if it is our ture, enable the widgets
