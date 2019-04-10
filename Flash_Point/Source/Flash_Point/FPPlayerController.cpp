@@ -244,6 +244,14 @@ void AFPPlayerController::PromtOptionPanel(EOptionPromptType option, FString opt
 	}
 }
 
+void AFPPlayerController::HostEndGame()
+{
+	if (HasAuthority()) {
+		UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+		gameInst->HostEndSession();
+	}
+}
+
 void AFPPlayerController::ServerChopWall_Implementation(AWall * wall)
 {
 	if (ensure(wall)) {
@@ -1870,7 +1878,7 @@ void AFPPlayerController::BeginPlay()
 	FindCrewManager();	
 	// change the mouse cursor to spcified widget
 	// TODO uncomment this line for final build
-	//SetMouseCursorWidget(EMouseCursor::Default, CreateWidget<UUserWidget>(this, CursorWidgetClass));	
+	SetMouseCursorWidget(EMouseCursor::Default, CreateWidget<UUserWidget>(this, CursorWidgetClass));	
 }
 
 void AFPPlayerController::SetOpenDoor()

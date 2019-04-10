@@ -141,6 +141,7 @@ void UFlashPointGameInstance::CreateGameSession()
 
 void UFlashPointGameInstance::CreateGameLobby(FGameLobbyInfo inLobbyInfo)
 {
+	isCreatingSession = true;
 	FString encrypted = inLobbyInfo.Encrypt();
 	FGameLobbyInfo decrypted = FGameLobbyInfo::DecryptLobbyInfo(encrypted);
 	UE_LOG(LogTemp, Warning, TEXT("The encrypted lobby info is: %s"), *encrypted);
@@ -274,8 +275,24 @@ void UFlashPointGameInstance::CreateSavedLobby(FMapSaveInfo inInfo)
 	CreateGameLobby(lobbyInfo);
 }
 
+void UFlashPointGameInstance::HostEndSession()
+{
+	isCreatingSession = false;
+	// create a session if there isn't one already
+	if (SessionInterface.IsValid()) {
+		UE_LOG(LogTemp, Warning, TEXT("Session valid"));
+		FNamedOnlineSession* existSession = SessionInterface->GetNamedSession(SESSION_NAME);
+		if (existSession) {
+			UE_LOG(LogTemp, Warning, TEXT("Host Ending Session"));
+			// if the session already exist, destroy the session
+			SessionInterface->DestroySession(SESSION_NAME);
+		}
+	}
+}
+
 void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Success)
 {
+	isCreatingSession = false;
 	// as the session got created, re enable the create lobby button
 	if (ensure(mainMenuUI)) {
 		mainMenuUI->EnableCreateLobby(true);
@@ -294,7 +311,7 @@ void UFlashPointGameInstance::OnCreateSessionComplete(FName SessionName, bool Su
 void UFlashPointGameInstance::OnDestroySessionComplete(FName SessionName, bool Success)
 {
 	// when the session is destroyed, do create session
-	if (Success) {
+	if (Success && isCreatingSession) {
 		UE_LOG(LogTemp, Warning, TEXT("Session successfully destroyed"));
 		CreateGameSession();
 	}

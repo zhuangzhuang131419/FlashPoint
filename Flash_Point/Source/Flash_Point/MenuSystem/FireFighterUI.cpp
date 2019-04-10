@@ -5,6 +5,7 @@
 #include "Components/Button.h"
 #include "GameBoard.h"
 #include "SavePanel.h"
+#include "FlashPointGameInstance.h"
 
 UFireFighterUI::UFireFighterUI(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer) {
 	ConstructorHelpers::FClassFinder<USavePanel> SavePanelClassFinder(TEXT("/Game/BPs/WidgetComponents/WBP_save"));
@@ -204,7 +205,9 @@ void UFireFighterUI::NotifyCrewChange()
 		}
 	}
 	if (isNotifyPlayerLeave) {
+		localPlayer->HostEndGame();
 		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+		localPlayer->LeaveGameSession();
 	}
 	// if not the begining of turn, this is just a prompt to notify events
 	if (!isBeginOfTurn) return;
@@ -247,5 +250,7 @@ void UFireFighterUI::OnSaveClicked()
 void UFireFighterUI::OnEndGameExit()
 {
 	if (!ensure(localPlayer)) return;
+	localPlayer->HostEndGame();
 	localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+	localPlayer->LeaveGameSession();
 }

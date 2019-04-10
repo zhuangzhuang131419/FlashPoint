@@ -662,6 +662,7 @@ void AFireFighterPawn::Rep_LobbyPawnID()
 			AFPPlayerController* localPlayer = Cast<AFPPlayerController>(world->GetFirstPlayerController());
 			if (ensure(localPlayer) && localPlayer->GetPawn() == this) {
 				localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+				localPlayer->LeaveGameSession();
 			}
 		}
 	}

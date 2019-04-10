@@ -19,9 +19,9 @@ class FOnlineSessionSearch;
 
  // a session name used by all classes
 // TODO MODIFY THESE VALUES EVERYTIME YOU BUILD!!!!!
-const static FName SESSION_NAME = TEXT("FPfRToVb095");
+const static FName SESSION_NAME = TEXT("FPfRtovb097");
 // a key for decrepeting the lobby infor passed with the session
-const static FName SESSION_INFO_KEY = TEXT("DCRPTFPfRTOvb095");
+const static FName SESSION_INFO_KEY = TEXT("DCRPTfPfrTOvb097");
 const static int32 FPSESSION_STANDARD_SIZE = 6;
 const static int32 MAX_SESSION_SEARCH = 200;
 
@@ -78,6 +78,8 @@ public:
 	void RefreshLobbyList();
 	// A function for lobby to create a saved game
 	void CreateSavedLobby(FMapSaveInfo inInfo);
+	// A function for the server to end session
+	void HostEndSession();
 
 protected:
 	// FIELDS
@@ -112,6 +114,7 @@ protected:
 
 	// ONLINE SUBSYSTEM RELATED
 	bool isDefaultOLSS = false;
+	bool isCreatingSession = false;
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<FOnlineSessionSearch> SessionSearch;
 };

@@ -413,7 +413,9 @@ int32 AGameBoard::JoinBoard()
 void AGameBoard::LeaveBoard(AFireFighterPawn * leavePawn)
 {
 	if (HasAuthority()) {
+		localPlayer->HostEndGame();
 		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+		localPlayer->LeaveGameSession();
 	}
 	else {
 		localPlayer->ServerExitFromBoard(this, leavePawn);
@@ -1034,6 +1036,7 @@ void AGameBoard::Rep_SomeOneLeft()
 	if (!ensure(localPlayer)) return;
 	if (leaveFlag >= 0 && leaveFlag == localPlayer->GetTurnNum()) {
 		localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+		localPlayer->LeaveGameSession();
 	}
 	else {
 		// notify the client that someone has left the game

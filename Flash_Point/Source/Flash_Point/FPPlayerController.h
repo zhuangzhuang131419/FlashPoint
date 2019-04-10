@@ -144,6 +144,12 @@ public:
 	void PromtCommandStatus(EAcceptanceStatus commandStatus);
 	UFUNCTION(BlueprintCallable, Category = "Take Turn")
 	void PromtOptionPanel(EOptionPromptType option, FString optionText);
+	
+	// for properly leaving session
+	UFUNCTION(BlueprintImplementableEvent, Category = "Session Managing")
+	void LeaveGameSession();
+	UFUNCTION(BlueprintCallable, Category = "Session Managing")
+	void HostEndGame();
 
 	// Here are the server excuted functions to synchronize all status on each client connected
 	// choped wall on server

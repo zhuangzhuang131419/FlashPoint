@@ -357,8 +357,15 @@ void ALobbyManager::ExitLobby(AFireFighterPawn * inPawn)
 				// travel to the lobby from here as a server
 				AFlash_PointGameModeBase* gameMode = Cast<AFlash_PointGameModeBase>(world->GetAuthGameMode());
 				if (!ensure(gameMode)) return;
+				UFlashPointGameInstance* gameInst = Cast<UFlashPointGameInstance>(GetGameInstance());
+				if (ensure(gameInst)) {
+					// when its host, destroy the entire session
+					UE_LOG(LogTemp, Warning, TEXT("Host is leaving lobby"));
+					gameInst->HostEndSession();
+				}
 				gameMode->DoSeamlessTravel(false);
 				localPlayer->ClientTravel("/Game/maps/MainMenu", ETravelType::TRAVEL_Absolute);
+				localPlayer->LeaveGameSession();
 			}
 		}
 	}
