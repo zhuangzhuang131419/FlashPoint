@@ -109,7 +109,7 @@ public:
 	int32 MAX_HEALTH = 24;
 
 	// Operation realted fields and functions
-	UPROPERTY(replicated, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
+	UPROPERTY(ReplicatedUsing = Rep_LostVictimNum, VisibleAnyWhere, BlueprintReadOnly, Category = "Setup")
 	int32 victimLostNum = 0;
 	bool moved = true;
 
@@ -304,6 +304,8 @@ protected:
 	void Rep_RelocateEngine();
 	UFUNCTION()
 	void Rep_SomeOneLeft();
+	UFUNCTION()
+	void Rep_LostVictimNum();
 
 	// Called when the game starts or when spawned
 	virtual void GetLifetimeReplicatedProps(TArray< FLifetimeProperty > & OutLifetimeProps) const override;

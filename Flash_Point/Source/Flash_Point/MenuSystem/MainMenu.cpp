@@ -144,6 +144,8 @@ void UMainMenu::OnJoinGameClicked()
 void UMainMenu::OnLoadGameClicked()
 {
 	// load all games that are saved
+	if (!ensure(LoadArrangement)) return;
+	LoadArrangement->ClearChildren();
 	if (UGameplayStatics::DoesSaveGameExist(FString(TEXT("SaveSlot")), 0)) {
 		UFlashPointSaveGame* savedGames = Cast<UFlashPointSaveGame>(UGameplayStatics::LoadGameFromSlot(FString(TEXT("SaveSlot")), 0));
 		if (ensure(savedGames)) {

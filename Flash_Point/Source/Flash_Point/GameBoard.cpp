@@ -1044,6 +1044,15 @@ void AGameBoard::Rep_SomeOneLeft()
 	}
 }
 
+void AGameBoard::Rep_LostVictimNum()
+{
+	if (victimLostNum >= 4) {
+		if (ensure(localPlayer)) {
+			localPlayer->NotifyGameOver(false);
+		}
+	}
+}
+
 void AGameBoard::GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const
 {
 	Super::GetLifetimeReplicatedProps(OutLifetimeProps);
