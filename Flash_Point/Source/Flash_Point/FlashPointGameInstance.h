@@ -19,9 +19,9 @@ class FOnlineSessionSearch;
 
  // a session name used by all classes
 // TODO MODIFY THESE VALUES EVERYTIME YOU BUILD!!!!!
-const static FName SESSION_NAME = TEXT("FPfRtovb100");
+const static FName SESSION_NAME = TEXT("FPfRtovb102");
 // a key for decrepeting the lobby infor passed with the session
-const static FName SESSION_INFO_KEY = TEXT("DCRPTfPfrTOvb100");
+const static FName SESSION_INFO_KEY = TEXT("DCRPTfPfrTOvb102");
 const static int32 FPSESSION_STANDARD_SIZE = 6;
 const static int32 MAX_SESSION_SEARCH = 200;
 

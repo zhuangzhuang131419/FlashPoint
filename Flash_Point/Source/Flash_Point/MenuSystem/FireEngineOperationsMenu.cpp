@@ -98,7 +98,7 @@ void UFireEngineOperationsMenu::FireDeckGun()
 					}
 				}
 
-				if (fireFighterPawn->GetCurrentAP() > fireFighterPawn->GetFireDeckGunConsumption())
+				if (fireFighterPawn->GetCurrentAP() >= fireFighterPawn->GetFireDeckGunConsumption())
 				{
 					ATile* targetTile = board->GenerateRandomPositionInQuadrant();
 					if (ensure(targetTile))

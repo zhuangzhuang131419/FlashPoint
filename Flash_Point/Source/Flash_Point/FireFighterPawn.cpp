@@ -821,6 +821,14 @@ void AFireFighterPawn::KnockDown()
 					carriedVictim = nullptr;
 					tempBoard->SetCurrentPOI(tempBoard->currentPOI - 1);
 				}
+
+				if (leadVictim)
+				{
+					tempBoard->SetVictimLostNum(tempBoard->victimLostNum + 1);
+					leadVictim->Destroy();
+					leadVictim = nullptr;
+					tempBoard->SetCurrentPOI(tempBoard->currentPOI - 1);
+				}
 			}
 		}
 	}

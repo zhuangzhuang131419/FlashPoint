@@ -242,6 +242,26 @@ void AGameBoard::ResolveKnockDownOnBoard()
 					}
 				}
 			}
+			if (HasAuthority()) {
+				if (ensure(localPlayer)) {
+					AFireFighterPawn* localPawn = Cast<AFireFighterPawn>(localPlayer->GetPawn());
+					if (ensure(localPawn)) {
+						if (localPawn->GetCarriedVictim()) {
+							localPlayer->NotifyCarryVictim(true);
+						}
+						else {
+							localPlayer->NotifyCarryVictim(false);
+						}
+
+						if (localPawn->GetLeading()) {
+							localPlayer->NotifyLeadVictim(true);
+						}
+						else {
+							localPlayer->NotifyLeadVictim(false);
+						}
+					}
+				}
+			}
 		}
 
 		// Any victims or POI in a space with fire are lost
